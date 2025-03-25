@@ -17,7 +17,7 @@ Fleksibilan je i može se specijalizovati za različite domene. Trenutno razvija
 
 ## 🏗️ Tehnologije koje koristimo
 
-🔹 **Backend:** Java Spring Boot
+🔹 **Backend:** Java Spring Boot  
 🔹 **Frontend:** React Native / Flutter  
 🔹 **Baza podataka:** MySQL   
 
