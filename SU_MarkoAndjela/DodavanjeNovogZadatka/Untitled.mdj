@@ -317,9 +317,9 @@
 											"font": "Arial;13;0",
 											"left": 37,
 											"top": -59,
-											"width": 113.31201171875,
+											"width": 121.037109375,
 											"height": 13,
-											"text": "+dodajNoviTrošak()",
+											"text": "+dodajNoviZadatak()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -334,7 +334,7 @@
 											"font": "Arial;13;0",
 											"left": 37,
 											"top": -44,
-											"width": 113.31201171875,
+											"width": 121.037109375,
 											"height": 13,
 											"text": "+osvježiFormu()",
 											"horizontalAlignment": 0
@@ -344,7 +344,7 @@
 									"font": "Arial;13;0",
 									"left": 32,
 									"top": -64,
-									"width": 123.31201171875,
+									"width": 131.037109375,
 									"height": 38
 								},
 								{
@@ -536,9 +536,9 @@
 											"font": "Arial;13;0",
 											"left": 53,
 											"top": -67,
-											"width": 113.31201171875,
+											"width": 121.037109375,
 											"height": 13,
-											"text": "+dodajNoviTrošak()",
+											"text": "+dodajNoviZadatak()",
 											"horizontalAlignment": 0
 										}
 									],
@@ -546,7 +546,7 @@
 									"font": "Arial;13;0",
 									"left": 48,
 									"top": -72,
-									"width": 123.31201171875,
+									"width": 131.037109375,
 									"height": 23
 								},
 								{
@@ -734,9 +734,9 @@
 											"font": "Arial;13;0",
 											"left": -35,
 											"top": 5,
-											"width": 170.36474609375,
+											"width": 178.08984375,
 											"height": 13,
-											"text": "+otvoriFormuZaUnosTroška()",
+											"text": "+otvoriFormuZaUnosZadatka()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -751,16 +751,16 @@
 											"font": "Arial;13;0",
 											"left": -35,
 											"top": 20,
-											"width": 170.36474609375,
+											"width": 178.08984375,
 											"height": 13,
-											"text": "+unesiTrošak()",
+											"text": "+unesiZadatak()",
 											"horizontalAlignment": 0
 										}
 									],
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": -40,
-									"width": 180.36474609375,
+									"width": 188.08984375,
 									"height": 38
 								},
 								{
@@ -950,9 +950,9 @@
 											"font": "Arial;13;0",
 											"left": -51,
 											"top": -27,
-											"width": 152.8134765625,
+											"width": 156.45703125,
 											"height": 13,
-											"text": "+unosPodatakaOTrošku()",
+											"text": "+unosPodatakaOZadatku()",
 											"horizontalAlignment": 0
 										},
 										{
@@ -967,7 +967,7 @@
 											"font": "Arial;13;0",
 											"left": -51,
 											"top": -12,
-											"width": 152.8134765625,
+											"width": 156.45703125,
 											"height": 13,
 											"text": "+signalizirajGrešku()",
 											"horizontalAlignment": 0
@@ -984,7 +984,7 @@
 											"font": "Arial;13;0",
 											"left": -51,
 											"top": 3,
-											"width": 152.8134765625,
+											"width": 156.45703125,
 											"height": 13,
 											"text": "+prikažiPorukuOGrešci()",
 											"horizontalAlignment": 0
@@ -1001,7 +1001,7 @@
 											"font": "Arial;13;0",
 											"left": -51,
 											"top": 18,
-											"width": 152.8134765625,
+											"width": 156.45703125,
 											"height": 13,
 											"text": "+singalizirajUspjeh()",
 											"horizontalAlignment": 0
@@ -1018,7 +1018,7 @@
 											"font": "Arial;13;0",
 											"left": -51,
 											"top": 33,
-											"width": 152.8134765625,
+											"width": 156.45703125,
 											"height": 13,
 											"text": "+prikažiPorukuOUspjehu()",
 											"horizontalAlignment": 0
@@ -1028,7 +1028,7 @@
 									"font": "Arial;13;0",
 									"left": -56,
 									"top": -32,
-									"width": 162.8134765625,
+									"width": 166.45703125,
 									"height": 83
 								},
 								{
@@ -1220,9 +1220,9 @@
 											"font": "Arial;13;0",
 											"left": 45,
 											"top": -59,
-											"width": 87.3056640625,
+											"width": 95.03076171875,
 											"height": 13,
-											"text": "+dodajTrošak()",
+											"text": "+dodajZadatak()",
 											"horizontalAlignment": 0
 										}
 									],
@@ -1230,7 +1230,7 @@
 									"font": "Arial;13;0",
 									"left": 40,
 									"top": -64,
-									"width": 97.3056640625,
+									"width": 105.03076171875,
 									"height": 23
 								},
 								{
@@ -4581,7 +4581,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGVmxuIWv/6BeQ="
 									},
-									"name": "Dodavanje novog troška",
+									"name": "Dodavanje novog zadatka",
 									"ownedViews": [
 										{
 											"_type": "UMLFrameView",
@@ -4602,9 +4602,9 @@
 													"font": "Arial;13;0",
 													"left": 24.72998046875,
 													"top": 13,
-													"width": 141.20068359375,
+													"width": 151.33154296875,
 													"height": 13,
-													"text": "Dodavanje novog troška"
+													"text": "Dodavanje novog zadatka"
 												},
 												{
 													"_type": "LabelView",
