@@ -4752,7 +4752,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGViyIZxr+rdng="
 							},
-							"name": "getRezervacije"
+							"name": "dobaviRezervacije"
 						}
 					]
 				},
@@ -4788,7 +4788,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGViyJE4b/VZmc="
 							},
-							"name": "getRezervacije"
+							"name": "dobaviRezervacije"
 						}
 					]
 				},
@@ -4809,7 +4809,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGViyKdGb//Iv4="
 							},
-							"name": "getRezervacije"
+							"name": "dobaviRezervacije"
 						}
 					]
 				}
@@ -5491,9 +5491,9 @@
 												"$ref": "AAAAAAGViyYZBMENNmw="
 											},
 											"font": "Arial;13;0",
-											"left": 374,
+											"left": 364,
 											"top": 232,
-											"width": 194.3525390625,
+											"width": 214.5888671875,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 10,
@@ -5501,7 +5501,7 @@
 												"$ref": "AAAAAAGViyYZBMEOY+E="
 											},
 											"edgePosition": 1,
-											"text": "3 : getRezervacije(tipRezervacija)"
+											"text": "3 : dobaviRezervacije(tipRezervacija)"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -5832,9 +5832,9 @@
 												"$ref": "AAAAAAGViyc/CcFgdcw="
 											},
 											"font": "Arial;13;0",
-											"left": 643,
+											"left": 633,
 											"top": 328,
-											"width": 194.3525390625,
+											"width": 214.5888671875,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 10,
@@ -5842,7 +5842,7 @@
 												"$ref": "AAAAAAGViyc/CcFhscI="
 											},
 											"edgePosition": 1,
-											"text": "5 : getRezervacije(tipRezervacija)"
+											"text": "5 : dobaviRezervacije(tipRezervacija)"
 										},
 										{
 											"_type": "EdgeLabelView",
@@ -6060,9 +6060,9 @@
 												"$ref": "AAAAAAGViyekncGc5F8="
 											},
 											"font": "Arial;13;0",
-											"left": 946,
+											"left": 936,
 											"top": 344,
-											"width": 112.708984375,
+											"width": 132.9453125,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 10,
@@ -6070,7 +6070,7 @@
 												"$ref": "AAAAAAGViyekncGdkqM="
 											},
 											"edgePosition": 1,
-											"text": "6 : getRezervacije()"
+											"text": "6 : dobaviRezervacije()"
 										},
 										{
 											"_type": "EdgeLabelView",
