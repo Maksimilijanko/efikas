@@ -1022,6 +1022,23 @@
 											"height": 13,
 											"text": "+prikažiPorukuOUspjehu()",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGWOxxi2aEfrZM=",
+											"_parent": {
+												"$ref": "AAAAAAGVmxovrP6aWdE="
+											},
+											"model": {
+												"$ref": "AAAAAAGWK3ibsBeBdLM="
+											},
+											"font": "Arial;13;0",
+											"left": -59,
+											"top": 48,
+											"width": 156.45703125,
+											"height": 13,
+											"text": "+prikaziPorukuOUspjehu()",
+											"horizontalAlignment": 0
 										}
 									],
 									"visible": false,
@@ -1029,7 +1046,7 @@
 									"left": -64,
 									"top": -32,
 									"width": 166.45703125,
-									"height": 83
+									"height": 98
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -4466,7 +4483,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGVmxoA4P5npLM="
 							},
-							"name": "unesiZadatak"
+							"name": "dodajZadatak"
 						}
 					]
 				},
@@ -6163,7 +6180,7 @@
 													"font": "Arial;13;0",
 													"left": 855,
 													"top": 476,
-													"width": 143.08251953125,
+													"width": 143.8125,
 													"height": 13,
 													"alpha": 1.5707963267948966,
 													"distance": 10,
@@ -6171,7 +6188,7 @@
 														"$ref": "AAAAAAGVmyGv4QG7hKU="
 													},
 													"edgePosition": 1,
-													"text": "8 : unesiZadatak(podaci)"
+													"text": "8 : dodajZadatak(podaci)"
 												},
 												{
 													"_type": "EdgeLabelView",
