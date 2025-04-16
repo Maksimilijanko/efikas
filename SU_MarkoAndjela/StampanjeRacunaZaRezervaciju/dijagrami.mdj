@@ -4702,7 +4702,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGVk/X8QloV+K8="
 							},
-							"name": "oznaciRezervacijuKaoZavrsenu"
+							"name": "stampajRacunZaRezervaciju"
 						},
 						{
 							"_type": "UMLOperation",
@@ -4759,7 +4759,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGVk/cT2FpCy1I="
 							},
-							"name": "oznaciRezervacijuKaoZavrsenu"
+							"name": "stampajRacunZaRezervaciju"
 						}
 					]
 				},
@@ -5157,7 +5157,7 @@
 														"$ref": "AAAAAAGVk/m1jltcO/8="
 													},
 													"edgePosition": 1,
-													"text": "1 : oznaciRezervacijuKaoZavrsenu()"
+													"text": "1 : stampajRacunZaRezervaciju()"
 												},
 												{
 													"_type": "EdgeLabelView",
@@ -5615,7 +5615,7 @@
 														"$ref": "AAAAAAGVk/rMuFvRGEc="
 													},
 													"edgePosition": 1,
-													"text": "3 : oznaciRezervacijuKaoZavrsenu(rezervacija)"
+													"text": "3 : stampajRacunZaRezervaciju(rezervacija)"
 												},
 												{
 													"_type": "EdgeLabelView",
