@@ -1,5 +1,4 @@
-import { Input, InputField, InputSlot } from "@/components/ui/input";
-import { ReactNode } from "react";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { GestureResponderEvent } from "react-native";
 
 interface Props {
@@ -7,14 +6,15 @@ interface Props {
     variant?: "underlined" | "outline" | "rounded";
     type?: "text" | "password";
     placeholder: string;
-    icon?: ReactNode;
+    icon?: any;
+    iconLocation?: 'left' | 'right'
     isInvalid?: boolean;
     isDisabled?: boolean;
     isHovered?: boolean;
     isFocused?: boolean;
     isRequired?: boolean;
     isOutline?: boolean;
-    onPress: (e: GestureResponderEvent) => void;
+    onPress?: (e: GestureResponderEvent) => void;
 }
 
 function TextField({ 
@@ -23,6 +23,7 @@ function TextField({
     type,
     placeholder,
     icon,
+    iconLocation = 'left',
     isInvalid, 
     isDisabled, 
     isHovered, 
@@ -31,12 +32,26 @@ function TextField({
     isOutline,
     onPress
 }: Props) {
+
+    const IconElement = (
+        <InputSlot className="pr-3"  >
+            <InputIcon as={icon} />
+        </InputSlot>
+    );
+    
     return(
-        <Input size={size} variant={variant} isInvalid={isInvalid} >
+        <Input 
+            size={size} 
+            variant={variant} 
+            isInvalid={isInvalid} 
+            isDisabled={isDisabled}
+            isHovered={isHovered}
+            isFocused={isFocused}
+            isRequired={isRequired}
+        >
+            {iconLocation === "left" && IconElement}
             <InputField type={type} placeholder={placeholder} />
-            <InputSlot className="pr-3" onPress={onPress}>
-              {icon}
-            </InputSlot>
+            {iconLocation === "right" && IconElement}
         </Input>
     );
 }
