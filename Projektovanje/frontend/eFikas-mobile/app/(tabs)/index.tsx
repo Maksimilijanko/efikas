@@ -1,8 +1,4 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import { MailIcon, SearchIcon } from "@/components/ui/icon";
-import { SelectItem } from "@/components/ui/select";
-import Dropdown from "@/src/components/atoms/Dropdown/Dropdown";
-import FloatButton from "@/src/components/atoms/FloatButton/FloatButton";
 import Icon from "@/src/components/atoms/Icon/Icon";
 import LabelSeparator from "@/src/components/atoms/LabelSeparator/LabelSeparator";
 import TextField from "@/src/components/atoms/TextField/TextField";
@@ -17,11 +13,11 @@ import { IconButton } from "@/src/components/atoms/IconButton/IconButton";
 import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
 import LabeledTextField from "@/src/components/molecules/LabeledTextField/LabeledTextField";
 import { ScrollView } from 'react-native';
-import i18n from "@/src/i18n";
 import { useState } from "react";
+import i18n from "@/src/i18n";
 
 import { I18nextProvider } from "react-i18next";
-import { GestureResponderEvent, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 
 // opcije za slajder (SegmentedControl)
@@ -82,7 +78,7 @@ export default function Index() {
                 <Label text="Veliki naslov" size="3xl" align="center" />
                 <Label text="Email adresa" className="text-[rgb(var(--color-tertiary-950))]" /> */}
                
-               {/* Icon button-i */}
+                {/* Icon button-i */}
                 {/* <Icon name="Home" />
                 <IconButton 
                     iconName="Home" 
@@ -92,7 +88,7 @@ export default function Index() {
                 />
                 <IconButton 
                     iconName="Settings" 
-                    size={28}
+                    size={60}
                     color="#3176B8"
                     onPress={() => console.log("Settings clicked")} 
                 />

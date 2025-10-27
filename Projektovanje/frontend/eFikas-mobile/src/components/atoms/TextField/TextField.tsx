@@ -1,5 +1,5 @@
 import { Input, InputField, InputSlot } from "@/components/ui/input";
-import { GestureResponderEvent } from "react-native";
+import { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
 import Icon from "@/src/components/atoms/Icon/Icon"; 
 
 interface Props {
@@ -8,7 +8,9 @@ interface Props {
     type?: "text" | "password";
     placeholder?: string;
     icon?: string;
-    iconLocation?: 'left' | 'right'
+    iconLocation?: 'left' | 'right' | 'absent';
+    style?: StyleProp<ViewStyle>;
+    inputProps?: React.ComponentProps<typeof InputField>;
     isInvalid?: boolean;
     isDisabled?: boolean;
     isHovered?: boolean;
@@ -24,7 +26,9 @@ function TextField({
     type,
     placeholder,
     icon,
-    iconLocation = 'left',
+    iconLocation = 'absent',
+    style,
+    inputProps,
     isInvalid, 
     isDisabled, 
     isHovered, 
@@ -41,7 +45,8 @@ function TextField({
     ) : null;
     
     return(
-        <Input 
+        <Input
+            style={style}
             size={size} 
             variant={variant} 
             isInvalid={isInvalid} 
@@ -51,7 +56,7 @@ function TextField({
             isRequired={isRequired}
         >
             {iconLocation === "left" && IconElement}
-            <InputField type={type} placeholder={placeholder} />
+            <InputField type={type} placeholder={placeholder} {...inputProps} />
             {iconLocation === "right" && IconElement}
         </Input>
     );
