@@ -10,7 +10,7 @@ export const config = {
     '--color-primary-300': '102 102 102',
     '--color-primary-400': '82 82 82',
     '--color-primary-500': '49 118 191',   // promijenjeno sa default '51 51 51', 500 je bazna boja !
-    '--color-primary-600': '41 41 41',
+    '--color-primary-600': '58 116 178',  // promijenjeno sa default '41 41 41', 600 je tamnija bazna boja - pritisnutno/kliknuto !
     '--color-primary-700': '31 31 31',
     '--color-primary-800': '13 13 13',
     '--color-primary-900': '10 10 10',
