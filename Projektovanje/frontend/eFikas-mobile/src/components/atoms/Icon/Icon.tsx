@@ -1,20 +1,29 @@
-import FontAwesome6 from "@expo/vector-icons/FontAwesome";
-import { StyleProp, TextStyle } from "react-native";
+import React from "react";
+import * as LucideIcons from "lucide-react-native";
+import { ViewStyle, StyleProp } from "react-native";
+import { Colors } from "@/src/styles/style";
 
-type FontAwesome6Name = React.ComponentProps<typeof FontAwesome6>["name"];
-interface Props {
-    name: FontAwesome6Name;
-    color?: string;
-    size?: number;
-    style?: StyleProp<TextStyle>;
+interface IconProps {
+  name: string;
+  color?: string;
+  size?: number;
+  style?: StyleProp<ViewStyle>;
 }
 
-// Link ka ikonicama: https://icons.expo.fyi/Index
-// TODO: Istraziti Gluestack boje!!
-function Icon({ name, color = 'rgb(49 118 191)', size = 25, style }: Props) {
-    return(
-        <FontAwesome6 color={color} name={name} size={size} style={style} className="text-[rgb(var(--color-primary-500))]" />
-    );
-}
+export const Icon = ({
+  name,
+  color = Colors.tertiary,
+  size = 24,
+  style,
+}: IconProps) => {
+  const LucideIcon = (LucideIcons as any)[name];
+
+  if (!LucideIcon) {
+    console.warn(`WARNING: Icon "${name}" not found in lucide-react-native`);
+    return null;
+  }
+
+  return <LucideIcon color={color} size={size} style={style} />;
+};
 
 export default Icon;
