@@ -1,8 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 import { Label } from "@/src/components/atoms/Label/Label";
-import Icon from "@/src/components/atoms/Icon/Icon"; 
+import { Icon } from "@/src/components/atoms/Icon/Icon"; 
 import TextField from "@/src/components/atoms/TextField/TextField";
+import { LucideIconName } from "@/src/types/types";
 
 interface LabeledTextFieldProps {
   label: string;
@@ -12,7 +13,7 @@ interface LabeledTextFieldProps {
   placeholder?: string;
   size?: "sm" | "md" | "lg" | "xl";     // za TextField
   labelSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl";
-  iconName?: string;    // ime ikone za Icon komponentu
+  iconName?: LucideIconName;    // ime ikone za Icon komponentu
   iconLocation?: "left" | "right";
   variant?: "outline" | "underlined" | "rounded";
   type?: "text" | "password";
@@ -51,7 +52,7 @@ const LabeledTextField = ({
         size={size}
         variant={variant}
         type={type}
-        icon={iconName}
+        iconName={iconName}
         iconLocation={iconLocation}
         isInvalid={error}
         isDisabled={disabled}
