@@ -1,5 +1,10 @@
 import { Button, ButtonText } from "@/components/ui/button";
+import { ChevronDownIcon } from "@/components/ui/icon";
+import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from "@/components/ui/select";
+import Dropdown from "@/src/components/atoms/Dropdown/Dropdown";
 import Icon from "@/src/components/atoms/Icon/Icon";
+import LinkButton from "@/src/components/atoms/LinkButton/LinkButton";
+import AnalyticsBar from "@/src/components/molecules/AnalyticsBar/AnalyticsBar";
 import ApartmentAttribute from "@/src/components/molecules/ApartmentAttribute/ApartmentAttribute";
 import i18n from "@/src/i18n";
 
@@ -17,10 +22,8 @@ export default function Index() {
                     
                 </Button>
 
-                <ApartmentAttribute 
-                    label="Wi-Fi" 
-                    icon={<Icon name="wifi" />}
-                />
+                <AnalyticsBar label="Troskovi" value={50} maxValue={100} />
+                <LinkButton label="Prikazi vise" />
             </View>
         </I18nextProvider>
     );
