@@ -2,9 +2,10 @@ import React from "react";
 import * as LucideIcons from "lucide-react-native";
 import { ViewStyle, StyleProp } from "react-native";
 import { Colors } from "@/src/styles/style";
+import { LucideIconName } from "@/src/types/types";
 
 interface IconProps {
-  name: string;
+  name: LucideIconName;
   color?: string;
   size?: number;
   style?: StyleProp<ViewStyle>;
@@ -26,4 +27,4 @@ export const Icon = ({
   return <LucideIcon color={color} size={size} style={style} />;
 };
 
-export default Icon;
+

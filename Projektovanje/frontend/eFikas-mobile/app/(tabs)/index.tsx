@@ -1,5 +1,8 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import Icon from "@/src/components/atoms/Icon/Icon";
+import { ChevronDownIcon } from "@/components/ui/icon";
+import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from "@/components/ui/select";
+import Dropdown from "@/src/components/atoms/Dropdown/Dropdown";
+import { Icon } from "@/src/components/atoms/Icon/Icon";
 import LabelSeparator from "@/src/components/atoms/LabelSeparator/LabelSeparator";
 import TextField from "@/src/components/atoms/TextField/TextField";
 import ToggleButton from "@/src/components/atoms/ToggleButton/ToggleButton";
@@ -18,6 +21,9 @@ import i18n from "@/src/i18n";
 
 import { I18nextProvider } from "react-i18next";
 import { Text, View } from "react-native";
+import ApartmentAttribute from "@/src/components/molecules/ApartmentAttribute/ApartmentAttribute";
+import LinkButton from "@/src/components/atoms/LinkButton/LinkButton";
+import FloatButton from "@/src/components/atoms/FloatButton/FloatButton";
 
 
 // opcije za slajder (SegmentedControl)
@@ -153,8 +159,6 @@ export default function Index() {
                     iconName="Lock"
                 /> */}
 
-
-                
             </View>
         </I18nextProvider>
     );

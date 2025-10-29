@@ -45,6 +45,7 @@ function Dropdown({
             isHovered={isHovered} 
             isFocusVisible={isFocusVisible}
             isFocused={isFocused} 
+            placeholder={placeholder}
             onOpen={onOpen}
             onValueChange={onValueChange}
             onClose={onClose}
@@ -60,13 +61,15 @@ function Dropdown({
                     <SelectDragIndicatorWrapper>
                         <SelectDragIndicator />
                     </SelectDragIndicatorWrapper>
-                    {items.map(item => {
-                        <SelectItem 
-                            key={item.id}
-                            label={item.label}
-                            value={item.value}
-                        />
-                    }) }
+                        {items.length > 0 ? (
+                            items.map(item => (
+                                <SelectItem key={item.id} label={item.label} value={item.value} />
+                            ))
+                        ) : 
+                        (
+                            <SelectItem label="No options available" value="none" isDisabled />
+                        )
+                    }
                 </SelectContent>
             </SelectPortal>
         </Select>

@@ -1,4 +1,5 @@
 import { Switch } from "@/components/ui/switch";
+import { Colors } from "@/src/styles/style";
 
 interface Props {
     size?: 'sm' | 'md' | 'lg';
@@ -27,11 +28,11 @@ function ToggleButton({
 
     // TODO: vidjeti kako rade GlueStack var boje iz config.ts!
     trackColor = { 
-        false: '#d4d4d4', 
-        true: '#3176bf' 
+        false: Colors.secondary, 
+        true: Colors.primary
     },
-    thumbColor ="#ffffff",
-    ios_backgroundColor = "#d4d4d4",
+    thumbColor = Colors.background,
+    ios_backgroundColor = Colors.secondary,
 }: Props) {
     return(
         <Switch
