@@ -2,9 +2,10 @@ import React from "react";
 import * as LucideIcons from "lucide-react-native";
 import { ViewStyle, StyleProp } from "react-native";
 import { Colors } from "@/src/styles/style";
+import { LucideIconName } from "@/src/types/types";
 
 interface IconProps {
-  name: string;
+  name: LucideIconName;
   color?: string;
   size?: number;
   strokeWidth?: number;
@@ -21,7 +22,7 @@ export const Icon = ({
   const LucideIcon = (LucideIcons as any)[name];
 
   if (!LucideIcon) {
-    console.warn(`⚠️ Icon "${name}" not found in lucide-react-native`);
+    console.warn(`Icon "${name}" not found in lucide-react-native`);
     return null;
   }
 
@@ -35,4 +36,4 @@ export const Icon = ({
   );
 };
 
-export default Icon;
+

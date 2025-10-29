@@ -1,14 +1,15 @@
 import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Divider } from "@/components/ui/divider";
-import Icon from "@/src/components/atoms/Icon/Icon"; 
+import { Icon } from "@/src/components/atoms/Icon/Icon"; 
 import { Colors } from "@/src/styles/style";
+import { LucideIconName } from "@/src/types/types";
 
 interface MenuItemProps {
   text: string;
   onPress: () => void;
-  leftIconName?: string;
-  rightIconName?: string;
+  leftIconName?: LucideIconName;
+  rightIconName?: LucideIconName;
   showDivider?: boolean;
 }
 

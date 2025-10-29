@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Pressable, GestureResponderEvent } from "react-native";
-import Icon from "../Icon/Icon"; 
+import { Icon } from "../Icon/Icon"; 
 import { Colors } from "@/src/styles/style";
+import { LucideIconName } from "@/src/types/types";
 
 interface IconButtonProps {
-  iconName: string;            
+  iconName: LucideIconName;            
   onPress: (event: GestureResponderEvent) => void;
   size?: number;
   strokeWidth?: number; 

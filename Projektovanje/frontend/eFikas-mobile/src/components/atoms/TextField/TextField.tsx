@@ -1,13 +1,14 @@
 import { Input, InputField, InputSlot } from "@/components/ui/input";
 import { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
-import Icon from "@/src/components/atoms/Icon/Icon"; 
+import { Icon } from "@/src/components/atoms/Icon/Icon"; 
+import { LucideIconName } from "@/src/types/types";
 
 interface Props {
     size?: "xl" | "lg" | "md" | "sm";
     variant?: "underlined" | "outline" | "rounded";
     type?: "text" | "password";
     placeholder?: string;
-    icon?: string;
+    iconName?: LucideIconName;
     iconLocation?: 'left' | 'right' | 'absent';
     style?: StyleProp<ViewStyle>;
     inputProps?: React.ComponentProps<typeof InputField>;
@@ -25,7 +26,7 @@ function TextField({
     variant = "outline", 
     type,
     placeholder,
-    icon,
+    iconName,
     iconLocation = 'absent',
     style,
     inputProps,
@@ -38,9 +39,9 @@ function TextField({
     onPress
 }: Props) {
 
-    const IconElement = icon ? (
+    const IconElement = iconName ? (
         <InputSlot className="pl-3"  >
-            <Icon name={icon} />
+            <Icon name={iconName} />
         </InputSlot>
     ) : null;
     

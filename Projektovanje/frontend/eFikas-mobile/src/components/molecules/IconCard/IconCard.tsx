@@ -1,11 +1,12 @@
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { Box } from "@/components/ui/box";
-import Icon from "@/src/components/atoms/Icon/Icon";
+import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Label } from "@/src/components/atoms/Label/Label";
+import { LucideIconName } from "@/src/types/types";
 
 interface IconCardProps {
-  iconName: string;
+  iconName: LucideIconName;
   label: string;
   onPress?: () => void;
   size?: number;

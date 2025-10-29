@@ -1,5 +1,7 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import Icon from "@/src/components/atoms/Icon/Icon";
+import { ChevronDownIcon } from "@/components/ui/icon";
+import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from "@/components/ui/select";
+import { Icon } from "@/src/components/atoms/Icon/Icon";
 import LabelSeparator from "@/src/components/atoms/LabelSeparator/LabelSeparator";
 import TextField from "@/src/components/atoms/TextField/TextField";
 import ToggleButton from "@/src/components/atoms/ToggleButton/ToggleButton";
@@ -13,7 +15,6 @@ import { IconButton } from "@/src/components/atoms/IconButton/IconButton";
 import { ReservationsCalendar } from "@/src/components/atoms/ReservationsCalendar/ReservationsCalendar";
 import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
 import LabeledTextField from "@/src/components/molecules/LabeledTextField/LabeledTextField";
-import ApartmentAttribute from "@/src/components/molecules/ApartmentAttribute/ApartmentAttribute"
 import { IconCard } from "@/src/components/molecules/IconCard/IconCard"
 import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard"
 import { Switch } from "@/components/ui/switch";
@@ -25,6 +26,9 @@ import i18n from "@/src/i18n";
 
 import { I18nextProvider } from "react-i18next";
 import { Text, View } from "react-native";
+import ApartmentAttribute from "@/src/components/molecules/ApartmentAttribute/ApartmentAttribute";
+import LinkButton from "@/src/components/atoms/LinkButton/LinkButton";
+import FloatButton from "@/src/components/atoms/FloatButton/FloatButton";
 
 
 // opcije za slajder (SegmentedControl)
