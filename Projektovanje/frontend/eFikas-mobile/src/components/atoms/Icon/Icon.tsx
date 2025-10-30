@@ -8,6 +8,7 @@ interface IconProps {
   name: LucideIconName;
   color?: string;
   size?: number;
+  strokeWidth?: number;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -15,16 +16,24 @@ export const Icon = ({
   name,
   color = Colors.tertiary,
   size = 24,
+  strokeWidth = 2,
   style,
 }: IconProps) => {
   const LucideIcon = (LucideIcons as any)[name];
 
   if (!LucideIcon) {
-    console.warn(`WARNING: Icon "${name}" not found in lucide-react-native`);
+    console.warn(`Icon "${name}" not found in lucide-react-native`);
     return null;
   }
 
-  return <LucideIcon color={color} size={size} style={style} />;
+  return (
+    <LucideIcon
+      color={color}
+      size={size}
+      strokeWidth={strokeWidth}
+      style={style}
+    />
+  );
 };
 
 

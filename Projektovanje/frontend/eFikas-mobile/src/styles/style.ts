@@ -7,5 +7,9 @@ export const Colors = {
   shadowColor: '#000000',
   textPrimary: '#1a1a1a',
   textSecondary: '#404040',
-  iconMenu: '#4D4D4D'
+  textLight: '#ffffff',
+  iconMenu: '#4D4D4D',
+  accent: '#FFA63A',
+  calendarPeriod: '#548DC9',
+  calendarPeriodOverlap: "#2C5AA0"
 };
