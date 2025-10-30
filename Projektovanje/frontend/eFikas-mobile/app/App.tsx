@@ -1,16 +1,14 @@
-import { Stack } from "expo-router";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import '@/global.css';
-import { SafeAreaProvider } from "react-native-safe-area-context";
-
+import { OverlayProvider } from "@gluestack-ui/overlay";
+import { Stack } from "expo-router";
 
 
 export default function App() {
+    
     return(
-        <SafeAreaProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <GluestackUIProvider >
+        <GluestackUIProvider >
+            <OverlayProvider>
                 <Stack>
                     <Stack.Screen
                         name="(tabs)"
@@ -21,11 +19,7 @@ export default function App() {
 
                     <Stack.Screen name="+not-found" options={{}} />
                 </Stack>
-            </GluestackUIProvider>
-            </GestureHandlerRootView>
-        </SafeAreaProvider>
-        
-        
-        
+            </OverlayProvider>
+        </GluestackUIProvider>
     );
 }
