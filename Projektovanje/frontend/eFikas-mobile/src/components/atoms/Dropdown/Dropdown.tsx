@@ -1,79 +1,63 @@
-import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from "@/components/ui/select";
-import { ReactNode } from "react";
-import { ChevronDownIcon } from "@/components/ui/icon";
+import { Colors } from "@/src/styles/style";
+import { DropdownSelect } from 'react-native-input-select';
+import { TFlatList, TSectionList, TSelectedItem } from "react-native-input-select/lib/typescript/src/types/index.types";
+import { Icon } from "../Icon/Icon";
+import { styles } from "./index.styles";
 
 interface Props {
-    size?: 'sm' | 'md' | 'lg' | 'xl'
-    variant?: 'underlined' | 'outline' | 'rounded'
-    items: { id: number; label: string; value: string }[];
-    placeholder?: string;
-    isDisabled?: boolean;
-    isInvalid?: boolean;
-    isRequired?: boolean;
-    isHovered?: boolean;
-    isFocusVisible?: boolean;
-    isFocused?: boolean;
-    isReadOnly?: boolean;
-    onOpen?: () => any,
-    onValueChange?: () => any,
-    onClose?: () => any,
+    label: string;
+    placeholder: string;
+    textInputPlaceholder: string;
+    options: TFlatList | TSectionList;
+    optionLabel?: string;
+    optionValue?: string;
+    selectedValue: TSelectedItem | TSelectedItem[];
+    setSelectedValue: (selectedItems: TSelectedItem | TSelectedItem[]) => void
 }
 
 function Dropdown({
-    size = 'md',
-    variant = 'outline',
-    items,
+    label,
     placeholder,
-    isDisabled = false,
-    isInvalid = false,
-    isRequired = false,
-    isHovered = false,
-    isFocusVisible = false,
-    isFocused = false,
-    isReadOnly = false,
-    onOpen,
-    onValueChange,
-    onClose,
+    textInputPlaceholder,
+    options,
+    optionLabel,
+    optionValue,
+    selectedValue,
+    setSelectedValue,
 }: Props) {
-    const chevronDownIcon = ChevronDownIcon;
-
-    return(
-        <Select 
-            isDisabled={isDisabled} 
-            isInvalid={isInvalid} 
-            isRequired={isRequired} 
-            isHovered={isHovered} 
-            isFocusVisible={isFocusVisible}
-            isFocused={isFocused} 
+    
+    return (
+        <DropdownSelect
+            label={label}
             placeholder={placeholder}
-            onOpen={onOpen}
-            onValueChange={onValueChange}
-            onClose={onClose}
-        >
-            <SelectTrigger>
-                <SelectInput size={size} variant={variant} placeholder={placeholder} className="flex-1" />
-                <SelectIcon className="mr-3" as={chevronDownIcon} />
-            </SelectTrigger>
-
-            <SelectPortal>
-                <SelectBackdrop />
-                <SelectContent>
-                    <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                    </SelectDragIndicatorWrapper>
-                        {items.length > 0 ? (
-                            items.map(item => (
-                                <SelectItem key={item.id} label={item.label} value={item.value} />
-                            ))
-                        ) : 
-                        (
-                            <SelectItem label="No options available" value="none" isDisabled />
-                        )
-                    }
-                </SelectContent>
-            </SelectPortal>
-        </Select>
+            options={options}
+            optionLabel={optionLabel}
+            optionValue={optionValue}
+            selectedValue={selectedValue}
+            onValueChange={(itemValue: any) => {
+                setTimeout(() => setSelectedValue(itemValue), 0);
+            }}
+            isMultiple
+            isSearchable
+            primaryColor={ Colors.primary }
+            dropdownIcon={ <Icon name="ChevronDown" size={20} color={Colors.tertiary} /> }
+            dropdownIconStyle={styles.dropdownIcon}
+            selectedItemsControls={{
+                showRemoveIcon: true,
+                
+            }}
+            searchControls={{
+                textInputProps: { 
+                    placeholder: textInputPlaceholder,
+                }
+            }}
+            dropdownContainerStyle={styles.dropdownContainer}
+            dropdownStyle={styles.dropdown}
+            placeholderStyle={styles.placeholder}
+            labelStyle={styles.label}
+        />
     );
 }
 
 export default Dropdown;
+

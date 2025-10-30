@@ -1,34 +1,8 @@
-import { Button, ButtonText } from "@/components/ui/button";
-import { ChevronDownIcon } from "@/components/ui/icon";
-import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from "@/components/ui/select";
-import { Icon } from "@/src/components/atoms/Icon/Icon";
-import LabelSeparator from "@/src/components/atoms/LabelSeparator/LabelSeparator";
-import TextField from "@/src/components/atoms/TextField/TextField";
-import ToggleButton from "@/src/components/atoms/ToggleButton/ToggleButton";
-import { LoginButton } from "@/src/components/atoms/LoginButton/LoginButton";
-import { BasicButton } from "@/src/components/atoms/BasicButton/BasicButton";
-import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
-import { SegmentedControl } from "@/src/components/atoms/SegmentedControl/SegmentedControl";
-import { Label } from "@/src/components/atoms/Label/Label";
-import Dropdown from "@/src/components/atoms/Dropdown/Dropdown";
-import { IconButton } from "@/src/components/atoms/IconButton/IconButton";
-import { ReservationsCalendar } from "@/src/components/atoms/ReservationsCalendar/ReservationsCalendar";
-import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
-import LabeledTextField from "@/src/components/molecules/LabeledTextField/LabeledTextField";
-import { IconCard } from "@/src/components/molecules/IconCard/IconCard"
-import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard"
-import { Switch } from "@/components/ui/switch";
-import { ScrollView } from 'react-native';
-import { useState } from "react";
-import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
 import i18n from "@/src/i18n";
-
+import { useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { Text, View } from "react-native";
-import ApartmentAttribute from "@/src/components/molecules/ApartmentAttribute/ApartmentAttribute";
-import LinkButton from "@/src/components/atoms/LinkButton/LinkButton";
-import FloatButton from "@/src/components/atoms/FloatButton/FloatButton";
+
 
 
 // opcije za slajder (SegmentedControl)
@@ -68,6 +42,8 @@ export default function Index() {
       note: "Jednodnevna rezervacija",
     },
   ];
+    
+    const [selected, setSelected] = useState<string | number>('');
 
     return(
       <I18nextProvider i18n={i18n}>
@@ -258,8 +234,19 @@ export default function Index() {
             labelProps={{ error: false, align: "center" }}
           /> */}
                 
-          <ReservationsCalendar reservations={testReservations} />
-
+          {/* <ReservationsCalendar reservations={testReservations} /> */}
+          
+          {/* <Dropdown
+              options={[
+                  { label: 'AA', value: 'AAA' },
+                  { label: 'AA2', value: 'AAA2' }
+              ]} 
+              placeholder="Izaberite item"
+              textInputPlaceholder="Pretraga"
+              selectedValue={value} 
+              setSelectedValue={setValue}
+              label="Pretraga"
+          /> */}
     </View>
   </I18nextProvider>
   );
