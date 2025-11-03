@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, TouchableOpacity, Button, Alert } from 'react-native';
+import { View, Image, TouchableOpacity, Button, Alert, StyleProp } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './index.styles';
@@ -7,16 +7,17 @@ import { Colors } from '@/src/styles/style';
 import { BasicButton } from '../../atoms/BasicButton/BasicButton';
 import { IconButton } from '../../atoms/IconButton/IconButton';
 import { PropsFilter } from 'react-native-reanimated/lib/typescript/createAnimatedComponent/PropsFilter';
+import { ViewStyle } from '@expo/html-elements/build/primitives/View';
 
 interface ImageItem {
     uri: string;
 }
 
 interface ImagePickerProps {
-    size: number
+    style?: StyleProp<ViewStyle>;
 }
 
-const ImagePicker = ({ size }: ImagePickerProps) => {
+const ImagePicker = ({ style }: ImagePickerProps) => {
 
     //dummy data images for demonstration
     const defaultImages: ImageItem[] = [
@@ -103,14 +104,14 @@ const ImagePicker = ({ size }: ImagePickerProps) => {
     }
 
     return (
-        <View style={[{ height: size }, styles.container]}>
+        <View style={[style, styles.container]}>
             <View style={styles.pickerHolder} >
                 <TouchableOpacity onLongPress={() => confirmDelete(currentIndex)} style={styles.mainImageTouchable} >
                     <Image source={{ uri: images[currentIndex].uri }} style={styles.mainImage} />
                 </TouchableOpacity>
 
                 <View style={styles.bottomRow}>
-                    <View style={styles.caroselSpace} />
+                    <View style={styles.carouselSpace} />
                     <IconButton onPress={nextImage} iconName="ChevronLeft" size={24} color={Colors.primary} />
 
 
@@ -135,7 +136,7 @@ const ImagePicker = ({ size }: ImagePickerProps) => {
 
                     <IconButton onPress={nextImage} iconName="ChevronRight" size={24} color={Colors.primary} />
 
-                    <View style={styles.caroselSpace} />
+                    <View style={styles.carouselSpace} />
                 </View>
             </View>
             <View style={styles.buttonWrapper}>

@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
         aspectRatio: 4 / 5,
-        backgroundColor: '#fff',
         justifyContent: 'space-evenly',
         alignItems: 'center',
         minHeight: 250
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-evenly'
     },
-    caroselSpace: {
+    carouselSpace: {
         width: '10%'
     },
     thumbnailRow: {
