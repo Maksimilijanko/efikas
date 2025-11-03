@@ -8,6 +8,7 @@ import { BasicButton } from '../../atoms/BasicButton/BasicButton';
 import { IconButton } from '../../atoms/IconButton/IconButton';
 import { PropsFilter } from 'react-native-reanimated/lib/typescript/createAnimatedComponent/PropsFilter';
 import { ViewStyle } from '@expo/html-elements/build/primitives/View';
+import { Label } from '../../atoms/Label/Label';
 
 interface ImageItem {
     uri: string;
@@ -105,6 +106,9 @@ const ImagePicker = ({ style }: ImagePickerProps) => {
 
     return (
         <View style={[style, styles.container]}>
+            <View style={styles.labelHolder}>
+                <Label text={"Slike"} size={"lg"} />
+            </View>
             <View style={styles.pickerHolder} >
                 <TouchableOpacity onLongPress={() => confirmDelete(currentIndex)} style={styles.mainImageTouchable} >
                     <Image source={{ uri: images[currentIndex].uri }} style={styles.mainImage} />

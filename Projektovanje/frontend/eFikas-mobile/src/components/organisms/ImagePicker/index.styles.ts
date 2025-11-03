@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         minHeight: 250
     },
+    labelHolder: {
+        width: '90%'
+    },
     pickerHolder: {
         flex: 1,
         width: '100%',
