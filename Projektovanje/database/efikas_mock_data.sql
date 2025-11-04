@@ -69,7 +69,7 @@ insert into reservation_type values
 insert into reservation (
     ApartmentId, ReservationId, GuestFullName, GuestPhoneNumber, 
     DateTimeOfArrival, DateTimeOfDeparture, GuestNumber, Pirce, 
-    Note, PersonalDocument, IdTypeOfReservation, TypeId
+    Note, PersonalDocumentURL, IdTypeOfReservation, TypeId
 ) values
 (1, 101, 'Petar Jovanovic', '+38164111222', '2025-11-05 14:00:00', '2025-11-07 10:00:00', 2, 120.0, 'Rezervisano online.', null, 1, 1),
 (2, 102, 'Ana Nikolic', '+38162123456', '2025-11-06 16:00:00', '2025-11-08 11:00:00', 3, 150.0, 'Pozivom zakazano.', null, 2, 2),

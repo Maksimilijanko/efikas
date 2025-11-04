@@ -117,7 +117,7 @@ DateTimeOfDeparture	timestamp		not null,
 GuestNumber			int				not null,
 Pirce				double,
 Note				varchar(256),
-PersonalDocument	blob,
+PersonalDocumentURL	varchar(100),
 IdTypeOfReservation	int				not null,
 TypeId				int				not null,
 constraint PK_reservation
