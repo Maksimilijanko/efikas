@@ -5,6 +5,7 @@ import { Text as SvgText, G } from 'react-native-svg';
 import { Label } from '../../atoms/Label/Label'; // Assuming this path is correct
 import { styles } from './index.styles';
 import { ViewStyle } from '@expo/html-elements/build/primitives/View';
+import { Colors } from '@/src/styles/style';
 
 interface PieChartDataItem {
     key: string;
@@ -45,7 +46,7 @@ const LegendComponent: React.FC<{ data: PieChartDataItem[] }> = ({ data }) => (
         {data.map((item) => (
             <View key={item.key} style={styles.legendItem}>
                 <View style={[styles.legendColorBox, { backgroundColor: item.color }]} />
-                <Label size={"sm"} text={item.key} />
+                <Label color={Colors.textSecondary} size={"sm"} text={item.key} />
             </View>
         ))}
     </View>

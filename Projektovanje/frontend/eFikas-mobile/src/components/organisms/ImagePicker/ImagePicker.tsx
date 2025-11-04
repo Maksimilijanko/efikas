@@ -107,7 +107,7 @@ const ImagePicker = ({ style }: ImagePickerProps) => {
     return (
         <View style={[style, styles.container]}>
             <View style={styles.labelHolder}>
-                <Label text={"Slike"} size={"lg"} />
+                <Label color={Colors.textPrimary} text={"Slike"} size={"lg"} />
             </View>
             <View style={styles.pickerHolder} >
                 <TouchableOpacity onLongPress={() => confirmDelete(currentIndex)} style={styles.mainImageTouchable} >
@@ -144,7 +144,7 @@ const ImagePicker = ({ style }: ImagePickerProps) => {
                 </View>
             </View>
             <View style={styles.buttonWrapper}>
-                <BasicButton title="Dodaj" onPress={pickImage} />
+                <BasicButton title="Dodaj" onPress={pickImage} className='w-full h-full' />
             </View>
         </View>
     );

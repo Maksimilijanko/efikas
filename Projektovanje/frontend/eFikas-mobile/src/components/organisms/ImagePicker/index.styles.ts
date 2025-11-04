@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         width: '90%'
     },
     pickerHolder: {
-        flex: 1,
+        height: '85%',
         width: '100%',
         justifyContent: 'space-evenly',
         alignItems: 'center'
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     buttonWrapper: {
-        height: 60,
+        height: '15%',
+        width: '50%',
         alignItems: 'center'
     }
 });
