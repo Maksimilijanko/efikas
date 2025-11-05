@@ -18,7 +18,7 @@ import { Label } from '@/src/components/atoms/Label/Label';
 import TextField from '@/src/components/atoms/TextField/TextField';
 
 const MAX_CHAR_LIMIT = 150;
-const TEXT_AREA_HEIGHT = 180; 
+const TEXT_AREA_HEIGHT = 180;
 
 const isDateValid = (dateString: string): boolean => {
   if (!dateString || dateString.length !== 10) return false;
@@ -84,50 +84,87 @@ const DatePickerInput: React.FC<{
   );
 };
 
-const CurrencyInput: React.FC<any> = ({ value, onChangeText, placeholder }) => (
-    <View>
-        <Label text="Trošak" color="#333" size="md" className="mb-2 mt-4" />
-        <View style={styles.currencyContainer}>
-            <TextField
-                variant="outline"
-                size="md"
-                style={styles.currencyTextFieldWrapper}
-                inputProps={{
-                    style: styles.currencyInputField,
-                    keyboardType: "numeric",
-                    onChangeText: onChangeText,
-                    value: value,
-                    placeholder: placeholder,
-                    placeholderTextColor: "#B0B0B0",
-                }}
-            />
-            <View style={styles.currencyTextWrapper}>
-                <Label text="BAM" color="#6B7280" size="md" className="font-semibold" />
-            </View>
-        </View>
-    </View>
-);
+const TimeField: React.FC<{
+  label: string;
+  onTimeChange: (time: { hours: string; minutes: string }) => void;
+}> = ({ label, onTimeChange }) => {
+  const [hours, setHours] = useState('');
+  const [minutes, setMinutes] = useState('');
 
-interface DamageDialogProps {
+  useEffect(() => {
+    onTimeChange({ hours, minutes });
+  }, [hours, minutes, onTimeChange]);
+
+
+  const handleHoursChange = (value: string) => {
+    const formatted = value.replace(/[^0-9]/g, '').slice(0, 2);
+    if (Number(formatted) <= 23 || formatted === '') setHours(formatted);
+  };
+
+  const handleMinutesChange = (value: string) => {
+    const formatted = value.replace(/[^0-9]/g, '').slice(0, 2);
+    if (Number(formatted) <= 59 || formatted === '') setMinutes(formatted);
+  };
+
+  return (
+    <View style={timeStyles.container}>
+      <Label text={label} color="#333" size="md" className="mb-2 mt-4" />
+      <View style={timeStyles.hstack}>
+        <TextField
+          placeholder="HH"
+          variant="outline"
+          size="md"
+          style={timeStyles.textField}
+          inputProps={{
+            keyboardType: 'numeric',
+            value: hours,
+            onChangeText: handleHoursChange,
+            maxLength: 2,
+            placeholderTextColor: "#B0B0B0",
+            textAlign: 'center',
+          }}
+        />
+        <Label text=":" size="xl" color="#333" className="mx-2" />
+        <TextField
+          placeholder="MM"
+          variant="outline"
+          size="md"
+          style={timeStyles.textField}
+          inputProps={{
+            keyboardType: 'numeric',
+            value: minutes,
+            onChangeText: handleMinutesChange,
+            maxLength: 2,
+            placeholderTextColor: "#B0B0B0",
+            textAlign: 'center',
+          }}
+        />
+      </View>
+    </View>
+  );
+};
+
+interface TasksDialogProps {
   visible: boolean;
   onConfirm: (data: {
-    steta: string;
+    zadatak: string;
     datum: string;
-    trosak: string;
+    vrijeme: string;
     napomena: string;
   }) => void;
   onClose: () => void;
 }
 
-export const DamageDialog: React.FC<DamageDialogProps> = ({
+export const TasksDialog: React.FC<TasksDialogProps> = ({
   visible,
   onClose,
   onConfirm,
 }) => {
-  const [steta, setSteta] = useState('');
+  const [zadatak, setZadatak] = useState('');
   const [datum, setDatum] = useState('');
-  const [trosak, setTrosak] = useState('');
+  const [time, setTime] = useState({ hours: '', minutes: '' });
   const [napomena, setNapomena] = useState('');
+
   const [keyboardOffset, setKeyboardOffset] = useState(0);
   const { height: screenHeight } = useWindowDimensions();
 
@@ -135,9 +172,9 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
   const dialogWidth = '100%';
 
   const resetFields = () => {
-    setSteta('');
+    setZadatak('');
     setDatum('');
-    setTrosak('');
+    setTime({ hours: '', minutes: '' });
     setNapomena('');
   };
 
@@ -175,7 +212,16 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
       console.error('Neispravan datum unesen.');
       return;
     }
-    onConfirm({ steta, datum, trosak, napomena });
+
+    let vrijeme = '';
+    const h = time.hours.padStart(2, '0');
+    const m = time.minutes.padStart(2, '0');
+
+    if (time.hours || time.minutes) {
+      vrijeme = `${h}:${m}`;
+    }
+
+    onConfirm({ zadatak, datum, vrijeme, napomena });
     onClose();
   };
 
@@ -183,9 +229,9 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
     resetFields();
     onClose();
   };
-
+  
   const handleIconPress = () => {
-    console.log('Kliknuta ikona olovke u napomeni!');
+    console.log('Kliknuta ikona olovke u napomeni za zadatke!');
   };
 
   return (
@@ -209,26 +255,25 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentArea}>
-
-              <Label text="Šteta" color="#333" size="md" className="mb-2 mt-4" />
+              
+              <Label text="Zadatak" color="#333" size="md" className="mb-2 mt-4" />
               <TextField
-                placeholder="Opis štete"
+                placeholder="Unesite naziv zadatka"
                 variant="outline"
                 size="md"
                 style={styles.inputStyle}
                 inputProps={{
-                  onChangeText: setSteta,
-                  value: steta,
+                  onChangeText: setZadatak,
+                  value: zadatak,
                   placeholderTextColor: "#B0B0B0",
                 }}
               />
 
               <DatePickerInput value={datum} onChange={setDatum} label="Datum" />
 
-              <CurrencyInput
-                value={trosak}
-                onChangeText={setTrosak}
-                placeholder="Iznos"
+              <TimeField
+                label="Vrijeme"
+                onTimeChange={setTime}
               />
 
               <Label text="Napomena" color="#333" size="md" className="mb-2 mt-4" />
@@ -237,7 +282,7 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
                   placeholder="Unesite dodatne detalje..."
                   variant="outline"
                   size="md"
-                  style={styles.textAreaFieldStyle} 
+                  style={styles.textAreaFieldStyle}
                   inputProps={{
                     multiline: true,
                     onChangeText: setNapomena,
@@ -263,7 +308,7 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
                   <Edit2 size={20} color="#6B7280" />
                 </TouchableOpacity>
               </View>
-              
+
               <View style={styles.charCounterContainer}>
                   <Text style={styles.charCounterText}>
                       {napomena.length}/{MAX_CHAR_LIMIT}
@@ -311,6 +356,24 @@ const dateStyles = StyleSheet.create({
   },
 });
 
+const timeStyles = StyleSheet.create({
+  container: { marginBottom: 10 },
+  hstack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 40,
+  },
+  textField: {
+    width: 60,
+    height: '100%',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    
+  },
+});
+
 const styles = StyleSheet.create({
   modalContent: {
     alignItems: 'center',
@@ -339,7 +402,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 15,
   },
-  // Korigovano: Smanjen paddingTop sa 30 na 15px da se smanji razmak iznad prve labele
   contentArea: { paddingHorizontal: 25, paddingTop: 15 },
 
   inputStyle: {
@@ -352,55 +414,11 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-
-  currencyContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 40,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  currencyTextFieldWrapper: {
-    flex: 1,
-    borderWidth: 0,
-    shadowOpacity: 0,
-    height: '100%',
-    paddingRight: 50,
-  },
-  currencyInputField: {
-    flex: 1,
-    fontSize: 16,
-    height: '100%',
-    paddingHorizontal: 15,
-    paddingRight: 0,
-    borderWidth: 0
-  },
-  currencyTextWrapper: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingRight: 15,
-    zIndex: 1,
-  },
-
+  
   textAreaWrapper: {
     position: 'relative', 
     marginBottom: 0,
-    minHeight: TEXT_AREA_HEIGHT, // KORIGOVANO: 180px
+    minHeight: TEXT_AREA_HEIGHT, 
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     borderWidth: 1,
@@ -410,15 +428,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
-    overflow: 'hidden',
+    overflow: 'hidden', 
   },
   
   textAreaFieldStyle: {
-    borderWidth: 0,
-    shadowOpacity: 0,
+    borderWidth: 0, 
+    shadowOpacity: 0, 
     paddingTop: 10,
     paddingLeft: 2,
-    minHeight: '100%',
+    minHeight: '100%', 
   },
   
   textAreaIconStyleFixed: {

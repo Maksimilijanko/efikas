@@ -3,7 +3,7 @@ import {
   View,
   Image,
   Pressable,
-  Text,
+  Text, 
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
@@ -13,6 +13,8 @@ import {
   ModalContent,
   ModalBackdrop,
 } from '../../../../components/ui/modal';
+
+import { Label } from '../../atoms/Label/Label';
 
 const Modal = ({
   visible,
@@ -27,7 +29,6 @@ interface GalleryProps {
 }
 
 export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
-  {/* cuvam indeks (broj) kliknute slike  */}
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
@@ -56,17 +57,18 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
   
   
   const imageDisplayHeight = screenHeight * 0.8;
-  const arrowHeight = 30; // Visina strelice
-  {/* napomena za inace:(visina ekrana - visina slike) / 2 = gornji neiskorišteni prostor.*/}
-  {/* gornji neiskorišteni prostor je (screenHeight - imageDisplayHeight) / 2 = 0.1 * screenHeight.*/}
-  const arrowVerticalOffset = (screenHeight - imageDisplayHeight) / 2 + (imageDisplayHeight / 2) - (arrowHeight / 2);
-  
+  const arrowHeight = 30;
 
   return (
     <View style={style}>
-      <Text style={styles.title}>Galerija</Text>
+      <Label
+        text="Galerija"
+        color="#111827"
+        size="2xl"
+        className="font-bold mb-4"
+      />
+      
       <View style={styles.imageRow}>
-        {/* Prikaz thumbnaila */}
         {firstFour.map((img, index) => {
           const isLast = index === 3 && extra > 0;
           return (
@@ -92,7 +94,6 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
         })}
       </View>
 
-     {/*galerija modal*/}
       <Modal visible={selectedIndex !== null} onClose={closeGallery}>
         <ModalBackdrop />
         <ModalContent style={styles.modalContent}>
@@ -104,24 +105,22 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
             />
           )}
 
-          {/*close button*/}
           <Pressable style={styles.modalCloseButton} onPress={closeGallery}>
             <X color="white" size={20} strokeWidth={2.5} />
           </Pressable>
 
-          {/* Strelice za navigaciju - ovdje npm install lucide-react-native*/}
           {selectedIndex !== null && (
             <>
               
               {selectedIndex > 0 && (
                 <Pressable
                   style={[
-                        styles.arrowButton, 
-                        styles.arrowLeft, 
-                        { 
-                            top: '50%', 
-                            marginTop: -(arrowHeight / 2) 
-                        }
+                      styles.arrowButton, 
+                      styles.arrowLeft, 
+                      { 
+                          top: '50%', 
+                          marginTop: -(arrowHeight / 2) 
+                      }
                     ]}
                   onPress={goToPrev}
                 >
@@ -133,12 +132,12 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
               {selectedIndex < images.length - 1 && (
                 <Pressable
                   style={[
-                        styles.arrowButton, 
-                        styles.arrowRight, 
-                        { 
-                            top: '50%', 
-                            marginTop: -(arrowHeight / 2) 
-                        }
+                      styles.arrowButton, 
+                      styles.arrowRight, 
+                      { 
+                          top: '50%', 
+                          marginTop: -(arrowHeight / 2) 
+                      }
                     ]}
                   onPress={goToNext}
                 >
@@ -153,14 +152,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
   );
 };
 
-{/* stil */}
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#111827',
-  },
   imageRow: {
     flexDirection: 'row',
     gap: 12,
@@ -233,4 +225,29 @@ const styles = StyleSheet.create({
   arrowRight: {
     right: 15,
   },
-});
+})
+
+/*
+Primjer upotrebe:
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { Gallery } from './Gallery'; // Prilagodite putanju
+
+const dummyImages = [
+  'https://picsum.photos/id/10/800/600',
+  'https://picsum.photos/id/20/800/600',
+  'https://picsum.photos/id/30/800/600',
+  'https://picsum.photos/id/40/800/600',
+  'https://picsum.photos/id/50/800/600',
+  'https://picsum.photos/id/60/800/600',
+];
+
+const ExampleScreen = () => {
+  return (
+    <View style={{ flex: 1, padding: 20, paddingTop: 50 }}>
+      <Gallery images={dummyImages} />
+    </View>
+  );
+};
+// export default ExampleScreen;
+*/

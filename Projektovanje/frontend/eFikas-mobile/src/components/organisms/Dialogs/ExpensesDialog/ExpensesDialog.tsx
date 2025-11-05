@@ -1,92 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react' 
 import {
   View,
-  TextInput,
   StyleSheet,
   Platform,
   useWindowDimensions,
   ScrollView,
   Keyboard,
   TouchableOpacity,
+  TextInput,
   Text,
-} from 'react-native';
-import { Edit2 } from 'lucide-react-native'; 
+} from 'react-native'
+import { Edit2 } from 'lucide-react-native'
 
-import { Modal, ModalContent } from '@/components/ui/modal';
-import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton';
-import { Label } from '@/src/components/atoms/Label/Label';
-import TextField from '@/src/components/atoms/TextField/TextField';
+import { Modal, ModalContent } from '@/components/ui/modal'
+import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton' 
+import { Label } from '@/src/components/atoms/Label/Label' 
+import TextField from '@/src/components/atoms/TextField/TextField'
+import Dropdown from '@/src/components/atoms/Dropdown/Dropdown' 
 
-const MAX_CHAR_LIMIT = 150;
-const TEXT_AREA_HEIGHT = 180; 
+type TSelectedItem = any
 
-const isDateValid = (dateString: string): boolean => {
-  if (!dateString || dateString.length !== 10) return false;
-  const parts = dateString.split('.');
-  if (parts.length !== 3) return false;
-
-  const day = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10);
-  const year = parseInt(parts[2], 10);
-
-  if (year < 1000 || year > 9999 || month === 0 || month > 12) return false;
-
-  const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
-    monthLength[1] = 29;
-  }
-
-  return day > 0 && day <= monthLength[month - 1];
-};
-
-const DatePickerInput: React.FC<{
-  value: string;
-  onChange: (text: string) => void;
-  label: string;
-}> = ({ value, onChange, label }) => {
-  const isValid = isDateValid(value) || value.length === 0;
-
-  const handleDateChange = (text: string) => {
-    let formattedText = text.replace(/[^0-9]/g, '');
-
-    if (formattedText.length > 2 && formattedText.charAt(2) !== '.') {
-      formattedText = formattedText.slice(0, 2) + '.' + formattedText.slice(2);
-    }
-    if (formattedText.length > 5 && formattedText.charAt(5) !== '.') {
-      formattedText = formattedText.slice(0, 5) + '.' + formattedText.slice(5);
-    }
-    if (formattedText.length > 10) formattedText = formattedText.slice(0, 10);
-
-    onChange(formattedText);
-  };
-
-  return (
-    <View style={dateStyles.container}>
-      <Label text={label} color="#333" size="md" className="mb-2 mt-4" />
-      <TextInput
-        style={[dateStyles.input, { borderColor: isValid ? '#E0E0E0' : 'red' }]}
-        placeholder="DD.MM.GGGG"
-        placeholderTextColor="#B0B0B0"
-        keyboardType={Platform.OS === 'android' ? 'numeric' : 'default'}
-        maxLength={10}
-        onChangeText={handleDateChange}
-        value={value}
-      />
-      {!isValid && value.length === 10 && (
-        <Label
-            text="Unesite ispravan datum (DD.MM.GGGG)"
-            color="red"
-            size="xs"
-            className="mt-1 ml-4"
-        />
-      )}
-    </View>
-  );
-};
+const EXPENSE_CATEGORIES: TSelectedItem[] = [
+  { id: 'Rezije', name: 'Režije' },
+  { id: 'Ciscenje', name: 'Čišćenje' },
+  { id: 'Namirnice', name: 'Namirnice' },
+]
 
 const CurrencyInput: React.FC<any> = ({ value, onChangeText, placeholder }) => (
     <View>
-        <Label text="Trošak" color="#333" size="md" className="mb-2 mt-4" />
+        <Label text="Iznos" color="#333" size="md" className="mb-2 mt-4" />
         <View style={styles.currencyContainer}>
             <TextField
                 variant="outline"
@@ -106,92 +48,116 @@ const CurrencyInput: React.FC<any> = ({ value, onChangeText, placeholder }) => (
             </View>
         </View>
     </View>
-);
+)
 
-interface DamageDialogProps {
-  visible: boolean;
+
+interface ExpensesDialogProps {
+  visible: boolean
   onConfirm: (data: {
-    steta: string;
-    datum: string;
-    trosak: string;
-    napomena: string;
-  }) => void;
-  onClose: () => void;
+    kategorija: string
+    trosak: string
+    iznos: string
+    napomena: string
+  }) => void
+  onClose: () => void
 }
 
-export const DamageDialog: React.FC<DamageDialogProps> = ({
+export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
   visible,
   onClose,
   onConfirm,
 }) => {
-  const [steta, setSteta] = useState('');
-  const [datum, setDatum] = useState('');
-  const [trosak, setTrosak] = useState('');
-  const [napomena, setNapomena] = useState('');
-  const [keyboardOffset, setKeyboardOffset] = useState(0);
-  const { height: screenHeight } = useWindowDimensions();
+  const scrollViewRef = useRef<ScrollView | null>(null); 
+  
+  const [kategorijaItems, setKategorijaItems] = useState<TSelectedItem[]>([]) 
+  const [trosak, setTrosak] = useState('')
+  const [iznos, setIznos] = useState('')
+  const [napomena, setNapomena] = useState('')
 
-  const modalHeight = screenHeight * 0.75;
-  const dialogWidth = '100%';
+  const [keyboardOffset, setKeyboardOffset] = useState(0)
+  const { height: screenHeight } = useWindowDimensions()
+
+  const modalHeight = screenHeight * 0.75
+  const dialogWidth = '100%'
 
   const resetFields = () => {
-    setSteta('');
-    setDatum('');
-    setTrosak('');
-    setNapomena('');
-  };
+    setKategorijaItems([])
+    setTrosak('')
+    setIznos('')
+    setNapomena('')
+    scrollViewRef.current?.scrollTo({ y: 0, animated: false }); 
+  }
 
   useEffect(() => {
-    if (visible) resetFields();
-  }, [visible]);
+    if (visible) {
+      resetFields()
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+      }, 100);
+    }
+  }, [visible])
 
   useEffect(() => {
     if (!visible) {
-      setKeyboardOffset(0);
-      return;
+      setKeyboardOffset(0)
+      return
     }
 
     const keyboardDidShowListener = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
       (e) => {
-        setKeyboardOffset(-e.endCoordinates.height * 0.5);
+        setKeyboardOffset(-e.endCoordinates.height * 0.5)
       },
-    );
+    )
     const keyboardDidHideListener = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
       () => {
-        setKeyboardOffset(0);
+        setKeyboardOffset(0)
       },
-    );
+    )
 
     return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, [visible]);
-
-  const handleConfirm = () => {
-    if (datum && !isDateValid(datum)) {
-      console.error('Neispravan datum unesen.');
-      return;
+      keyboardDidHideListener.remove()
+      keyboardDidShowListener.remove()
     }
-    onConfirm({ steta, datum, trosak, napomena });
-    onClose();
+  }, [visible])
+
+  const scrollToBottom = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
   };
+  
+  const handleInputFocus = () => {
+    scrollToBottom();
+  };
+  
+  const handleConfirm = () => {
+    const kategorijaId = kategorijaItems.length > 0 ? kategorijaItems[0].id : ''
+
+    onConfirm({ kategorija: kategorijaId, trosak, iznos, napomena })
+    onClose()
+  }
 
   const handleCancel = () => {
-    resetFields();
-    onClose();
-  };
+    resetFields()
+    onClose()
+  }
 
   const handleIconPress = () => {
-    console.log('Kliknuta ikona olovke u napomeni!');
-  };
+    console.log('Kliknuta ikona olovke u napomeni!')
+  }
+  
+  const handleCategoryChange = (selectedItems: TSelectedItem | TSelectedItem[]) => {
+    const itemsArray = Array.isArray(selectedItems) ? selectedItems : [selectedItems]
+    setKategorijaItems(itemsArray.slice(0, 1))
+  }
+  
+  const currentSelectedValue = kategorijaItems
 
   return (
     <Modal isOpen={visible} onClose={handleCancel}>
       <ModalContent style={styles.modalContent}>
-
         <View
           style={[
             styles.dialogContainer,
@@ -199,37 +165,50 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
               width: dialogWidth,
               height: modalHeight,
               transform: [{ translateY: keyboardOffset }],
-            }
+            },
           ]}
         >
-
           <ScrollView
+            ref={scrollViewRef}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={true}
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentArea}>
-
-              <Label text="Šteta" color="#333" size="md" className="mb-2 mt-4" />
+              
+              <View style={styles.categoryDropdownWrapper}>
+                <Label text="Kategorija troška" color="#333" size="md" className="mb-2 mt-4" /> 
+                <Dropdown
+                  label={''} 
+                  placeholder='Izaberite kategoriju...'
+                  textInputPlaceholder='Pretraži kategorije'
+                  options={EXPENSE_CATEGORIES}
+                  optionLabel='name'
+                  optionValue='id'
+                  selectedValue={currentSelectedValue}
+                  setSelectedValue={handleCategoryChange}
+                />
+              </View>
+              
+              <Label text="Trošak" color="#333" size="md" className="mb-2 mt-4" />
               <TextField
-                placeholder="Opis štete"
+                placeholder="Opis troška"
                 variant="outline"
                 size="md"
                 style={styles.inputStyle}
                 inputProps={{
-                  onChangeText: setSteta,
-                  value: steta,
-                  placeholderTextColor: "#B0B0B0",
+                  onChangeText: setTrosak,
+                  value: trosak,
+                  placeholderTextColor: '#B0B0B0',
                 }}
               />
 
-              <DatePickerInput value={datum} onChange={setDatum} label="Datum" />
-
               <CurrencyInput
-                value={trosak}
-                onChangeText={setTrosak}
-                placeholder="Iznos"
+                value={iznos}
+                onChangeText={setIznos}
+                placeholder="0.00"
               />
+              
 
               <Label text="Napomena" color="#333" size="md" className="mb-2 mt-4" />
               <View style={styles.textAreaWrapper}>
@@ -237,39 +216,39 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
                   placeholder="Unesite dodatne detalje..."
                   variant="outline"
                   size="md"
-                  style={styles.textAreaFieldStyle} 
+                  style={styles.textAreaFieldStyle}
                   inputProps={{
                     multiline: true,
-                    onChangeText: setNapomena,
+                    onChangeText: setNapomena, 
                     value: napomena,
-                    placeholderTextColor: "#B0B0B0",
+                    placeholderTextColor: '#B0B0B0',
                     textAlignVertical: 'top',
-                    maxLength: MAX_CHAR_LIMIT,
+                    maxLength: 150, 
                     style: { 
-                      paddingRight: 35, 
-                      paddingLeft: 10, 
-                      flex: 1, 
-                      minHeight: TEXT_AREA_HEIGHT, 
-                      textAlign: 'left',
-                      writingDirection: 'ltr',
+                        paddingRight: 35, 
+                        paddingLeft: 10, 
+                        flex: 1, 
+                        minHeight: 180, 
+                        textAlign: 'left', 
+                        writingDirection: 'ltr',
                     }, 
+                    onFocus: handleInputFocus,
                   }}
                 />
-                <TouchableOpacity 
-                  onPress={handleIconPress} 
+                <TouchableOpacity
+                  onPress={handleIconPress}
                   style={styles.textAreaIconStyleFixed}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
                   <Edit2 size={20} color="#6B7280" />
                 </TouchableOpacity>
               </View>
-              
+                
               <View style={styles.charCounterContainer}>
                   <Text style={styles.charCounterText}>
-                      {napomena.length}/{MAX_CHAR_LIMIT}
+                      {napomena.length}/150
                   </Text>
               </View>
-
             </View>
           </ScrollView>
 
@@ -284,32 +263,8 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
         </View>
       </ModalContent>
     </Modal>
-  );
-};
-
-const dateStyles = StyleSheet.create({
-  container: { marginBottom: 10 },
-  input: {
-    height: 40,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginTop: 4,
-    marginLeft: 15,
-  },
-});
+  )
+}
 
 const styles = StyleSheet.create({
   modalContent: {
@@ -339,8 +294,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 15,
   },
-  // Korigovano: Smanjen paddingTop sa 30 na 15px da se smanji razmak iznad prve labele
   contentArea: { paddingHorizontal: 25, paddingTop: 15 },
+
+  categoryDropdownWrapper: {
+    marginTop: 0, 
+    marginBottom: 10,
+  },
 
   inputStyle: {
     height: 40,
@@ -383,7 +342,7 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingHorizontal: 15,
     paddingRight: 0,
-    borderWidth: 0
+    borderWidth: 0,
   },
   currencyTextWrapper: {
     position: 'absolute',
@@ -398,9 +357,9 @@ const styles = StyleSheet.create({
   },
 
   textAreaWrapper: {
-    position: 'relative', 
-    marginBottom: 0,
-    minHeight: TEXT_AREA_HEIGHT, // KORIGOVANO: 180px
+    position: 'relative',
+    marginBottom: 0, 
+    minHeight: 180, 
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     borderWidth: 1,
@@ -412,7 +371,6 @@ const styles = StyleSheet.create({
     elevation: 1,
     overflow: 'hidden',
   },
-  
   textAreaFieldStyle: {
     borderWidth: 0,
     shadowOpacity: 0,
@@ -420,15 +378,14 @@ const styles = StyleSheet.create({
     paddingLeft: 2,
     minHeight: '100%',
   },
-  
   textAreaIconStyleFixed: {
     position: 'absolute',
-    right: 5, 
-    bottom: 5, 
-    zIndex: 10, 
+    right: 5,
+    bottom: 5,
+    zIndex: 10,
     padding: 5,
   },
-  
+
   charCounterContainer: {
     alignItems: 'flex-end',
     width: '100%',
@@ -451,4 +408,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   buttonWrapper: { flex: 1, marginHorizontal: 8 },
-});
+})
