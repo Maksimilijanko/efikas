@@ -1,3 +1,8 @@
+/*
+{** Popravljeno pozicioniranje strelice (top: 4) da ne viri iz polja i malo sam podesila padding
+ u placeholderu da tekst bolje 'sjedi' unutra. Sada je sve centrirano. by Nikolina **}
+*/
+
 import { Colors } from '@/src/styles/style';
 import { StyleSheet } from 'react-native';
 
@@ -18,9 +23,12 @@ export const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     placeholder: {
-        fontSize: 16,
+        fontSize: 15,
         color: '#6b7280',
         textAlign: 'left',
+        paddingTop: 2,
+        paddingLeft:6,
+        paddingBottom:2,
     },
     label: {
         fontSize: 16,
@@ -28,10 +36,12 @@ export const styles = StyleSheet.create({
         marginBottom: 8,
         color: Colors.primary,
         textAlign: 'left',
+       
     },
     dropdownIcon: {
-        top: 12,
+        top: 4, // KORIGOVANO: Vertikalno centriranje ikone (48px polje - 20px ikona = 28px/2 = 14px)
         right: 12,
+        
     },
     modalContainer: {
         padding: 16,
