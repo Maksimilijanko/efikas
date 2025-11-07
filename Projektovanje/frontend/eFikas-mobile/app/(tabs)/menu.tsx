@@ -1,297 +1,192 @@
-import { useState } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native"; 
+import React from "react";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { Colors } from "@/src/styles/style";
 
-import { Divider } from '../../components/ui/divider';
-
-import { ChevronRight } from 'lucide-react-native'; 
-
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'; 
-
-
-interface ListItemProps {
-    iconType: 'Feather' | 'MaterialCommunityIcons'; 
-    iconName: string; 
-    label: string;
-    onPress: () => void;
-    isLast?: boolean;
-}
-
-const ListItem: React.FC<ListItemProps> = ({ iconType, iconName, label, onPress, isLast }) => {
-    
-    const renderIcon = () => {
-        const iconColor = '#000'; 
-        const iconSize = 24;
-
-        if (iconType === 'Feather') {
-           
-            return <Feather name={iconName} size={iconSize} color={iconColor} style={styles.iconStyle} />;
-        }
-        if (iconType === 'MaterialCommunityIcons') {
-           
-            return <MaterialCommunityIcons name={iconName} size={iconSize} color={iconColor} style={styles.iconStyle} />;
-        }
-        return null;
-    };
-
-
-    return (
-        <Pressable 
-            onPress={onPress}
-            style={({ pressed }) => [
-                styles.listItem,
-                { opacity: pressed ? 0.7 : 1 } 
-            ]}
-        >
-            <View style={styles.listItemContent}>
-                
-                {renderIcon()}
-                
-                <Text style={styles.labelStyle}>{label}</Text>
-                
-                <ChevronRight 
-                    size={22} 
-                    color="#ccc" 
-                    style={styles.arrowStyle}
-                />
-            </View>
-            
-            {!isLast && (
-                <View style={styles.dividerContainer}> 
-                    <Divider />
-                </View>
-            )}
-            
-        </Pressable>
-    );
-};
-
+import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
 
 
 export default function Menu() {
+   //Naknadno dodati logiku nakon implementacije ostalih komponenti 
+    const handleItemPress = (item: string) => {
     
-   const handleItemPress = (item: string) => {
-
-    console.log(`Pritisnuta stavka menija: ${item}`); 
-    
-   
-    switch (item) {
-      
-        case "Profil":
+     switch (item) {
         
-            console.log("Navigacija: Otvori detalje profila."); 
-            break;
-        
-        case "Obavještenja":
-        
-            console.log("Navigacija: Otvori ekran sa obaveštenjima.");
-            break;
+         case "Profil":
+             console.log("Navigacija: Otvori detalje profila."); 
+             break;
+         
+         case "Obavještenja":
+             console.log("Navigacija: Otvori ekran sa obaveštenjima.");
+             break;
 
-        case "Moji stanovi":
-            
-            console.log("Navigacija: Otvori listu stanova.");
-            break;
+         case "Moji stanovi":
+             console.log("Navigacija: Otvori listu stanova.");
+             break;
 
-      
-        case "Troškovi":
-          
-            console.log("Navigacija: Otvori sekciju Troškovi.");
-            break;
+         case "Troškovi":
+             console.log("Navigacija: Otvori sekciju Troškovi.");
+             break;
 
-        case "Statistika":
-          
-            console.log("Navigacija: Otvori grafikone statistike.");
-            break;
+         case "Statistika":
+             console.log("Navigacija: Otvori grafikone statistike.");
+             break;
 
-        case "Knjiga prihoda":
-            
-            console.log("Navigacija: Otvori sekciju Knjiga prihoda.");
-            break;
+         case "Knjiga prihoda":
+             console.log("Navigacija: Otvori sekciju Knjiga prihoda.");
+             break;
 
-        case "Knjiga rashoda":
-            
-            console.log("Navigacija: Otvori sekciju Knjiga rashoda.");
-            break;
+         case "Knjiga rashoda":
+             console.log("Navigacija: Otvori sekciju Knjiga rashoda.");
+             break;
 
-        case "Knjiga gostiju":
-            
-            console.log("Navigacija: Otvori Knjigu gostiju.");
-            break;
-            
-      
-        case "Podešavanja":
-          
-            console.log("Navigacija: Otvori opšte podešavanje aplikacije.");
-            break;
+         case "Knjiga gostiju":
+             console.log("Navigacija: Otvori Knjigu gostiju.");
+             break;
+             
+         
+         case "Podešavanja":
+             console.log("Navigacija: Otvori opšte podešavanje aplikacije.");
+             break;
 
-        case "O aplikaciji":
-            
-            console.log("Prikaz: Informacije o aplikaciji i verziji.");
-            break;
+         case "O aplikaciji":
+             console.log("Prikaz: Informacije o aplikaciji i verziji.");
+             break;
 
-        case "Odjava":
-            console.log("Akcija: Pokreni proces odjave (briši token).");
-            break;
+         case "Odjava":
+             console.log("Akcija: Pokreni proces odjave (briši token).");
+             break;
 
-        default:
-           
-            console.log(`Greška: Nije definisana akcija za nepoznatu stavku: ${item}`);
-    }
-};
+         default:
+             console.log(`Greška: Nije definisana akcija za nepoznatu stavku: ${item}`);
+     }
+ };
     
     return(
-        <View style={styles.screenContainer}>
-            
-          
+<ScrollView contentContainerStyle={styles.scrollContent} style={styles.screenContainer}>            
+         
             <Text style={styles.sectionTitle}>Profil</Text>
             
             <View style={styles.listContainer}>
                 
-                <ListItem 
-                    iconType="Feather"
-                    iconName="user" 
-                    label="Profil" 
+              
+                <MenuItem 
+                    leftIconName="User"
+                    text="Profil" 
                     onPress={() => handleItemPress("Profil")} 
                 />
                 
-                <ListItem 
-                    iconType="MaterialCommunityIcons"
-                    iconName="bell-outline" 
-                    label="Obavještenja" 
+                
+                <MenuItem 
+                    leftIconName="Bell" 
+                    text="Obavještenja" 
                     onPress={() => handleItemPress("Obavještenja")} 
                 />
                 
-                <ListItem 
-                    iconType="Feather"
-                    iconName="home" 
-                    label="Moji stanovi" 
+                
+                <MenuItem 
+                    leftIconName="Home"
+                    text="Moji stanovi" 
                     onPress={() => handleItemPress("Moji stanovi")} 
-                    isLast={true} 
-                />
-            </View>
-
-           
-            <Text style={[styles.sectionTitle, styles.sectionMargin]}>Knjigovodstvo</Text>
-            
-            <View style={styles.listContainer}>
-                
-                <ListItem 
-                    iconType="MaterialCommunityIcons"
-                    iconName="wallet-outline" 
-                    label="Troškovi" 
-                    onPress={() => handleItemPress("Troškovi")} 
-                />
-                
-                <ListItem 
-                    iconType="Feather"
-                    iconName="bar-chart-2" 
-                    label="Statistika" 
-                    onPress={() => handleItemPress("Statistika")} 
-                />
-
-                 <ListItem 
-                    iconType="MaterialCommunityIcons"
-                    iconName="book-open-outline" 
-                    label="Knjiga prihoda" 
-                    onPress={() => handleItemPress("Knjiga prihoda")} 
-                />
-
-                 <ListItem 
-                    iconType="MaterialCommunityIcons"
-                    iconName="book-edit-outline" 
-                    label="Knjiga rashoda" 
-                    onPress={() => handleItemPress("Knjiga rashoda")} 
-                />
-
-                 <ListItem 
-                    iconType="MaterialCommunityIcons"
-                    iconName="account-multiple-outline" 
-                    label="Knjiga gostiju" 
-                    onPress={() => handleItemPress("Knjiga gostiju")} 
-                    isLast={true} 
+                    showDivider={false} 
                 />
             </View>
 
           
+            <Text style={[styles.sectionTitle, styles.sectionMargin]}>Knjigovodstvo</Text>
+            
+            <View style={styles.listContainer}>
+                
+                <MenuItem 
+                    leftIconName="Wallet"
+                    text="Troškovi" 
+                    onPress={() => handleItemPress("Troškovi")} 
+                />
+                
+              
+                <MenuItem 
+                    leftIconName="BarChart2"
+                    text="Statistika" 
+                    onPress={() => handleItemPress("Statistika")} 
+                />
+
+              
+                <MenuItem 
+                    leftIconName="BookOpen" 
+                    text="Knjiga prihoda" 
+                    onPress={() => handleItemPress("Knjiga prihoda")} 
+                />
+
+             
+                <MenuItem 
+                    leftIconName="BookMarked" 
+                    text="Knjiga rashoda" 
+                    onPress={() => handleItemPress("Knjiga rashoda")} 
+                />
+
+            
+                <MenuItem 
+                    leftIconName="Users" 
+                    text="Knjiga gostiju" 
+                    onPress={() => handleItemPress("Knjiga gostiju")} 
+                    showDivider={false} 
+                />
+            </View>
+
+
             <Text style={[styles.sectionTitle, styles.sectionMargin]}>Podešavanja</Text>
 
             <View style={styles.listContainer}>
 
-                <ListItem 
-                    iconType="Feather"
-                    iconName="settings" 
-                    label="Podešavanja" 
+                <MenuItem 
+                    leftIconName="Settings"
+                    text="Podešavanja" 
                     onPress={() => handleItemPress("Podešavanja")} 
                 />
 
-                <ListItem 
-                    iconType="Feather"
-                    iconName="info" 
-                    label="O aplikaciji" 
+              
+                <MenuItem 
+                    leftIconName="Info" 
+                    text="O aplikaciji" 
                     onPress={() => handleItemPress("O aplikaciji")} 
                 />
                 
-                <ListItem 
-                    iconType="MaterialCommunityIcons"
-                    iconName="logout" 
-                    label="Odjava" 
+             
+                <MenuItem 
+                    leftIconName="LogOut" 
+                    text="Odjava" 
                     onPress={() => handleItemPress("Odjava")} 
-                    isLast={true} 
+                    showDivider={false} 
                 />
             </View>
 
-        
+
             <View style={{ height: 50 }} />
 
-        </View>
+        </ScrollView>
     );
 }
 
 
 const styles = StyleSheet.create({
-    screenContainer: {
+   screenContainer: {
         flex: 1,
-        padding: 15,
-        backgroundColor: 'default', 
+        backgroundColor: Colors.background,
+    },
+    scrollContent: {
+        padding: 15, 
     },
     sectionTitle: {
-        fontSize: 18,
-        fontWeight: '600', 
-        color: '#3176BF', 
+        fontSize: 16,
+        color: Colors.primary,
         marginBottom: 15,
         marginLeft: 5,
     },
     listContainer: {
-        backgroundColor: 'default', 
         borderRadius: 10,
         overflow: 'hidden', 
     },
-  
+
     sectionMargin: {
         marginTop: 20, 
     },
-    listItem: {
-        paddingHorizontal: 15,
-    },
-    listItemContent: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: 8, 
-    },
-    iconStyle: {
-        marginRight: 15,
-        flexGrow: 0, 
-    },
-    labelStyle: {
-        flex: 1, 
-        fontSize: 16,
-        color: '#000',
-    },
-    arrowStyle: {
-        marginLeft: 15,
-    },
-    
-    dividerContainer: {
-        marginLeft: 35, 
-    }
 });
