@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Text, View, StyleSheet, Pressable } from "react-native"; 
 import { Card } from "@/components/ui/card";
@@ -5,17 +6,18 @@ import { ChevronRight } from 'lucide-react-native';
 import { Colors } from "@/src/styles/style";
 
 
-
 export interface ReservationCardProps {
+    reservationId: string; 
     name: string;
     address: string;
     dateFrom: string;
     dateTo: string;
-    onIconPress: (name: string) => void; 
+    onIconPress: (id: string) => void; 
 }
 
 
 export default function ReservationCard({ 
+    reservationId, 
     name,
     address,
     dateFrom,
@@ -24,11 +26,25 @@ export default function ReservationCard({
 }: ReservationCardProps) {
     
     const handlePress = () => {
-        onIconPress(name); 
+        onIconPress(reservationId); 
     };
     
     return(
-        <Card variant="elevated" size="md" style={{ marginVertical: 10 }}> 
+        <Card 
+            variant="elevated" 
+            size="md" 
+            style={[{ 
+                marginVertical: 10,
+                backgroundColor: '#FFFFFF',
+                padding: 15,
+                borderRadius: 8,
+                elevation: 3, 
+                shadowColor: '#000000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,        
+                shadowRadius: 3, 
+            }]}
+        > 
             
             <View style={styles.contentContainer}>
                 
@@ -71,6 +87,7 @@ export default function ReservationCard({
         </Card>
     );
 }
+
 
 
 const styles = StyleSheet.create({
@@ -125,64 +142,63 @@ const styles = StyleSheet.create({
 
 //PRIMJER UPOTREBE IZ INDEX.TSX FAJLA
 /**  
- import React from 'react';
-import { Text, View, StyleSheet, Alert, ScrollView } from "react-native"; 
-import { Colors } from "@/src/styles/style";
-
-import  ReservationCard from "@/src/components/organisms/ReservationCard/ReservationCard";
-
-
-const RESERVATIONS = [
-    { id: 'r1', name: "Stan Centar", address: "Jevrejska 14A", dateFrom: "05.01.2025", dateTo: "09.01.2025" },
-    { id: 'r2', name: "Lokal Stari Grad", address: "Dunavska 22", dateFrom: "10.03.2025", dateTo: "15.03.2025" },
-    { id: 'r3', name: "Kuća na Fruškoj", address: "Sremska 3", dateFrom: "01.05.2025", dateTo: "01.06.2025" }, 
-    { id: 'r4', name: "Kancelarije NBG", address: "Bulevar Zorana Đinđića 5", dateFrom: "20.10.2025", dateTo: "30.10.2025" }, 
-];
-
-
-export default function Index() {
-    
-    const handleCardClick = (apartmentName: string) => {
-        console.log(`Pritisnuta navigacija kod stana: ${apartmentName}`);
-
-    };
-
-    return(
-       
-        <ScrollView style={styles.screenContainer}>
-            
-          
-            {RESERVATIONS.map((reservation) => (
-              
-                <ReservationCard 
-                    key={reservation.id} 
-                    name={reservation.name}
-                    address={reservation.address}
-                    dateFrom={reservation.dateFrom}
-                    dateTo={reservation.dateTo}
-                    onIconPress={handleCardClick} 
-                />
-            ))}
-            
-            <View style={{ height: 50 }} />
-        </ScrollView>
-    );
-}
-
-
-const styles = StyleSheet.create({
-    screenContainer: {
-        flex: 1,
-        padding: 10,
-        backgroundColor: 'default', 
-    },
-    header: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 15,
-        color: Colors.textPrimary,
-    },
-});
-
+  import React from 'react';
+ import { Text, View, StyleSheet, Alert, ScrollView } from "react-native"; 
+ import { Colors } from "@/src/styles/style";
+ 
+ import  ReservationCard from "@/src/components/organisms/ReservationCard/ReservationCard";
+ 
+ 
+ const RESERVATIONS = [
+     { reservationId: 'r1', name: "Stan Centar", address: "Jevrejska 14A", dateFrom: "05.01.2025", dateTo: "09.01.2025" },
+     { reservationId: 'r2', name: "Lokal Stari Grad", address: "Dunavska 22", dateFrom: "10.03.2025", dateTo: "15.03.2025" },
+     { reservationId: 'r3', name: "Kuća na Fruškoj", address: "Sremska 3", dateFrom: "01.05.2025", dateTo: "01.06.2025" }, 
+     { reservationId: 'r4', name: "Kancelarije NBG", address: "Bulevar Zorana Đinđića 5", dateFrom: "20.10.2025", dateTo: "30.10.2025" }, 
+ ];
+ 
+ 
+ export default function Index() {
+     
+     const handleCardClick = (id: string) => { 
+         console.log(`Pritisnuta navigacija kod rezervacije ID: ${id}`);
+     };
+ 
+     return(
+         
+         <ScrollView style={styles.screenContainer}>
+             
+             {RESERVATIONS.map((reservation) => (
+                 
+                 <ReservationCard 
+                     key={reservation.reservationId} 
+                     reservationId={reservation.reservationId} 
+                     name={reservation.name}
+                     address={reservation.address}
+                     dateFrom={reservation.dateFrom}
+                     dateTo={reservation.dateTo}
+                     onIconPress={handleCardClick} 
+                 />
+             ))}
+             
+             <View style={{ height: 50 }} />
+         </ScrollView>
+     );
+ }
+ 
+ 
+ const styles = StyleSheet.create({
+     screenContainer: {
+         flex: 1,
+         padding: 10,
+         backgroundColor: 'default', 
+     },
+     header: {
+         fontSize: 20,
+         fontWeight: 'bold',
+         marginBottom: 15,
+         color: Colors.textPrimary,
+     },
+ });
+ 
  
  */
