@@ -1,145 +1,116 @@
-drop schema if exists efikas;
-create schema efikas;
-use efikas;
+DROP SCHEMA IF EXISTS efikas CASCADE;
+CREATE SCHEMA efikas;
 
-create table user (
-UserId 			int 			auto_increment 	primary key,
-Name			varchar(50)		not null,
-Surname 		varchar(50)		not null,
-JIB				char(13)		not null,
-PasswordHash	varchar(512)		not null,
-Email			varchar(50)		not null
+CREATE TABLE efikas.app_user (
+                                 UserId SERIAL PRIMARY KEY,
+                                 Name varchar(50) NOT NULL,
+                                 Surname varchar(50) NOT NULL,
+                                 JIB char(13) NOT NULL,
+                                 PasswordHash varchar(512) NOT NULL,
+                                 Email varchar(50) NOT NULL
 );
 
-create table apartment (
-ApartmentId		int				auto_increment	primary key,
-Address			varchar(100)	not null,
-NumberOfBeds	int				not null,
-NumberOfRooms	int				not null,
-Capacity		int				not null,
-PricePerDay		double			not null,
-PricePerNight	double			not null,
-UserId			int				not null,
-constraint FK_apartment_user
-foreign key(UserId)
-references user(UserId)
-on update cascade on delete cascade
+CREATE TABLE efikas.apartment (
+                                  ApartmentId SERIAL PRIMARY KEY,
+                                  Address varchar(100) NOT NULL,
+                                  NumberOfBeds int NOT NULL,
+                                  NumberOfRooms int NOT NULL,
+                                  Capacity int NOT NULL,
+                                  PricePerDay DOUBLE PRECISION NOT NULL,
+                                  PricePerNight DOUBLE PRECISION NOT NULL,
+                                  UserId int NOT NULL,
+                                  CONSTRAINT FK_apartment_user FOREIGN KEY(UserId)
+                                      REFERENCES efikas.app_user(UserId)
+                                      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table cash_register (
-CashRegisterId		int				primary key,
-CashRegisterNumber	int				not null,
-SoftwareVersion		varchar(15)		not null,
-UserId 				int				not null,
-constraint FK_cash_register_user
-foreign key (UserID)
-references user(UserId)
-on update cascade on delete cascade
+CREATE TABLE efikas.cash_register (
+                                      CashRegisterId SERIAL PRIMARY KEY,
+                                      CashRegisterNumber int NOT NULL,
+                                      SoftwareVersion varchar(15) NOT NULL,
+                                      UserId int NOT NULL,
+                                      CONSTRAINT FK_cash_register_user FOREIGN KEY(UserId)
+                                          REFERENCES efikas.app_user(UserId)
+                                          ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table apartment_trait (
-ApartmentId		int 			not null,
-TraitName		varchar(15)		not null,
-TraitValue		boolean			not null,
-constraint PK_apartment_trait
-primary key (ApartmentId, TraitName),
-constraint FK_apartment_trait_apartment
-foreign key (ApartmentId)
-references apartment(ApartmentId)
-on update cascade on delete cascade
+CREATE TABLE efikas.apartment_trait (
+                                        ApartmentId int NOT NULL,
+                                        TraitName varchar(15) NOT NULL,
+                                        TraitValue BOOLEAN NOT NULL,
+                                        CONSTRAINT PK_apartment_trait PRIMARY KEY (ApartmentId, TraitName),
+                                        CONSTRAINT FK_apartment_trait_apartment FOREIGN KEY (ApartmentId)
+                                            REFERENCES efikas.apartment(ApartmentId)
+                                            ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table apartment_picture (
-ApartmentId		int				not null,
-PictureURL		varchar(100)	not null,
-constraint PK_apartment_picture 
-primary key (ApartmentId, PictureURL),
-constraint FK_apartment_picture_apartment
-foreign key (ApartmentId)
-references apartment(ApartmentId)
-on update cascade on delete cascade
+CREATE TABLE efikas.apartment_picture (
+                                          ApartmentId int NOT NULL,
+                                          PictureURL varchar(100) NOT NULL,
+                                          CONSTRAINT PK_apartment_picture PRIMARY KEY (ApartmentId, PictureURL),
+                                          CONSTRAINT FK_apartment_picture_apartment FOREIGN KEY (ApartmentId)
+                                              REFERENCES efikas.apartment(ApartmentId)
+                                              ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table apartment_task (
-ApartmentId		int				not null,
-Name			varchar(20)		not null,
-DateTime		timestamp		not null,
-Note			varchar(256),
-Status			boolean			not null,
-constraint PK_apartment_task
-primary key (ApartmentId, Name),
-constraint FK_apartment_task_apartment
-foreign key (ApartmentId)
-references apartment(ApartmentId)
-on update cascade on delete cascade
+CREATE TABLE efikas.apartment_task (
+                                       ApartmentId int NOT NULL,
+                                       Name varchar(20) NOT NULL,
+                                       DateTime TIMESTAMP NOT NULL,
+                                       Note varchar(256),
+                                       Status BOOLEAN NOT NULL,
+                                       CONSTRAINT PK_apartment_task PRIMARY KEY (ApartmentId, Name),
+                                       CONSTRAINT FK_apartment_task_apartment FOREIGN KEY (ApartmentId)
+                                           REFERENCES efikas.apartment(ApartmentId)
+                                           ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table apartment_damage (
-ApartmentId		int				not null,
-Name			varchar(100)	not null,
-DamagePrice		double			,
-Note			varchar(256)	not null,
-Status			boolean			not null,
-constraint PK_apartment_damage
-primary key (ApartmentId, Name),
-constraint FK_apartment_damage_apartment
-foreign key (ApartmentId)
-references apartment(ApartmentId)
-on update cascade on delete cascade
+CREATE TABLE efikas.apartment_damage (
+                                         ApartmentId int NOT NULL,
+                                         Name varchar(100) NOT NULL,
+                                         DamagePrice DOUBLE PRECISION,
+                                         Note varchar(256) NOT NULL,
+                                         Status BOOLEAN NOT NULL,
+                                         CONSTRAINT PK_apartment_damage PRIMARY KEY (ApartmentId, Name),
+                                         CONSTRAINT FK_apartment_damage_apartment FOREIGN KEY (ApartmentId)
+                                             REFERENCES efikas.apartment(ApartmentId)
+                                             ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table apartment_expense (
-ApartmentId		int				not null,
-Name			varchar(100)	not null,
-Amount			double			not null,
-Note			varchar(256)	not null,
-Status			boolean			not null,
-constraint PK_apartment_expense
-primary key (ApartmentId, Name),
-constraint FK_apartment_expense_apartment
-foreign key (ApartmentId)
-references apartment(ApartmentId)
-on update cascade on delete cascade
+CREATE TABLE efikas.apartment_expense (
+                                          ApartmentId int NOT NULL,
+                                          Name varchar(100) NOT NULL,
+                                          Amount DOUBLE PRECISION NOT NULL,
+                                          Note varchar(256) NOT NULL,
+                                          Status BOOLEAN NOT NULL,
+                                          CONSTRAINT PK_apartment_expense PRIMARY KEY (ApartmentId, Name),
+                                          CONSTRAINT FK_apartment_expense_apartment FOREIGN KEY (ApartmentId)
+                                              REFERENCES efikas.apartment(ApartmentId)
+                                              ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-create table reservation_type (
-TypeId			int			primary key,
-TypeName		varchar(50)	not null
+CREATE TABLE efikas.reservation_type (
+                                         TypeId SERIAL PRIMARY KEY,
+                                         TypeName varchar(50) NOT NULL
 );
 
-create table reservation (
-ApartmentId			int				not null,
-ReservationId		int				not null,
-GuestFullName		varchar(100)	not null,
-GuestPhoneNumber	varchar(30)		not null,
-DateTimeOfArrival	timestamp		not null,
-DateTimeOfDeparture	timestamp		not null,
-GuestNumber			int				not null,
-Price				double,
-Note				varchar(256),
-PersonalDocumentURL	varchar(100),
-IdTypeOfReservation	int				not null,
-TypeId				int				not null,
-constraint PK_reservation
-primary key (ReservationId),
-constraint FK_reservation_apartment
-foreign key (ApartmentId)
-references apartment(ApartmentId)
-on update cascade on delete cascade,
-constraint FK_reservation_reservation_type
-foreign key (TypeId)
-references reservation_type(TypeId)
-on update cascade on delete cascade
+CREATE TABLE efikas.reservation (
+                                    ApartmentId int NOT NULL,
+                                    ReservationId SERIAL PRIMARY KEY,
+                                    GuestFullName varchar(100) NOT NULL,
+                                    GuestPhoneNumber varchar(30) NOT NULL,
+                                    DateTimeOfArrival TIMESTAMP NOT NULL,
+                                    DateTimeOfDeparture TIMESTAMP NOT NULL,
+                                    GuestNumber int NOT NULL,
+                                    Price DOUBLE PRECISION,
+                                    Note varchar(256),
+                                    PersonalDocumentURL varchar(100),
+                                    IdTypeOfReservation int NOT NULL,
+                                    TypeId int NOT NULL,
+                                    CONSTRAINT FK_reservation_apartment FOREIGN KEY (ApartmentId)
+                                        REFERENCES efikas.apartment(ApartmentId)
+                                        ON UPDATE CASCADE ON DELETE CASCADE,
+                                    CONSTRAINT FK_reservation_reservation_type FOREIGN KEY (TypeId)
+                                        REFERENCES efikas.reservation_type(TypeId)
+                                        ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-
-
-
-
-
-
-
-
-
-
-
