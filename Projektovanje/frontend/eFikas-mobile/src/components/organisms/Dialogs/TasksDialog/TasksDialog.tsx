@@ -10,12 +10,13 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import { Edit2 } from 'lucide-react-native'; 
+import { Edit2 } from 'lucide-react-native';
 
 import { Modal, ModalContent } from '@/components/ui/modal';
 import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton';
 import { Label } from '@/src/components/atoms/Label/Label';
 import TextField from '@/src/components/atoms/TextField/TextField';
+import { Colors } from '@/src/styles/style';
 
 const MAX_CHAR_LIMIT = 150;
 const TEXT_AREA_HEIGHT = 180;
@@ -62,11 +63,14 @@ const DatePickerInput: React.FC<{
 
   return (
     <View style={dateStyles.container}>
-      <Label text={label} color="#333" size="md" className="mb-2 mt-4" />
+      <Label text={label} color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
       <TextInput
-        style={[dateStyles.input, { borderColor: isValid ? '#E0E0E0' : 'red' }]}
+        style={[
+          dateStyles.input,
+          { borderColor: isValid ? Colors.secondary : Colors.accent },
+        ]}
         placeholder="DD.MM.GGGG"
-        placeholderTextColor="#B0B0B0"
+        placeholderTextColor={Colors.tertiary}
         keyboardType={Platform.OS === 'android' ? 'numeric' : 'default'}
         maxLength={10}
         onChangeText={handleDateChange}
@@ -74,10 +78,10 @@ const DatePickerInput: React.FC<{
       />
       {!isValid && value.length === 10 && (
         <Label
-            text="Unesite ispravan datum (DD.MM.GGGG)"
-            color="red"
-            size="xs"
-            className="mt-1 ml-4"
+          text="Unesite ispravan datum (DD.MM.GGGG)"
+          color={Colors.accent}
+          size="xs"
+          className="mt-1 ml-4"
         />
       )}
     </View>
@@ -95,7 +99,6 @@ const TimeField: React.FC<{
     onTimeChange({ hours, minutes });
   }, [hours, minutes, onTimeChange]);
 
-
   const handleHoursChange = (value: string) => {
     const formatted = value.replace(/[^0-9]/g, '').slice(0, 2);
     if (Number(formatted) <= 23 || formatted === '') setHours(formatted);
@@ -108,7 +111,7 @@ const TimeField: React.FC<{
 
   return (
     <View style={timeStyles.container}>
-      <Label text={label} color="#333" size="md" className="mb-2 mt-4" />
+      <Label text={label} color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
       <View style={timeStyles.hstack}>
         <TextField
           placeholder="HH"
@@ -120,11 +123,11 @@ const TimeField: React.FC<{
             value: hours,
             onChangeText: handleHoursChange,
             maxLength: 2,
-            placeholderTextColor: "#B0B0B0",
+            placeholderTextColor: Colors.tertiary,
             textAlign: 'center',
           }}
         />
-        <Label text=":" size="xl" color="#333" className="mx-2" />
+        <Label text=":" size="xl" color={Colors.textPrimary} className="mx-2" />
         <TextField
           placeholder="MM"
           variant="outline"
@@ -135,7 +138,7 @@ const TimeField: React.FC<{
             value: minutes,
             onChangeText: handleMinutesChange,
             maxLength: 2,
-            placeholderTextColor: "#B0B0B0",
+            placeholderTextColor: Colors.tertiary,
             textAlign: 'center',
           }}
         />
@@ -237,7 +240,6 @@ export const TasksDialog: React.FC<TasksDialogProps> = ({
   return (
     <Modal isOpen={visible} onClose={handleCancel}>
       <ModalContent style={styles.modalContent}>
-
         <View
           style={[
             styles.dialogContainer,
@@ -245,18 +247,16 @@ export const TasksDialog: React.FC<TasksDialogProps> = ({
               width: dialogWidth,
               height: modalHeight,
               transform: [{ translateY: keyboardOffset }],
-            }
+            },
           ]}
         >
-
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={true}
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentArea}>
-              
-              <Label text="Zadatak" color="#333" size="md" className="mb-2 mt-4" />
+              <Label text="Zadatak" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
               <TextField
                 placeholder="Unesite naziv zadatka"
                 variant="outline"
@@ -265,7 +265,7 @@ export const TasksDialog: React.FC<TasksDialogProps> = ({
                 inputProps={{
                   onChangeText: setZadatak,
                   value: zadatak,
-                  placeholderTextColor: "#B0B0B0",
+                  placeholderTextColor: Colors.tertiary,
                 }}
               />
 
@@ -276,7 +276,7 @@ export const TasksDialog: React.FC<TasksDialogProps> = ({
                 onTimeChange={setTime}
               />
 
-              <Label text="Napomena" color="#333" size="md" className="mb-2 mt-4" />
+              <Label text="Napomena" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
               <View style={styles.textAreaWrapper}>
                 <TextField
                   placeholder="Unesite dodatne detalje..."
@@ -287,7 +287,7 @@ export const TasksDialog: React.FC<TasksDialogProps> = ({
                     multiline: true,
                     onChangeText: setNapomena,
                     value: napomena,
-                    placeholderTextColor: "#B0B0B0",
+                    placeholderTextColor: Colors.tertiary,
                     textAlignVertical: 'top',
                     maxLength: MAX_CHAR_LIMIT,
                     style: { 
@@ -305,16 +305,15 @@ export const TasksDialog: React.FC<TasksDialogProps> = ({
                   style={styles.textAreaIconStyleFixed}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Edit2 size={20} color="#6B7280" />
+                  <Edit2 size={20} color={Colors.textSecondary} />
                 </TouchableOpacity>
               </View>
 
               <View style={styles.charCounterContainer}>
-                  <Text style={styles.charCounterText}>
-                      {napomena.length}/{MAX_CHAR_LIMIT}
-                  </Text>
+                <Text style={styles.charCounterText}>
+                  {napomena.length}/{MAX_CHAR_LIMIT}
+                </Text>
               </View>
-
             </View>
           </ScrollView>
 
@@ -336,20 +335,20 @@ const dateStyles = StyleSheet.create({
   container: { marginBottom: 10 },
   input: {
     height: 40,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 8,
     paddingHorizontal: 15,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
+    borderColor: Colors.secondary,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
   },
   errorText: {
-    color: 'red',
+    color: Colors.accent,
     fontSize: 12,
     marginTop: 4,
     marginLeft: 15,
@@ -368,9 +367,9 @@ const timeStyles = StyleSheet.create({
     width: 60,
     height: '100%',
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: Colors.secondary,
     borderRadius: 8,
-    
+    backgroundColor: Colors.background,
   },
 });
 
@@ -388,7 +387,7 @@ const styles = StyleSheet.create({
   },
   dialogContainer: {
     maxWidth: 600,
-    backgroundColor: 'white',
+    backgroundColor: Colors.background,
     borderRadius: 15,
     overflow: 'hidden',
     shadowColor: 'transparent',
@@ -407,8 +406,8 @@ const styles = StyleSheet.create({
   inputStyle: {
     height: 40,
     marginBottom: 10,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
+    backgroundColor: Colors.background,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -419,11 +418,11 @@ const styles = StyleSheet.create({
     position: 'relative', 
     marginBottom: 0,
     minHeight: TEXT_AREA_HEIGHT, 
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
+    borderColor: Colors.secondary,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -456,7 +455,7 @@ const styles = StyleSheet.create({
   },
   charCounterText: {
     fontSize: 12,
-    color: '#9CA3AF', 
+    color: Colors.textSecondary,
   },
 
   buttonContainer: {
@@ -465,8 +464,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 15,
     borderTopWidth: 1,
-    borderTopColor: '#EFEFEF',
-    backgroundColor: '#FFFFFF',
+    borderTopColor: Colors.secondary,
+    backgroundColor: Colors.background,
   },
   buttonWrapper: { flex: 1, marginHorizontal: 8 },
 });

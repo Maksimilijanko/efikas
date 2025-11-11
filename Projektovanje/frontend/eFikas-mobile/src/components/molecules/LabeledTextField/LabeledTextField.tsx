@@ -1,29 +1,44 @@
 import React from "react";
 import { View } from "react-native";
 import { Label } from "@/src/components/atoms/Label/Label";
-import { Icon } from "@/src/components/atoms/Icon/Icon"; 
 import TextField from "@/src/components/atoms/TextField/TextField";
 import { LucideIconName } from "@/src/types/types";
 
 interface LabeledTextFieldProps {
   label: string;
   required?: boolean;
-  error?: boolean;
+  error?: boolean;              // dodato
+  errorText?: string;           // dodato
   disabled?: boolean;
   placeholder?: string;
-  size?: "sm" | "md" | "lg" | "xl";     // za TextField
-  labelSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl";
-  iconName?: LucideIconName;    // ime ikone za Icon komponentu
+  size?: "sm" | "md" | "lg" | "xl";
+  labelSize?:
+    | "xs"
+    | "sm"
+    | "md"
+    | "lg"
+    | "xl"
+    | "2xl"
+    | "3xl"
+    | "4xl"
+    | "5xl"
+    | "6xl";
+  iconName?: LucideIconName;
   iconLocation?: "left" | "right";
   variant?: "outline" | "underlined" | "rounded";
   type?: "text" | "password";
   onPress?: (e: any) => void;
+
+  value?: string;
+  onChangeText?: (text: string) => void;
+  inputProps?: any;
 }
 
 const LabeledTextField = ({
   label,
   required = false,
   error = false,
+  errorText,
   disabled = false,
   placeholder = "",
   size = "md",
@@ -33,20 +48,22 @@ const LabeledTextField = ({
   variant = "outline",
   type = "text",
   onPress,
+  value,
+  onChangeText,
+  inputProps,
 }: LabeledTextFieldProps) => {
+  const hasError = !!error || !!errorText;
+
   return (
     <View className="w-full">
-      {/* Label iznad polja */}
       <Label
-        text={label}
-        required={required}
-        error={error}
-        disabled={disabled}
+        text={`${label}${required ? " *" : ""}`}
         size={labelSize}
         align="left"
+        color={hasError ? "#DC2626" : undefined}
+        className="mb-1"
       />
 
-      {/* TextField */}
       <TextField
         placeholder={placeholder}
         size={size}
@@ -54,10 +71,25 @@ const LabeledTextField = ({
         type={type}
         iconName={iconName}
         iconLocation={iconLocation}
-        isInvalid={error}
+        isInvalid={hasError}
         isDisabled={disabled}
         onPress={onPress}
+        inputProps={{
+          value,
+          onChangeText,
+          ...(inputProps || {}),
+        }}
       />
+
+      {errorText ? (
+        <Label
+          text={errorText}
+          size="xs"
+          align="left"
+          color="#DC2626"
+          className="mt-1"
+        />
+      ) : null}
     </View>
   );
 };

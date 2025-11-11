@@ -15,6 +15,7 @@ import {
 } from '../../../../components/ui/modal';
 
 import { Label } from '../../atoms/Label/Label';
+import { Colors } from '@/src/styles/style';
 
 const Modal = ({
   visible,
@@ -55,7 +56,6 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
     setSelectedIndex((prevIndex) => Math.max(prevIndex! - 1, 0));
   };
   
-  
   const imageDisplayHeight = screenHeight * 0.8;
   const arrowHeight = 30;
 
@@ -63,7 +63,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
     <View style={style}>
       <Label
         text="Galerija"
-        color="#111827"
+        color={Colors.textPrimary}
         size="2xl"
         className="font-bold mb-4"
       />
@@ -106,42 +106,40 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
           )}
 
           <Pressable style={styles.modalCloseButton} onPress={closeGallery}>
-            <X color="white" size={20} strokeWidth={2.5} />
+            <X color={Colors.textLight} size={20} strokeWidth={2.5} />
           </Pressable>
 
           {selectedIndex !== null && (
             <>
-              
               {selectedIndex > 0 && (
                 <Pressable
                   style={[
-                      styles.arrowButton, 
-                      styles.arrowLeft, 
-                      { 
-                          top: '50%', 
-                          marginTop: -(arrowHeight / 2) 
-                      }
-                    ]}
+                    styles.arrowButton, 
+                    styles.arrowLeft, 
+                    { 
+                      top: '50%', 
+                      marginTop: -(arrowHeight / 2) 
+                    }
+                  ]}
                   onPress={goToPrev}
                 >
-                  <ChevronLeft color="white" size={24} strokeWidth={2.5} />
+                  <ChevronLeft color={Colors.textLight} size={24} strokeWidth={2.5} />
                 </Pressable>
               )}
 
-              
               {selectedIndex < images.length - 1 && (
                 <Pressable
                   style={[
-                      styles.arrowButton, 
-                      styles.arrowRight, 
-                      { 
-                          top: '50%', 
-                          marginTop: -(arrowHeight / 2) 
-                      }
-                    ]}
+                    styles.arrowButton, 
+                    styles.arrowRight, 
+                    { 
+                      top: '50%', 
+                      marginTop: -(arrowHeight / 2) 
+                    }
+                  ]}
                   onPress={goToNext}
                 >
-                  <ChevronRight color="white" size={24} strokeWidth={2.5} />
+                  <ChevronRight color={Colors.textLight} size={24} strokeWidth={2.5} />
                 </Pressable>
               )}
             </>
@@ -164,7 +162,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: Colors.secondary,
   },
   image: {
     width: '100%',
@@ -177,23 +175,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   overlayText: {
-    color: 'white',
+    color: Colors.textLight,
     fontSize: 26,
     fontWeight: '600',
   },
 
-  
   modalContent: {
     width: '100%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent', 
+    backgroundColor: 'transparent',
   },
   modalImage: {
     width: '100%',
   },
-  
   
   modalCloseButton: {
     position: 'absolute',
@@ -202,12 +198,11 @@ const styles = StyleSheet.create({
     zIndex: 10,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     borderRadius: 18,
-    width: 36, 
+    width: 36,
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
 
   arrowButton: {
     position: 'absolute',
@@ -225,29 +220,4 @@ const styles = StyleSheet.create({
   arrowRight: {
     right: 15,
   },
-})
-
-/*
-Primjer upotrebe:
-import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Gallery } from './Gallery'; // Prilagodite putanju
-
-const dummyImages = [
-  'https://picsum.photos/id/10/800/600',
-  'https://picsum.photos/id/20/800/600',
-  'https://picsum.photos/id/30/800/600',
-  'https://picsum.photos/id/40/800/600',
-  'https://picsum.photos/id/50/800/600',
-  'https://picsum.photos/id/60/800/600',
-];
-
-const ExampleScreen = () => {
-  return (
-    <View style={{ flex: 1, padding: 20, paddingTop: 50 }}>
-      <Gallery images={dummyImages} />
-    </View>
-  );
-};
-// export default ExampleScreen;
-*/
+});

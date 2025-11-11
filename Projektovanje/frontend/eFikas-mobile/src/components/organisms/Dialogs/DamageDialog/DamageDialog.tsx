@@ -16,6 +16,7 @@ import { Modal, ModalContent } from '@/components/ui/modal';
 import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton';
 import { Label } from '@/src/components/atoms/Label/Label';
 import TextField from '@/src/components/atoms/TextField/TextField';
+import { Colors } from '@/src/styles/style';
 
 const MAX_CHAR_LIMIT = 150;
 const TEXT_AREA_HEIGHT = 180; 
@@ -62,11 +63,14 @@ const DatePickerInput: React.FC<{
 
   return (
     <View style={dateStyles.container}>
-      <Label text={label} color="#333" size="md" className="mb-2 mt-4" />
+      <Label text={label} color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
       <TextInput
-        style={[dateStyles.input, { borderColor: isValid ? '#E0E0E0' : 'red' }]}
+        style={[
+          dateStyles.input,
+          { borderColor: isValid ? Colors.secondary : Colors.accent },
+        ]}
         placeholder="DD.MM.GGGG"
-        placeholderTextColor="#B0B0B0"
+        placeholderTextColor={Colors.tertiary}
         keyboardType={Platform.OS === 'android' ? 'numeric' : 'default'}
         maxLength={10}
         onChangeText={handleDateChange}
@@ -74,10 +78,10 @@ const DatePickerInput: React.FC<{
       />
       {!isValid && value.length === 10 && (
         <Label
-            text="Unesite ispravan datum (DD.MM.GGGG)"
-            color="red"
-            size="xs"
-            className="mt-1 ml-4"
+          text="Unesite ispravan datum (DD.MM.GGGG)"
+          color={Colors.accent}
+          size="xs"
+          className="mt-1 ml-4"
         />
       )}
     </View>
@@ -85,27 +89,27 @@ const DatePickerInput: React.FC<{
 };
 
 const CurrencyInput: React.FC<any> = ({ value, onChangeText, placeholder }) => (
-    <View>
-        <Label text="Trošak" color="#333" size="md" className="mb-2 mt-4" />
-        <View style={styles.currencyContainer}>
-            <TextField
-                variant="outline"
-                size="md"
-                style={styles.currencyTextFieldWrapper}
-                inputProps={{
-                    style: styles.currencyInputField,
-                    keyboardType: "numeric",
-                    onChangeText: onChangeText,
-                    value: value,
-                    placeholder: placeholder,
-                    placeholderTextColor: "#B0B0B0",
-                }}
-            />
-            <View style={styles.currencyTextWrapper}>
-                <Label text="BAM" color="#6B7280" size="md" className="font-semibold" />
-            </View>
-        </View>
+  <View>
+    <Label text="Trošak" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
+    <View style={styles.currencyContainer}>
+      <TextField
+        variant="outline"
+        size="md"
+        style={styles.currencyTextFieldWrapper}
+        inputProps={{
+          style: styles.currencyInputField,
+          keyboardType: 'numeric',
+          onChangeText: onChangeText,
+          value: value,
+          placeholder: placeholder,
+          placeholderTextColor: Colors.tertiary,
+        }}
+      />
+      <View style={styles.currencyTextWrapper}>
+        <Label text="BAM" color={Colors.textSecondary} size="md" className="font-semibold" />
+      </View>
     </View>
+  </View>
 );
 
 interface DamageDialogProps {
@@ -191,7 +195,6 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
   return (
     <Modal isOpen={visible} onClose={handleCancel}>
       <ModalContent style={styles.modalContent}>
-
         <View
           style={[
             styles.dialogContainer,
@@ -199,18 +202,16 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
               width: dialogWidth,
               height: modalHeight,
               transform: [{ translateY: keyboardOffset }],
-            }
+            },
           ]}
         >
-
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={true}
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentArea}>
-
-              <Label text="Šteta" color="#333" size="md" className="mb-2 mt-4" />
+              <Label text="Šteta" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
               <TextField
                 placeholder="Opis štete"
                 variant="outline"
@@ -219,7 +220,7 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
                 inputProps={{
                   onChangeText: setSteta,
                   value: steta,
-                  placeholderTextColor: "#B0B0B0",
+                  placeholderTextColor: Colors.tertiary,
                 }}
               />
 
@@ -231,45 +232,44 @@ export const DamageDialog: React.FC<DamageDialogProps> = ({
                 placeholder="Iznos"
               />
 
-              <Label text="Napomena" color="#333" size="md" className="mb-2 mt-4" />
+              <Label text="Napomena" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
               <View style={styles.textAreaWrapper}>
                 <TextField
                   placeholder="Unesite dodatne detalje..."
                   variant="outline"
                   size="md"
-                  style={styles.textAreaFieldStyle} 
+                  style={styles.textAreaFieldStyle}
                   inputProps={{
                     multiline: true,
                     onChangeText: setNapomena,
                     value: napomena,
-                    placeholderTextColor: "#B0B0B0",
+                    placeholderTextColor: Colors.tertiary,
                     textAlignVertical: 'top',
                     maxLength: MAX_CHAR_LIMIT,
-                    style: { 
-                      paddingRight: 35, 
-                      paddingLeft: 10, 
-                      flex: 1, 
-                      minHeight: TEXT_AREA_HEIGHT, 
+                    style: {
+                      paddingRight: 35,
+                      paddingLeft: 10,
+                      flex: 1,
+                      minHeight: TEXT_AREA_HEIGHT,
                       textAlign: 'left',
                       writingDirection: 'ltr',
-                    }, 
+                    },
                   }}
                 />
-                <TouchableOpacity 
-                  onPress={handleIconPress} 
+                <TouchableOpacity
+                  onPress={handleIconPress}
                   style={styles.textAreaIconStyleFixed}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Edit2 size={20} color="#6B7280" />
+                  <Edit2 size={20} color={Colors.textSecondary} />
                 </TouchableOpacity>
               </View>
-              
-              <View style={styles.charCounterContainer}>
-                  <Text style={styles.charCounterText}>
-                      {napomena.length}/{MAX_CHAR_LIMIT}
-                  </Text>
-              </View>
 
+              <View style={styles.charCounterContainer}>
+                <Text style={styles.charCounterText}>
+                  {napomena.length}/{MAX_CHAR_LIMIT}
+                </Text>
+              </View>
             </View>
           </ScrollView>
 
@@ -291,20 +291,20 @@ const dateStyles = StyleSheet.create({
   container: { marginBottom: 10 },
   input: {
     height: 40,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 8,
     paddingHorizontal: 15,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
+    borderColor: Colors.secondary,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
   },
   errorText: {
-    color: 'red',
+    color: Colors.accent,
     fontSize: 12,
     marginTop: 4,
     marginLeft: 15,
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
   },
   dialogContainer: {
     maxWidth: 600,
-    backgroundColor: 'white',
+    backgroundColor: Colors.background,
     borderRadius: 15,
     overflow: 'hidden',
     shadowColor: 'transparent',
@@ -339,14 +339,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 15,
   },
-  // Korigovano: Smanjen paddingTop sa 30 na 15px da se smanji razmak iznad prve labele
   contentArea: { paddingHorizontal: 25, paddingTop: 15 },
 
   inputStyle: {
     height: 40,
     marginBottom: 10,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
+    backgroundColor: Colors.background,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -357,12 +356,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 40,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: Colors.secondary,
     marginBottom: 10,
-    shadowColor: '#000',
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -383,7 +382,7 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingHorizontal: 15,
     paddingRight: 0,
-    borderWidth: 0
+    borderWidth: 0,
   },
   currencyTextWrapper: {
     position: 'absolute',
@@ -398,21 +397,21 @@ const styles = StyleSheet.create({
   },
 
   textAreaWrapper: {
-    position: 'relative', 
+    position: 'relative',
     marginBottom: 0,
-    minHeight: TEXT_AREA_HEIGHT, // KORIGOVANO: 180px
-    backgroundColor: '#FFFFFF',
+    minHeight: TEXT_AREA_HEIGHT,
+    backgroundColor: Colors.background,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
+    borderColor: Colors.secondary,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
     overflow: 'hidden',
   },
-  
+
   textAreaFieldStyle: {
     borderWidth: 0,
     shadowOpacity: 0,
@@ -420,15 +419,15 @@ const styles = StyleSheet.create({
     paddingLeft: 2,
     minHeight: '100%',
   },
-  
+
   textAreaIconStyleFixed: {
     position: 'absolute',
-    right: 5, 
-    bottom: 5, 
-    zIndex: 10, 
+    right: 5,
+    bottom: 5,
+    zIndex: 10,
     padding: 5,
   },
-  
+
   charCounterContainer: {
     alignItems: 'flex-end',
     width: '100%',
@@ -438,7 +437,7 @@ const styles = StyleSheet.create({
   },
   charCounterText: {
     fontSize: 12,
-    color: '#9CA3AF', 
+    color: Colors.textSecondary,
   },
 
   buttonContainer: {
@@ -447,8 +446,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 15,
     borderTopWidth: 1,
-    borderTopColor: '#EFEFEF',
-    backgroundColor: '#FFFFFF',
+    borderTopColor: Colors.secondary,
+    backgroundColor: Colors.background,
   },
   buttonWrapper: { flex: 1, marginHorizontal: 8 },
 });

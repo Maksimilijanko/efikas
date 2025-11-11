@@ -17,6 +17,7 @@ import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton'
 import { Label } from '@/src/components/atoms/Label/Label' 
 import TextField from '@/src/components/atoms/TextField/TextField'
 import Dropdown from '@/src/components/atoms/Dropdown/Dropdown' 
+import { Colors } from '@/src/styles/style'
 
 type TSelectedItem = any
 
@@ -27,29 +28,28 @@ const EXPENSE_CATEGORIES: TSelectedItem[] = [
 ]
 
 const CurrencyInput: React.FC<any> = ({ value, onChangeText, placeholder }) => (
-    <View>
-        <Label text="Iznos" color="#333" size="md" className="mb-2 mt-4" />
-        <View style={styles.currencyContainer}>
-            <TextField
-                variant="outline"
-                size="md"
-                style={styles.currencyTextFieldWrapper}
-                inputProps={{
-                    style: styles.currencyInputField,
-                    keyboardType: "numeric",
-                    onChangeText: onChangeText,
-                    value: value,
-                    placeholder: placeholder,
-                    placeholderTextColor: "#B0B0B0",
-                }}
-            />
-            <View style={styles.currencyTextWrapper}>
-                <Label text="BAM" color="#6B7280" size="md" className="font-semibold" />
-            </View>
-        </View>
+  <View>
+    <Label text="Iznos" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
+    <View style={styles.currencyContainer}>
+      <TextField
+        variant="outline"
+        size="md"
+        style={styles.currencyTextFieldWrapper}
+        inputProps={{
+          style: styles.currencyInputField,
+          keyboardType: 'numeric',
+          onChangeText: onChangeText,
+          value: value,
+          placeholder: placeholder,
+          placeholderTextColor: Colors.tertiary,
+        }}
+      />
+      <View style={styles.currencyTextWrapper}>
+        <Label text="BAM" color={Colors.textSecondary} size="md" className="font-semibold" />
+      </View>
     </View>
+  </View>
 )
-
 
 interface ExpensesDialogProps {
   visible: boolean
@@ -67,7 +67,7 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
   onClose,
   onConfirm,
 }) => {
-  const scrollViewRef = useRef<ScrollView | null>(null); 
+  const scrollViewRef = useRef<ScrollView | null>(null) 
   
   const [kategorijaItems, setKategorijaItems] = useState<TSelectedItem[]>([]) 
   const [trosak, setTrosak] = useState('')
@@ -85,15 +85,15 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
     setTrosak('')
     setIznos('')
     setNapomena('')
-    scrollViewRef.current?.scrollTo({ y: 0, animated: false }); 
+    scrollViewRef.current?.scrollTo({ y: 0, animated: false }) 
   }
 
   useEffect(() => {
     if (visible) {
       resetFields()
       setTimeout(() => {
-        scrollViewRef.current?.scrollTo({ y: 0, animated: false });
-      }, 100);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: false })
+      }, 100)
     }
   }, [visible])
 
@@ -124,13 +124,13 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
 
   const scrollToBottom = () => {
     if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({ animated: true });
+      scrollViewRef.current.scrollToEnd({ animated: true })
     }
-  };
+  }
   
   const handleInputFocus = () => {
-    scrollToBottom();
-  };
+    scrollToBottom()
+  }
   
   const handleConfirm = () => {
     const kategorijaId = kategorijaItems.length > 0 ? kategorijaItems[0].id : ''
@@ -175,22 +175,26 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentArea}>
-              
               <View style={styles.categoryDropdownWrapper}>
-                <Label text="Kategorija troška" color="#333" size="md" className="mb-2 mt-4" /> 
+                <Label
+                  text="Kategorija troška"
+                  color={Colors.textPrimary}
+                  size="md"
+                  className="mb-2 mt-4"
+                /> 
                 <Dropdown
                   label={''} 
-                  placeholder='Izaberite kategoriju...'
-                  textInputPlaceholder='Pretraži kategorije'
+                  placeholder="Izaberite kategoriju..."
+                  textInputPlaceholder="Pretraži kategorije"
                   options={EXPENSE_CATEGORIES}
-                  optionLabel='name'
-                  optionValue='id'
+                  optionLabel="name"
+                  optionValue="id"
                   selectedValue={currentSelectedValue}
                   setSelectedValue={handleCategoryChange}
                 />
               </View>
               
-              <Label text="Trošak" color="#333" size="md" className="mb-2 mt-4" />
+              <Label text="Trošak" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
               <TextField
                 placeholder="Opis troška"
                 variant="outline"
@@ -199,7 +203,7 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
                 inputProps={{
                   onChangeText: setTrosak,
                   value: trosak,
-                  placeholderTextColor: '#B0B0B0',
+                  placeholderTextColor: Colors.tertiary,
                 }}
               />
 
@@ -209,8 +213,7 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
                 placeholder="0.00"
               />
               
-
-              <Label text="Napomena" color="#333" size="md" className="mb-2 mt-4" />
+              <Label text="Napomena" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
               <View style={styles.textAreaWrapper}>
                 <TextField
                   placeholder="Unesite dodatne detalje..."
@@ -221,16 +224,16 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
                     multiline: true,
                     onChangeText: setNapomena, 
                     value: napomena,
-                    placeholderTextColor: '#B0B0B0',
+                    placeholderTextColor: Colors.tertiary,
                     textAlignVertical: 'top',
                     maxLength: 150, 
                     style: { 
-                        paddingRight: 35, 
-                        paddingLeft: 10, 
-                        flex: 1, 
-                        minHeight: 180, 
-                        textAlign: 'left', 
-                        writingDirection: 'ltr',
+                      paddingRight: 35, 
+                      paddingLeft: 10, 
+                      flex: 1, 
+                      minHeight: 180, 
+                      textAlign: 'left', 
+                      writingDirection: 'ltr',
                     }, 
                     onFocus: handleInputFocus,
                   }}
@@ -240,14 +243,14 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
                   style={styles.textAreaIconStyleFixed}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                  <Edit2 size={20} color="#6B7280" />
+                  <Edit2 size={20} color={Colors.textSecondary} />
                 </TouchableOpacity>
               </View>
                 
               <View style={styles.charCounterContainer}>
-                  <Text style={styles.charCounterText}>
-                      {napomena.length}/150
-                  </Text>
+                <Text style={styles.charCounterText}>
+                  {napomena.length}/150
+                </Text>
               </View>
             </View>
           </ScrollView>
@@ -280,7 +283,7 @@ const styles = StyleSheet.create({
   },
   dialogContainer: {
     maxWidth: 600,
-    backgroundColor: 'white',
+    backgroundColor: Colors.background,
     borderRadius: 15,
     overflow: 'hidden',
     shadowColor: 'transparent',
@@ -304,8 +307,8 @@ const styles = StyleSheet.create({
   inputStyle: {
     height: 40,
     marginBottom: 10,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
+    backgroundColor: Colors.background,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -316,12 +319,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 40,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: Colors.secondary,
     marginBottom: 10,
-    shadowColor: '#000',
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -360,11 +363,11 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginBottom: 0, 
     minHeight: 180, 
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
+    borderColor: Colors.secondary,
+    shadowColor: Colors.shadowColor,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -395,7 +398,7 @@ const styles = StyleSheet.create({
   },
   charCounterText: {
     fontSize: 12,
-    color: '#9CA3AF', 
+    color: Colors.textSecondary,
   },
 
   buttonContainer: {
@@ -404,8 +407,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 15,
     borderTopWidth: 1,
-    borderTopColor: '#EFEFEF',
-    backgroundColor: '#FFFFFF',
+    borderTopColor: Colors.secondary,
+    backgroundColor: Colors.background,
   },
   buttonWrapper: { flex: 1, marginHorizontal: 8 },
 })
