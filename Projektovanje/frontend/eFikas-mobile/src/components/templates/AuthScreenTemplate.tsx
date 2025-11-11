@@ -344,9 +344,11 @@ const AuthScreenTemplate = (props: AuthScreenTemplateProps) => {
     );
 };
 
+
+export default AuthScreenTemplate;
+
 /*
 primjer upotrebe:
-export default AuthScreenTemplate;
 
 import React from 'react';
 import { View, Text } from 'react-native'; 
