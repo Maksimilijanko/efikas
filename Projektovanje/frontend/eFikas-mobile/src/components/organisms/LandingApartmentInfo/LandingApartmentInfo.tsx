@@ -12,17 +12,14 @@ import {
 
 import { Colors } from "@/src/styles/style";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
-import { Feather, MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard";
+import { Icon } from "@/src/components/atoms/Icon/Icon"; 
+
 
 interface Service {
   id: string;
   name: string;
-  icon:
-    | keyof typeof MaterialCommunityIcons.glyphMap
-    | keyof typeof Feather.glyphMap
-    | keyof typeof FontAwesome5.glyphMap;
-  library: "MaterialCommunityIcons" | "Feather" | "FontAwesome5";
+  icon: string; 
 }
 
 type ServiceKey =
@@ -35,15 +32,16 @@ type ServiceKey =
   | "fen"
   | "balkon";
 
+
 const SERVICE_MAP: Record<ServiceKey, Service> = {
-  parking: { id: "parking", name: "Parking", icon: "parking", library: "FontAwesome5" },
-  wifi: { id: "wifi", name: "Wi-Fi", icon: "wifi", library: "Feather" },
-  klima: {  id: "klima",  name: "Klima",  icon: "wind",  library: "Feather" },
-  tv: { id: "tv", name: "Smart TV", icon: "tv", library: "Feather" }, 
-  kafa: { id: "kafa", name: "Kafa", icon: "coffee-outline", library: "MaterialCommunityIcons" }, 
-  vesmasina: { id: "vesmasina", name: "Veš mašina", icon: "washing-machine", library: "MaterialCommunityIcons",},
-  fen: { id: "fen", name: "Fen", icon: "hair-dryer-outline", library: "MaterialCommunityIcons" },
-  balkon: { id: "balkon", name: "Balkon", icon: "balcony", library: "MaterialCommunityIcons" }
+  parking: { id: "parking", name: "Parking", icon: "ParkingCircle" },
+  wifi: { id: "wifi", name: "Wi-Fi", icon: "Wifi" },
+  klima: { id: "klima", name: "Klima", icon: "Wind" },
+  tv: { id: "tv", name: "Smart TV", icon: "Tv" },
+  kafa: { id: "kafa", name: "Kafa", icon: "Coffee" },
+  vesmasina: { id: "vesmasina", name: "Veš mašina", icon: "WashingMachine" }, 
+  fen: { id: "fen", name: "Fen", icon: "Fan" },
+  balkon: { id: "balkon", name: "Balkon", icon: "Home" },
 };
 
 const VISIBLE_SERVICES_COUNT = 4;
@@ -75,55 +73,63 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const visibleServices = apartmentServices.slice(0, VISIBLE_SERVICES_COUNT);
 
-  const renderIcon = (service: Service) => {
-    const IconComponent =
-      service.library === "Feather"
-        ? Feather
-        : service.library === "FontAwesome5"
-        ? FontAwesome5
-        : MaterialCommunityIcons;
-    return <IconComponent name={service.icon as any} size={22} color={Colors.primary} />;
-  };
-
   return (
     <>
-     <View style={styles.cardWrapper}>
-  <ImageBackground
-    source={imageUrl}
-    style={styles.imageBackground}
-    imageStyle={styles.imageStyle}
-  >
-    <View style={styles.infoContainer}>
-      
-      <View style={styles.attrBox}>
-       <View style={[styles.attrInner, { marginRight: 5 }]}>
-          <MaterialCommunityIcons name="bed-king-outline" size={20} color="#000" />
-          <Text style={{ marginLeft: 20, fontSize: 14, fontWeight: "400", color: Colors.shadowColor }}>
-            {bedrooms}
-          </Text>
-        </View>
-      </View>
+      <View style={styles.cardWrapper}>
+        <ImageBackground
+          source={imageUrl}
+          style={styles.imageBackground}
+          imageStyle={styles.imageStyle}
+        >
+          <View style={styles.infoContainer}>
+            <View style={styles.attrBox}>
+              <View style={[styles.attrInner, { marginRight: 5 }]}>
+                <Icon name="Bed" size={20} color="#000" />
+                <Text
+                  style={{
+                    marginLeft: 20,
+                    fontSize: 14,
+                    fontWeight: "400",
+                    color: Colors.shadowColor,
+                  }}
+                >
+                  {bedrooms}
+                </Text>
+              </View>
+            </View>
 
-      <View style={styles.attrBox}>
-        <View style={styles.attrInner}>
-          <Text style={{ fontSize: 14, fontWeight: "400", color: Colors.shadowColor }}>
-            {squareMeters} m2
-          </Text>
-        </View>
-      </View>
+            <View style={styles.attrBox}>
+              <View style={styles.attrInner}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "400",
+                    color: Colors.shadowColor,
+                  }}
+                >
+                  {squareMeters} m²
+                </Text>
+              </View>
+            </View>
 
-      <View style={styles.attrBox}>
-         <View style={[styles.attrInner, { marginRight: 5 }]}>
-          <Feather name="users" size={20} color="#000" />
-          <Text style={{ marginLeft: 20, fontSize: 14, fontWeight: "400", color: Colors.shadowColor }}>
-            {maxGuests}
-          </Text>
-        </View>
+            <View style={styles.attrBox}>
+              <View style={[styles.attrInner, { marginRight: 5 }]}>
+                <Icon name="Users" size={20} color="#000" />
+                <Text
+                  style={{
+                    marginLeft: 20,
+                    fontSize: 14,
+                    fontWeight: "400",
+                    color: Colors.shadowColor,
+                  }}
+                >
+                  {maxGuests}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </ImageBackground>
       </View>
-
-    </View>
-  </ImageBackground>
-</View>
 
       <View style={styles.servicesHeaderContainer}>
         <Text style={styles.servicesTitle}>Usluge</Text>
@@ -139,7 +145,13 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
           <View style={serviceStyles.featureWrapper} key={service.id}>
             <ApartmentFeatureCard
               label={service.name}
-              icon={renderIcon(service)}
+              icon={
+                <Icon
+                  name={service.icon as any}
+                  color={Colors.primary}
+                  size={22}
+                />
+              }
               backgroundColor="#f0f0f0"
             />
           </View>
@@ -159,13 +171,22 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
                 <View style={serviceStyles.featureWrapper}>
                   <ApartmentFeatureCard
                     label={item.name}
-                    icon={renderIcon(item)}
+                    icon={
+                      <Icon
+                        name={item.icon as any}
+                        color={Colors.primary}
+                        size={22}
+                      />
+                    }
                     backgroundColor="#f0f0f0"
                   />
                 </View>
               )}
             />
-            <DialogButton title="U redu" onPress={() => setIsModalVisible(false)} />
+            <DialogButton
+              title="U redu"
+              onPress={() => setIsModalVisible(false)}
+            />
           </View>
         </View>
       </Modal>
