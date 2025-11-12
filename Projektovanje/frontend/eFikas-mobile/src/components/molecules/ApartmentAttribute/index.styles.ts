@@ -11,6 +11,5 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 5,
     backgroundColor: 'white',
-    shadowOpacity: 1
   }
 });
