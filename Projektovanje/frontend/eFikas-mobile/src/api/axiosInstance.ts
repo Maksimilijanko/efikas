@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
     withCredentials: true
 });
 
-// TODO: uncomment when backend gets implemented
+// --- TODO: uncomment when backend gets implemented --- 
 // // Axios request interceptor - for JWT in Authorization header
 // axiosInstance.interceptors.request.use(
 //     (config) => {

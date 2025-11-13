@@ -7,6 +7,14 @@ export interface LoginRequest {
     password: string;
 }
 
+export interface RegisterRequest {
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
 // TODO: fix when backend gets implemented
 export interface AuthenticationResponse {
     test: string;
