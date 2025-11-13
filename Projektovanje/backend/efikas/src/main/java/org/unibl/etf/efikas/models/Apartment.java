@@ -14,7 +14,7 @@ public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"ApartmentId\"", nullable = false)
-    private Integer id;
+    private Integer apartmentId;
 
     @Column(name = "\"Address\"", nullable = false, length = 100)
     private String address;
@@ -38,5 +38,7 @@ public class Apartment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "\"UserId\"", nullable = false)
     private AppUser user;
+
+    // TODO: change ApartmentTrait to be here, even though it's OneToMany multiplicity
 
 }
