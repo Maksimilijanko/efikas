@@ -6,6 +6,22 @@ interface Props {
     label: string;
 }
 
+/**
+ * LabelSeparator component
+ *
+ * A horizontal separator with a centered label, used to visually
+ * divide sections of content (e.g., between form fields, buttons, or list groups).
+ *
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.label - The text displayed at the center of the separator.
+ * @returns {JSX.Element} A horizontal divider with a centered label.
+ *
+ * @example
+ * ```tsx
+ * <LabelSeparator label="Or continue with" />
+ * ```
+ */
 function LabelSeparator({ label }: Props) {
     return(
         <HStack space="md" className="w-100 items-center content-center ">

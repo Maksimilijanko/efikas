@@ -15,6 +15,45 @@ interface Props {
     setSelectedValue: (selectedItems: TSelectedItem | TSelectedItem[]) => void
 }
 
+
+/**
+ * A customizable multi-select dropdown built on top of the
+ * `react-native-input-select` library, styled according to the app’s theme.
+ *
+ * This component allows users to select one or multiple options from a list,
+ * with built-in search functionality, custom icons, and flexible display
+ * configuration for labels and values.
+ *
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.label - The label displayed above the dropdown input.
+ * @param {string} props.placeholder - Text shown when no option is selected.
+ * @param {string} props.textInputPlaceholder - Placeholder text for the search input field.
+ * @param {TFlatList | TSectionList} props.options - The list of available options; supports flat or sectioned structures.
+ * @param {string} [props.optionLabel] - The key used to display the label for each option.
+ * @param {string} [props.optionValue] - The key used to identify the value of each option.
+ * @param {TSelectedItem | TSelectedItem[]} props.selectedValue - The currently selected item(s).
+ * @param {(selectedItems: TSelectedItem | TSelectedItem[]) => void} props.setSelectedValue - Callback fired when selection changes.
+ * @returns {JSX.Element} A styled, searchable, multi-select dropdown component.
+ *
+ * @example
+ * ```tsx
+ * const [selectedItems, setSelectedItems] = useState<TSelectedItem[]>([]);
+ *
+ * <Dropdown
+ *   label="Select categories"
+ *   placeholder="Choose one or more"
+ *   textInputPlaceholder="Search options..."
+ *   options={[
+ *     { label: "Design", value: "design" },
+ *     { label: "Development", value: "dev" },
+ *     { label: "Marketing", value: "marketing" },
+ *   ]}
+ *   selectedValue={selectedItems}
+ *   setSelectedValue={setSelectedItems}
+ * />
+ * ```
+ */
 function Dropdown({
     label,
     placeholder,
