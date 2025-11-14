@@ -14,7 +14,7 @@ public class CashRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"CashRegisterId\"", nullable = false)
-    private Integer id;
+    private Integer cashRegisterId;
 
     @Column(name = "\"CashRegisterNumber\"", nullable = false)
     private Integer cashRegisterNumber;

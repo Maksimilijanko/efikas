@@ -12,7 +12,7 @@ public class ReservationType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"TypeId\"", nullable = false)
-    private Integer id;
+    private Integer reservationTypeId;
 
     @Column(name = "\"TypeName\"", nullable = false, length = 50)
     private String typeName;
