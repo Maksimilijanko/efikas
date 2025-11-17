@@ -1,13 +1,12 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { Colors } from "@/src/styles/style";
+import { Text, View } from "react-native";
 import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
-import style from './style'
+import style from "./style";
 
-export type IconName = "Globe" | "SunMoon" | "AlertTriangle";
+import { LucideIconName } from "@/src/types/types";
 
 export type SettingsItemType = {
-  icon: IconName;
+  icon: LucideIconName;  
   label: string;
 };
 
@@ -21,7 +20,10 @@ interface SettingsTemplateProps {
   onItemPress: (label: string) => void;
 }
 
-export default function SettingsTemplate({ sections, onItemPress }: SettingsTemplateProps) {
+export default function SettingsTemplate({
+  sections,
+  onItemPress,
+}: SettingsTemplateProps) {
   return (
     <View style={style.screenContainer}>
       {sections.map((section, sectionIndex) => (
@@ -34,6 +36,7 @@ export default function SettingsTemplate({ sections, onItemPress }: SettingsTemp
           >
             {section.title}
           </Text>
+
           <View style={style.listContainer}>
             {section.items.map((item, index) => (
               <MenuItem
@@ -53,30 +56,32 @@ export default function SettingsTemplate({ sections, onItemPress }: SettingsTemp
 
 //PRIMJER UPOTREBE
 /**
- const MY_SETTINGS_SECTIONS: SettingsSection[] = [
-  {
-    title: "Opšte",
-    items: [
-      { icon: "Globe", label: "Jezik" },
-      { icon: "SunMoon", label: "Tema" },
-    ],
-  },
-  {
-    title: "Povratne informacije",
-    items: [{ icon: "AlertTriangle", label: "Prijavite grešku" }],
-  },
-];
+  const SECTIONS: SettingsSection[] = [
+    {
+      title: "Opšte",
+      items: [
+        { icon: "Globe", label: "Jezik" },
+        { icon: "SunMoon", label: "Tema" },
+      ],
+    },
+    {
+      title: "Povratne informacije",
+      items: [
+        { icon: "AlertTriangle", label: "Prijavite grešku" },
+      ],
+    },
+  ];
 
-export default function MySettingsScreen() {
   const handleItemPress = (label: string) => {
-    console.log("Kliknuto na:", label);
-    // ovdje može otvaranje modala
+    Alert.alert("Pritisnuto", label);
   };
 
   return (
     <View style={{ flex: 1 }}>
-      <SettingsTemplate sections={MY_SETTINGS_SECTIONS} onItemPress={handleItemPress} />
+      <SettingsTemplate
+        sections={SECTIONS}
+        onItemPress={handleItemPress}
+      />
     </View>
   );
-}
  */
