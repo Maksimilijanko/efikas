@@ -8,198 +8,28 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
-  TouchableOpacity,
   LayoutAnimation,
   UIManager,
   StyleSheet,
 } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
-import { Text } from '@/components/ui/text';
-import LabelSeparator from '../atoms/LabelSeparator/LabelSeparator';
-import { LoginButton } from '../atoms/LoginButton/LoginButton';
-import LabeledTextField from '../molecules/LabeledTextField/LabeledTextField';
-import { GoogleButton } from '../atoms/GoogleButton';
 import { Colors } from '@/src/styles/style';
-import { SegmentedControl } from '../atoms/SegmentedControl/SegmentedControl';
+import { SegmentedControl } from '../../atoms/SegmentedControl/SegmentedControl';
 
 type AuthMode = 'login' | 'register';
 
 interface AuthScreenTemplateProps {
+  authForm: React.ReactNode;
   onLogin: (data: any) => void;
   onRegister: (data: any) => void;
-  onForgotPassword: () => void;
+  onForgotPassword?: () => void;
   onGoogleLogin: () => void;
 }
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-
-const LoginForm = ({ onLogin, onForgotPassword, onGoogleLogin }: Omit<AuthScreenTemplateProps, 'onRegister'>) => (
-  <VStack space="xl" className="w-full px-6">
-    <VStack space="lg" className="w-full">
-      <LabeledTextField
-        label="Email"
-        placeholder="markomarkovic@gmail.out"
-        iconLocation="left"
-        type="text"
-        iconName="Mail"
-      />
-      <LabeledTextField
-        label="Password"
-        placeholder="•••••••••"
-        iconLocation="left"
-        type="password"
-        iconName="Lock"
-      />
-    </VStack>
-
-    <LoginButton
-      title="Prijavi se"
-      onPress={() => onLogin({ email: 'example', password: 'example' })}
-      className="mt-2"
-    />
-
-    <TouchableOpacity
-      onPress={onForgotPassword}
-      className="self-center mt-1"
-      activeOpacity={0.6}
-    >
-      <Text
-        className="font-semibold text-center text-sm"
-        style={{ color: Colors.primary }}
-      >
-        Zaboravljena lozinka
-      </Text>
-    </TouchableOpacity>
-
-    <LabelSeparator label="ili" />
-
-    <GoogleButton onPress={onGoogleLogin} />
-  </VStack>
-);
-
-const RegisterForm = ({ onRegister, onGoogleLogin }: Omit<AuthScreenTemplateProps, 'onLogin' | 'onForgotPassword'>) => {
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [repeatPasswordError, setRepeatPasswordError] = useState<string | null>(null);
-
-  const validatePasswords = () => {
-    let valid = true;
-
-    if (password.length < 8) {
-      setPasswordError('Lozinka mora imati najmanje 8 karaktera.');
-      valid = false;
-    } else {
-      setPasswordError(null);
-    }
-
-    if (repeatPassword !== password) {
-      setRepeatPasswordError('Lozinke se ne podudaraju.');
-      valid = false;
-    } else {
-      setRepeatPasswordError(null);
-    }
-
-    return valid;
-  };
-
-  const handleRegisterPress = () => {
-    const ok = validatePasswords();
-    if (!ok) return;
-
-    onRegister({
-      password,
-      repeatPassword,
-    });
-  };
-
-  return (
-    <VStack space="lg" className="w-full px-6">
-      <LabeledTextField
-        label="Ime"
-        placeholder="Marko"
-        iconLocation="left"
-        type="text"
-      />
-      <LabeledTextField
-        label="Prezime"
-        placeholder="Marković"
-        iconLocation="left"
-        type="text"
-      />
-      <LabeledTextField
-        label="Email"
-        placeholder="markomarkovic@gmail.com"
-        iconLocation="left"
-        type="text"
-        iconName="Mail"
-      />
-      <LabeledTextField
-        label="Password"
-        placeholder="•••••••••"
-        iconLocation="left"
-        type="password"
-        iconName="Lock"
-        value={password}
-        onChangeText={(text) => {
-          setPassword(text);
-          if (passwordError) setPasswordError(null);
-        }}
-        error={!!passwordError}
-      />
-      {passwordError && (
-        <Text
-          style={{
-            color: '#DC2626',
-            fontSize: 12,
-            marginTop: 4,
-            marginLeft: 4,
-          }}
-        >
-          {passwordError}
-        </Text>
-      )}
-
-      <LabeledTextField
-        label="Password"
-        placeholder="Ponovi šifru"
-        iconLocation="left"
-        type="password"
-        iconName="Lock"
-        onChangeText={(text) => {
-          setRepeatPassword(text);
-          if (repeatPasswordError) setRepeatPasswordError(null);
-        }}
-        error={!!repeatPasswordError}
-      />
-      {repeatPasswordError && (
-        <Text
-          style={{
-            color: '#DC2626',
-            fontSize: 12,
-            marginTop: 4,
-            marginLeft: 4,
-          }}
-        >
-          {repeatPasswordError}
-        </Text>
-      )}
-
-      <LoginButton
-        title="Registruj se"
-        onPress={handleRegisterPress}
-        className="mt-4"
-      />
-
-      <LabelSeparator label="ili" />
-
-      <GoogleButton onPress={onGoogleLogin} />
-    </VStack>
-  );
-};
 
 const AuthScreenTemplate = (props: AuthScreenTemplateProps) => {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
@@ -248,18 +78,11 @@ const AuthScreenTemplate = (props: AuthScreenTemplateProps) => {
   const renderForm = () => {
     if (authMode === 'login') {
       return (
-        <LoginForm
-          onLogin={props.onLogin}
-          onForgotPassword={props.onForgotPassword}
-          onGoogleLogin={props.onGoogleLogin}
-        />
+        props.authForm
       );
     }
     return (
-      <RegisterForm
-        onRegister={props.onRegister}
-        onGoogleLogin={props.onGoogleLogin}
-      />
+      props.authForm
     );
   };
 

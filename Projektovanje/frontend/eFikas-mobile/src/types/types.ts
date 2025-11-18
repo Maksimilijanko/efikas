@@ -3,7 +3,7 @@ import * as LucideIcons from "lucide-react-native";
 export type LucideIconName = keyof typeof LucideIcons;
 
 export interface LoginRequest {
-    username: string;
+    email: string;
     password: string;
 }
 

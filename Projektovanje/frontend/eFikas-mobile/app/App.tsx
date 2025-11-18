@@ -10,6 +10,15 @@ export default function App() {
         <GluestackUIProvider >
             <OverlayProvider>
                 <Stack>
+                    {/* Not logged in -> show auth flow */}
+                    <Stack.Screen
+                        name="(auth)"
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+
+                    {/* Authenticated users go to (tabs) */}
                     <Stack.Screen
                         name="(tabs)"
                         options={{
