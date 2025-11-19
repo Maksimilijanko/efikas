@@ -10,6 +10,6 @@ export const Colors = {
   textLight: '#ffffff',
   iconMenu: '#4D4D4D',
   accent: '#FFA63A',
-  calendarPeriod: '#548DC9',
-  calendarPeriodOverlap: "#2C5AA0"
+  calendarPeriod: '#C1D6EC',
+  calendarPeriodOverlap: "#8bb3deff",
 };
