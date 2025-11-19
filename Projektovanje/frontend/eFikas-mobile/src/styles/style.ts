@@ -12,4 +12,5 @@ export const Colors = {
   accent: '#FFA63A',
   calendarPeriod: '#C1D6EC',
   calendarPeriodOverlap: "#8bb3deff",
+  borderColor: "#E2E2E2",
 };
