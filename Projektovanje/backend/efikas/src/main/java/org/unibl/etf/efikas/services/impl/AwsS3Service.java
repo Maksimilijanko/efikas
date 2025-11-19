@@ -7,12 +7,14 @@ import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
 import org.unibl.etf.efikas.util.Constants;
 import org.unibl.etf.efikas.util.FileHelper;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +49,17 @@ public class AwsS3Service implements S3Service {
         }
 
         return new FileUploadResponse(uniqueName, LocalDateTime.now());
+    }
+
+    @Override
+    public byte[] downloadFile(String key) throws IOException {
+        ResponseBytes<GetObjectResponse> objectAsBytes = s3Client.getObjectAsBytes(GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX + key)
+                .build()
+        );
+
+        return objectAsBytes.asByteArray();
     }
 
     @Override

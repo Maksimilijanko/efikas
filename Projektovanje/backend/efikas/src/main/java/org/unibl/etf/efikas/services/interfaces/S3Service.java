@@ -13,8 +13,14 @@ public interface S3Service {
     FileUploadResponse uploadFile(MultipartFile file) throws IOException;
 
     /**
+     * Downloads a file from the S3 bucket.
+     * @param key The key identifier to the object on the S3 bucket.
+     * */
+    byte[] downloadFile(String key) throws IOException;
+
+    /**
      * Gets a presigned URL of an object in the S3 bucket.
-     * @param key The key that identifies the object on the bucket.
+     * @param key The key identifier to the object on the S3 bucket.
      * */
     String getPresignedUrl(String key);
 }

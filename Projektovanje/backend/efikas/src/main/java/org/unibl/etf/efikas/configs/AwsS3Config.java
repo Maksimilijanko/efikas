@@ -14,12 +14,6 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 @Configuration
 @Lazy
 public class AwsS3Config {
-//    @Value("${aws.region}")
-//    private String region;
-//    @Value("${aws.credentials.access-key-id}")
-//    private String accessKey;
-//    @Value("${aws.credentials.secret-access-key}")
-//    private String secretKey;
     private final AwsProperties awsProperties;
 
     public AwsS3Config(AwsProperties awsProperties) {
