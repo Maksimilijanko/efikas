@@ -1,13 +1,14 @@
 package org.unibl.etf.efikas.controllers;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.unibl.etf.efikas.security.JwtUtil;
 import org.unibl.etf.efikas.services.AppUserService;
 
 import java.util.Map;
@@ -19,6 +20,9 @@ public class AppUserController {
 
     private final AppUserService appUserService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> user) {
         return appUserService.register(user)
@@ -28,9 +32,24 @@ public class AppUserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> userCredentials) {
-        return appUserService.authenticate(userCredentials.get("email"), userCredentials.get("password"))
-                ? ResponseEntity.ok("User logged in successfully.")
-                : ResponseEntity.status(401).body("Invalid credentials.");
+        String email = userCredentials.get("email");
+        String password = userCredentials.get("password");
+
+        boolean isAuthenticated = appUserService.authenticate(email, password);
+
+        if (!isAuthenticated) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials"));
+        }
+
+        // Generate token
+        String token = jwtUtil.generateToken(email);
+
+        // Prepare JWT to be returned to the user in JSON form
+        return ResponseEntity.ok(Map.of(
+                "email", email,
+                "token", token
+        ));
     }
 
 }
