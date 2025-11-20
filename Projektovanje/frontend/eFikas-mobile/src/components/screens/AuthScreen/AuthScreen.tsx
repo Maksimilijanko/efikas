@@ -117,7 +117,7 @@ const RegisterForm = ({
             email: registerData.email.length < 6,
             password: registerData.password.length < 8,
             repeatPassword: registerData.repeatPassword !== registerData.password,
-            jib: registerData.jib.length !== 12 || !/^\d+$/.test(registerData.jib)
+            jib: registerData.jib.length !== 13 || !/^\d+$/.test(registerData.jib)
         };
 
         onErrorsRegisterChange('all', newErrors); // handle this in parent

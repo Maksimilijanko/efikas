@@ -26,7 +26,7 @@
         "errors": {
             "emailError": "Email mora biti bar 6 karaktera",
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
-            "jibLengthError": "JIB mora imati 12 cifara",
+            "jibLengthError": "JIB mora imati 13 cifara",
             "passwordMismatchError": "Lozinke se ne podudaraju"
         }
     }

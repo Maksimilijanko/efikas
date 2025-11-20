@@ -26,7 +26,7 @@
         "errors": {
             "emailError": "Email has to be at least 6 characters",
             "passwordLengthError": "Password has to be at least 8 characters",
-            "jibLengthError": "JIB has to be exactly 12 numbers long",
+            "jibLengthError": "JIB has to be exactly 13 digits long",
             "passwordMismatchError": "Passwords do not match"
         }
     }
