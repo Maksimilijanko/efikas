@@ -3,6 +3,31 @@
         "reservations": "Reservations",
         "home": "Home",
         "menu": "Menu"
-    }
+    },
 
+
+    "auth": {
+        "orSeparator": "or",
+
+        "login": {
+            "password": "Password",
+            "loginButton": "Sign in",
+            "forgotPassword": "Forgot password?"
+        },
+
+        "register": {
+            "firstName": "First name",
+            "lastName": "Last name",
+            "password": "Password",
+            "repeatPassword": "Confirm password",
+            "registerButton": "Sign up"
+        },
+
+        "errors": {
+            "emailError": "Email has to be at least 6 characters",
+            "passwordLengthError": "Password has to be at least 8 characters",
+            "jibLengthError": "JIB has to be exactly 12 characters",
+            "passwordMismatchError": "Passwords do not match"
+        }
+    }
 }

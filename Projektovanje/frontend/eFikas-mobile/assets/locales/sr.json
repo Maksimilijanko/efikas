@@ -3,7 +3,31 @@
         "reservations": "Rezervacije",
         "home": "Početna",
         "menu": "Meni"
+    },
+
+
+    "auth": {
+        "orSeparator": "ili",
+
+        "login": {
+            "password": "Lozinka",
+            "loginButton": "Prijavite se",
+            "forgotPassword": "Zaboravljena lozinka?"
+        },
+
+        "register": {
+            "firstName": "Ime",
+            "lastName": "Prezime",
+            "password": "Lozinka",
+            "repeatPassword": "Ponovite lozinku",
+            "registerButton": "Registrujte se"
+        },
+
+        "errors": {
+            "emailError": "Email mora biti bar 6 karaktera",
+            "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
+            "jibLengthError": "Email mora imati 12 karaktera",
+            "passwordMismatchError": "Lozinke se ne podudaraju"
+        }
     }
-
-
 }

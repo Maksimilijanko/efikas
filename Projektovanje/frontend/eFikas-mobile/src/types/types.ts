@@ -12,7 +12,7 @@ export interface RegisterRequest {
     surname: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    repeatPassword: string;
     jib: string;
 }
 
