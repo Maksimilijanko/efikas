@@ -3,12 +3,13 @@ import { TouchableOpacity, Image, Text } from 'react-native';
 import { HStack } from '@/components/ui/hstack';
 import { Colors } from '@/src/styles/style';
 
-const GOOGLE_ICON_URI =
-  'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-1024.png';
+
+const GOOGLE_ICON_URI = 'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-1024.png';
 
 interface GoogleButtonProps {
   onPress: () => void;
 }
+
 
 export const GoogleButton: React.FC<GoogleButtonProps> = ({ onPress }) => {
   return (

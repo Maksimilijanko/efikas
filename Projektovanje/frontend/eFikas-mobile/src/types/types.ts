@@ -13,9 +13,10 @@ export interface RegisterRequest {
     email: string;
     password: string;
     confirmPassword: string;
+    jib: string;
 }
 
-// TODO: fix when backend gets implemented
 export interface AuthenticationResponse {
-    test: string;
+    email: string;
+    token: string;
 }
