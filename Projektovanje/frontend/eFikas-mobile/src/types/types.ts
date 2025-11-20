@@ -3,7 +3,7 @@ import * as LucideIcons from "lucide-react-native";
 export type LucideIconName = keyof typeof LucideIcons;
 
 export interface LoginRequest {
-    username: string;
+    email: string;
     password: string;
 }
 
@@ -12,10 +12,11 @@ export interface RegisterRequest {
     surname: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    repeatPassword: string;
+    jib: string;
 }
 
-// TODO: fix when backend gets implemented
 export interface AuthenticationResponse {
-    test: string;
+    email: string;
+    token: string;
 }

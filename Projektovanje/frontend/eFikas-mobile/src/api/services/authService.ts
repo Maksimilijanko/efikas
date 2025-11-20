@@ -1,22 +1,23 @@
 import { AuthenticationResponse, LoginRequest, RegisterRequest } from "@/src/types/types";
 import axiosInstance from "../axiosInstance";
 import { API_URLS } from "@/src/util/apiConstants";
+import { AxiosResponse } from "axios";
 
 export const authService = {
 
   // Google OAuth Authentication
-  googleLogin: async (googleToken: string): Promise<AuthenticationResponse> => {
+  googleLogin: async (googleToken: string): Promise<AxiosResponse> => {
     const response = await axiosInstance.post<AuthenticationResponse>(API_URLS.auth.googleLogin, { googleToken });
-    return response.data;
+    return response;
   },
 
-  login: async (loginRequest: LoginRequest): Promise<string> => {
+  login: async (loginRequest: LoginRequest): Promise<AxiosResponse> => {
     const response = await axiosInstance.post<string>(API_URLS.auth.login, loginRequest);
-    return response.data;
+    return response;
   },
 
-  register: async (registerRequest: RegisterRequest): Promise<string> => {
+  register: async (registerRequest: RegisterRequest): Promise<AxiosResponse> => {
     const response = await axiosInstance.post<string>(API_URLS.auth.register, registerRequest);
-    return response.data;
+    return response;
   }
 }; 
