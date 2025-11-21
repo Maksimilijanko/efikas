@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.unibl.etf.efikas.models.dto.ApartmentCreateDTO;
+import org.unibl.etf.efikas.models.dto.ApartmentDTO;
 import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 import org.unibl.etf.efikas.services.ApartmentService;
 
@@ -34,7 +34,7 @@ public class ApartmentController {
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<?> createApartment(
-            @RequestPart("apartment") ApartmentCreateDTO apartmentRequest,
+            @RequestPart("apartment") ApartmentDTO apartmentRequest,
             @RequestPart("pictures") List<MultipartFile> pictures) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -5,10 +5,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.unibl.etf.efikas.exceptions.FileUploadException;
+import org.unibl.etf.efikas.models.dto.ApartmentDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.ApartmentPicture;
 import org.unibl.etf.efikas.models.entities.ApartmentPictureId;
-import org.unibl.etf.efikas.models.dto.ApartmentCreateDTO;
 import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.repositories.ApartmentPictureRepository;
@@ -47,7 +47,7 @@ public class ApartmentService {
                 .toList();
     }
 
-    public ApartmentResponse createApartmentWithFiles(ApartmentCreateDTO request, List<MultipartFile> files, String email) {
+    public ApartmentResponse createApartmentWithFiles(ApartmentDTO request, List<MultipartFile> files, String email) {
         Apartment apartment = new Apartment();
         apartment.setAddress(request.getAddress());
         apartment.setNumberOfBeds(request.getNumberOfBeds());
