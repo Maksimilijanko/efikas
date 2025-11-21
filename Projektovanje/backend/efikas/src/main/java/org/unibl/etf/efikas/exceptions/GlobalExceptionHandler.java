@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<?> handleFileUploadException(FileUploadException ex){
+    @ExceptionHandler(S3UploadException.class)
+    public ResponseEntity<?> handleS3UploadException(S3UploadException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(S3DeletionException.class)
+    public ResponseEntity<?> handleS3DeletionException(S3DeletionException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

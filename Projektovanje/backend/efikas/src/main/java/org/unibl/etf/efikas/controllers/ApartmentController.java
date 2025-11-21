@@ -2,7 +2,6 @@ package org.unibl.etf.efikas.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +42,7 @@ public class ApartmentController {
         String email = authentication.getName(); // Ako je pogresan email, stavi null
 
 
-        ApartmentResponse response = apartmentService.createApartmentWithFiles(apartmentRequest, pictures, email); //"T.hanks@skibidi.com"
+        ApartmentResponse response = apartmentService.createApartmentWithFiles(apartmentRequest, pictures, email);
 
         return ResponseEntity.ok(response);
     }
@@ -57,16 +56,16 @@ public class ApartmentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
+        System.out.println("Hello from update");
+
         // PUT method behaves in "upsert" manner
         ApartmentResponse response = null;
         try {
-            response =
-                    apartmentService.updateApartment(id, apartmentRequest, pictures, email);
+            response = apartmentService.updateApartment(id, apartmentRequest, pictures, email);
             return ResponseEntity.ok(response);
         } catch(EntityNotFoundException e) {
             // Create a new apartment with the given ID
-            response =
-                    apartmentService.createApartmentWithFiles(id, apartmentRequest, pictures, email);
+            response = apartmentService.createApartmentWithFiles(id, apartmentRequest, pictures, email);
 
             // Obtain absolute URI to the newly created resource in order to provide a Location header
             URI location = ServletUriComponentsBuilder
@@ -75,7 +74,6 @@ public class ApartmentController {
                     .toUri();
             return ResponseEntity.created(location).body(response);
         }
-
     }
 
     @DeleteMapping(value = "/{id}")
