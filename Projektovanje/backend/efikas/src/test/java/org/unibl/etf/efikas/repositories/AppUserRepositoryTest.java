@@ -1,10 +1,9 @@
 package org.unibl.etf.efikas.repositories; // koristi isti paket kao tvoja glavna aplikacija
 
-import org.unibl.etf.efikas.models.AppUser;
+import org.unibl.etf.efikas.models.entities.AppUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.unibl.etf.efikas.repositories.AppUserRepository;
 
 import java.util.List;
 

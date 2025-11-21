@@ -1,6 +1,6 @@
 package org.unibl.etf.efikas.repositories;
 
-import org.unibl.etf.efikas.models.Reservation;
+import org.unibl.etf.efikas.models.entities.Reservation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

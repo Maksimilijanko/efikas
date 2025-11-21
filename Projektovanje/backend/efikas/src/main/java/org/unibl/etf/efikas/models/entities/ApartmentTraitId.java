@@ -1,4 +1,4 @@
-package org.unibl.etf.efikas.models;
+package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

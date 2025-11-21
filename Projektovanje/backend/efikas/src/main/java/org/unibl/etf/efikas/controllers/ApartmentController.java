@@ -34,16 +34,14 @@ public class ApartmentController {
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<?> createApartment(
-            @RequestPart("apartment") String apartmentJson,
+            @RequestPart("apartment") ApartmentCreateDTO apartmentRequest,
             @RequestPart("pictures") List<MultipartFile> pictures) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
+        String email = authentication.getName(); // Ako je pogresan email, stavi null
 
-        ObjectMapper mapper = new ObjectMapper();
-        ApartmentCreateDTO request = mapper.readValue(apartmentJson, ApartmentCreateDTO.class);
 
-        ApartmentResponse response = apartmentService.createApartmentWithFiles(request, pictures, email);
+        ApartmentResponse response = apartmentService.createApartmentWithFiles(apartmentRequest, pictures, email); //"T.hanks@skibidi.com"
 
         return ResponseEntity.ok(response);
     }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.efikas.models.AppUser;
+import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 
 import java.util.Map;

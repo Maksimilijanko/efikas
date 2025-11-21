@@ -1,18 +1,22 @@
 package org.unibl.etf.efikas.services;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.unibl.etf.efikas.mappers.ApartmentMapper;
-import org.unibl.etf.efikas.models.Apartment;
-import org.unibl.etf.efikas.models.ApartmentPicture;
-import org.unibl.etf.efikas.models.ApartmentPictureId;
+import org.unibl.etf.efikas.exceptions.FileUploadException;
+import org.unibl.etf.efikas.models.entities.Apartment;
+import org.unibl.etf.efikas.models.entities.ApartmentPicture;
+import org.unibl.etf.efikas.models.entities.ApartmentPictureId;
 import org.unibl.etf.efikas.models.dto.ApartmentCreateDTO;
 import org.unibl.etf.efikas.models.responses.ApartmentResponse;
+import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.repositories.ApartmentPictureRepository;
 import org.unibl.etf.efikas.repositories.ApartmentRepository;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
+import org.unibl.etf.efikas.services.interfaces.S3Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +26,25 @@ public class ApartmentService {
 
     private final ApartmentRepository apartmentRepository;
     private final ApartmentPictureRepository apartmentPictureRepository;
-    private final ApartmentMapper mapper;
     private final AppUserRepository appUserRepository;
+    private final ModelMapper modelMapper;
+    private final S3Service s3Service;
 
     public List<ApartmentResponse> getApartmentsForUser(String email) {
-        return apartmentRepository.findByUserEmail(email).stream().map(a -> {
-            return mapper.toDto(a, apartmentPictureRepository.findApartmentPictureByApartment(a).stream()
-                    .map(p -> p.getId().getPictureURL()).toList());
-        }).toList();
+        return apartmentRepository.findByUserEmail(email).stream()
+                .map(a -> {
+                    ApartmentResponse resp = modelMapper.map(a, ApartmentResponse.class);
+
+                    List<String> pictures = apartmentPictureRepository
+                            .findApartmentPictureByApartment(a)
+                            .stream()
+                            .map(p -> p.getId().getPictureURL())
+                            .toList();
+
+                    resp.setPictures(pictures);
+                    return resp;
+                })
+                .toList();
     }
 
     public ApartmentResponse createApartmentWithFiles(ApartmentCreateDTO request, List<MultipartFile> files, String email) {
@@ -45,8 +60,14 @@ public class ApartmentService {
         Apartment savedApartment = apartmentRepository.save(apartment);
 
         List<ApartmentPicture> pictures = new ArrayList<>();
+        FileUploadResponse s3UploadResponse;
         for (MultipartFile file : files) {
-            String url = null;      // TODO: obtain S3 URL
+            try {
+                s3UploadResponse = s3Service.uploadFile(file);
+            } catch (IOException e) {
+                throw new FileUploadException(e.getMessage());
+            }
+            String url = s3UploadResponse.getFilePath();
 
             ApartmentPicture picture = new ApartmentPicture();
             picture.setApartment(savedApartment);
@@ -61,7 +82,11 @@ public class ApartmentService {
 
         apartmentPictureRepository.saveAll(pictures);
 
-        return mapper.toDto(savedApartment,
-                pictures.stream().map(p -> p.getId().getPictureURL()).toList());
+        ApartmentResponse response = modelMapper.map(savedApartment, ApartmentResponse.class);
+        response.setPictures(
+                pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
+        );
+
+        return response;
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import org.unibl.etf.efikas.models.AppUser;
+import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 
 @Service
