@@ -1,4 +1,4 @@
-package org.unibl.etf.efikas.models;
+package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,15 +6,13 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "apartment_task", schema = "efikas")
-public class ApartmentTask {
+@Table(name = "apartment_damage", schema = "efikas")
+public class ApartmentDamage {
     @EmbeddedId
-    private ApartmentTaskId id;
+    private ApartmentDamageId id;
 
     @MapsId("apartmentId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -22,10 +20,10 @@ public class ApartmentTask {
     @JoinColumn(name = "\"ApartmentId\"", nullable = false)
     private Apartment apartment;
 
-    @Column(name = "\"DateTime\"", nullable = false)
-    private Instant dateTime;
+    @Column(name = "\"DamagePrice\"")
+    private Double damagePrice;
 
-    @Column(name = "\"Note\"", length = 256)
+    @Column(name = "\"Note\"", nullable = false, length = 256)
     private String note;
 
     @Column(name = "\"Status\"", nullable = false)

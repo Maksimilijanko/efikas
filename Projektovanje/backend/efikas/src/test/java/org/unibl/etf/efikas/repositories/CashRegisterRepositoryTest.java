@@ -1,6 +1,6 @@
 package org.unibl.etf.efikas.repositories;
 
-import org.unibl.etf.efikas.models.CashRegister;
+import org.unibl.etf.efikas.models.entities.CashRegister;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
