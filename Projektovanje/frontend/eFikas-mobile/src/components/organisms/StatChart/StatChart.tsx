@@ -1,29 +1,54 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { Colors } from "@/src/styles/style";
 import { useRouter } from 'expo-router';
+import { Platform } from "react-native";
+import { Dimensions } from 'react-native';
 
 export interface StatChartProps {
   title: string;
   data: { value: number; label: string }[];
 }
 
+function getLast7MonthsData(data) {
+  const now = new Date();
+  const currentMonth = now.getMonth();
+
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Avg', 'Sep', 'Okt', 'Nov', 'Dec'];
+
+  const months = [];
+  for (let i = 6; i >= 0; i--) {
+    let monthIndex = currentMonth - i;
+    if (monthIndex < 0) monthIndex += 12;
+    months.push(monthNames[monthIndex]);
+  }
+
+  const filtered = months.map(m => data.find(d => d.label === m) || { label: m, value: 0 });
+
+  return filtered;
+}
+
+
 export const StatChart: React.FC<StatChartProps> = ({ title, data }) => {
   const router = useRouter();
+  const last7 = getLast7MonthsData(data);
 
-  const chartData = data.map(item => ({
+  const chartData = last7.map(item => ({
     value: item.value,
-    label: '',
+    label: item.label,
   }));
 
   const handlePress = () => {
     router.push('/analytics');
   };
 
+  const screenWidth = Dimensions.get('window').width;
+  const dynamicSpacing = screenWidth / (chartData.length + 1);
+
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.7}>
-      <Text style={styles.title}>{title}</Text>
+      {false && <Text style={styles.title}>{title}</Text>}
 
       <LineChart
         data={chartData}
@@ -31,10 +56,16 @@ export const StatChart: React.FC<StatChartProps> = ({ title, data }) => {
         areaChart
         thickness={1.5}
         hideRules
-        hideAxesAndRules
-        initialSpacing={0}
-        endSpacing={0}
-        spacing={30}
+        xAxisLabelTextStyle={{
+          color: Colors.textSecondary,
+          fontSize: 12,
+        }}
+        xAxisLabelsVerticalShift={10}
+        yAxisLabelWidth={16}
+        yAxisTextStyle={{ display: 'none' }}
+        initialSpacing={15}
+        endSpacing={15}
+        spacing={dynamicSpacing}
         hideDataPoints={true}
         color={Colors.primary}
         startFillColor={Colors.primary}
@@ -53,18 +84,31 @@ export const StatChart: React.FC<StatChartProps> = ({ title, data }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 0,
+    paddingVertical: 24,
     paddingHorizontal: 0,
     borderRadius: 20,
     backgroundColor: Colors.background,
+    width: '100%',
     elevation: 3,
+    // SHADOW
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.shadowColor,
+        shadowOpacity: 0.05,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '500',
     textAlign: "left",
     marginTop: 16,
-    marginBottom: 24,
+    marginBottom: 16,
     marginLeft: 32,
     color: Colors.textPrimary,
   },

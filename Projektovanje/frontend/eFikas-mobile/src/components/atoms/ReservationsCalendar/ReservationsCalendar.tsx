@@ -12,6 +12,7 @@ import { Calendar, LocaleConfig } from "react-native-calendars";
 import { Colors } from "@/src/styles/style";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
+import { Platform } from "react-native";
 
 // ------------------ Lokalizacija ------------------
 LocaleConfig.locales["sr"] = {
@@ -230,7 +231,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
     );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.calendarWrapper}>
       <Calendar
         markingType="period"
         markedDates={markedDates}
@@ -350,14 +351,31 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
 // ------------------ STYLES ------------------
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-
   calendar: {
     borderRadius: 20,
     overflow: "hidden",
     backgroundColor: Colors.background,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+
+  calendarWrapper: {
+    flex: 1,
+    borderRadius: 20,
+    backgroundColor: Colors.background,
+    width: '100%',
+    // SHADOW
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.shadowColor,
+        shadowOpacity: 0.05,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
 
   modalBackdrop: {
