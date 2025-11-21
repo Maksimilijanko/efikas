@@ -1,7 +1,6 @@
 package org.unibl.etf.efikas.models.dto;
 
 import lombok.Data;
-import java.util.List;
 
 @Data
 public class ApartmentDTO {
