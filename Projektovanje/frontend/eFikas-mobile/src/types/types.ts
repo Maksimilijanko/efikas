@@ -20,3 +20,30 @@ export interface AuthenticationResponse {
     email: string;
     token: string;
 }
+export interface StatisticsDataPoint {
+  label: string;
+  value: number;
+}
+
+export interface StatisticsResponse {
+  data: StatisticsDataPoint[];
+}
+export interface Reservation {
+  ReservationId: number;
+  ApartmentId: number;
+  GuestFullName: string;
+  GuestPhoneNumber: string;
+  DateTimeOfArrival: string;
+  DateTimeOfDeparture: string;
+  GuestNumber: number;
+  Price: number;
+  Note: string;
+  PersonalDocumentURL: string;
+  IdTypeOfReservation: number;
+  TypeId: number;
+}
+export interface DashboardResponse {
+  fullName: string;
+  statistics: StatisticsResponse;
+  reservations: Reservation[];
+}

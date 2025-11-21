@@ -8,6 +8,7 @@ export type DashboardTemplateProps = {
   reservationsHeader: React.ReactNode;
   calendar: React.ReactNode;
   shortcuts: React.ReactNode[];
+  statisticsHeader: React.ReactNode;
   statisticsCard: React.ReactNode;
 };
 
@@ -19,6 +20,7 @@ const DashboardTemplate: React.FC<DashboardTemplateProps> = ({
   reservationsHeader,
   calendar,
   shortcuts,
+  statisticsHeader,
   statisticsCard
 }) => {
   return (
@@ -57,6 +59,10 @@ const DashboardTemplate: React.FC<DashboardTemplateProps> = ({
         </View>
 
         <View style={styles.statisticsSection}>
+          {statisticsHeader}
+        </View>
+
+        <View style={styles.statisticsSection}>
           {statisticsCard}
         </View>
       </ScrollView>
@@ -77,15 +83,16 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     width: '92%',
-    marginBottom: screenHeight * 0.015
+    marginBottom: screenHeight * 0.024
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%',
   },
   headerLeft: {
-    flexShrink: 1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-start'
   },
@@ -111,19 +118,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: screenHeight * 0.04
+    marginBottom: screenHeight * 0.03,
+    gap: 12
   },
   shortcutItem: {
     flex: 1,
-    marginHorizontal: '1%',
     justifyContent: 'center',
     alignItems: 'center'
   },
   statisticsSection: {
     width: '92%',
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: screenHeight * 0.04
+    marginBottom: screenHeight * 0.01
   }
 });
 
