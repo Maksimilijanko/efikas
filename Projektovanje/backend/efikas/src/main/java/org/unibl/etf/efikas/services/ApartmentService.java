@@ -1,5 +1,6 @@
 package org.unibl.etf.efikas.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.unibl.etf.efikas.exceptions.FileUploadException;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.ApartmentPicture;
 import org.unibl.etf.efikas.models.entities.ApartmentPictureId;
-import org.unibl.etf.efikas.models.dto.ApartmentCreateDTO;
+import org.unibl.etf.efikas.models.dto.ApartmentDTO;
 import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.repositories.ApartmentPictureRepository;
@@ -47,7 +48,7 @@ public class ApartmentService {
                 .toList();
     }
 
-    public ApartmentResponse createApartmentWithFiles(ApartmentCreateDTO request, List<MultipartFile> files, String email) {
+    public ApartmentResponse createApartmentWithFiles(ApartmentDTO request, List<MultipartFile> files, String email) {
         Apartment apartment = new Apartment();
         apartment.setAddress(request.getAddress());
         apartment.setNumberOfBeds(request.getNumberOfBeds());
@@ -83,6 +84,105 @@ public class ApartmentService {
         apartmentPictureRepository.saveAll(pictures);
 
         ApartmentResponse response = modelMapper.map(savedApartment, ApartmentResponse.class);
+        response.setPictures(
+                pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
+        );
+
+        return response;
+    }
+
+    public ApartmentResponse createApartmentWithFiles(Integer id, ApartmentDTO request, List<MultipartFile> files, String email) {
+        Apartment apartment = new Apartment();
+        apartment.setApartmentId(id);
+        apartment.setAddress(request.getAddress());
+        apartment.setNumberOfBeds(request.getNumberOfBeds());
+        apartment.setNumberOfRooms(request.getNumberOfRooms());
+        apartment.setCapacity(request.getCapacity());
+        apartment.setPricePerDay(request.getPricePerDay());
+        apartment.setPricePerNight(request.getPricePerNight());
+        apartment.setUser(appUserRepository.findByEmail(email).orElse(null));
+
+        Apartment savedApartment = apartmentRepository.save(apartment);
+
+        List<ApartmentPicture> pictures = new ArrayList<>();
+        FileUploadResponse s3UploadResponse;
+        for (MultipartFile file : files) {
+            try {
+                s3UploadResponse = s3Service.uploadFile(file);
+            } catch (IOException e) {
+                throw new FileUploadException(e.getMessage());
+            }
+            String url = s3UploadResponse.getFilePath();
+
+            ApartmentPicture picture = new ApartmentPicture();
+            picture.setApartment(savedApartment);
+
+            ApartmentPictureId pictureId = new ApartmentPictureId();
+            pictureId.setPictureURL(url);
+            pictureId.setApartmentId(savedApartment.getApartmentId());
+
+            picture.setId(pictureId);
+            pictures.add(picture);
+        }
+
+        apartmentPictureRepository.saveAll(pictures);
+
+        ApartmentResponse response = modelMapper.map(savedApartment, ApartmentResponse.class);
+        response.setPictures(
+                pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
+        );
+
+        return response;
+    }
+
+    public ApartmentResponse updateApartment(
+            Integer apartmentId,
+            ApartmentDTO dto,
+            List<MultipartFile> newPictures,
+            String userEmail
+    ) throws IOException {
+
+        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+                .orElseThrow(() -> new EntityNotFoundException("Apartment not found"));
+
+        // Throw an exception if the apartment belongs to a different user
+        if (!apartment.getUser().getEmail().equals(userEmail)) {
+            throw new RuntimeException("Forbidden");
+        }
+
+        apartment.setAddress(dto.getAddress());
+        apartment.setNumberOfRooms(dto.getNumberOfRooms());
+        apartment.setNumberOfBeds(dto.getNumberOfBeds());
+        apartment.setCapacity(dto.getCapacity());
+        apartment.setPricePerDay(dto.getPricePerDay());
+        apartment.setPricePerNight(dto.getPricePerNight());
+
+        // TODO: handle picture updating, populate pictures list with updated URLs
+
+        List<ApartmentPicture> pictures = null;
+
+        apartmentRepository.save(apartment);
+
+
+        ApartmentResponse response = modelMapper.map(apartment, ApartmentResponse.class);
+        response.setPictures(
+                pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
+        );
+
+        return response;
+    }
+
+    public ApartmentResponse deleteApartment(Integer apartmentId) throws IOException {
+        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+                .orElseThrow(() -> new EntityNotFoundException("Apartment not found"));
+
+        apartmentRepository.delete(apartment);
+
+        // TODO: handle picture deleting, populate pictures list with URLs of deleted pictures
+
+        List<ApartmentPicture> pictures = null;
+
+        ApartmentResponse response = modelMapper.map(apartment, ApartmentResponse.class);
         response.setPictures(
                 pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
         );

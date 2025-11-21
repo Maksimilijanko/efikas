@@ -1,10 +1,9 @@
 package org.unibl.etf.efikas.models.dto;
 
 import lombok.Data;
-import java.util.List;
 
 @Data
-public class ApartmentCreateDTO {
+public class ApartmentDTO {
 
     private String address;
     private Integer numberOfBeds;
