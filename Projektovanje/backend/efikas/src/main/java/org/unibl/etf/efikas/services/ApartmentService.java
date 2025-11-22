@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.unibl.etf.efikas.exceptions.FileUploadException;
+import org.unibl.etf.efikas.exceptions.S3UploadException;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.ApartmentPicture;
 import org.unibl.etf.efikas.models.entities.ApartmentPictureId;
@@ -39,7 +39,7 @@ public class ApartmentService {
                     List<String> pictures = apartmentPictureRepository
                             .findApartmentPictureByApartment(a)
                             .stream()
-                            .map(p -> p.getId().getPictureURL())
+                            .map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL()))
                             .toList();
 
                     resp.setPictures(pictures);
@@ -50,50 +50,16 @@ public class ApartmentService {
 
     public ApartmentResponse createApartmentWithFiles(ApartmentDTO request, List<MultipartFile> files, String email) {
         Apartment apartment = new Apartment();
-        apartment.setAddress(request.getAddress());
-        apartment.setNumberOfBeds(request.getNumberOfBeds());
-        apartment.setNumberOfRooms(request.getNumberOfRooms());
-        apartment.setCapacity(request.getCapacity());
-        apartment.setPricePerDay(request.getPricePerDay());
-        apartment.setPricePerNight(request.getPricePerNight());
-        apartment.setUser(appUserRepository.findByEmail(email).orElse(null));
-
-        Apartment savedApartment = apartmentRepository.save(apartment);
-
-        List<ApartmentPicture> pictures = new ArrayList<>();
-        FileUploadResponse s3UploadResponse;
-        for (MultipartFile file : files) {
-            try {
-                s3UploadResponse = s3Service.uploadFile(file);
-            } catch (IOException e) {
-                throw new FileUploadException(e.getMessage());
-            }
-            String url = s3UploadResponse.getFilePath();
-
-            ApartmentPicture picture = new ApartmentPicture();
-            picture.setApartment(savedApartment);
-
-            ApartmentPictureId pictureId = new ApartmentPictureId();
-            pictureId.setPictureURL(url);
-            pictureId.setApartmentId(savedApartment.getApartmentId());
-
-            picture.setId(pictureId);
-            pictures.add(picture);
-        }
-
-        apartmentPictureRepository.saveAll(pictures);
-
-        ApartmentResponse response = modelMapper.map(savedApartment, ApartmentResponse.class);
-        response.setPictures(
-                pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
-        );
-
-        return response;
+        return getApartmentResponseCreate(request, files, email, apartment);
     }
 
     public ApartmentResponse createApartmentWithFiles(Integer id, ApartmentDTO request, List<MultipartFile> files, String email) {
         Apartment apartment = new Apartment();
         apartment.setApartmentId(id);
+        return getApartmentResponseCreate(request, files, email, apartment);
+    }
+
+    private ApartmentResponse getApartmentResponseCreate(ApartmentDTO request, List<MultipartFile> files, String email, Apartment apartment) {
         apartment.setAddress(request.getAddress());
         apartment.setNumberOfBeds(request.getNumberOfBeds());
         apartment.setNumberOfRooms(request.getNumberOfRooms());
@@ -110,7 +76,7 @@ public class ApartmentService {
             try {
                 s3UploadResponse = s3Service.uploadFile(file);
             } catch (IOException e) {
-                throw new FileUploadException(e.getMessage());
+                throw new S3UploadException(e.getMessage());
             }
             String url = s3UploadResponse.getFilePath();
 
@@ -157,17 +123,42 @@ public class ApartmentService {
         apartment.setPricePerDay(dto.getPricePerDay());
         apartment.setPricePerNight(dto.getPricePerNight());
 
-        // TODO: handle picture updating, populate pictures list with updated URLs
+        Apartment updatedApartment = apartmentRepository.save(apartment);
 
-        List<ApartmentPicture> pictures = null;
+        /* Steps for updating pictures on S3
+        * (1) Upload new images with new keys
+        * (2) Delete images on S3 with old keys
+        * (3) Update database with new keys
+        * (4) ???
+        * (5) Profit
+        * */
+        // Upload new images
+        List<String> newKeys = new ArrayList<>();
+        for (MultipartFile file : newPictures) {
+            FileUploadResponse uploaded = s3Service.uploadFile(file);
+            newKeys.add(uploaded.getFilePath());
+        }
 
-        apartmentRepository.save(apartment);
+        // Delete old files and DB entries
+        List<ApartmentPicture> pictures = apartmentPictureRepository.findApartmentPictureByApartment(updatedApartment);
+        pictures.forEach(p -> s3Service.deleteFile(p.getId().getPictureURL()));
+        apartmentPictureRepository.deleteAll(pictures);
 
+        // Add new DB entries with new keys
+        for (String key : newKeys) {
+            ApartmentPictureId newApartmentPictureId = new ApartmentPictureId();
+            newApartmentPictureId.setApartmentId(updatedApartment.getApartmentId());
+            newApartmentPictureId.setPictureURL(key);
 
-        ApartmentResponse response = modelMapper.map(apartment, ApartmentResponse.class);
-        response.setPictures(
-                pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
-        );
+            ApartmentPicture picture = new ApartmentPicture();
+            picture.setId(newApartmentPictureId);
+            picture.setApartment(updatedApartment);
+
+            apartmentPictureRepository.save(picture);
+        }
+
+        ApartmentResponse response = modelMapper.map(updatedApartment, ApartmentResponse.class);
+        response.setPictures(newKeys);
 
         return response;
     }
@@ -176,16 +167,19 @@ public class ApartmentService {
         Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found"));
 
+        List<ApartmentPicture> pictures = apartmentPictureRepository.findApartmentPictureByApartment(apartment);
+        ApartmentResponse response = modelMapper.map(apartment, ApartmentResponse.class);
+        // 1. Set the appropriate URLs first (only keys, not presigned urls)
+        response.setPictures(
+                pictures.stream().map(p -> p.getId().getPictureURL()).toList()
+        );
+
+        // delete children first, then apartment
+        apartmentPictureRepository.deleteAll(pictures);
         apartmentRepository.delete(apartment);
 
-        // TODO: handle picture deleting, populate pictures list with URLs of deleted pictures
-
-        List<ApartmentPicture> pictures = null;
-
-        ApartmentResponse response = modelMapper.map(apartment, ApartmentResponse.class);
-        response.setPictures(
-                pictures.stream().map(p -> s3Service.getPresignedUrl(p.getId().getPictureURL())).toList()
-        );
+        // 2. Delete them on S3
+        response.getPictures().forEach(s3Service::deleteFile);
 
         return response;
     }

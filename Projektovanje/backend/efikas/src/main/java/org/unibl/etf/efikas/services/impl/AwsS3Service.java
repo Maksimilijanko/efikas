@@ -3,18 +3,18 @@ package org.unibl.etf.efikas.services.impl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.unibl.etf.efikas.exceptions.S3DeletionException;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
 import org.unibl.etf.efikas.util.Constants;
 import org.unibl.etf.efikas.util.FileHelper;
 import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,5 +75,19 @@ public class AwsS3Service implements S3Service {
                 .build();
 
         return s3Presigner.presignGetObject(presignRequest).url().toString();
+    }
+
+    @Override
+    public String deleteFile(String key) throws S3DeletionException {
+        try {
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build());
+
+            return key;
+        } catch (S3Exception | SdkClientException ex) {
+            throw new S3DeletionException("AWS failed to delete file: " + key);
+        }
     }
 }
