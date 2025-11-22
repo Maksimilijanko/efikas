@@ -1,0 +1,71 @@
+import { useMutation } from '@tanstack/react-query';
+import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { authService } from '../api/services/authService';
+import { secureStoreService } from '../services/secureStoreService';
+import { toastService } from '../services/toastService';
+import { LoginRequest, RegisterRequest } from '../types/types';
+import { SECURE_STORE_KEYS } from '../util/secureStoreKeys';
+
+export const useAuth = () => {
+    const { t } = useTranslation();
+
+    const loginMutation = useMutation({
+        mutationFn: (loginRequest: LoginRequest) => authService.login(loginRequest),
+        onSuccess: (response) => {
+            if (response.status === 200) {
+                toastService.success(
+                    t('auth.login.toastMessages.successTitle'),
+                    t('auth.login.toastMessages.successMsg')
+                );
+
+                secureStoreService.setItemAsync(
+                    SECURE_STORE_KEYS.authenticationResponseKey,
+                    JSON.stringify(response.data)
+                );
+
+                router.replace('/(tabs)');
+            } else {
+                throw new Error(`Login failed with status: ${response.status}`);
+            }
+        },
+        onError: (error: Error) => {
+            toastService.error(
+                t('auth.login.toastMessages.errorTitle'),
+                t('auth.login.toastMessages.errorMsg')
+            );
+            console.log("Login error: ", error.message);
+        },
+    });
+
+    const registerMutation = useMutation({
+        mutationFn: (registerRequest: RegisterRequest) =>
+            authService.register(registerRequest),
+        onSuccess: (response) => {
+            if (response.status === 200) {
+                toastService.success(
+                    t('auth.register.toastMessages.successTitle'),
+                    t('auth.register.toastMessages.successMsg')
+                );
+            } else {
+                throw new Error(`Registration failed with status: ${response.status}`);
+            }
+        },
+        onError: (error: Error) => {
+            toastService.error(
+                t('auth.register.toastMessages.errorTitle'),
+                t('auth.register.toastMessages.errorMsg')
+            );
+            console.log("Registration error: ", error.message);
+        },
+    });
+
+    return {
+        login: loginMutation.mutate,
+        register: registerMutation.mutate,
+        isLoggingIn: loginMutation.isPending,
+        isRegistering: registerMutation.isPending,
+        loginError: loginMutation.error,
+        registerError: registerMutation.error,
+    };
+}

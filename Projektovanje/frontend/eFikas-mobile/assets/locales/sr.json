@@ -18,7 +18,8 @@
                 "successMsg": "Možete sada koristiti aplikaciju.",
                 "errorTitle": "Greška!",
                 "errorMsg": "Provjerite Vaš email i lozinku."
-            }
+            },
+            "loadingTitle": "Prijava u toku"
         },
 
         "register": {
@@ -32,7 +33,8 @@
                 "successMsg": "Pokušajte se prijaviti sa novim nalogom.",
                 "errorTitle": "Greška!",
                 "errorMsg": "Provjerite Vaše podatke."
-            }
+            },
+            "loadingTitle": "Registracija u toku"
         },
 
         "errors": {
