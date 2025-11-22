@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.unibl.etf.efikas.models.entities.ApartmentExpense;
 
+import java.util.List;
+
 @Repository
 public interface ApartmentExpenseRepository extends JpaRepository<ApartmentExpense, Long> {
+    List<ApartmentExpense> findApartmentExpenseByApartmentId(Long apartmentId);
 }
