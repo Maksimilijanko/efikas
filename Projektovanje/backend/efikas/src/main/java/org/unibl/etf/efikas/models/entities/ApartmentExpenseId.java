@@ -1,4 +1,4 @@
-package org.unibl.etf.efikas.models;
+package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -12,19 +12,19 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-public class ApartmentTaskId implements Serializable {
-    private static final long serialVersionUID = 7368208576096282655L;
+public class ApartmentExpenseId implements Serializable {
+    private static final long serialVersionUID = 5635580517241181054L;
     @Column(name = "\"ApartmentId\"", nullable = false)
     private Integer apartmentId;
 
-    @Column(name = "\"Name\"", nullable = false, length = 20)
+    @Column(name = "\"Name\"", nullable = false, length = 100)
     private String name;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        ApartmentTaskId entity = (ApartmentTaskId) o;
+        ApartmentExpenseId entity = (ApartmentExpenseId) o;
         return Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.apartmentId, entity.apartmentId);
     }

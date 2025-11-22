@@ -1,4 +1,4 @@
-package org.unibl.etf.efikas.models;
+package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,15 +9,24 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "apartment_picture", schema = "efikas")
-public class ApartmentPicture {
+@Table(name = "apartment_expense", schema = "efikas")
+public class ApartmentExpense {
     @EmbeddedId
-    private ApartmentPictureId id;
+    private ApartmentExpenseId id;
 
     @MapsId("apartmentId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "\"ApartmentId\"", nullable = false)
     private Apartment apartment;
+
+    @Column(name = "\"Amount\"", nullable = false)
+    private Double amount;
+
+    @Column(name = "\"Note\"", nullable = false, length = 256)
+    private String note;
+
+    @Column(name = "\"Status\"", nullable = false)
+    private Boolean status = false;
 
 }

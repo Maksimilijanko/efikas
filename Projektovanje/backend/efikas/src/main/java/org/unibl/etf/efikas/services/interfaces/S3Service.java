@@ -1,6 +1,7 @@
 package org.unibl.etf.efikas.services.interfaces;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.unibl.etf.efikas.exceptions.S3DeletionException;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 
 import java.io.IOException;
@@ -23,4 +24,11 @@ public interface S3Service {
      * @param key The key identifier to the object on the S3 bucket.
      * */
     String getPresignedUrl(String key);
+
+    /**
+     * Deletes a file from the S3 bucket
+     * @param key The key identifier to the object on the S3 bucket.
+     * @return {@code String} key of the deleted file.
+     * */
+    String deleteFile(String key) throws S3DeletionException;
 }

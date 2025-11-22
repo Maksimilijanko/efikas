@@ -1,18 +1,15 @@
 package org.unibl.etf.efikas.controllers;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.unibl.etf.efikas.exceptions.FileUploadException;
+import org.unibl.etf.efikas.exceptions.S3UploadException;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Base64;
 import java.util.Map;
 
 // REST controller for testing AWS S3 API. Can be changed further down the line (or deleted) when the url gets embedded in appropriate models.
@@ -38,7 +35,7 @@ public class S3Controller {
         try {
             fileUploadResponse = s3Service.uploadFile(file);
         } catch (IOException e) {
-            throw new FileUploadException(e.getMessage());
+            throw new S3UploadException(e.getMessage());
         }
 
         URI location = ServletUriComponentsBuilder
