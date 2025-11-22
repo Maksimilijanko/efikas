@@ -42,13 +42,6 @@
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
             "jibLengthError": "JIB mora imati 13 cifara",
             "passwordMismatchError": "Lozinke se ne podudaraju"
-        },
-
-        "toastMessages": {
-            "successTitle": "Uspješno ste se prijavili!",
-            "successMsg": "Možete sada koristiti aplikaciju.",
-            "errorTitle": "Greška!",
-            "errorMsg": "Provjerite Vaš email i lozinku."
         }
     }
 }
