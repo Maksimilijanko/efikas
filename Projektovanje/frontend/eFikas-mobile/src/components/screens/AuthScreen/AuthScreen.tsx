@@ -14,13 +14,14 @@ import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTem
 import { authService } from "@/src/api/services/authService";
 import { secureStoreService } from "@/src/services/secureStoreService";
 import { SECURE_STORE_KEYS } from "@/src/util/secureStoreKeys";
+import { router } from "expo-router";
+import { toastService } from "@/src/services/toastService";
 
 
 // =================================================================
 // LOGIN
 // =================================================================
 const LoginForm = ({
-    loginData,
     errorsLogin,
     onLoginDataChange,
     onErrorsLoginChange,
@@ -28,7 +29,6 @@ const LoginForm = ({
     onForgotPassword,
     onGoogleLogin
 }: {
-    loginData: LoginRequest;
     errorsLogin: { email: boolean; password: boolean };
     onLoginDataChange: (field: keyof LoginRequest, value: string) => void;
     onErrorsLoginChange: (field: keyof typeof errorsLogin, value: boolean) => void;
@@ -223,6 +223,7 @@ const RegisterForm = ({
 
 export default function AuthScreen() {
     const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+    const { t } = useTranslation();
     
     // TODO: Maybe integrate later with react-hook-form library...
     const [loginData, setLoginData] = useState<LoginRequest>({
@@ -255,26 +256,29 @@ export default function AuthScreen() {
         try{
             const response = await authService.login(loginRequest);
             if(response.status === 200) {
-                console.log("OK logged in. Response: ", response.data);
-                secureStoreService.setItemAsync(SECURE_STORE_KEYS.authenticationResponseKey, response.data);
+                toastService.success(t('auth.login.toastMessages.successTitle'), t('auth.login.toastMessages.successMsg'));
+                
+                await secureStoreService.setItemAsync(SECURE_STORE_KEYS.authenticationResponseKey, JSON.stringify(response.data));
+                
+                router.replace('/(tabs)');
             }
             else {
                 throw new Error("Can't log in - " + response.status);
             }
         } catch(error) {
+            toastService.error(t('auth.login.toastMessages.errorTitle'), t('auth.login.toastMessages.errorMsg'));
             console.log("Login error: ", error.message);
         }
     };
     
     const onRegister = async (registerRequest: RegisterRequest) => {
-        console.log("User registering: ", registerRequest);
-
         try{
             const response = await authService.register(registerRequest);
             if(response.status === 200) {
-                console.log("REGISTRATION SUCCESSFUL");
+                toastService.success(t('auth.register.toastMessages.successTitle'), t('auth.register.toastMessages.successMsg'));
             }
             else {
+                toastService.error(t('auth.register.toastMessages.errorTitle'), t('auth.register.toastMessages.errorMsg'));
                 throw new Error("Can't register - " + response.status);
             }
 
@@ -284,7 +288,7 @@ export default function AuthScreen() {
     };
 
     // TODO: wait for backend
-    const onForgotPassword = () => {
+    const onForgotPassword = async () => {
         // forgot password logic
     };
 
@@ -322,7 +326,7 @@ export default function AuthScreen() {
         }
     };
 
-    const handleLoginPress = () => {
+    const handleLoginPress = async () => {
         const emailInvalid = loginData.email.length < 6;
         const passwordInvalid = loginData.password.length < 2;
 
@@ -332,12 +336,12 @@ export default function AuthScreen() {
         });
 
         if (emailInvalid || passwordInvalid) return;
-        onLogin(loginData);
+        await onLogin(loginData);
     };
 
-    const handleRegisterPress = () => {
+    const handleRegisterPress = async () => {
         // Your register validation logic
-        onRegister(registerData);
+        await onRegister(registerData);
     };
 
 
@@ -347,7 +351,6 @@ export default function AuthScreen() {
             <View className="w-full mt-6">
                 {authMode === 'login' ? (
                     <LoginForm
-                        loginData={loginData}
                         errorsLogin={errorsLogin}
                         onLoginDataChange={handleLoginDataChange}
                         onErrorsLoginChange={handleErrorsLoginChange}

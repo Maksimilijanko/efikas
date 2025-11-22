@@ -3,6 +3,9 @@ import { FormControl, FormControlHelper, FormControlHelperText,
 import LabeledTextField from "../LabeledTextField/LabeledTextField";
 import { LucideIconName } from "@/src/types/types";
 import { Icon } from "../../atoms/Icon/Icon";
+import { AlertTriangleIcon } from "lucide-react-native";
+import { TouchableOpacity } from "react-native";
+import { useState } from "react";
 
 
 interface Props {
@@ -26,6 +29,9 @@ export default function FormField({
   isInvalid = false,
   onChangeText
 }: Props) {
+    const [isPasswordVisible, setPasswordVisible] = useState(false);
+
+    const isPasswordField = type === "password";
 
     return (
         <FormControl isInvalid={isInvalid} isRequired size="md">
@@ -34,8 +40,22 @@ export default function FormField({
                 placeholder={placeholder}
                 iconLocation="left"
                 iconName={iconName}
-                type={type}
+                type={isPasswordField && !isPasswordVisible ? "password" : "text"}
                 onChangeText={onChangeText}
+                rightElement={
+                    isPasswordField ? (
+                        <TouchableOpacity
+                            onPress={() => setPasswordVisible(v => !v)}
+                            style={{ paddingRight: 8 }}
+                        >
+                        {isPasswordVisible ? (
+                            <Icon name="Eye" size={20} />
+                        ) : (
+                            <Icon name="EyeOff" size={20} />
+                        )}
+                        </TouchableOpacity>
+                    ) : null
+                }
             />
 
             {helperText && (
@@ -47,10 +67,9 @@ export default function FormField({
             {isInvalid && errorText && (
                 <FormControlError>
                     <FormControlErrorIcon
-                        
+                        as={AlertTriangleIcon}
                         className="text-red-500"
                     >
-                        <Icon name="OctagonAlert" />
                     </FormControlErrorIcon>
                     <FormControlErrorText className="text-red-500">
                         {errorText}

@@ -12,7 +12,13 @@
         "login": {
             "password": "Lozinka",
             "loginButton": "Prijavite se",
-            "forgotPassword": "Zaboravljena lozinka?"
+            "forgotPassword": "Zaboravljena lozinka?",
+            "toastMessages": {
+                "successTitle": "Uspješno ste se prijavili!",
+                "successMsg": "Možete sada koristiti aplikaciju.",
+                "errorTitle": "Greška!",
+                "errorMsg": "Provjerite Vaš email i lozinku."
+            }
         },
 
         "register": {
@@ -20,7 +26,13 @@
             "lastName": "Prezime",
             "password": "Lozinka",
             "repeatPassword": "Ponovite lozinku",
-            "registerButton": "Registrujte se"
+            "registerButton": "Registrujte se",
+            "toastMessages": {
+                "successTitle": "Uspješno ste se registrovali!",
+                "successMsg": "Pokušajte se prijaviti sa novim nalogom.",
+                "errorTitle": "Greška!",
+                "errorMsg": "Provjerite Vaše podatke."
+            }
         },
 
         "errors": {
@@ -28,6 +40,13 @@
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
             "jibLengthError": "JIB mora imati 13 cifara",
             "passwordMismatchError": "Lozinke se ne podudaraju"
+        },
+
+        "toastMessages": {
+            "successTitle": "Uspješno ste se prijavili!",
+            "successMsg": "Možete sada koristiti aplikaciju.",
+            "errorTitle": "Greška!",
+            "errorMsg": "Provjerite Vaš email i lozinku."
         }
     }
 }

@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { Colors } from "@/src/styles/style";
 
 import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
+import { router } from "expo-router";
 
 type IconName = "User" | "Bell" | "Home" | "Wallet" | "BarChart2" | "BookOpen" | "BookMarked" | "Users" | "Settings" | "Info" | "LogOut";
 
@@ -89,7 +90,7 @@ export default function Menu() {
             break;
     
           case "Odjava":
-            console.log("Akcija: Pokreni proces odjave (briši token).");
+            router.replace('/auth');
             break;
     
           default:
