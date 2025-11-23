@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, View, Text, StyleSheet, Platform } from "react-native";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Colors } from "@/src/styles/style";
+import { useTranslation } from "react-i18next";
 
 interface LogoutDialogProps {
   visible: boolean;
@@ -14,6 +15,8 @@ export const LogoutDialog: React.FC<LogoutDialogProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -26,13 +29,13 @@ export const LogoutDialog: React.FC<LogoutDialogProps> = ({
 
           {/* Tekst */}
           <Text style={styles.message}>
-            Da li ste sigurni da želite da se odjavite sa ovog naloga?
+            {t("dialogs.logout.message")}
           </Text>
 
           {/* Dugmad */}
           <View style={styles.buttonsContainer}>
-            <DialogButton title="Odustani" onPress={onCancel} />
-            <DialogButton title="Potvrdi" onPress={onConfirm} />
+            <DialogButton title={t("dialogs.logout.cancelButton")} onPress={onCancel} />
+            <DialogButton title={t("dialogs.logout.confirmButton")} onPress={onConfirm} />
           </View>
 
         </View>

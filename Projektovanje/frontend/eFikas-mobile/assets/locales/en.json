@@ -43,5 +43,113 @@
             "jibLengthError": "JIB has to be exactly 13 digits long",
             "passwordMismatchError": "Passwords do not match"
         }
+    },
+
+    "dialogs": {
+        "logout": {
+            "message": "Are you sure you want to log out from this account?",
+            "cancelButton": "Cancel",
+            "confirmButton": "Confirm"
+        },
+
+        "report": {
+            "placeholder": "Description of the problem...",
+            "cancelButton": "Cancel",
+            "sendButton": "Send"
+        },
+
+        "download": {
+            "title": "Document is downloading",
+            "subtitle": "Check the downloads folder",
+            "okButton": "OK"
+        },
+
+        "language": {
+            "title": "Language",
+            "langEn": "English",
+            "langSr": "Serbian",
+            "cancelButton": "Cancel",
+            "confirmButton": "Confirm"
+        },
+
+        "theme": {
+            "title": "Theme",
+            "lightTheme": "Light",
+            "darkTheme": "Dark",
+            "cancelButton": "Cancel",
+            "confirmButton": "Confirm"
+        }
+    },
+
+    "chart": {
+        "months": [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ]
+    },
+
+    "welcome": {
+        "loginButton": "Log In"
+    },
+
+    "dashboard": {
+        "loading": "Loading...",
+        "greeting": "Hello,",
+        "sections": {
+            "reservationsTitle": "Reservations",
+            "statisticsTitle": "Statistics"
+        },
+        "shortcuts": {
+            "expenses": "Expenses",
+            "tasks": "Tasks",
+            "damages": "Damages"
+        }
+    },
+
+    "menu": {
+        "title": {
+            "profile": "Profile",
+            "accounting": "Accounting",
+            "settings": "Settings"
+        },
+        "item": {
+            "profile": "Profile",
+            "notifications": "Notifications",
+            "myApartments": "My Apartments",
+            "expenses": "Expenses",
+            "statistics": "Statistics",
+            "incomeBook": "Income Ledger",
+            "expenseBook": "Expense Ledger",
+            "guestBook": "Guest Ledger",
+            "settings": "Settings",
+            "aboutApp": "About App",
+            "logout": "Log Out"
+        }
+    },
+
+    "calendar": {
+        "months": [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ],
+        "monthsShort": [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ],
+        "dayNames": [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+        "dayNamesShort": [ "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" ],
+        "today": "Today"
+    },
+
+    "reservationsCalendar": {
+        "modalTitle": "Stay Information",
+        "guestCount": "Guest Count:",
+        "nightsCount": "Number of Nights:",
+        "arrival": "Arrival:",
+        "departure": "Departure:",
+        "price": "Price:",
+        "currency": "BAM",
+        "okButton": "OK",
+        "detailsButton": "Details"
     }
 }

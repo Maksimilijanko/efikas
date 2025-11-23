@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, View, TextInput, StyleSheet, Platform } from "react-native";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Colors } from "@/src/styles/style";
+import { useTranslation } from "react-i18next";
 
 interface ReportDialogProps {
   visible: boolean;
@@ -14,6 +15,7 @@ export const ReportDialog: React.FC<ReportDialogProps> = ({
   onCancel,
   onSubmit,
 }) => {
+  const { t } = useTranslation();
   const [text, setText] = useState("");
   const [inputHeight, setInputHeight] = useState(140);
 
@@ -34,7 +36,7 @@ export const ReportDialog: React.FC<ReportDialogProps> = ({
               multiline
               value={text}
               onChangeText={setText}
-              placeholder="Opis problema..."
+              placeholder={t("dialogs.report.placeholder")}
               placeholderTextColor={Colors.tertiary}
               onContentSizeChange={(e) =>
                 setInputHeight(Math.max(140, e.nativeEvent.contentSize.height))
@@ -44,8 +46,8 @@ export const ReportDialog: React.FC<ReportDialogProps> = ({
 
           {/* Dugmad */}
           <View style={styles.buttonsContainer}>
-            <DialogButton title="Odustani" onPress={onCancel} />
-            <DialogButton title="Pošalji" onPress={() => onSubmit(text)} />
+            <DialogButton title={t("dialogs.report.cancelButton")} onPress={onCancel} />
+            <DialogButton title={t("dialogs.report.sendButton")} onPress={() => onSubmit(text)} />
           </View>
 
         </View>
