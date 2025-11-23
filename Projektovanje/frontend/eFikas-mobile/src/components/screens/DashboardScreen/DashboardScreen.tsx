@@ -10,8 +10,10 @@ import { ReservationsCalendar } from "@/src/components/atoms/ReservationsCalenda
 import { Colors } from "@/src/styles/style";
 import { ApartmentsButton } from "@/src/components/atoms/ApartmentsButton/ApartmentsButton";
 import { SectionHeader } from "@/src/components/molecules/SectionHeader/SectionHeader";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardScreen() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [fullName, setFullName] = useState("");
   const [statistics, setStatistics] = useState([]);
@@ -58,7 +60,7 @@ export default function DashboardScreen() {
   if (loading) {
     return (
       <Text style={{ marginTop: 40, textAlign: "center" }}>
-        Učitavanje...
+        {t("dashboard.loading")}
       </Text>
     );
   }
@@ -68,7 +70,7 @@ export default function DashboardScreen() {
       headerLeft={
         <View>
           <Label 
-            text="ZDRAVO,"
+            text={t("dashboard.greeting").toUpperCase()}
             align="left"
             size="xl"
             color={Colors.tertiary}
@@ -86,7 +88,7 @@ export default function DashboardScreen() {
       headerRight={<ApartmentsButton onPress={goToApartments} />}
       reservationsHeader={
         <SectionHeader 
-          title="Rezervacije" 
+          title={t("dashboard.sections.reservationsTitle")}
           onPress={goToReservations}
         />
       }
@@ -96,21 +98,21 @@ export default function DashboardScreen() {
       shortcuts={[
         <IconCard
           key="1"
-          label="Troškovi"
+          label={t("dashboard.shortcuts.expenses")}
           iconName="Wallet"
           color={Colors.primary}
           onPress={goToExpenses}
         />,
         <IconCard
           key="2"
-          label="Zadaci"
+          label={t("dashboard.shortcuts.tasks")}
           iconName="Wrench"
           color={Colors.primary}
           onPress={goToTasks}
         />,
         <IconCard
           key="3"
-          label="Štete"
+          label={t("dashboard.shortcuts.damages")}
           iconName="BrushCleaning"
           color={Colors.primary}
           onPress={goToDamages}
@@ -118,7 +120,7 @@ export default function DashboardScreen() {
       ]}
       statisticsHeader={
         <SectionHeader 
-          title="Statistika" 
+          title={t("dashboard.sections.statisticsTitle")}
           onPress={goToAnalytics}
         />
       }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, View, Text, Image, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Colors } from "@/src/styles/style";
+import { useTranslation } from "react-i18next";
 
 interface LanguageOption {
   id: string;
@@ -22,11 +23,20 @@ export const LanguageDialog: React.FC<LanguageDialogProps> = ({
   onConfirm,
   selectedLanguage,
 }) => {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState(selectedLanguage);
 
   const languageOptions: LanguageOption[] = [
-    { id: "en", label: "Engleski", image: require("@/assets/images/language-en.jpg") },
-    { id: "sr", label: "Srpski", image: require("@/assets/images/language-sr.jpg") },
+    { 
+      id: "en", 
+      label: t("dialogs.language.langEn"),
+      image: require("@/assets/images/language-en.jpg")
+    },
+    {
+      id: "sr",
+      label: t("dialogs.language.langSr"),
+      image: require("@/assets/images/language-sr.jpg")
+    },
   ];
 
   const handleSelect = (id: string) => setSelected(id);
@@ -43,7 +53,7 @@ export const LanguageDialog: React.FC<LanguageDialogProps> = ({
         <View style={styles.modalContainer}>
           {/* Unutrasnji kontejner */}
           <View style={styles.innerContainer}>
-            <Text style={styles.sectionTitle}>Jezik</Text>
+            <Text style={styles.sectionTitle}>{t("dialogs.language.title")}</Text>
 
             <View style={styles.optionsContainer}>
               {languageOptions.map(option => (
@@ -73,8 +83,8 @@ export const LanguageDialog: React.FC<LanguageDialogProps> = ({
           </View>
 
           <View style={styles.buttonsContainer}>
-            <DialogButton title="Odustani" onPress={onClose} />
-            <DialogButton title="Potvrdi" onPress={handleConfirm} />
+            <DialogButton title={t("dialogs.language.cancelButton")} onPress={onClose} />
+            <DialogButton title={t("dialogs.language.confirmButton")} onPress={handleConfirm} />
           </View>
         </View>
       </View>

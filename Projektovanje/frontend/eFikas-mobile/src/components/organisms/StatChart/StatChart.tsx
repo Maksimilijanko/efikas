@@ -5,17 +5,16 @@ import { Colors } from "@/src/styles/style";
 import { useRouter } from 'expo-router';
 import { Platform } from "react-native";
 import { Dimensions } from 'react-native';
+import { useTranslation } from "react-i18next";
 
 export interface StatChartProps {
   title: string;
   data: { value: number; label: string }[];
 }
 
-function getLast7MonthsData(data) {
+function getLast7MonthsData(data, monthNames) {
   const now = new Date();
   const currentMonth = now.getMonth();
-
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Avg', 'Sep', 'Okt', 'Nov', 'Dec'];
 
   const months = [];
   for (let i = 6; i >= 0; i--) {
@@ -32,7 +31,10 @@ function getLast7MonthsData(data) {
 
 export const StatChart: React.FC<StatChartProps> = ({ title, data }) => {
   const router = useRouter();
-  const last7 = getLast7MonthsData(data);
+  const { t } = useTranslation();
+
+  const monthNames = t('chart.months', { returnObjects: true });
+  const last7 = getLast7MonthsData(data, monthNames);
 
   const chartData = last7.map(item => ({
     value: item.value,

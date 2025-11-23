@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, View, Text, Image, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Colors } from "@/src/styles/style";
+import { useTranslation } from "react-i18next";
 
 interface ThemeOption {
   id: string;
@@ -22,11 +23,20 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
   onConfirm,
   selectedTheme,
 }) => {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState(selectedTheme);
 
   const themeOptions: ThemeOption[] = [
-    { id: "light", label: "Svijetla", image: require("@/assets/images/theme_light.png") },
-    { id: "dark", label: "Tamna", image: require("@/assets/images/theme_dark.png") },
+    { 
+      id: "light",
+      label: t("dialogs.theme.lightTheme"),
+      image: require("@/assets/images/theme_light.png")
+    },
+    { 
+      id: "dark",
+      label: t("dialogs.theme.darkTheme"),
+      image: require("@/assets/images/theme_dark.png")
+    },
   ];
 
   const handleSelect = (id: string) => setSelected(id);
@@ -43,7 +53,7 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
         <View style={styles.modalContainer}>
           {/* Unutrasnji kontejner */}
           <View style={styles.innerContainer}>
-            <Text style={styles.sectionTitle}>Tema</Text>
+            <Text style={styles.sectionTitle}>{t("dialogs.theme.title")}</Text>
 
             <View style={styles.optionsContainer}>
               {themeOptions.map(option => (
@@ -73,8 +83,8 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
           </View>
 
           <View style={styles.buttonsContainer}>
-            <DialogButton title="Odustani" onPress={onClose} />
-            <DialogButton title="Potvrdi" onPress={handleConfirm} />
+            <DialogButton title={t("dialogs.theme.cancelButton")} onPress={onClose} />
+            <DialogButton title={t("dialogs.theme.confirmButton")} onPress={handleConfirm} />
           </View>
         </View>
       </View>

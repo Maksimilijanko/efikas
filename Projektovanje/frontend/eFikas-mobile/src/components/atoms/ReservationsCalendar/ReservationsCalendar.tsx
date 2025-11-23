@@ -13,19 +13,7 @@ import { Colors } from "@/src/styles/style";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Platform } from "react-native";
-
-// ------------------ Lokalizacija ------------------
-LocaleConfig.locales["sr"] = {
-  monthNames: [
-    "Januar", "Februar", "Mart", "April", "Maj", "Jun",
-    "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar",
-  ],
-  monthNamesShort: ["Jan.", "Feb.", "Mar.", "Apr.", "Maj", "Jun", "Jul.", "Avg.", "Sep.", "Okt.", "Nov.", "Dec."],
-  dayNames: ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"],
-  dayNamesShort: ["NED", "PON", "UTO", "SRI", "ČET", "PET", "SUB"],
-  today: "Danas",
-};
-LocaleConfig.defaultLocale = "sr";
+import { useTranslation } from "react-i18next";
 
 export interface DbReservation {
   ReservationId: number;
@@ -51,10 +39,26 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
   reservations,
   onOpenDetails,
 }) => {
+  const { t, i18n } = useTranslation();
   const [markedDates, setMarkedDates] = useState<{ [key: string]: any }>({});
   const [selectedReservations, setSelectedReservations] = useState<DbReservation[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // ---------------- Dinamicka lokalizacija kalendara ----------------
+  useEffect(() => {
+    const currentLang = i18n.language;
+
+    LocaleConfig.locales[currentLang] = {
+      monthNames: t("calendar.months", { returnObjects: true }) as string[],
+      monthNamesShort: t("calendar.monthsShort", { returnObjects: true }) as string[],
+      dayNames: t("calendar.dayNames", { returnObjects: true }) as string[],
+      dayNamesShort: t("calendar.dayNamesShort", { returnObjects: true }) as string[],
+      today: t("calendar.today") as string,
+    };
+    
+    LocaleConfig.defaultLocale = currentLang;
+  }, [i18n.language, t]);
 
   // ---------------- Animacije ----------------
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -249,7 +253,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
       />
 
       {/* ---------------- MODAL ---------------- */}
-      <Modal visible={modalVisible} transparent animationType="none">
+      <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.modalBackdrop}>
           <Animated.View
             style={[
@@ -295,7 +299,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
             {/* Naslov */}
             <Text style={styles.modalTitle}>
-              Informacije o boravku
+              {t("reservationsCalendar.modalTitle")}
               {selectedReservations.length > 1 &&
                 ` (${selectedReservations.length})`}
             </Text>
@@ -304,24 +308,24 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
             {current && (
               <View style={styles.resContent}>
                 <Text style={styles.label}>
-                  Broj gostiju: <Text style={styles.bold}>{current.GuestNumber}</Text>
+                  {t("reservationsCalendar.guestCount")}{" "}<Text style={styles.bold}>{current.GuestNumber}</Text>
                 </Text>
 
                 <Text style={styles.label}>
-                  Broj noćenja: <Text style={styles.bold}>{nights}</Text>
+                  {t("reservationsCalendar.nightsCount")}{" "}<Text style={styles.bold}>{nights}</Text>
                 </Text>
                 
                 <Text style={[styles.label, { marginTop: 12 }]}>
-                  Dolazak: <Text style={styles.bold}>{formatDateTime(current.DateTimeOfArrival)}</Text>
+                  {t("reservationsCalendar.arrival")}{" "}<Text style={styles.bold}>{formatDateTime(current.DateTimeOfArrival)}</Text>
                 </Text>
 
                 <Text style={styles.label}>
-                  Odlazak: <Text style={styles.bold}>{formatDateTime(current.DateTimeOfDeparture)}</Text>
+                  {t("reservationsCalendar.departure")}{" "}<Text style={styles.bold}>{formatDateTime(current.DateTimeOfDeparture)}</Text>
                 </Text>
 
                 {current.Price && (
                   <Text style={[styles.label, { marginTop: 12 }]}>
-                    Cijena: <Text style={styles.bold}>{current.Price.toFixed(2)} BAM</Text>
+                    {t("reservationsCalendar.price")}{" "}<Text style={styles.bold}>{current.Price.toFixed(2)} {t("reservationsCalendar.currency")}</Text>
                   </Text>
                 )}
               </View>
@@ -330,7 +334,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
             {/* Dugmad */}
             <View style={styles.buttonRow}>
               <DialogButton
-                title="U redu"
+                title={t("reservationsCalendar.okButton")}
                 onPress={() =>
                   animateOut(() => {
                     setModalVisible(false);
@@ -338,7 +342,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
                 }
               />
               <DialogButton
-                title="Detalji"
+                title={t("reservationsCalendar.detailsButton")}
                 onPress={() => onOpenDetails && onOpenDetails(current!)}
               />
             </View>

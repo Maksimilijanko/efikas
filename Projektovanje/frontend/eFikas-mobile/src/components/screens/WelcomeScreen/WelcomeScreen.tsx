@@ -3,10 +3,12 @@ import { Image, StyleSheet } from "react-native";
 import WelcomeScreenTemplate from "@/src/components/templates/WelcomeScreenTemplate/WelcomeScreenTemplate";
 import { LoginButton } from "@/src/components/atoms/LoginButton/LoginButton";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const WelcomeScreen: React.FC = () => {
+  const { t } = useTranslation();
   const handlePress = () => {
-    router.push("/login");
+    router.push("/auth");
   };
 
   return (
@@ -15,7 +17,7 @@ const WelcomeScreen: React.FC = () => {
       logo={<Image source={require("@/assets/images/lqlogo.png")} style={styles.logo} />}
       primaryButton={
         <LoginButton
-          title="Prijavi se"
+          title={t("welcome.loginButton")}
           onPress={handlePress}
           className="bg-white"
           textClassName="text-black"

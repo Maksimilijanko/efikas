@@ -43,5 +43,113 @@
             "jibLengthError": "JIB mora imati 13 cifara",
             "passwordMismatchError": "Lozinke se ne podudaraju"
         }
+    },
+
+    "dialogs": {
+        "logout": {
+            "message": "Da li ste sigurni da želite da se odjavite sa ovog naloga?",
+            "cancelButton": "Odustani",
+            "confirmButton": "Potvrdi"
+        },
+
+        "report": {
+            "placeholder": "Opis problema...",
+            "cancelButton": "Odustani",
+            "sendButton": "Pošalji"
+        },
+
+        "download": {
+            "title": "Dokument se preuzima",
+            "subtitle": "Provjerite folder sa preuzimanjima",
+            "okButton": "U redu"
+        },
+
+        "language": {
+            "title": "Jezik",
+            "langEn": "Engleski",
+            "langSr": "Srpski",
+            "cancelButton": "Odustani",
+            "confirmButton": "Potvrdi"
+        },
+
+        "theme": {
+            "title": "Tema",
+            "lightTheme": "Svijetla",
+            "darkTheme": "Tamna",
+            "cancelButton": "Odustani",
+            "confirmButton": "Potvrdi"
+        }
+    },
+
+    "chart": {
+        "months": [
+            "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", 
+            "Jul", "Avg", "Sep", "Okt", "Nov", "Dec"
+        ]
+    },
+
+    "welcome": {
+        "loginButton": "Prijavi se"
+    },
+
+    "dashboard": {
+        "loading": "Učitavanje...",
+        "greeting": "Zdravo,",
+        "sections": {
+            "reservationsTitle": "Rezervacije",
+            "statisticsTitle": "Statistika"
+        },
+        "shortcuts": {
+            "expenses": "Troškovi",
+            "tasks": "Zadaci",
+            "damages": "Štete"
+        }
+    },
+
+    "menu": {
+        "title": {
+            "profile": "Profil",
+            "accounting": "Knjigovodstvo",
+            "settings": "Podešavanja"
+        },
+        "item": {
+            "profile": "Profil",
+            "notifications": "Obavještenja",
+            "myApartments": "Moji stanovi",
+            "expenses": "Troškovi",
+            "statistics": "Statistika",
+            "incomeBook": "Knjiga prihoda",
+            "expenseBook": "Knjiga rashoda",
+            "guestBook": "Knjiga gostiju",
+            "settings": "Podešavanja",
+            "aboutApp": "O aplikaciji",
+            "logout": "Odjava"
+        }
+    },
+
+    "calendar": {
+        "months": [
+            "Januar", "Februar", "Mart", "April", "Maj", "Jun",
+            "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"
+        ],
+        "monthsShort": [
+            "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", 
+            "Jul", "Avg", "Sep", "Okt", "Nov", "Dec"
+        ],
+        "dayNames": ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"],
+        "dayNamesShort": ["NED", "PON", "UTO", "SRI", "ČET", "PET", "SUB"],
+        "today": "Danas"
+    },
+
+    "reservationsCalendar": {
+        "modalTitle": "Informacije o boravku",
+        "guestCount": "Broj gostiju:",
+        "nightsCount": "Broj noćenja:",
+        "arrival": "Dolazak:",
+        "departure": "Odlazak:",
+        "price": "Cijena:",
+        "currency": "BAM",
+        "okButton": "U redu",
+        "detailsButton": "Detalji"
     }
 }

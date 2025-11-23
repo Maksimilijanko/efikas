@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, View, Text, StyleSheet } from "react-native";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Colors } from "@/src/styles/style";
+import { useTranslation } from "react-i18next";
 
 interface DownloadDialogProps {
   visible: boolean;
@@ -12,6 +13,8 @@ export const DownloadDialog: React.FC<DownloadDialogProps> = ({
   visible,
   onClose,
 }) => {
+  const { t } = useTranslation();
+  
   return (
     <Modal
       visible={visible}
@@ -23,12 +26,12 @@ export const DownloadDialog: React.FC<DownloadDialogProps> = ({
         <View style={styles.modalContainer}>
 
           {/* Tekst */}
-          <Text style={styles.title}>Dokument se preuzima</Text>
-          <Text style={styles.subtitle}>Provjerite folder sa preuzimanjima</Text>
+          <Text style={styles.title}>{t("dialogs.download.title")}</Text>
+          <Text style={styles.subtitle}>{t("dialogs.download.subtitle")}</Text>
 
           {/* Dugme */}
           <View style={styles.buttonContainer}>
-            <DialogButton title="U redu" onPress={onClose} />
+            <DialogButton title={t("dialogs.download.okButton")} onPress={onClose} />
           </View>
 
         </View>
