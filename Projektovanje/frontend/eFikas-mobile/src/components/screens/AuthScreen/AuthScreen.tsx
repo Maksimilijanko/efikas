@@ -11,30 +11,28 @@ import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 import AuthSwitcher from "../../molecules/AuthSwitcher/AuthSwitcher";
 import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
-import { authService } from "@/src/api/services/authService";
-import { secureStoreService } from "@/src/services/secureStoreService";
-import { SECURE_STORE_KEYS } from "@/src/util/secureStoreKeys";
+import { useAuth } from "@/src/hooks/useAuth";
 
 
 // =================================================================
 // LOGIN
 // =================================================================
 const LoginForm = ({
-    loginData,
     errorsLogin,
     onLoginDataChange,
     onErrorsLoginChange,
     onLoginPress,
     onForgotPassword,
-    onGoogleLogin
+    onGoogleLogin,
+    isLoading
 }: {
-    loginData: LoginRequest;
     errorsLogin: { email: boolean; password: boolean };
     onLoginDataChange: (field: keyof LoginRequest, value: string) => void;
     onErrorsLoginChange: (field: keyof typeof errorsLogin, value: boolean) => void;
     onLoginPress: () => void;
     onForgotPassword: () => void;
     onGoogleLogin: () => void;
+    isLoading?: boolean;
 }) => {
     const { t } = useTranslation();
 
@@ -73,6 +71,8 @@ const LoginForm = ({
                 title={t('auth.login.loginButton')}
                 onPress={onLoginPress}
                 className="mt-2"
+                loadingTitle={t('auth.login.loadingTitle')}
+                isLoading={isLoading}
             />
 
             <TouchableOpacity
@@ -99,7 +99,8 @@ const RegisterForm = ({
     onRegisterDataChange,
     onErrorsRegisterChange,
     onRegisterPress,
-    onGoogleLogin
+    onGoogleLogin,
+    isLoading
 }: {
     registerData: RegisterRequest;
     errorsRegister: { name: boolean; surname: boolean; email: boolean; password: boolean; repeatPassword: boolean; jib: boolean };
@@ -107,6 +108,7 @@ const RegisterForm = ({
     onErrorsRegisterChange: (field: keyof typeof errorsRegister, value: boolean) => void;
     onRegisterPress: () => void;
     onGoogleLogin: () => void;
+    isLoading?: boolean;
 }) => {
     const { t } = useTranslation();
 
@@ -211,6 +213,8 @@ const RegisterForm = ({
                 title={t('auth.register.registerButton')}
                 onPress={handleRegisterPress}
                 className="mt-4"
+                loadingTitle={t('auth.register.loadingTitle')}
+                isLoading={isLoading}
             />
 
             <LabelSeparator label={t('auth.orSeparator')} />
@@ -223,6 +227,8 @@ const RegisterForm = ({
 
 export default function AuthScreen() {
     const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+    const { t } = useTranslation();
+    const { login, register, isLoggingIn, isRegistering } = useAuth();
     
     // TODO: Maybe integrate later with react-hook-form library...
     const [loginData, setLoginData] = useState<LoginRequest>({
@@ -251,40 +257,8 @@ export default function AuthScreen() {
         jib: false,
     });
 
-    const onLogin = async (loginRequest: LoginRequest) => {
-        try{
-            const response = await authService.login(loginRequest);
-            if(response.status === 200) {
-                console.log("OK logged in. Response: ", response.data);
-                secureStoreService.setItemAsync(SECURE_STORE_KEYS.authenticationResponseKey, response.data);
-            }
-            else {
-                throw new Error("Can't log in - " + response.status);
-            }
-        } catch(error) {
-            console.log("Login error: ", error.message);
-        }
-    };
-    
-    const onRegister = async (registerRequest: RegisterRequest) => {
-        console.log("User registering: ", registerRequest);
-
-        try{
-            const response = await authService.register(registerRequest);
-            if(response.status === 200) {
-                console.log("REGISTRATION SUCCESSFUL");
-            }
-            else {
-                throw new Error("Can't register - " + response.status);
-            }
-
-        } catch(error) {
-            console.log(error.message)
-        }
-    };
-
     // TODO: wait for backend
-    const onForgotPassword = () => {
+    const onForgotPassword = async () => {
         // forgot password logic
     };
 
@@ -322,7 +296,7 @@ export default function AuthScreen() {
         }
     };
 
-    const handleLoginPress = () => {
+    const handleLoginPress = async () => {
         const emailInvalid = loginData.email.length < 6;
         const passwordInvalid = loginData.password.length < 2;
 
@@ -332,12 +306,11 @@ export default function AuthScreen() {
         });
 
         if (emailInvalid || passwordInvalid) return;
-        onLogin(loginData);
+        login(loginData);
     };
 
-    const handleRegisterPress = () => {
-        // Your register validation logic
-        onRegister(registerData);
+    const handleRegisterPress = async () => {
+        register(registerData);
     };
 
 
@@ -347,13 +320,13 @@ export default function AuthScreen() {
             <View className="w-full mt-6">
                 {authMode === 'login' ? (
                     <LoginForm
-                        loginData={loginData}
                         errorsLogin={errorsLogin}
                         onLoginDataChange={handleLoginDataChange}
                         onErrorsLoginChange={handleErrorsLoginChange}
                         onLoginPress={handleLoginPress}
                         onForgotPassword={onForgotPassword}
                         onGoogleLogin={onGoogleLogin}
+                        isLoading={isLoggingIn}
                     />
                 ) : (
                     <RegisterForm
@@ -363,6 +336,7 @@ export default function AuthScreen() {
                         onErrorsRegisterChange={handleErrorsRegisterChange}
                         onRegisterPress={handleRegisterPress}
                         onGoogleLogin={onGoogleLogin}
+                        isLoading={isRegistering}
                     />
                 )}
             </View>

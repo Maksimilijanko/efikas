@@ -12,6 +12,7 @@ interface Props {
     iconLocation?: 'left' | 'right' | 'absent';
     style?: StyleProp<ViewStyle>;
     inputProps?: React.ComponentProps<typeof InputField>;
+    rightElement?: React.ReactNode;
     isInvalid?: boolean;
     isDisabled?: boolean;
     isHovered?: boolean;
@@ -48,6 +49,7 @@ function TextField({
     iconLocation = 'absent',
     style,
     inputProps,
+    rightElement,
     isInvalid, 
     isDisabled, 
     isHovered, 
@@ -74,9 +76,17 @@ function TextField({
             isFocused={isFocused}
             isRequired={isRequired}
         >
+            {/* Left Icon */}
             {iconLocation === "left" && IconElement}
+
+            {/* Main Input */}
             <InputField type={type} placeholder={placeholder} {...inputProps} />
+
+            {/* Right Icon (if type === password toggle) */}
             {iconLocation === "right" && IconElement}
+
+            {/* Custom Right Element (e.g., eye/eye-off for password toggle) */}
+            {rightElement && <InputSlot className="pr-3">{rightElement}</InputSlot>}
         </Input>
     );
 }

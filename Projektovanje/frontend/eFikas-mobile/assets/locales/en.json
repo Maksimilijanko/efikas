@@ -12,7 +12,14 @@
         "login": {
             "password": "Password",
             "loginButton": "Sign in",
-            "forgotPassword": "Forgot password?"
+            "forgotPassword": "Forgot password?",
+            "toastMessages": {
+                "successTitle": "You have successfully logged in!",
+                "successMsg": "You may now use the app.",
+                "errorTitle": "Error!",
+                "errorMsg": "Check Your email and password."
+            },
+            "loadingTitle": "Logging in"
         },
 
         "register": {
@@ -20,7 +27,14 @@
             "lastName": "Last name",
             "password": "Password",
             "repeatPassword": "Confirm password",
-            "registerButton": "Sign up"
+            "registerButton": "Sign up",
+            "toastMessages": {
+                "successTitle": "You have successfully registered!",
+                "successMsg": "Try to sign in with Your new account.",
+                "errorTitle": "Error!",
+                "errorMsg": "Please check Your entered data."
+            },
+            "loadingTitle": "Registering"
         },
 
         "errors": {

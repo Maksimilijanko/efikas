@@ -12,7 +12,14 @@
         "login": {
             "password": "Lozinka",
             "loginButton": "Prijavite se",
-            "forgotPassword": "Zaboravljena lozinka?"
+            "forgotPassword": "Zaboravljena lozinka?",
+            "toastMessages": {
+                "successTitle": "Uspješno ste se prijavili!",
+                "successMsg": "Možete sada koristiti aplikaciju.",
+                "errorTitle": "Greška!",
+                "errorMsg": "Provjerite Vaš email i lozinku."
+            },
+            "loadingTitle": "Prijava u toku"
         },
 
         "register": {
@@ -20,7 +27,14 @@
             "lastName": "Prezime",
             "password": "Lozinka",
             "repeatPassword": "Ponovite lozinku",
-            "registerButton": "Registrujte se"
+            "registerButton": "Registrujte se",
+            "toastMessages": {
+                "successTitle": "Uspješno ste se registrovali!",
+                "successMsg": "Pokušajte se prijaviti sa novim nalogom.",
+                "errorTitle": "Greška!",
+                "errorMsg": "Provjerite Vaše podatke."
+            },
+            "loadingTitle": "Registracija u toku"
         },
 
         "errors": {

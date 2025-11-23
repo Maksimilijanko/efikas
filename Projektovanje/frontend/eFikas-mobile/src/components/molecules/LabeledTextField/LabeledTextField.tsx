@@ -27,6 +27,7 @@ interface LabeledTextFieldProps {
   iconLocation?: "left" | "right";
   variant?: "outline" | "underlined" | "rounded";
   type?: "text" | "password";
+  rightElement?: React.ReactNode;
   onPress?: (e: any) => void;
 
   value?: string;
@@ -47,6 +48,7 @@ const LabeledTextField = ({
   iconLocation = "left",
   variant = "outline",
   type = "text",
+  rightElement,
   onPress,
   value,
   onChangeText,
@@ -73,6 +75,7 @@ const LabeledTextField = ({
         iconLocation={iconLocation}
         isInvalid={hasError}
         isDisabled={disabled}
+        rightElement={rightElement}
         onPress={onPress}
         inputProps={{
           value,
