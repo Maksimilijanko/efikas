@@ -1,0 +1,78 @@
+import React from "react";
+import {
+  Accordion as BaseAccordion,
+  AccordionItem,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionTitleText,
+  AccordionContent,
+  AccordionContentText,
+} from "@/components/ui/accordion";
+import { Divider } from "@/components/ui/divider";
+import { Icon } from "@/src/components/atoms/Icon/Icon";
+
+// Tip za svaki item
+interface AccordionItemData {
+  id: string;
+  title: string;
+  content: string | React.ReactNode;
+}
+
+// Tip za propove (prosiruje sve propove originalnog Accordion-a)
+interface AccordionProps
+  extends React.ComponentProps<typeof BaseAccordion> {
+  items: AccordionItemData[];
+  className?: string;
+}
+
+export const Accordion = ({
+  items,
+  type = "single",
+  isCollapsible = true,
+  isDisabled = false,
+  className,
+  ...props
+}: AccordionProps) => {
+  return (
+    <BaseAccordion
+      size="lg"
+      variant="filled"
+      type={type}
+      isCollapsible={isCollapsible}
+      isDisabled={isDisabled}
+      className={`w-[100%] border border-outline-200 rounded-2xl overflow-hidden ${className || ""}`}
+      {...props}
+    >
+      {items.map((item, index) => (
+        <React.Fragment key={item.id}>
+          <AccordionItem value={item.id} className="py-2">
+            <AccordionHeader className="py-2 px-4">
+              <AccordionTrigger>
+                {({ isExpanded }) => (
+                  <>
+                    <AccordionTitleText className="text-xl">
+                        {item.title}
+                    </AccordionTitleText>
+                    <Icon
+                      name={isExpanded ? "ChevronUp" : "ChevronDown"}
+                      size={24}
+                      style={{ marginLeft: 8 }}
+                    />
+                  </>
+                )}
+              </AccordionTrigger>
+            </AccordionHeader>
+            <AccordionContent className="px-10 pb-2">
+                <AccordionContentText>
+                    {item.content}
+                </AccordionContentText>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Divider osim iza zadnjeg itema */}
+          {index < items.length - 1 && <Divider />}
+        </React.Fragment>
+      ))}
+    </BaseAccordion>
+  );
+};
