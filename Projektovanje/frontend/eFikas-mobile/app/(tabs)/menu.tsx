@@ -6,12 +6,11 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { LogoutDialog } from "@/src/components/organisms/Dialogs/LogoutDialog/LogoutDialog";
 import { useAuth } from "@/src/hooks/useAuth";
-
-type IconName = "User" | "Bell" | "Home" | "Wallet" | "ChartNoAxesCombined" | "BookDown" | "BookUp" | "Users" | "Settings" | "Info" | "LogOut";
+import { LucideIconName } from "@/src/types/types";
 
 type MenuItemType = {
   id: string;
-  icon: IconName; 
+  icon: LucideIconName; 
   i18nKey: string;
 };
 
