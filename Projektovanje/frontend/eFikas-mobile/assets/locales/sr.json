@@ -45,6 +45,7 @@
         }
     },
 
+
     "dialogs": {
         "logout": {
             "message": "Da li ste sigurni da želite da se odjavite sa ovog naloga?",
@@ -107,6 +108,24 @@
     },
 
     "menu": {
+        "stackNavigation": {
+            "profile": "Profil",
+            "notifications": "Obavještenja",
+            "myApartments": "Moji stanovi",
+            
+            "expenses": "Troškovi",
+            "statistics": "Statistika",
+            "incomeBook": "Knjiga prihoda",
+            "expensesBook": "Knjiga rashoda",
+            "guestBook": "Knjiga gostiju",
+
+            "settingsMain": "Podešavanja",
+            "language": "Jezik",
+            "theme": "Tema",
+            "bugReport": "Prijava greške",
+            "aboutApp": "O aplikaciji"
+
+        },
         "title": {
             "profile": "Profil",
             "accounting": "Knjigovodstvo",
@@ -124,6 +143,20 @@
             "settings": "Podešavanja",
             "aboutApp": "O aplikaciji",
             "logout": "Odjava"
+        },
+
+        "mainSettings": {
+            "settings": {
+                "general": {
+                    "mainTitle": "Opšte",
+                    "languageTitle": "Jezik",
+                    "themeTitle": "Tema"
+                },
+                "feedback": {
+                    "mainTitle": "Povratne informacije",
+                    "bugReportTitle": "Prijavite grešku"
+                }
+            }
         }
     },
 

@@ -28,6 +28,7 @@ export interface StatisticsDataPoint {
 export interface StatisticsResponse {
   data: StatisticsDataPoint[];
 }
+
 export interface Reservation {
   ReservationId: number;
   ApartmentId: number;
@@ -42,8 +43,21 @@ export interface Reservation {
   IdTypeOfReservation: number;
   TypeId: number;
 }
+
 export interface DashboardResponse {
   fullName: string;
   statistics: StatisticsResponse;
   reservations: Reservation[];
 }
+
+export interface MenuItemProps {
+  id: string;
+  icon: LucideIconName; 
+  text: string;
+  onPressMenuItem: () => void;
+};
+
+export interface MenuSectionProps {
+  title: string;
+  items: MenuItemProps[];
+};
