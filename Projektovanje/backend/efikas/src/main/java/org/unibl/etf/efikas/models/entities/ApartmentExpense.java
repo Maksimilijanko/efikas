@@ -33,5 +33,4 @@ public class ApartmentExpense {
     @Column(name = "\"Status\"", nullable = false)
     private Boolean status = false;
     
-
 }

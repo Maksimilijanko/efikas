@@ -37,11 +37,11 @@ public class ApartmentExpenseService {
     // Create a new expense for a given apartment
     // Perform ownership check before executing the method logic itself
     @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
-    public ApartmentExpenseResponse createNewExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expense) {
+    public ApartmentExpenseResponse createNewApartmentExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expense) {
         ApartmentExpense apartmentExpense = modelMapper.map(expense, ApartmentExpense.class);
 
         Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
-                .orElseThrow(() -> new EntityNotFoundException("Apartman nije pronađen."));
+                .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         apartmentExpense.setApartment(apartment);
         ApartmentExpenseId id = new ApartmentExpenseId();
@@ -49,6 +49,26 @@ public class ApartmentExpenseService {
         id.setName(expense.getName());
 
         apartmentExpense.setId(id);
+
+        apartmentExpenseRepository.save(apartmentExpense);
+
+        return modelMapper.map(apartmentExpense, ApartmentExpenseResponse.class);
+    }
+
+    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    public ApartmentExpenseResponse updateApartmentExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expense, String apartmentExpenseName) {
+        ApartmentExpenseId apartmentExpenseId = new ApartmentExpenseId();
+        apartmentExpenseId.setApartmentId(apartmentId);
+        apartmentExpenseId.setName(apartmentExpenseName);
+
+        // I overcomplicated things with this unnecessary composite primary key. Sorry :/
+        ApartmentExpense apartmentExpense = apartmentExpenseRepository.findApartmentExpenseById(apartmentExpenseId)
+                .orElseThrow(() -> new EntityNotFoundException("Apartment expense not found!"));
+
+        apartmentRepository.findById(apartmentId.longValue())
+                .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
+
+        modelMapper.map(expense, apartmentExpense);
 
         apartmentExpenseRepository.save(apartmentExpense);
 

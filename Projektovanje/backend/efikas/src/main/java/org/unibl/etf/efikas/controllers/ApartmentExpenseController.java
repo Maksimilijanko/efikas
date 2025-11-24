@@ -1,13 +1,17 @@
 package org.unibl.etf.efikas.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.models.dto.ApartmentExpenseDTO;
 import org.unibl.etf.efikas.models.responses.ApartmentExpenseResponse;
 import org.unibl.etf.efikas.services.ApartmentExpenseService;
+
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -31,8 +35,29 @@ public class ApartmentExpenseController {
     public ResponseEntity<?> addApartmentExpense(@PathVariable Integer apartmentId, @RequestBody ApartmentExpenseDTO expense) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        ApartmentExpenseResponse response = apartmentExpenseService.createNewExpense(apartmentId, authentication, expense);
+        ApartmentExpenseResponse response = apartmentExpenseService.createNewApartmentExpense(apartmentId, authentication, expense);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("{apartmentId}/expenses/{apartmentExpenseName}")
+    public ResponseEntity<?> updateApartmentExpense(@PathVariable Integer apartmentId, @PathVariable String apartmentExpenseName, @RequestBody ApartmentExpenseDTO expense) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Upsert behavior
+        ApartmentExpenseResponse response = null;
+        try {
+            response = apartmentExpenseService.updateApartmentExpense(apartmentId, authentication, expense, apartmentExpenseName);
+            return ResponseEntity.ok(response);
+        } catch(EntityNotFoundException e) {
+            response = apartmentExpenseService.createNewApartmentExpense(apartmentId, authentication, expense);
+
+            // Obtain absolute URI to the newly created resource in order to provide a Location header
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .build()
+                    .toUri();
+            return ResponseEntity.created(location).body(response);
+        }
     }
 }
