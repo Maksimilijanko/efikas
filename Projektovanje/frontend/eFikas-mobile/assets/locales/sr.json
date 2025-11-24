@@ -103,6 +103,14 @@
     },
 
     "dashboard": {
+        "navigation": {
+            "apartmentsTitle": "Stanovi",
+            "reservationsTitle": "Rezervacije",
+            "expensesTitle": "Troškovi",
+            "tasksTitle": "Zadaci",
+            "damagesTitle": "Štete",
+            "statisticsTitle": "Statistika"
+        },
         "loading": "Učitavanje...",
         "greeting": "Zdravo,",
         "sections": {

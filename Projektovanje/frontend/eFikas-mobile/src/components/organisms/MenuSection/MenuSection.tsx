@@ -5,13 +5,12 @@ import { styles } from "./index.styles";
 import { MenuSectionProps } from "@/src/types/types";
 
 
-export default function MenuSection({ i18nTitleKey, title, items }: MenuSectionProps) {
+export default function MenuSection({ title, items }: MenuSectionProps) {
     return(
-        <View key={i18nTitleKey}>
+        <View className="mb-5">
             <Text
                 style={[
                     styles.sectionTitle,
-                    // sectionIndex > 0 && styles.sectionMargin,
                 ]}
             >
                 {title}

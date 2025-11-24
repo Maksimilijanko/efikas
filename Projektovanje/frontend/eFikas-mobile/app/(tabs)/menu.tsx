@@ -104,7 +104,7 @@ export default function Menu() {
         break;
 
       case "aboutApp":
-        router.push("/aboutApp");
+        router.push("/(menu)/(mainSettings)/aboutApp");
         break;
 
       case "logout":

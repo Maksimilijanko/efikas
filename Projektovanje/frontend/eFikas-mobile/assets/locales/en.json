@@ -102,6 +102,14 @@
     },
 
     "dashboard": {
+        "navigation": {
+            "apartmentsTitle": "Apartments",
+            "reservationsTitle": "Reservations",
+            "expensesTitle": "Expenses",
+            "tasksTitle": "Tasks",
+            "damagesTitle": "Damages",
+            "statisticsTitle": "Statistics"
+        },
         "loading": "Loading...",
         "greeting": "Hello,",
         "sections": {

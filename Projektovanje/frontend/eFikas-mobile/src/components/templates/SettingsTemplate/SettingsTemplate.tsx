@@ -21,29 +21,6 @@ export default function SettingsTemplate({
           title={section.title} 
           items={section.items}
         />
-
-        // <View key={section.title}>
-        //   <Text
-        //     style={[
-        //       style.sectionTitle,
-        //       sectionIndex > 0 && style.sectionMargin,
-        //     ]}
-        //   >
-        //     {section.title}
-        //   </Text>
-
-        //   <View style={style.listContainer}>
-        //     {section.items.map((item, index) => (
-        //       <MenuItem
-        //         key={item.label}
-        //         leftIconName={item.icon}
-        //         text={item.label}
-        //         onPress={() => onItemPress(item.label)}
-        //         showDivider={index < section.items.length - 1}
-        //       />
-        //     ))}
-        //   </View>
-        // </View>
       ))}
     </View>
   );

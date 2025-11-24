@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 
-export default function Reservations() {
+export default function Tasks() {
     return(
         <>
             <Text>Stranica za zadatke</Text>
