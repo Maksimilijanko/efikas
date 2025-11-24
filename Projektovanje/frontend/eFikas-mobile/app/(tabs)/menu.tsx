@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { Colors } from "@/src/styles/style";
 import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { LogoutDialog } from "@/src/components/organisms/Dialogs/LogoutDialog/LogoutDialog";
+import { useAuth } from "@/src/hooks/useAuth";
 
-type IconName = "User" | "Bell" | "Home" | "Wallet" | "BarChart2" | "BookOpen" | "BookMarked" | "Users" | "Settings" | "Info" | "LogOut";
+type IconName = "User" | "Bell" | "Home" | "Wallet" | "ChartNoAxesCombined" | "BookDown" | "BookUp" | "Users" | "Settings" | "Info" | "LogOut";
 
 type MenuItemType = {
   id: string;
@@ -31,9 +33,9 @@ const MENU_SECTIONS: MenuSection[] = [
     i18nTitleKey: "menu.title.accounting",
     items: [
       { id: "expenses", icon: "Wallet", i18nKey: "menu.item.expenses" },
-      { id: "statistics", icon: "BarChart2", i18nKey: "menu.item.statistics" },
-      { id: "incomeBook", icon: "BookOpen", i18nKey: "menu.item.incomeBook" },
-      { id: "expenseBook", icon: "BookMarked", i18nKey: "menu.item.expenseBook" },
+      { id: "statistics", icon: "ChartNoAxesCombined", i18nKey: "menu.item.statistics" },
+      { id: "incomeBook", icon: "BookDown", i18nKey: "menu.item.incomeBook" },
+      { id: "expenseBook", icon: "BookUp", i18nKey: "menu.item.expenseBook" },
       { id: "guestBook", icon: "Users", i18nKey: "menu.item.guestBook" },
     ],
   },
@@ -50,6 +52,19 @@ const MENU_SECTIONS: MenuSection[] = [
 export default function Menu() {
 
   const { t } = useTranslation();
+  const { logout } = useAuth();
+  const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
+  
+  // --- Logika za odjavu ---
+  const handleLogoutConfirm = async () => {
+    setLogoutDialogVisible(false);
+    await logout();
+  };
+
+  const handleLogoutCancel = () => {
+    setLogoutDialogVisible(false);
+  };
+
   const handleItemPress = (itemId: string) => {
     switch (itemId) {
       case "profile":
@@ -93,7 +108,7 @@ export default function Menu() {
         break;
 
       case "logout":
-        router.replace('/auth');
+        setLogoutDialogVisible(true);
         break;
 
       default:
@@ -130,6 +145,11 @@ export default function Menu() {
         </React.Fragment>
       ))}
       <View style={{ height: 50 }} />
+      <LogoutDialog
+        visible={logoutDialogVisible}
+        onConfirm={handleLogoutConfirm}
+        onCancel={handleLogoutCancel}
+      />
     </ScrollView>
   );
 }

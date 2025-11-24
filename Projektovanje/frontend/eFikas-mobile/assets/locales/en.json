@@ -37,6 +37,15 @@
             "loadingTitle": "Registering"
         },
 
+        "logout": {
+            "toastMessages": {
+                "successTitle": "Logged Out",
+                "successMsg": "You have successfully logged out.",
+                "errorTitle": "Logout Failed",
+                "errorMsg": "Logout failed. Check your connection or try again."
+            }
+        },
+
         "errors": {
             "emailError": "Email has to be at least 6 characters",
             "passwordLengthError": "Password has to be at least 8 characters",

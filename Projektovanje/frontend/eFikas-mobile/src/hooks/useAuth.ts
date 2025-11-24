@@ -60,9 +60,30 @@ export const useAuth = () => {
         },
     });
 
+    const logout = async () => {
+        try {
+            await secureStoreService.deleteItemAsync(
+                SECURE_STORE_KEYS.authenticationResponseKey
+            );
+            toastService.success(
+                t('auth.logout.toastMessages.successTitle'),
+                t('auth.logout.toastMessages.successMsg')
+            );
+            router.replace('/auth');
+            
+        } catch (error) {
+            console.error("Greška prilikom odjave:", error);
+            toastService.error(
+                t('auth.logout.toastMessages.errorTitle'),
+                t('auth.logout.toastMessages.errorMsg')
+            );
+        }
+    };
+
     return {
         login: loginMutation.mutate,
         register: registerMutation.mutate,
+        logout,
         isLoggingIn: loginMutation.isPending,
         isRegistering: registerMutation.isPending,
         loginError: loginMutation.error,
