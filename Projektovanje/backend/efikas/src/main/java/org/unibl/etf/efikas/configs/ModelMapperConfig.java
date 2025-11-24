@@ -3,7 +3,9 @@ package org.unibl.etf.efikas.configs;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.unibl.etf.efikas.models.entities.ApartmentDamage;
 import org.unibl.etf.efikas.models.entities.ApartmentExpense;
+import org.unibl.etf.efikas.models.responses.ApartmentDamageResponse;
 import org.unibl.etf.efikas.models.responses.ApartmentExpenseResponse;
 
 @Configuration
@@ -23,6 +25,17 @@ public class ModelMapperConfig {
                 .addMapping(
                         source -> source.getId().getApartmentId(),
                         ApartmentExpenseResponse::setApartmentId
+                );
+
+        // Provide custom mapping for ApartmentDamageResponse
+        mapper.createTypeMap(ApartmentDamage.class, ApartmentDamageResponse.class)
+                .addMapping(
+                        source -> source.getId().getName(),
+                        ApartmentDamageResponse::setName
+                )
+                .addMapping(
+                        source -> source.getId().getApartmentId(),
+                        ApartmentDamageResponse::setApartmentId
                 );
 
 
