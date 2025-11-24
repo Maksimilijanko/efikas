@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ApartmentExpenseRepository extends JpaRepository<ApartmentExpense, Long> {
-    List<ApartmentExpense> findApartmentExpenseByApartmentId(Long apartmentId);
+    List<ApartmentExpense> findApartmentExpenseByApartmentApartmentId(Integer apartment_apartmentId);
 }

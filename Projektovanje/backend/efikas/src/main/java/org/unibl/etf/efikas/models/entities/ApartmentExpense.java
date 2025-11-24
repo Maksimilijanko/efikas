@@ -12,6 +12,10 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "apartment_expense", schema = "efikas")
 public class ApartmentExpense {
     @EmbeddedId
+    @AttributeOverrides({
+            @AttributeOverride(name = "apartmentId", column = @Column(name = "\"ApartmentId\"")),
+            @AttributeOverride(name = "name", column = @Column(name = "\"Name\""))
+    })
     private ApartmentExpenseId id;
 
     @MapsId("apartmentId")
@@ -28,5 +32,16 @@ public class ApartmentExpense {
 
     @Column(name = "\"Status\"", nullable = false)
     private Boolean status = false;
+
+    // Not elegant, but it works :)
+    @Column(name = "\"Name\"", insertable = false, updatable = false)
+    private String nameFromDb;
+
+    @PostLoad
+    private void populateIdName() {
+        if (id != null && id.getName() == null) {
+            id.setName(this.nameFromDb);
+        }
+    }
 
 }
