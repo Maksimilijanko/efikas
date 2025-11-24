@@ -32,16 +32,6 @@ public class ApartmentExpense {
 
     @Column(name = "\"Status\"", nullable = false)
     private Boolean status = false;
-
-    // Not elegant, but it works :)
-    @Column(name = "\"Name\"", insertable = false, updatable = false)
-    private String nameFromDb;
-
-    @PostLoad
-    private void populateIdName() {
-        if (id != null && id.getName() == null) {
-            id.setName(this.nameFromDb);
-        }
-    }
+    
 
 }
