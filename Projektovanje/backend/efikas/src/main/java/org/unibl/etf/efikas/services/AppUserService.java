@@ -1,6 +1,9 @@
 package org.unibl.etf.efikas.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,5 +46,14 @@ public class AppUserService {
     public boolean authenticate(String email, String password) {
         return appUserRepository.findByEmail(email).map(user -> passwordEncoder.matches(password, user.getPasswordHash()))
                 .orElse(false);
+    }
+
+    public String getCurrentUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("Korisnik nije prijavljen.");
+        }
+
+        return authentication.getName();
     }
 }

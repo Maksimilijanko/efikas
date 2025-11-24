@@ -22,12 +22,9 @@ public class ApartmentExpenseController {
     @GetMapping("{apartmentId}/expenses")
     public ResponseEntity<?> getApartmentExpenses(@PathVariable Integer apartmentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-
-        // Email left unused - apartment expense is not in relation with app user
 
         List<ApartmentExpenseResponse> expenses =
-                apartmentExpenseService.getAllApartmentExpensesForApartment(apartmentId);
+                apartmentExpenseService.getAllApartmentExpensesForApartment(apartmentId, authentication);
 
         return ResponseEntity.ok(expenses);
     }
