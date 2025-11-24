@@ -15,9 +15,15 @@ public class ModelMapperConfig {
 
         mapper.getConfiguration().setAmbiguityIgnored(true);
         // Provide custom mapping for ApartmentExpenseResponse
-        mapper.typeMap(ApartmentExpense.class, ApartmentExpenseResponse.class)
-                .addMappings(m -> m.map(src -> src.getApartment().getApartmentId(),
-                        ApartmentExpenseResponse::setApartmentId));
+        mapper.createTypeMap(ApartmentExpense.class, ApartmentExpenseResponse.class)
+                .addMapping(
+                        source -> source.getId().getName(),
+                        ApartmentExpenseResponse::setName
+                )
+                .addMapping(
+                        source -> source.getId().getApartmentId(),
+                        ApartmentExpenseResponse::setApartmentId
+                );
 
 
         return mapper;
