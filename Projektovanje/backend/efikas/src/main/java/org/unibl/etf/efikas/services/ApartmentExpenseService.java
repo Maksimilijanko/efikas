@@ -79,7 +79,6 @@ public class ApartmentExpenseService {
             ApartmentExpenseId newId = new ApartmentExpenseId();
             newId.setApartmentId(apartmentId);
             newId.setName(newName);
-            apartmentExpense.setId(newId);
 
             apartmentExpense.setId(newId);
         }
