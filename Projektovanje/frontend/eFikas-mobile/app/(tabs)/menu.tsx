@@ -103,7 +103,7 @@ export default function Menu() {
         break;
 
       case "aboutApp":
-        console.log("Prikaz: Informacije o aplikaciji i verziji.");
+        router.push("/aboutApp");
         break;
 
       case "logout":
