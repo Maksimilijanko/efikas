@@ -12,6 +12,10 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "apartment_expense", schema = "efikas")
 public class ApartmentExpense {
     @EmbeddedId
+    @AttributeOverrides({
+            @AttributeOverride(name = "apartmentId", column = @Column(name = "\"ApartmentId\"")),
+            @AttributeOverride(name = "name", column = @Column(name = "\"Name\""))
+    })
     private ApartmentExpenseId id;
 
     @MapsId("apartmentId")
@@ -28,5 +32,5 @@ public class ApartmentExpense {
 
     @Column(name = "\"Status\"", nullable = false)
     private Boolean status = false;
-
+    
 }
