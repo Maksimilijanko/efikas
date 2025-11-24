@@ -40,17 +40,17 @@ export const Accordion = ({
       type={type}
       isCollapsible={isCollapsible}
       isDisabled={isDisabled}
-      className={`w-[100%] border border-outline-200 rounded-2xl overflow-hidden ${className || ""}`}
+      className={`w-[100%] rounded-3xl overflow-hidden ${className || ""}`}
       {...props}
     >
       {items.map((item, index) => (
         <React.Fragment key={item.id}>
           <AccordionItem value={item.id} className="py-2">
-            <AccordionHeader className="py-2 px-4">
+            <AccordionHeader className="py-1 px-4">
               <AccordionTrigger>
                 {({ isExpanded }) => (
                   <>
-                    <AccordionTitleText className="text-xl">
+                    <AccordionTitleText className="text-lg">
                         {item.title}
                     </AccordionTitleText>
                     <Icon

@@ -37,6 +37,15 @@
             "loadingTitle": "Registering"
         },
 
+        "logout": {
+            "toastMessages": {
+                "successTitle": "Logged Out",
+                "successMsg": "You have successfully logged out.",
+                "errorTitle": "Logout Failed",
+                "errorMsg": "Logout failed. Check your connection or try again."
+            }
+        },
+
         "errors": {
             "emailError": "Email has to be at least 6 characters",
             "passwordLengthError": "Password has to be at least 8 characters",
@@ -136,9 +145,9 @@
             "myApartments": "My Apartments",
             "expenses": "Expenses",
             "statistics": "Statistics",
-            "incomeBook": "Income Ledger",
-            "expenseBook": "Expense Ledger",
-            "guestBook": "Guest Ledger",
+            "incomeBook": "Income Book",
+            "expenseBook": "Expense Book",
+            "guestBook": "Guest Book",
             "settings": "Settings",
             "aboutApp": "About App",
             "logout": "Log Out"
@@ -183,5 +192,29 @@
         "currency": "BAM",
         "okButton": "OK",
         "detailsButton": "Details"
+    },
+
+    "aboutApp": {
+        "title": "About App",
+        "systemName": "eFikas",
+        "systemDesc": "Electronic fiscal and control administrative system",
+        "accordion": {
+            "functionalities": "Functionalities",
+            "compatibility": "Compatibility",
+            "appVersion": "App Version",
+            "team": "Development Team",
+            "contact": "Contact & Support",
+
+            "content_fiscalization": "Real-time fiscalization",
+            "content_reservations": "Reservation management",
+            "content_statistics": "Business statistics",
+            "content_multiLang": "Multi-language support",
+
+            "content_platforms": "Available for Android and iOS",
+            "content_cashRegister": "Connection with fiscal cash register",
+
+            "content_versionNumber": "Version 1.0",
+            "content_releaseDate": "Release date: 01/01/2026"
+        }
     }
 }

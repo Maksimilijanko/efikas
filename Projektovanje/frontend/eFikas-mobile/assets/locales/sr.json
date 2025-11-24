@@ -37,6 +37,15 @@
             "loadingTitle": "Registracija u toku"
         },
 
+        "logout": {
+            "toastMessages": {
+                "successTitle": "Odjava uspela!",
+                "successMsg": "Uspešno ste se odjavili.",
+                "errorTitle": "Greška prilikom odjave",
+                "errorMsg": "Neuspela odjava. Proverite vezu ili pokušajte ponovo."
+            }
+        },
+
         "errors": {
             "emailError": "Email mora biti bar 6 karaktera",
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
@@ -184,5 +193,29 @@
         "currency": "BAM",
         "okButton": "U redu",
         "detailsButton": "Detalji"
+    },
+
+    "aboutApp": {
+        "title": "O aplikaciji",
+        "systemName": "eFikas",
+        "systemDesc": "Elektronski fiskalni i kontrolni administrativni sistem",
+        "accordion": {
+            "functionalities": "Funkcionalnosti",
+            "compatibility": "Kompatibilnosti",
+            "appVersion": "Verzija aplikacije",
+            "team": "Razvojni tim",
+            "contact": "Kontakt i podrška",
+
+            "content_fiscalization": "Fiskalizacija u realnom vremenu",
+            "content_reservations": "Upravljanje rezervacijama",
+            "content_statistics": "Statistika poslovanja",
+            "content_multiLang": "Podrška za više jezika",
+
+            "content_platforms": "Dostupnost za Android i iOS",
+            "content_cashRegister": "Povezivanje sa fiskalnom kasom",
+
+            "content_versionNumber": "Verzija 1.0",
+            "content_releaseDate": "Datum izdavanja: 01.01.2026."
+        }
     }
 }
