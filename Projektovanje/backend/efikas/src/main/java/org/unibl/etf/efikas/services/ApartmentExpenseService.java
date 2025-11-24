@@ -68,12 +68,37 @@ public class ApartmentExpenseService {
         apartmentRepository.findById(apartmentId.longValue())
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
+        apartmentExpenseRepository.delete(apartmentExpense);
+
         modelMapper.map(expense, apartmentExpense);
+
+        String newName = expense.getName();
+        if(newName != null && !newName.equals(apartmentExpense.getId().getName())) {
+            ApartmentExpenseId newId = new ApartmentExpenseId();
+            newId.setApartmentId(apartmentId);
+            newId.setName(newName);
+            apartmentExpense.setId(newId);
+
+            apartmentExpense.setId(newId);
+        }
 
         apartmentExpenseRepository.save(apartmentExpense);
 
         return modelMapper.map(apartmentExpense, ApartmentExpenseResponse.class);
     }
 
+    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    public ApartmentExpenseResponse deleteApartmentExpense(Integer apartmentId, Authentication authentication, String apartmentExpenseName) {
+        ApartmentExpenseId apartmentExpenseId = new ApartmentExpenseId();
+        apartmentExpenseId.setApartmentId(apartmentId);
+        apartmentExpenseId.setName(apartmentExpenseName);
+
+        ApartmentExpense apartmentExpense = apartmentExpenseRepository.findApartmentExpenseById(apartmentExpenseId)
+                .orElseThrow(() -> new EntityNotFoundException("Apartment expense not found!"));
+
+        apartmentExpenseRepository.delete(apartmentExpense);
+
+        return modelMapper.map(apartmentExpense, ApartmentExpenseResponse.class);
+    }
 
 }

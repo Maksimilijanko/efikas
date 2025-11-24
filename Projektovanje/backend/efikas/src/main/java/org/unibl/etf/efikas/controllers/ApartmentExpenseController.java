@@ -8,7 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.models.dto.ApartmentExpenseDTO;
+import org.unibl.etf.efikas.models.entities.ApartmentExpense;
 import org.unibl.etf.efikas.models.responses.ApartmentExpenseResponse;
+import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 import org.unibl.etf.efikas.services.ApartmentExpenseService;
 
 import java.net.URI;
@@ -59,5 +61,14 @@ public class ApartmentExpenseController {
                     .toUri();
             return ResponseEntity.created(location).body(response);
         }
+    }
+
+    @DeleteMapping("{apartmentId}/expenses/{apartmentExpenseName}")
+    public ResponseEntity<?> deleteApartmentExpense(@PathVariable Integer apartmentId, @PathVariable String apartmentExpenseName) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        ApartmentExpenseResponse response = apartmentExpenseService.deleteApartmentExpense(apartmentId, authentication, apartmentExpenseName);
+
+        return ResponseEntity.ok(response);
     }
 }
