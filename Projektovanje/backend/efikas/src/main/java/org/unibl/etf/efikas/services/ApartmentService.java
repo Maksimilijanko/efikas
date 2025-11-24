@@ -3,8 +3,10 @@ package org.unibl.etf.efikas.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.exceptions.S3UploadException;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.ApartmentPicture;
@@ -165,7 +167,7 @@ public class ApartmentService {
 
     public ApartmentResponse deleteApartment(Integer apartmentId) throws IOException {
         Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
-                .orElseThrow(() -> new EntityNotFoundException("Apartment not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apartment not found"));
 
         List<ApartmentPicture> pictures = apartmentPictureRepository.findApartmentPictureByApartment(apartment);
         ApartmentResponse response = modelMapper.map(apartment, ApartmentResponse.class);

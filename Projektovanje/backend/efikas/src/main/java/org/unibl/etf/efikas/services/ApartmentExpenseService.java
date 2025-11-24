@@ -3,9 +3,11 @@ package org.unibl.etf.efikas.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.models.dto.ApartmentExpenseDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.ApartmentExpense;
@@ -94,7 +96,7 @@ public class ApartmentExpenseService {
         apartmentExpenseId.setName(apartmentExpenseName);
 
         ApartmentExpense apartmentExpense = apartmentExpenseRepository.findApartmentExpenseById(apartmentExpenseId)
-                .orElseThrow(() -> new EntityNotFoundException("Apartment expense not found!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apartment expense not found!"));
 
         apartmentExpenseRepository.delete(apartmentExpense);
 
