@@ -37,6 +37,15 @@
             "loadingTitle": "Registracija u toku"
         },
 
+        "logout": {
+            "toastMessages": {
+                "successTitle": "Odjava uspela!",
+                "successMsg": "Uspešno ste se odjavili.",
+                "errorTitle": "Greška prilikom odjave",
+                "errorMsg": "Neuspela odjava. Proverite vezu ili pokušajte ponovo."
+            }
+        },
+
         "errors": {
             "emailError": "Email mora biti bar 6 karaktera",
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
