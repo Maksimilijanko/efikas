@@ -225,5 +225,18 @@
             "content_versionNumber": "Verzija 1.0",
             "content_releaseDate": "Datum izdavanja: 01.01.2026."
         }
+    },
+
+    "books": {
+        "documents": {
+            "downloadErrorTitle": "Greška preuzimanja",
+            "downloadErrorMessage": "Neuspješno preuzimanje"
+        },
+        "bookTitles": {
+            "ExpenseBook": "Knjiga rashoda",
+            "IncomeBook": "Knjiga prihoda",
+            "DomesticGuestsBook": "Knjiga domaćih gostiju",
+            "ForeignGuestsBook": "Knjiga stranih gostiju"
+        }
     }
 }
