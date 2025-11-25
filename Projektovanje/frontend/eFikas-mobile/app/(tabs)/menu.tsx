@@ -71,7 +71,7 @@ export default function Menu() {
         break;
 
       case "notifications":
-        console.log("Navigacija: Otvori ekran sa obaveštenjima.");
+        router.push('/(menu)/(profile)/notifications');
         break;
 
       case "myApartments":

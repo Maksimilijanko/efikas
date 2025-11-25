@@ -237,6 +237,11 @@
             "DomesticGuestsBook": "Domestic Guests Book",
             "ForeignGuestsBook": "Foreign Guests Book"
         }
+    },
+
+    "notifications": {
+        "title": "Notifications",
+        "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance"
     }
 
 }
