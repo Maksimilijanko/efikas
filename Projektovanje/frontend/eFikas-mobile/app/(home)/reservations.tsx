@@ -1,9 +1,7 @@
 import { Text } from "react-native";
 
 export default function Reservations() {
-    return(
-        <>
-            <Text>Stranica za štete</Text>
-        </>
+    return (
+        <Text>Stranica za rezervacije</Text>
     );
 }

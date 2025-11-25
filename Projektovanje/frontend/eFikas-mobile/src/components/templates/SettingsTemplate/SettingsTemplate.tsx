@@ -1,54 +1,26 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
 import style from "./style";
 
-import { LucideIconName } from "@/src/types/types";
 
-export type SettingsItemType = {
-  icon: LucideIconName;  
-  label: string;
-};
-
-export type SettingsSection = {
-  title: string;
-  items: SettingsItemType[];
-};
+import MenuSection from "../../organisms/MenuSection/MenuSection";
+import { View } from "react-native";
+import { MenuSectionProps } from "@/src/types/types";
 
 interface SettingsTemplateProps {
-  sections: SettingsSection[];
-  onItemPress: (label: string) => void;
+  sections: MenuSectionProps[];
 }
 
 export default function SettingsTemplate({
   sections,
-  onItemPress,
 }: SettingsTemplateProps) {
   return (
     <View style={style.screenContainer}>
       {sections.map((section, sectionIndex) => (
-        <View key={section.title}>
-          <Text
-            style={[
-              style.sectionTitle,
-              sectionIndex > 0 && style.sectionMargin,
-            ]}
-          >
-            {section.title}
-          </Text>
-
-          <View style={style.listContainer}>
-            {section.items.map((item, index) => (
-              <MenuItem
-                key={item.label}
-                leftIconName={item.icon}
-                text={item.label}
-                onPress={() => onItemPress(item.label)}
-                showDivider={index < section.items.length - 1}
-              />
-            ))}
-          </View>
-        </View>
+        <MenuSection 
+          key={sectionIndex} 
+          title={section.title} 
+          items={section.items}
+        />
       ))}
     </View>
   );

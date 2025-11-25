@@ -102,6 +102,14 @@
     },
 
     "dashboard": {
+        "navigation": {
+            "apartmentsTitle": "Apartments",
+            "reservationsTitle": "Reservations",
+            "expensesTitle": "Expenses",
+            "tasksTitle": "Tasks",
+            "damagesTitle": "Damages",
+            "statisticsTitle": "Statistics"
+        },
         "loading": "Loading...",
         "greeting": "Hello,",
         "sections": {
@@ -116,6 +124,24 @@
     },
 
     "menu": {
+        "stackNavigation": {
+            "profile": "Profile",
+            "notifications": "Notifications",
+            "myApartments": "My apartments",
+            
+            "expenses": "Expenses",
+            "statistics": "Statistics",
+            "incomeBook": "Income book",
+            "expensesBook": "Expenses book",
+            "guestBook": "Guest book",
+
+            "settingsMain": "Podešavanja",
+            "language": "Jezik",
+            "theme": "Tema",
+            "bugReport": "Prijava greške",
+            "aboutApp": "O aplikaciji"
+
+        },
         "title": {
             "profile": "Profile",
             "accounting": "Accounting",
@@ -133,6 +159,20 @@
             "settings": "Settings",
             "aboutApp": "About App",
             "logout": "Log Out"
+        },
+
+        "mainSettings": {
+            "settings": {
+                "general": {
+                    "mainTitle": "General",
+                    "languageTitle": "Language",
+                    "themeTitle": "Theme"
+                },
+                "feedback": {
+                    "mainTitle": "Feedback",
+                    "bugReportTitle": "Report an error"
+                }
+            }
         }
     },
 

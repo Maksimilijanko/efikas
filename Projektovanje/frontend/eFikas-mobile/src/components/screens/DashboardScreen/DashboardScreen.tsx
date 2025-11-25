@@ -39,22 +39,22 @@ export default function DashboardScreen() {
 
   // --- Navigation handlers ---
   function goToReservations() {
-    router.push("/reservations");
+    router.push("/(home)/reservations");
   }
   function goToExpenses() {
-    router.push("/expenses");
+    router.push("/(home)/expenses");
   }
   function goToTasks() {
-    router.push("/tasks");
+    router.push("/(home)/tasks");
   }
   function goToDamages() {
-    router.push("/damages");
+    router.push("/(home)/damages");
   }
   function goToApartments() {
-    router.push("/apartments");
+    router.push("/(home)/apartments");
   }
   function goToAnalytics() {
-    router.push("/analytics");
+    router.push("/(home)/analytics");
   }
 
   if (loading) {

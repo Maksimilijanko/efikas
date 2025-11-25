@@ -99,11 +99,12 @@ export default function Menu() {
         break;
 
       case "settings":
-        console.log("Navigacija: Otvori opšte podešavanje aplikacije.");
+        //console.log("Navigacija: Otvori opšte podešavanje aplikacije.");
+        router.push('/(menu)/(mainSettings)/(settings)');
         break;
 
       case "aboutApp":
-        router.push("/aboutApp");
+        router.push("/(menu)/(mainSettings)/aboutApp");
         break;
 
       case "logout":
