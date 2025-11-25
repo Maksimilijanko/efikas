@@ -1,0 +1,102 @@
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Platform, Alert } from "react-native";
+import { IconButton } from "@/src/components/atoms/IconButton/IconButton";
+import { Colors } from '@/src/styles/style';
+import { DownloadDialog } from "@/src/components/organisms/Dialogs/DownloadDialog/DownloadDialog"; // Pretpostavljena putanja do dijaloga
+import { useDownload } from "@/src/hooks/useDownload";
+import { useTranslation } from "react-i18next";
+import { Spinner } from "@/components/ui/spinner";
+
+export type DocumentType = 
+    | 'IncomeBook'  // Knjiga prihoda
+    | 'ExpenseBook' // Knjiga rashoda
+    | 'DomesticGuestsBook' // Knjiga domacih gostiju
+    | 'ForeignGuestsBook'; // Knjiga stranih gostiju
+
+export type DocumentItemProps = {
+    title: string;
+    documentType: DocumentType;
+};
+
+const DocumentItem: React.FC<DocumentItemProps> = ({ title, documentType }) => {
+    const { t } = useTranslation();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { downloadDocument, isDownloading, downloadError } = useDownload();
+
+    // Reakcija na gresku iz hook-a
+    useEffect(() => {
+        if (downloadError) {
+            Alert.alert(
+                t('books.documents.downloadErrorTitle'),
+                downloadError);
+        }
+    }, [downloadError]);
+
+    const handleDownloadPress = async () => {
+        const success = await downloadDocument(documentType);
+    
+        if (success) {
+            setIsDialogOpen(true);
+        }
+        // Ako nije uspjelo (success je false), greska se vec prikazuje putem useEffect/Alert
+    };
+
+    return (
+        <View>
+        <View style={itemStyles.container}>
+            <Text style={[itemStyles.title, { marginRight: 10 }]}>{title}</Text> 
+            {isDownloading ? (
+                <Spinner 
+                    size="small" 
+                    color={Colors.primary}
+                />
+            ) : (
+                <IconButton 
+                    iconName="Download"
+                    onPress={handleDownloadPress}
+                    size={24}
+                    color={Colors.textPrimary}
+                />
+            )}
+        </View>
+
+        <DownloadDialog 
+            visible={isDialogOpen}
+            onClose={() => setIsDialogOpen(false)}
+        />
+        </View>
+    );
+};
+
+const itemStyles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 36,
+        borderRadius: 20,
+        paddingHorizontal: 24,
+        borderColor: Colors.borderColor,
+        borderWidth: 1,
+        backgroundColor: Colors.background,
+        ...Platform.select({
+          ios: {
+            shadowColor: Colors.shadowColor,
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+            shadowOffset: { width: 0, height: 4 },
+          },
+          android: { 
+            elevation: 2,
+          },
+        }),
+    },
+
+    title: {
+        fontSize: 18,
+        fontWeight: "600",
+        color: Colors.textPrimary,
+    },
+});
+
+export default DocumentItem;
