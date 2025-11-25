@@ -135,11 +135,8 @@
             "expensesBook": "Expenses book",
             "guestBook": "Guest book",
 
-            "settingsMain": "Podešavanja",
-            "language": "Jezik",
-            "theme": "Tema",
-            "bugReport": "Prijava greške",
-            "aboutApp": "O aplikaciji"
+            "settingsMain": "Settings",
+            "aboutApp": "About the app"
 
         },
         "title": {

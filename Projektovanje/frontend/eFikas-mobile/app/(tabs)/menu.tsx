@@ -100,7 +100,7 @@ export default function Menu() {
 
       case "settings":
         //console.log("Navigacija: Otvori opšte podešavanje aplikacije.");
-        router.push('/(menu)/(mainSettings)/(settings)');
+        router.push('/(menu)/(mainSettings)/settings');
         break;
 
       case "aboutApp":

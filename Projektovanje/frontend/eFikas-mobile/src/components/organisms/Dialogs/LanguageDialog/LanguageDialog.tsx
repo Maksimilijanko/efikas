@@ -14,7 +14,7 @@ interface LanguageDialogProps {
   visible: boolean;
   onClose: () => void;
   onConfirm: (languageId: string) => void;
-  selectedLanguage: string;
+  selectedLanguage?: string;
 }
 
 export const LanguageDialog: React.FC<LanguageDialogProps> = ({

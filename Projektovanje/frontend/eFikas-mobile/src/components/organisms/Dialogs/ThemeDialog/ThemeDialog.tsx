@@ -14,7 +14,7 @@ interface ThemeDialogProps {
   visible: boolean;
   onClose: () => void;
   onConfirm: (themeId: string) => void;
-  selectedTheme: string;
+  selectedTheme?: string;
 }
 
 export const ThemeDialog: React.FC<ThemeDialogProps> = ({

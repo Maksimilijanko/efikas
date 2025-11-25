@@ -13,4 +13,13 @@ export const Colors = {
   calendarPeriod: '#C1D6EC',
   calendarPeriodOverlap: "#8bb3deff",
   borderColor: "#E2E2E2",
+
+  // For reference from Figma
+  dark: {
+    tabBackground: '#34373c',
+    tabBarInactiveTint: '#d9d9d9',
+    tabBarActiveTint: '#4c98e7',
+
+    screenBackground: '#292b2e'
+  }
 };
