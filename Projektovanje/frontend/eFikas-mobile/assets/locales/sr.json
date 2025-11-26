@@ -238,5 +238,10 @@
             "DomesticGuestsBook": "Knjiga domaćih gostiju",
             "ForeignGuestsBook": "Knjiga stranih gostiju"
         }
+    },
+
+    "notifications": {
+        "title": "Obavještenja",
+        "description": "Dobijate podsjetnike o važnim događajima - dolascima gostiju, plaćanjima, zadacima i održavanju smještaja"
     }
 }
