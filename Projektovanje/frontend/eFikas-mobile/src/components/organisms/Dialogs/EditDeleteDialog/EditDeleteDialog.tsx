@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, View, Pressable, Text, StyleSheet } from "react-native";
+import { Modal, View, Pressable, Text, StyleSheet, Platform } from "react-native";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Colors } from "@/src/styles/style";
 import { useTranslation } from "react-i18next";
@@ -19,14 +19,26 @@ export function EditDeleteDialog({
     onEdit,
     onDelete,
     showDelete = true,
-    position = { top: 100, right: 8 },
+    position,
 }: EditDeleteDialogProps) {
     const { t } = useTranslation();
+    
+    const DEFAULT_TOP_IOS = 100;
+    const DEFAULT_TOP_ANDROID = 40;
+    const DEFAULT_RIGHT = 8;
+
+    // Izracunavanje podrazumevane top pozicije (u zavisnosti od platforme)
+    const calculatedDefaultPosition = {
+        top: Platform.OS === 'ios' ? DEFAULT_TOP_IOS : DEFAULT_TOP_ANDROID,
+        right: DEFAULT_RIGHT,
+    };
+    
+    const finalPosition = position ? position : calculatedDefaultPosition;
 
     return (
         <Modal visible={visible} transparent animationType="fade">
             <Pressable style={styles.backdrop} onPress={onClose}>
-                <View style={[styles.dialog, position]}>
+                <View style={[styles.dialog, finalPosition]}>
 
                 {/* Edit */}
                 <Pressable style={styles.button} onPress={onEdit}>
