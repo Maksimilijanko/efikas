@@ -222,5 +222,24 @@
             "content_versionNumber": "Version 1.0",
             "content_releaseDate": "Release date: 01/01/2026"
         }
+    },
+
+    "books": {
+        "documents": {
+            "downloadErrorTitle": "Download Error",
+            "downloadErrorMessage": "Download failed"
+        },
+        "bookTitles": {
+            "ExpenseBook": "Expense Book",
+            "IncomeBook": "Income Book",
+            "DomesticGuestsBook": "Domestic Guests Book",
+            "ForeignGuestsBook": "Foreign Guests Book"
+        }
+    },
+
+    "notifications": {
+        "title": "Notifications",
+        "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance"
     }
+
 }

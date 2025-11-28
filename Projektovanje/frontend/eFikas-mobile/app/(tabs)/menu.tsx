@@ -71,7 +71,7 @@ export default function Menu() {
         break;
 
       case "notifications":
-        console.log("Navigacija: Otvori ekran sa obaveštenjima.");
+        router.push('/(menu)/(profile)/notifications');
         break;
 
       case "myApartments":
@@ -87,15 +87,15 @@ export default function Menu() {
         break;
 
       case "incomeBook":
-        console.log("Navigacija: Otvori sekciju Knjiga prihoda.");
+        router.push('/(menu)/(bookkeeping)/incomeBook');
         break;
 
       case "expenseBook":
-        console.log("Navigacija: Otvori sekciju Knjiga rashoda.");
+        router.push('/(menu)/(bookkeeping)/expensesBook');
         break;
 
       case "guestBook":
-        console.log("Navigacija: Otvori Knjigu gostiju.");
+        router.push('/(menu)/(bookkeeping)/guestBook');
         break;
 
       case "settings":
