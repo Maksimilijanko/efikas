@@ -11,5 +11,9 @@ export const API_URLS = {
         register: `${API_BASE_URL}/users/register`,
     },
     
+    profile: {
+        get: `${API_BASE_URL}/profile`,
+        update: `${API_BASE_URL}/profile`,
+    },
     
 }

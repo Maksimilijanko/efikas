@@ -87,6 +87,11 @@
             "darkTheme": "Dark",
             "cancelButton": "Cancel",
             "confirmButton": "Confirm"
+        },
+
+        "editDelete": {
+            "edit": "Edit Information",
+            "delete": "Delete"
         }
     },
 
@@ -242,6 +247,27 @@
     "notifications": {
         "title": "Notifications",
         "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance"
+    },
+
+    "profile": {
+        "labels": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "taxId": "Tax ID (JIB)", 
+            "registerNumber": "Register Number",
+            "softwareVersion": "Software Version"
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "save": "Save"
+        },
+        "toastMessages": {
+            "fetchErrorTitle": "Loading Error",
+            "fetchErrorMessage": "Could not load profile data.",
+            "updateErrorTitle": "Saving Error",
+            "updateErrorMessage": "Could not save the profile.",
+            "genericError": "An error occurred."
+        }
     }
 
 }
