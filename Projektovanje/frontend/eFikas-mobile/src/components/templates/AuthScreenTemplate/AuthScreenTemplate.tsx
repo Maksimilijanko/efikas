@@ -13,7 +13,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
-import { Colors } from '@/src/styles/style';
+import { useTheme } from '@/src/providers/ThemeProvider';
 
 
 interface AuthScreenTemplateProps {
@@ -27,6 +27,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 }
 
 const AuthScreenTemplate = (props: AuthScreenTemplateProps) => {
+  const { Colors } = useTheme();
   const windowHeight = Dimensions.get('window').height;
   const topImageHeight = windowHeight * 0.25;
 

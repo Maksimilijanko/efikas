@@ -161,7 +161,7 @@ export const config = {
     '--color-primary-200': '197 197 197',
     '--color-primary-300': '212 212 212',
     '--color-primary-400': '221 221 221',
-    '--color-primary-500': '230 230 230', //bilo 230 230 230, 49 118 191
+    '--color-primary-500': '49 118 191', //bilo 230 230 230 (button background), 49 118 191
     '--color-primary-600': '240 240 240',
     '--color-primary-700': '250 250 250',
     '--color-primary-800': '253 253 253',
@@ -253,13 +253,13 @@ export const config = {
     '--color-info-950': '236 248 254',
 
     /* Typography */
-    '--color-typography-0': '23 23 23',
-    '--color-typography-50': '38 38 39',
+    '--color-typography-0': '23 23 23', // 23 23 23 
+    '--color-typography-50': '38 38 39', // 38 38 39
     '--color-typography-100': '64 64 64',
     '--color-typography-200': '82 82 82',
     '--color-typography-300': '115 115 115',
     '--color-typography-400': '140 140 140',
-    '--color-typography-500': '163 163 163',
+    '--color-typography-500': '163 163 163', //bilo 163 163 163, 49 118 191
     '--color-typography-600': '212 212 212',
     '--color-typography-700': '219 219 220',
     '--color-typography-800': '229 229 229',

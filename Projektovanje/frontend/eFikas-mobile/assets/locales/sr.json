@@ -63,6 +63,7 @@
         },
 
         "report": {
+            "title": "Opišite Vaš problem",
             "placeholder": "Opis problema...",
             "cancelButton": "Odustani",
             "sendButton": "Pošalji"

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Label } from '@/src/components/atoms/Label/Label';
 import { IconButton } from '@/src/components/atoms/IconButton/IconButton';
-import { Colors } from '@/src/styles/style';
+import { useTheme } from '@/src/providers/ThemeProvider';
 
 interface SectionHeaderProps {
   title: string;
@@ -10,6 +10,8 @@ interface SectionHeaderProps {
 }
 
 export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, onPress }) => {
+  const { Colors } = useTheme();
+
   return (
     <View style={styles.container}>
       <Label 

@@ -1,10 +1,9 @@
-import React from "react";
 import style from "./style";
-
 
 import MenuSection from "../../organisms/MenuSection/MenuSection";
 import { View } from "react-native";
 import { MenuSectionProps } from "@/src/types/types";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface SettingsTemplateProps {
   sections: MenuSectionProps[];
@@ -13,8 +12,10 @@ interface SettingsTemplateProps {
 export default function SettingsTemplate({
   sections,
 }: SettingsTemplateProps) {
+  const { Colors } = useTheme();
+
   return (
-    <View style={style.screenContainer}>
+    <View style={[style.screenContainer, { backgroundColor: Colors.screenBackground }]}>
       {sections.map((section, sectionIndex) => (
         <MenuSection 
           key={sectionIndex} 

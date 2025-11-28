@@ -18,6 +18,10 @@ export type AnalyticsTemplateProps = {
     periodSelector: React.ReactNode;
 };
 
+/*
+WARN  setLayoutAnimationEnabledExperimental is currently a no-op in the New Architecture.
+Valjda ne treba navoditi u novoj arhitekturi React Native-a?
+*/
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }

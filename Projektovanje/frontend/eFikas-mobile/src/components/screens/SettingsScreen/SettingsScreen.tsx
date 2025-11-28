@@ -6,8 +6,7 @@ import { useTranslation } from "react-i18next";
 import SettingsTemplate from "../../templates/SettingsTemplate/SettingsTemplate";
 import { LanguageDialog } from "../../organisms/Dialogs/LanguageDialog/LanguageDialog";
 import { ThemeDialog } from "../../organisms/Dialogs/ThemeDialog/ThemeDialog";
-import { useColorMode, set as setColorMode } from "@gluestack-ui/themed";
-import { useTheme } from "@/src/providers/ThemeProvider";
+import { Theme, useTheme } from "@/src/providers/ThemeProvider";
 import { ReportDialog } from "../../organisms/Dialogs/ReportDialog/ReportDialog";
 
 
@@ -15,7 +14,6 @@ export default function SettingsScreen() {
     const [languageDialogVisible, setLanguageDialogVisible] = useState(false);
     const [themeDialogVisible, setThemeDialogVisible] = useState(false);
     const [reportDialogVisible, setReportDialogVisible] = useState(false);
-    const currentTheme = useColorMode();
 
     const { t, i18n } = useTranslation();
     const { toggleTheme } = useTheme();
@@ -25,10 +23,10 @@ export default function SettingsScreen() {
         console.log("Language changed to: ", languageId);
     }
 
-    const onThemeChange = (selectedTheme: string) => {
-        toggleTheme();    // UI state
+    const onThemeChange = (selectedTheme: Theme) => {
+        toggleTheme(selectedTheme);    // UI state
         //setColorMode('Light'); // Gluestack theme switching
-        console.log("Theme changed to: ", selectedTheme + `, current=${currentTheme}`);
+        console.log("Theme changed to: ", selectedTheme);
     };
 
     const onErrorReportSubmit = () => {
