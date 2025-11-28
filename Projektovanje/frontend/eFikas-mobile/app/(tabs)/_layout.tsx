@@ -12,16 +12,16 @@ export default function TabsRootLayout() {
     return(
         // Link ka ikonicama: https://icons.expo.fyi/Index
         <Tabs initialRouteName="index" screenOptions={{
-            // --- Leave commented out for now, in testing phase ---
+            // --- In testing phase, can be left commented out for now... ---
             tabBarActiveTintColor: Colors.tabBarActiveTint,
             tabBarInactiveTintColor: Colors.tabBarInactiveTint,
             headerTintColor: Colors.textPrimary,
             headerStyle: {
-                backgroundColor: Colors.tabBackground, // Set your desired background color here
+                backgroundColor: Colors.tabBackground, // Desired background color here
             },
             sceneStyle: { backgroundColor: Colors.screenBackground },
             tabBarStyle: {
-              backgroundColor: Colors.tabBackground // Example: Light background color
+              backgroundColor: Colors.tabBackground // background color of tab bar
             }, 
         }}>
             <Tabs.Screen name="reservations" options={{
