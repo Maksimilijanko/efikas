@@ -40,7 +40,7 @@ export default function ProfileScreen() {
             await updateProfile(tempProfile);
             setIsEditMode(false);
         } catch (err) {
-            // ovde možeš dodati toastService za grešku
+            console.error("Failed to update profile:", err);
         }
     };
 
@@ -111,8 +111,14 @@ export default function ProfileScreen() {
 
                     {isEditMode && (
                         <View style={styles.buttonContainer}>
-                            <DialogButton title={t("profile.buttons.cancel")} onPress={handleCancel} />
-                            <DialogButton title={t("profile.buttons.save")} onPress={handleSave} />
+                            <DialogButton 
+                                title={t("profile.buttons.cancel")} 
+                                onPress={handleCancel} 
+                            />
+                            <DialogButton 
+                                title={t("profile.buttons.save")} 
+                                onPress={handleSave} 
+                            />
                         </View>
                     )}
 

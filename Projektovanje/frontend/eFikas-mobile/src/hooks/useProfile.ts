@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { profileService } from "@/src/api/services/profileService";
 import { ProfileData } from "@/src/types/types";
 import { toastService } from '../services/toastService';
@@ -6,62 +6,61 @@ import { useTranslation } from "react-i18next";
 
 export const useProfile = () => {
     const { t } = useTranslation();
-    const [profile, setProfile] = useState<ProfileData | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const queryClient = useQueryClient();
 
-    // Dohvati profil sa backend-a
-    const fetchProfile = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const data = await profileService.fetchProfile();
-            setProfile(data);
-        } catch (err: any) {
-            console.error("Failed to fetch profile:", err);
-            const errorMessage = err.message || t("profile.toastMessages.genericError");
-            setError(errorMessage);
-            toastService.error(
-                t("profile.toastMessages.fetchErrorTitle"), 
-                t("profile.toastMessages.fetchErrorMessage")
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
+    // -------- FETCH PROFILE --------
+    const {
+        data: profile,
+        isLoading,
+        isError,
+        error,
+        refetch: fetchProfile,
+    } = useQuery({
+        queryKey: ["profile"],
+        queryFn: async () => {
+            try {
+                return await profileService.fetchProfile();
+            } catch (err: any) {
+                const errorMessage = err.message || t("profile.toastMessages.genericError");
+                toastService.error(
+                    t("profile.toastMessages.fetchErrorTitle"),
+                    t("profile.toastMessages.fetchErrorMessage")
+                );
+                throw new Error(errorMessage);
+            }
+        },
+    });
 
-    // Update profila
-    const updateProfile = useCallback(async (updatedData: ProfileData) => {
-        setIsSaving(true);
-        setError(null);
-        try {
-            await profileService.updateProfile(updatedData);
-            setProfile(updatedData);
-        } catch (err: any) {
-            console.error("Failed to update profile:", err);
-            const errorMessage = err.message || t("profile.toastMessages.genericError");
-            setError(errorMessage);
-            toastService.error(
-                t("profile.toastMessages.updateErrorTitle"), 
-                t("profile.toastMessages.updateErrorMessage")
-            );
-            throw err;
-        } finally {
-            setIsSaving(false);
-        }
-    }, []);
-
-    // Automatsko ucitavanje podataka pri mount-u
-    useEffect(() => {
-        fetchProfile();
-    }, [fetchProfile]);
+    // -------- UPDATE PROFILE --------
+    const {
+        mutateAsync: updateProfile,
+        isPending: isSaving,
+    } = useMutation({
+        mutationFn: async (updatedData: ProfileData) => {
+            try {
+                await profileService.updateProfile(updatedData);
+                return updatedData;
+            } catch (err: any) {
+                const errorMessage = err.message || t("profile.toastMessages.genericError");
+                toastService.error(
+                    t("profile.toastMessages.updateErrorTitle"),
+                    t("profile.toastMessages.updateErrorMessage")
+                );
+                throw new Error(errorMessage);
+            }
+        },
+        onSuccess: (updatedData) => {
+            // Ovim mozemo azurirati keš!
+            queryClient.setQueryData(["profile"], updatedData);
+        },
+    });
 
     return {
         profile,
         isLoading,
         isSaving,
-        error,
+        isError,
+        error: (error as Error)?.message ?? null,
         fetchProfile,
         updateProfile,
     };
