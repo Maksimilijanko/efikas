@@ -1,11 +1,19 @@
+import { useTheme } from "@/src/providers/ThemeProvider";
 import { Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
 
 export default function MenuRootLayout() {
     const { t } = useTranslation();
+    const { Colors } = useTheme();
 
     return (
-        <Stack screenOptions={{ headerShown: true }}>
+        <Stack screenOptions={{ 
+            headerShown: true,
+            headerTintColor: Colors.textPrimary,
+            headerStyle: {
+                backgroundColor: Colors.tabBackground, // Set your desired background color here
+            },
+        }} >
             {/* ========================================== SEKCIJA PROFIL ========================================== */}
             <Stack.Screen name="(profile)/profile" options={{ title: t('menu.stackNavigation.profile') }} />
             <Stack.Screen name="(profile)/notifications" options={{ title: t('menu.stackNavigation.notifications') }} />
@@ -21,10 +29,7 @@ export default function MenuRootLayout() {
 
 
             {/* ========================================== SEKCIJA PODEŠAVANJA ========================================== */}
-            <Stack.Screen name="(mainSettings)/(settings)/index" options={{ title: t('menu.stackNavigation.settingsMain') }} />
-            <Stack.Screen name="(mainSettings)/(settings)/language" options={{ title: t('menu.stackNavigation.language') }} />
-            <Stack.Screen name="(mainSettings)/(settings)/theme" options={{ title: t('menu.stackNavigation.theme') }} />
-            <Stack.Screen name="(mainSettings)/(settings)/bugReport" options={{ title: t('menu.stackNavigation.bugReport') }} />
+            <Stack.Screen name="(mainSettings)/settings" options={{ title: t('menu.stackNavigation.settingsMain') }} />
             <Stack.Screen name="(mainSettings)/aboutApp" options={{ title: t('menu.stackNavigation.aboutApp') }} />
         </Stack>
     );

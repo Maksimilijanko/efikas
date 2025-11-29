@@ -47,7 +47,7 @@ function DescriptionBox({
     placeholder
 }: Props) {
     return (
-        <Textarea size={size} isInvalid={isInvalid} isDisabled={isDisabled} isHovered={isHovered} isFocused={isFocused} isRequired={isRequired} isReadOnly={isReadOnly}>
+        <Textarea  size={size} isInvalid={isInvalid} isDisabled={isDisabled} isHovered={isHovered} isFocused={isFocused} isRequired={isRequired} isReadOnly={isReadOnly}>
             <TextareaInput placeholder={placeholder} />
         </Textarea>
     );

@@ -1,20 +1,19 @@
+import { Box } from "@/components/ui/box";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { useTheme } from "@/src/providers/ThemeProvider";
 import React, { useState } from "react";
-import { Modal, View, Text, Image, TouchableOpacity, StyleSheet, Platform } from "react-native";
-import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
-import { Colors } from "@/src/styles/style";
 import { useTranslation } from "react-i18next";
-
-interface ThemeOption {
-  id: string;
-  label: string;
-  image: any;
-}
+import { Image, StyleSheet, View } from "react-native";
+import { SettingsDialog } from "../SettingsDialog/SettingsDialog";
+import { Pressable } from "@/components/ui/pressable";
 
 interface ThemeDialogProps {
   visible: boolean;
   onClose: () => void;
   onConfirm: (themeId: string) => void;
-  selectedTheme: string;
+  selectedTheme?: string;
 }
 
 export const ThemeDialog: React.FC<ThemeDialogProps> = ({
@@ -24,120 +23,46 @@ export const ThemeDialog: React.FC<ThemeDialogProps> = ({
   selectedTheme,
 }) => {
   const { t } = useTranslation();
+  const { Colors } = useTheme();
   const [selected, setSelected] = useState(selectedTheme);
 
-  const themeOptions: ThemeOption[] = [
-    { 
-      id: "light",
-      label: t("dialogs.theme.lightTheme"),
-      image: require("@/assets/images/theme_light.png")
-    },
-    { 
-      id: "dark",
-      label: t("dialogs.theme.darkTheme"),
-      image: require("@/assets/images/theme_dark.png")
-    },
+  const themeOptions = [
+    { id: "light", label: t("dialogs.theme.lightTheme"), image: require("@/assets/images/theme_light.png") },
+    { id: "dark", label: t("dialogs.theme.darkTheme"), image: require("@/assets/images/theme_dark.png") },
   ];
 
-  const handleSelect = (id: string) => setSelected(id);
-  const handleConfirm = () => { onConfirm(selected); onClose(); };
-
   return (
-    <Modal
+    <SettingsDialog
       visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}
+      title={t("dialogs.theme.title")}
+      onClose={onClose}
+      onConfirm={() => onConfirm(selected)}
     >
-      <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          {/* Unutrasnji kontejner */}
-          <View style={styles.innerContainer}>
-            <Text style={styles.sectionTitle}>{t("dialogs.theme.title")}</Text>
-
-            <View style={styles.optionsContainer}>
-              {themeOptions.map(option => (
-                <TouchableOpacity
-                  key={option.id}
-                  style={styles.option}
-                  onPress={() => handleSelect(option.id)}
-                  activeOpacity={0.8}
-                >
-                  <View style={styles.themeShadowWrapper}>
-                    <View style={styles.themeRoundedWrapper}>
-                      <Image source={option.image} style={styles.themeImage} />
-                    </View>
-                  </View>
-
-                  <Text style={styles.label}>{option.label}</Text>
-
-                  <View style={[
-                    styles.radioOuter,
-                    selected === option.id && styles.radioOuterSelected
-                  ]}>
-                    {selected === option.id && <View style={styles.radioInner} />}
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.buttonsContainer}>
-            <DialogButton title={t("dialogs.theme.cancelButton")} onPress={onClose} />
-            <DialogButton title={t("dialogs.theme.confirmButton")} onPress={handleConfirm} />
-          </View>
-        </View>
-      </View>
-    </Modal>
+      <HStack style={styles.optionsContainer}>
+        {themeOptions.map((opt) => (
+          <Pressable key={opt.id} onPress={() => setSelected(opt.id)} style={styles.option}>
+            <VStack style={{ alignItems: "center", width: "100%" }}>
+              <View style={{ marginBottom: 16 }}>
+                <Image source={opt.image} style={{ width: 51, height: 105, borderRadius: 5 }} />
+              </View>
+              <Text style={[styles.label, { color: Colors.textSecondary }]}>{opt.label}</Text>
+              <Box
+                style={[
+                  styles.radioOuter,
+                  { borderColor: selected === opt.id ? Colors.primary : Colors.tertiary },
+                ]}
+              >
+                {selected === opt.id && <Box style={[styles.radioInner, { backgroundColor: Colors.primary }]} />}
+              </Box>
+            </VStack>
+          </Pressable>
+        ))}
+      </HStack>
+    </SettingsDialog>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.45)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    backgroundColor: Colors.background,
-    width: "90%",
-    borderRadius: 20,
-    paddingVertical: 25,
-    paddingHorizontal: 20,
-    alignItems: "center",
-    elevation: 8,
-    shadowColor: Colors.shadowColor,
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  innerContainer: {
-    width: "100%",
-    backgroundColor: Colors.background,
-    borderRadius: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    marginBottom: 25,
-    borderWidth: 0.2,
-    borderColor: Colors.borderColor,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.shadowColor,
-        shadowOpacity: 0.05,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 4 },
-      },
-      android: { elevation: 4 },
-    }),
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.tertiary,
-    marginBottom: 24,
-    textAlign: "left",
-  },
   optionsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -147,33 +72,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "40%",
   },
-  themeShadowWrapper: {
-    borderRadius: 5,
-    marginBottom: 16,
-    backgroundColor: Colors.background,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.shadowColor,
-        shadowOpacity: 0.15,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 4 },
-      },
-      android: { elevation: 8 },
-    }),
-  },
-  themeRoundedWrapper: {
-    borderRadius: 5,
-    overflow: "hidden",
-  },
-  themeImage: {
-    width: 51,
-    height: 105,
-    resizeMode: "cover",
-  },
   label: {
     fontSize: 15,
     fontWeight: "500",
-    color: Colors.textSecondary,
     marginBottom: 10,
   },
   radioOuter: {
@@ -181,23 +82,12 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 11,
     borderWidth: 2,
-    borderColor: Colors.tertiary,
     justifyContent: "center",
     alignItems: "center",
-  },
-  radioOuterSelected: {
-    borderColor: Colors.primary,
   },
   radioInner: {
     width: 11,
     height: 11,
     borderRadius: 5.5,
-    backgroundColor: Colors.primary,
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
-    marginTop: 10,
   },
 });

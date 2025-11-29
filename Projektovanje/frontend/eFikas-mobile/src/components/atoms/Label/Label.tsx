@@ -2,7 +2,7 @@ import { Text } from "@/components/ui/text";
 
 interface LabelProps {
   text: string;
-  color: string;
+  color?: string;
   required?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl";
   align?: "left" | "center" | "right";

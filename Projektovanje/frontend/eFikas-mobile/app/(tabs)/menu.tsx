@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
-import { Colors } from "@/src/styles/style";
 import { MenuItem } from "@/src/components/molecules/MenuItem/MenuItem";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { LogoutDialog } from "@/src/components/organisms/Dialogs/LogoutDialog/LogoutDialog";
 import { useAuth } from "@/src/hooks/useAuth";
 import { LucideIconName } from "@/src/types/types";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 type MenuItemType = {
   id: string;
@@ -49,7 +49,7 @@ const MENU_SECTIONS: MenuSection[] = [
 ];
 
 export default function Menu() {
-
+  const { Colors } = useTheme(); 
   const { t } = useTranslation();
   const { logout } = useAuth();
   const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
@@ -100,7 +100,7 @@ export default function Menu() {
 
       case "settings":
         //console.log("Navigacija: Otvori opšte podešavanje aplikacije.");
-        router.push('/(menu)/(mainSettings)/(settings)');
+        router.push('/(menu)/(mainSettings)/settings');
         break;
 
       case "aboutApp":
@@ -119,13 +119,14 @@ export default function Menu() {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollContent}
-      style={styles.screenContainer}
+      style={[styles.screenContainer, { backgroundColor: Colors.screenBackground }]}
     >
       {MENU_SECTIONS.map((section, sectionIndex) => (
         <React.Fragment key={section.i18nTitleKey}>
           <Text
             style={[
-              styles.sectionTitle,
+              styles.sectionTitle, 
+              {color: Colors.primary},
               sectionIndex > 0 && styles.sectionMargin, 
             ]}
           >
@@ -157,7 +158,6 @@ export default function Menu() {
 const styles = StyleSheet.create({
   screenContainer: {
       flex: 1,
-      backgroundColor: Colors.background,
   },
   scrollContent: {
       padding: 15,
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
       fontSize: 16,
       fontWeight: 500,
-      color: Colors.primary,
       marginBottom: 15,
       marginLeft: 5,
   },

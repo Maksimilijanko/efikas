@@ -161,7 +161,7 @@ export const config = {
     '--color-primary-200': '197 197 197',
     '--color-primary-300': '212 212 212',
     '--color-primary-400': '221 221 221',
-    '--color-primary-500': '230 230 230',
+    '--color-primary-500': '49 118 191', //bilo 230 230 230 (button background), 49 118 191
     '--color-primary-600': '240 240 240',
     '--color-primary-700': '250 250 250',
     '--color-primary-800': '253 253 253',
@@ -169,7 +169,7 @@ export const config = {
     '--color-primary-950': '253 252 252',
 
     /* Secondary  */
-    '--color-secondary-0': '20 20 20',
+    '--color-secondary-0': '35 37 40', // bilo 20 20 20, 49 118 191 - pozadina karti
     '--color-secondary-50': '23 23 23',
     '--color-secondary-100': '31 31 31',
     '--color-secondary-200': '39 39 39',
@@ -253,13 +253,13 @@ export const config = {
     '--color-info-950': '236 248 254',
 
     /* Typography */
-    '--color-typography-0': '23 23 23',
-    '--color-typography-50': '38 38 39',
+    '--color-typography-0': '23 23 23', // 23 23 23 
+    '--color-typography-50': '38 38 39', // 38 38 39
     '--color-typography-100': '64 64 64',
     '--color-typography-200': '82 82 82',
     '--color-typography-300': '115 115 115',
     '--color-typography-400': '140 140 140',
-    '--color-typography-500': '163 163 163',
+    '--color-typography-500': '163 163 163', //bilo 163 163 163, 49 118 191
     '--color-typography-600': '212 212 212',
     '--color-typography-700': '219 219 220',
     '--color-typography-800': '229 229 229',
@@ -281,7 +281,7 @@ export const config = {
     '--color-outline-950': '253 254 254',
 
     /* Background */
-    '--color-background-0': '18 18 18',
+    '--color-background-0': '49 118 191', //49 118 191, bilo 18 18 18
     '--color-background-50': '39 38 37',
     '--color-background-100': '65 64 64',
     '--color-background-200': '83 82 82',

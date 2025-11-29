@@ -4,8 +4,9 @@ import { Box } from "@/components/ui/box";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Label } from "@/src/components/atoms/Label/Label";
 import { LucideIconName } from "@/src/types/types";
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
 import { Platform } from "react-native";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface IconCardProps {
   iconName: LucideIconName;
@@ -28,11 +29,21 @@ export const IconCard = ({
   className,
   labelProps,
 }: IconCardProps) => {
+  const { Colors } = useTheme();
+
   return (
     <Pressable onPress={onPress} style={styles.pressable}>
       <Box
         className={`items-center justify-center rounded-2xl p-3 bg-[rgb(var(--color-secondary-0))] ${className}`}
-        style={styles.container}
+        style={[
+          styles.container,
+          {
+            backgroundColor: Colors.background,
+            ...(Platform.OS === 'ios' && {
+              shadowColor: Colors.shadowColor,
+            })
+          }
+        ]}
       >
         {/* Ikona – pomjerena malo gore */}
         <Box style={styles.iconContainer}>
@@ -47,6 +58,7 @@ export const IconCard = ({
 };
 
 const styles = StyleSheet.create({
+  
   pressable: {
     alignItems: "center",
     justifyContent: "center",
@@ -58,7 +70,6 @@ const styles = StyleSheet.create({
     // SHADOW
     ...Platform.select({
       ios: {
-        shadowColor: Colors.shadowColor,
         shadowOpacity: 0.05,
         shadowRadius: 12,
         shadowOffset: { width: 0, height: 4 },

@@ -2,9 +2,8 @@ import { StyleSheet } from 'react-native';
 import { Colors } from "@/src/styles/style";
 
 export default StyleSheet.create({
-screenContainer: {
+  screenContainer: {
     flex: 1,
-    backgroundColor: Colors.background,
     padding: 15,
   },
   sectionTitle: {
