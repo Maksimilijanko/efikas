@@ -61,3 +61,11 @@ export interface MenuSectionProps {
   title: string;
   items: MenuItemProps[];
 };
+
+export interface ProfileData {
+    firstName: string;
+    lastName: string;
+    taxId: string;
+    registerNumber: string;
+    softwareVersion: string;
+}

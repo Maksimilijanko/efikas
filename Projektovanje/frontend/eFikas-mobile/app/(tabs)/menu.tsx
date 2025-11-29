@@ -67,7 +67,7 @@ export default function Menu() {
   const handleItemPress = (itemId: string) => {
     switch (itemId) {
       case "profile":
-        console.log("Navigacija: Otvori detalje profila.");
+        router.push('/(menu)/(profile)/profile');
         break;
 
       case "notifications":
@@ -75,15 +75,15 @@ export default function Menu() {
         break;
 
       case "myApartments":
-        console.log("Navigacija: Otvori listu stanova.");
+        router.push('/(menu)/(profile)/myApartments');
         break;
 
       case "expenses":
-        console.log("Navigacija: Otvori sekciju Troškovi.");
+        router.push("/(home)/expenses");
         break;
 
       case "statistics":
-        console.log("Navigacija: Otvori grafikone statistike.");
+        router.push("/(home)/analytics");
         break;
 
       case "incomeBook":
@@ -99,7 +99,6 @@ export default function Menu() {
         break;
 
       case "settings":
-        //console.log("Navigacija: Otvori opšte podešavanje aplikacije.");
         router.push('/(menu)/(mainSettings)/settings');
         break;
 

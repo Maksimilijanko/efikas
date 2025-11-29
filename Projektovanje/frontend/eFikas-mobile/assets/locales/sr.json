@@ -89,6 +89,11 @@
             "darkTheme": "Tamna",
             "cancelButton": "Odustani",
             "confirmButton": "Potvrdi"
+        },
+
+        "editDelete": {
+            "edit": "Uredi informacije",
+            "delete": "Izbriši"
         }
     },
 
@@ -244,5 +249,26 @@
     "notifications": {
         "title": "Obavještenja",
         "description": "Dobijate podsjetnike o važnim događajima - dolascima gostiju, plaćanjima, zadacima i održavanju smještaja"
+    },
+
+    "profile": {
+        "labels": {
+            "firstName": "Ime",
+            "lastName": "Prezime",
+            "taxId": "JIB",
+            "registerNumber": "Broj kase",
+            "softwareVersion": "Verzija softvera"
+        },
+        "buttons": {
+            "cancel": "Odustani",
+            "save": "Sačuvaj"
+        },
+        "toastMessages": {
+            "fetchErrorTitle": "Greška pri učitavanju",
+            "fetchErrorMessage": "Nije moguće učitati podatke o profilu.",
+            "updateErrorTitle": "Greška pri čuvanju",
+            "updateErrorMessage": "Nije moguće sačuvati profil.",
+            "genericError": "Došlo je do greške."
+        }
     }
 }

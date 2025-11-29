@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { dashboardService } from "@/src/api/services/dashboardService";
 import DashboardTemplate from "@/src/components/templates/DashboardTemplate/DashboardTemplate";
@@ -61,9 +61,12 @@ export default function DashboardScreen() {
 
   if (loading) {
     return (
-      <Text style={{ marginTop: 40, textAlign: "center" }}>
-        {t("dashboard.loading")}
-      </Text>
+      // <Text style={{ marginTop: 40, textAlign: "center" }}>
+      //   {t("dashboard.loading")}
+      // </Text>
+      <View style={{ marginTop: 80, alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.tertiary} />
+      </View>
     );
   }
 

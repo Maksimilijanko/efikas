@@ -13,6 +13,7 @@ export const Colors = {
   calendarPeriod: '#C1D6EC',
   calendarPeriodOverlap: "#8bb3deff",
   borderColor: "#E2E2E2",
+  deleteColor: "#E53935",
 
   // For reference from Figma
   dark: {
