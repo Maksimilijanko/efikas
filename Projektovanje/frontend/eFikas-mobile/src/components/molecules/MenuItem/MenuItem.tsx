@@ -2,8 +2,8 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Divider } from "@/components/ui/divider";
 import { Icon } from "@/src/components/atoms/Icon/Icon"; 
-import { Colors } from "@/src/styles/style";
 import { LucideIconName } from "@/src/types/types";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface MenuItemProps {
   text: string;
@@ -20,9 +20,11 @@ export const MenuItem = ({
   rightIconName = "ChevronRight",
   showDivider = true,
 }: MenuItemProps) => {
+  const { Colors } = useTheme();
+
   return (
     <View>
-      <Pressable onPress={onPress} style={styles.container}>
+      <Pressable onPress={onPress} style={[styles.container, { backgroundColor: Colors.screenBackground }]}>
         {leftIconName && (
           <Icon
             name={leftIconName}
@@ -31,7 +33,7 @@ export const MenuItem = ({
             style={styles.leftIcon}
           />
         )}
-        <Text style={styles.text}>{text}</Text>
+        <Text style={[styles.text, { color: Colors.textPrimary }]}>{text}</Text>
         {rightIconName && (
           <Icon
             name={rightIconName}
@@ -55,7 +57,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: Colors.background,
   },
   leftIcon: {
     marginRight: 12,
@@ -63,7 +64,6 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     fontSize: 16,
-    color: Colors.textPrimary,
   },
   rightIcon: {
     marginLeft: 12,

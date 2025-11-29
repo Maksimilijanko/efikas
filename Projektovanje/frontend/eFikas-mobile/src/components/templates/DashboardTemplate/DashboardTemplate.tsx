@@ -73,7 +73,6 @@ const DashboardTemplate: React.FC<DashboardTemplateProps> = ({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: Colors.secondary
   },
   scrollContent: {
     width: '100%',

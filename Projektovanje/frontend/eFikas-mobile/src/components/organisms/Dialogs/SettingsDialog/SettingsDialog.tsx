@@ -1,0 +1,78 @@
+import { HStack } from "@/components/ui/hstack";
+import { Modal, ModalBackdrop, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@/components/ui/modal";
+import { Text } from "@/components/ui/text";
+import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
+import { useTheme } from "@/src/providers/ThemeProvider";
+import { Platform, StyleSheet } from "react-native";
+
+interface SettingsDialogProps {
+    visible: boolean;
+    title: string;
+    onClose: () => void;
+    onConfirm: () => void;
+    children: React.ReactNode; // the modal body
+}
+
+export const SettingsDialog: React.FC<SettingsDialogProps> = ({
+    visible,
+    title,
+    onClose,
+    onConfirm,
+    children,
+}) => {
+    const { Colors } = useTheme();
+
+    return (
+        <Modal isOpen={visible} onClose={onClose}>
+            <ModalBackdrop />
+            <ModalContent
+                style={[
+                    styles.modalContainer,
+                    { backgroundColor: Colors.background, shadowColor: Colors.shadowColor },
+                ]}
+            >
+                <ModalHeader>
+                    <Text style={[styles.sectionTitle, { color: Colors.tertiary }]}>{title}</Text>
+                </ModalHeader>
+
+                <ModalBody style={styles.modalBody}>{children}</ModalBody>
+
+                <ModalFooter style={styles.buttonsContainer}>
+                    <HStack style={{ justifyContent: "space-between", width: "100%" }}>
+                        <DialogButton title="Cancel" onPress={onClose} />
+                        <DialogButton title="Confirm" onPress={onConfirm} />
+                    </HStack>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
+};
+
+const styles = StyleSheet.create({
+    modalContainer: {
+        width: "90%",
+        borderRadius: 20,
+        paddingVertical: 25,
+        paddingHorizontal: 20,
+        alignItems: "center",
+        elevation: 8,
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+    },
+    modalBody: {
+        width: '100%',
+    },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 24,
+        textAlign: "left",
+    },
+    buttonsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "90%",
+        marginTop: 10,
+    },
+});

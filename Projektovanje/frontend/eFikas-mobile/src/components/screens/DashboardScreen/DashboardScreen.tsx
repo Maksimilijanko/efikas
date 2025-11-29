@@ -7,12 +7,14 @@ import { StatChart } from "@/src/components/organisms/StatChart/StatChart";
 import { IconCard } from "@/src/components/molecules/IconCard/IconCard";
 import { Label } from "@/src/components/atoms/Label/Label";
 import { ReservationsCalendar } from "@/src/components/atoms/ReservationsCalendar/ReservationsCalendar";
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
 import { ApartmentsButton } from "@/src/components/atoms/ApartmentsButton/ApartmentsButton";
 import { SectionHeader } from "@/src/components/molecules/SectionHeader/SectionHeader";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export default function DashboardScreen() {
+  const { Colors } = useTheme();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [fullName, setFullName] = useState("");
@@ -105,6 +107,7 @@ export default function DashboardScreen() {
           iconName="Wallet"
           color={Colors.primary}
           onPress={goToExpenses}
+          labelProps={{ color: Colors.textPrimary }}
         />,
         <IconCard
           key="2"
@@ -112,6 +115,7 @@ export default function DashboardScreen() {
           iconName="Wrench"
           color={Colors.primary}
           onPress={goToTasks}
+          labelProps={{ color: Colors.textPrimary }}
         />,
         <IconCard
           key="3"
@@ -119,6 +123,7 @@ export default function DashboardScreen() {
           iconName="BrushCleaning"
           color={Colors.primary}
           onPress={goToDamages}
+          labelProps={{ color: Colors.textPrimary }}
         />,
       ]}
       statisticsHeader={
