@@ -31,25 +31,24 @@ const GuestsBookScreen: React.FC = () => {
   }));
 
   return ( 
-      <DocumentsDownloadTemplate
-        documentsData={documentsDataForTemplate}
+    <DocumentsDownloadTemplate
+      documentsData={documentsDataForTemplate}
+      
+      documentItemComponent={(props) => {
+        const originalDoc = rawGuestsBookData.find(
+          doc => t(doc.titleKey) === props.title
+        );
+        // Postavljanje documentType s fallbackom na 'DomesticGuestsBook'
+        const docType: DocumentType = originalDoc?.documentType || 'DomesticGuestsBook';
         
-        documentItemComponent={(props) => {
-          const originalDoc = rawGuestsBookData.find(
-            doc => t(doc.titleKey) === props.title
-          );
-
-          // Postavljanje documentType s fallbackom na 'DomesticGuestsBook'
-          const docType: DocumentType = originalDoc?.documentType || 'DomesticGuestsBook';
-          
-          return (
-            <DocumentItem 
-              title={props.title} 
-              documentType={docType}
-            />
-          );
-        }}
-      />  
+        return (
+          <DocumentItem 
+            title={props.title} 
+            documentType={docType}
+          />
+        );
+      }}
+    />  
   );
 };
 
