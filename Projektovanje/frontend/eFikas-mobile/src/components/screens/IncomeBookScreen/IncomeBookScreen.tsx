@@ -25,24 +25,24 @@ const IncomeBookScreen: React.FC = () => {
   }));
 
   return ( 
-      <DocumentsDownloadTemplate
-        documentsData={documentsDataForTemplate}
+    <DocumentsDownloadTemplate
+      documentsData={documentsDataForTemplate}
+      
+      documentItemComponent={(props) => {
+        const originalDoc = rawIncomeBookData.find(
+          doc => t(doc.titleKey) === props.title
+        );
+            
+        const docType: DocumentType = originalDoc?.documentType || 'IncomeBook';
         
-        documentItemComponent={(props) => {
-          const originalDoc = rawIncomeBookData.find(
-            doc => t(doc.titleKey) === props.title
-          );
-              
-          const docType: DocumentType = originalDoc?.documentType || 'IncomeBook';
-          
-          return (
-            <DocumentItem 
-              title={props.title} 
-              documentType={docType}
-            />
-          );
-        }}
-      />  
+        return (
+          <DocumentItem 
+            title={props.title} 
+            documentType={docType}
+          />
+        );
+      }}
+    />  
   );
 };
 
