@@ -7,9 +7,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.unibl.etf.efikas.models.dto.ApartmentDamageDTO;
-import org.unibl.etf.efikas.models.responses.ApartmentDamageResponse;
-import org.unibl.etf.efikas.services.ApartmentDamageService;
+import org.unibl.etf.efikas.models.dto.ApartmentExpenseDTO;
+import org.unibl.etf.efikas.models.dto.ApartmentTaskDTO;
+import org.unibl.etf.efikas.models.entities.ApartmentTask;
+import org.unibl.etf.efikas.models.responses.ApartmentExpenseResponse;
+import org.unibl.etf.efikas.models.responses.ApartmentTaskResponse;
+import org.unibl.etf.efikas.services.ApartmentTaskService;
+
 import java.net.URI;
 import java.util.List;
 
@@ -18,37 +22,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApartmentTaskController {
 
-    private final ApartmentDamageService apartmentDamageService;
+    private final ApartmentTaskService apartmentTaskService;
 
-    @GetMapping("{apartmentId}/damages")
-    public ResponseEntity<?> getApartmentDamages(@PathVariable Integer apartmentId) {
+    @GetMapping("{apartmentId}/tasks")
+    public ResponseEntity<?> getApartmentTasks(@PathVariable Integer apartmentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        List<ApartmentDamageResponse> damages = apartmentDamageService.getAllApartmentDamagesForApartment(apartmentId, authentication);
+        List<ApartmentTaskResponse> tasks =
+                apartmentTaskService.getAllApartmentTasksForApartment(apartmentId, authentication);
 
-        return ResponseEntity.ok(damages);
+        return ResponseEntity.ok(tasks);
     }
 
-    @PostMapping("{apartmentId}/damages")
-    public ResponseEntity<?> addApartmentDamage(@PathVariable Integer apartmentId, @RequestBody ApartmentDamageDTO damage) {
+    @PostMapping("{apartmentId}/tasks")
+    public ResponseEntity<?> addApartmentTasks(@PathVariable Integer apartmentId, @RequestBody ApartmentTaskDTO task) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        ApartmentDamageResponse response = apartmentDamageService.createNewApartmentDamage(apartmentId, authentication, damage);
+        ApartmentTaskResponse response = apartmentTaskService.createNewApartmentTask(apartmentId, authentication, task);
 
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("{apartmentId}/damages/{apartmentDamageName}")
-    public ResponseEntity<?> updateApartmentDamage(@PathVariable Integer apartmentId, @PathVariable String apartmentDamageName, @RequestBody ApartmentDamageDTO damage) {
+    @PutMapping("{apartmentId}/tasks/{apartmentTaskName}")
+    public ResponseEntity<?> updateApartmentTask(@PathVariable Integer apartmentId, @PathVariable String apartmentTaskName, @RequestBody ApartmentTaskDTO task) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Upsert behavior
-        ApartmentDamageResponse response = null;
+        ApartmentTaskResponse response = null;
         try {
-            response = apartmentDamageService.updateApartmentDamage(apartmentId, authentication, damage, apartmentDamageName);
+            response = apartmentTaskService.updateApartmentTask(apartmentId, authentication, task, apartmentTaskName);
             return ResponseEntity.ok(response);
         } catch(EntityNotFoundException e) {
-            response = apartmentDamageService.createNewApartmentDamage(apartmentId, authentication, damage);
+            response = apartmentTaskService.createNewApartmentTask(apartmentId, authentication, task);
 
             // Obtain absolute URI to the newly created resource in order to provide a Location header
             URI location = ServletUriComponentsBuilder
@@ -59,11 +64,11 @@ public class ApartmentTaskController {
         }
     }
 
-    @DeleteMapping("{apartmentId}/damages/{apartmentDamageName}")
-    public ResponseEntity<?> deleteApartmentDamage(@PathVariable Integer apartmentId, @PathVariable String apartmentDamageName) {
+    @DeleteMapping("{apartmentId}/tasks/{apartmentTaskName}")
+    public ResponseEntity<?> deleteApartmentTask(@PathVariable Integer apartmentId, @PathVariable String apartmentTaskName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        ApartmentDamageResponse response = apartmentDamageService.deleteApartmentDamage(apartmentId, authentication, apartmentDamageName);
+        ApartmentTaskResponse response = apartmentTaskService.deleteApartmentTask(apartmentId, authentication, apartmentTaskName);
 
         return ResponseEntity.ok(response);
     }

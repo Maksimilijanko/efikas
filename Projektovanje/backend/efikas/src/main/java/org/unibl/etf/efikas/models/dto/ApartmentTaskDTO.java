@@ -1,12 +1,11 @@
-package org.unibl.etf.efikas.models.responses;
+package org.unibl.etf.efikas.models.dto;
 
 import lombok.Data;
 
 import java.time.Instant;
 
 @Data
-public class ApartmentTaskResponse {
-    private Long apartmentId;
+public class ApartmentTaskDTO {
     private String name;
     private String note;
     private Boolean status;
