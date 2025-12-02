@@ -105,7 +105,7 @@ CREATE TABLE efikas."reservation" (
                                       "Price" DOUBLE PRECISION,
                                       "Note" varchar(256),
                                       "PersonalDocumentURL" varchar(100),
-                                      "IdTypeOfReservation" int NOT NULL,
+                                      "IdTypeOfReservation" int NOT NULL,           -- do we need this?
                                       "TypeId" int NOT NULL,
                                       CONSTRAINT "FK_reservation_apartment" FOREIGN KEY ("ApartmentId")
                                           REFERENCES efikas."apartment"("ApartmentId")
