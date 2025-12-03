@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.unibl.etf.efikas.models.entities.ReservationType;
 
+import java.util.Optional;
+
 @Repository
 public interface ReservationTypeRepository extends JpaRepository<ReservationType, Long> {
+    Optional<ReservationType> findReservationTypeByTypeName(String reservationTypeName);
 }

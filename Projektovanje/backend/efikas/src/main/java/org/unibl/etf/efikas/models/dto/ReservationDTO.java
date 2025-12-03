@@ -12,5 +12,5 @@ public class ReservationDTO {
     private Double price;
     private String dateTimeOfArrival;
     private String dateTimeOfDeparture;
-    private String personalDocumentURL;
+
 }
