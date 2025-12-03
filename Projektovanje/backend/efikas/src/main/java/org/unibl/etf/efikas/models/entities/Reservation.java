@@ -47,8 +47,9 @@ public class Reservation {
     @Column(name = "\"PersonalDocumentURL\"", length = 100)
     private String personalDocumentURL;
 
-    @Column(name = "\"IdTypeOfReservation\"", nullable = false)
-    private Integer idTypeOfReservation;
+    // This is redundant; therefore, we don't need it.
+//    @Column(name = "\"IdTypeOfReservation\"", nullable = false)
+//    private Integer idTypeOfReservation;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
