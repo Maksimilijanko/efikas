@@ -1,13 +1,12 @@
 package org.unibl.etf.efikas.models.responses;
 
 import lombok.Data;
-import org.unibl.etf.efikas.models.entities.Apartment;
-
 import java.time.Instant;
 
 @Data
 public class ReservationResponse {
-    private Apartment apartment;
+    private Integer reservationId;
+    private ApartmentResponse apartment;
     private String guestFullName;
     private String guestPhoneNumber;
     private Instant dateTimeOfArrival;

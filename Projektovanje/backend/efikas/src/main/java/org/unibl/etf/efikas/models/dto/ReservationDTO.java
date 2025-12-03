@@ -2,6 +2,8 @@ package org.unibl.etf.efikas.models.dto;
 
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 public class ReservationDTO {
     private String guestFullName;
@@ -10,7 +12,7 @@ public class ReservationDTO {
     private String note;
     private String reservationType;
     private Double price;
-    private String dateTimeOfArrival;
-    private String dateTimeOfDeparture;
-
+    private Instant dateTimeOfArrival;
+    private Instant dateTimeOfDeparture;
+    private Long apartmentId;
 }

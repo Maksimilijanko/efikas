@@ -57,6 +57,10 @@ public class ModelMapperConfig {
         mapper.createTypeMap(Reservation.class, ReservationResponse.class)
                 .addMapping(source -> source.getType().getTypeName(), ReservationResponse::setReservationType);
 
+        // We skip the reservationId when creating a Reservation from ReservationDTO
+        mapper.createTypeMap(ReservationDTO.class, Reservation.class)
+                .addMappings(m -> m.skip(Reservation::setReservationId));
+
 
 
         return mapper;

@@ -114,3 +114,10 @@ CREATE TABLE efikas."reservation" (
                                           REFERENCES efikas."reservation_type"("TypeId")
                                           ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+ALTER TABLE efikas."reservation" DROP COLUMN "IdTypeOfReservation";
+
+select * from efikas.reservation;
+select * from efikas.reservation_type;
+select * from efikas.apartment;
+

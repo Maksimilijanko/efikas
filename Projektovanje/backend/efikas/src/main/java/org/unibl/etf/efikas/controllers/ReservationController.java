@@ -14,13 +14,13 @@ import org.unibl.etf.efikas.services.ReservationService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/apartments")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping(value = "/{apartmentId}/", consumes = "multipart/form-data")
+    @PostMapping(value = "/apartments/{apartmentId}/reservations", consumes = "multipart/form-data")
     public ResponseEntity<?> createReservation(@PathVariable Integer apartmentId,
                                                @RequestPart("reservation") ReservationDTO reservationDTO,
                                                @RequestPart("picture") MultipartFile documentPicture) {
@@ -28,18 +28,52 @@ public class ReservationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
+        // For POST, we are extracting apartmentId from the endpoint URL itself.
+        // We are not relying on the value found in DTO.
         ReservationResponse response = reservationService.createNewReservation(apartmentId, authentication,
                 reservationDTO, documentPicture);
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(value = "/{apartmentId}/")
+    @GetMapping(value = "/apartments/{apartmentId}/reservations")
     public ResponseEntity<?> getReservations(@PathVariable Integer apartmentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
         List<ReservationResponse> response = reservationService.getAllReservations(apartmentId, authentication);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/reservations/{reservationId}")
+    public ResponseEntity<?> getReservation(@PathVariable Long reservationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        ReservationResponse response = reservationService.getReservation(reservationId, authentication);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping(value = "/reservations/{reservationId}", consumes = "multipart/form-data")
+    public ResponseEntity<?> updateReservation(@PathVariable Long reservationId,
+                                               @RequestPart("reservation") ReservationDTO reservationDTO,
+                                               @RequestPart("picture") MultipartFile documentPicture) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        ReservationResponse response = reservationService
+                .updateReservation(reservationId, authentication, reservationDTO, documentPicture);
+
+        // TODO: implement upsert behavior
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value = "/reservations/{reservationId}")
+    public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        ReservationResponse response = reservationService.deleteReservation(reservationId, authentication);
 
         return ResponseEntity.ok(response);
     }
