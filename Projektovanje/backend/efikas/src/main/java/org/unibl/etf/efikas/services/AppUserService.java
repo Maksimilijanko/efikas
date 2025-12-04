@@ -103,6 +103,16 @@ public class AppUserService {
         }
 
         user.setPasswordHash(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        appUserRepository.save(user);
+    }
+
+    public AppUserResponse deleteUserAccount(Authentication authentication) {
+        String email = authentication.getName();
+        AppUser user = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+
+        appUserRepository.delete(user);
+        return modelMapper.map(user, AppUserResponse.class);
     }
 
 }

@@ -113,6 +113,13 @@ public class AppUserController {
         return ResponseEntity.noContent().build();
     }
 
-    
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteAccount() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        AppUserResponse response = appUserService.deleteUserAccount(authentication);
+
+        return ResponseEntity.ok(response);
+    }
 
 }
