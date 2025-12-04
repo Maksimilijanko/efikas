@@ -78,4 +78,13 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(value = "/reservations")
+    public ResponseEntity<?> getAllUserReservations() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        List<ReservationResponse> response = reservationService.getAllReservationsForUser(authentication);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
