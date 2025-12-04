@@ -92,9 +92,16 @@ public class AppUserController {
     public ResponseEntity<?> updateAccountInfo(@RequestBody UserDTO user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        AppUserResponse response = null;
+        AppUserResponse response = appUserService.updateUserAccount(user, authentication);
+        String email = response.getEmail();
+        // Generate token (there might have been a change in email)
+        String token = jwtUtil.generateToken(email);
 
-        return ResponseEntity.ok(response);
+        // Prepare JWT to be returned to the user in JSON form
+        return ResponseEntity.ok(Map.of(
+                "email", email,
+                "token", token
+        ));
     }
 
     @PutMapping("/me/password")
@@ -105,5 +112,7 @@ public class AppUserController {
 
         return ResponseEntity.noContent().build();
     }
+
+    
 
 }
