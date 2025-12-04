@@ -129,4 +129,14 @@ public class ReservationService {
         return modelMapper.map(reservation, ReservationResponse.class);
     }
 
+    public List<ReservationResponse> getAllReservationsForUser(Authentication authentication) {
+        String email = authentication.getName();
+
+        List<Reservation> reservations = reservationRepository.findReservationByApartmentUserEmail(email);
+
+        return reservations.stream()
+                .map((element) -> modelMapper.map(element, ReservationResponse.class))
+                .collect(Collectors.toList());
+    }
+
 }
