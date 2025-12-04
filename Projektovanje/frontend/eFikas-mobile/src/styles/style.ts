@@ -14,6 +14,8 @@ export const Colors = {
   calendarPeriodOverlap: "#8bb3deff",
   borderColor: "#E2E2E2",
   deleteColor: "#E53935",
+  statusOccupied: "#FF3B30",
+  statusAvailable: "#34C759",
 
   // For reference from Figma
   dark: {
@@ -64,12 +66,15 @@ export const lightTheme = {
   tabBarActiveTint: '#3176BF',
 
   screenBackground: "#ffffff",
+
+  statusOccupied: "#c42f27ff",
+  statusAvailable: "#30aa4eff",
 };
 
 export const darkTheme = {
   primary: '#3176BF',
   primaryPressed: '#326296',
-  secondary: '#f9f9f9',
+  secondary: '#303338',
   tertiary: '#999',
   background: '#232528',
   shadowColor: '#ffffff',
@@ -87,4 +92,7 @@ export const darkTheme = {
   tabBarActiveTint: '#4c98e7',
 
   screenBackground: "#282a2d",
+
+  statusOccupied: "#FF3B30",
+  statusAvailable: "#34C759",
 };

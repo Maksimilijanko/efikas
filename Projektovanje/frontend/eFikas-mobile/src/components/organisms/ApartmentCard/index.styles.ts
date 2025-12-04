@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '@/src/styles/style';
 
 export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 10,
+        backgroundColor: Colors.background,
+        borderRadius: 15,
         padding: 12,
-        shadowColor: '#000',
+        shadowColor: Colors.shadowColor,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 3.8,

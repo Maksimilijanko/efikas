@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '@/src/styles/style';
 
 export const styles = StyleSheet.create({
   hstack: {
@@ -9,7 +10,12 @@ export const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 5,
+    borderRadius: 8,
     backgroundColor: 'white',
+    shadowColor: Colors.shadowColor,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.09,
+    shadowRadius: 3,
+    elevation: 5,
   }
 });

@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { Platform } from "react-native";
 import { Dimensions } from 'react-native';
 import { useTranslation } from "react-i18next";
+import { useTheme } from '@/src/providers/ThemeProvider';
 
 export interface StatChartProps {
   title: string;
@@ -32,6 +33,7 @@ function getLast7MonthsData(data, monthNames) {
 export const StatChart: React.FC<StatChartProps> = ({ title, data }) => {
   const router = useRouter();
   const { t } = useTranslation();
+  const { Colors } = useTheme();
 
   const monthNames = t('chart.months', { returnObjects: true });
   const last7 = getLast7MonthsData(data, monthNames);
@@ -49,7 +51,18 @@ export const StatChart: React.FC<StatChartProps> = ({ title, data }) => {
   const dynamicSpacing = screenWidth / (chartData.length + 1);
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.7}>
+    // <TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.7}>
+    <TouchableOpacity style={[
+        styles.container,
+        {
+          backgroundColor: Colors.background,
+          ...(Platform.OS === "ios" && {
+            shadowColor: Colors.shadowColor,
+          })
+        }
+      ]} 
+      onPress={handlePress} 
+      activeOpacity={0.7}>
       {false && <Text style={styles.title}>{title}</Text>}
 
       <LineChart

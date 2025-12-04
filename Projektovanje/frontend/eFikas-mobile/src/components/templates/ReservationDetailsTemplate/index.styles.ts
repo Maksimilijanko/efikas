@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     },
     infoItem: {
         width: '48%',
-        marginBottom: height * 0.015
+        marginBottom: height * 0.001
     },
     noteHeaderWrapper: {
         width: '100%',
@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
     },
     primaryActionWrapper: {
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: height * 0.015
     }
 });
 

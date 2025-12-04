@@ -4,7 +4,9 @@ import { View, Text, TouchableOpacity, Image, StyleProp, ViewStyle } from 'react
 import { styles } from './index.styles';
 import { Icon } from '../../atoms/Icon/Icon';
 import { Label } from '../../atoms/Label/Label';
-import { Colors } from '@/src/styles/style';
+// import { Colors } from '@/src/styles/style';
+import { useTheme } from '@/src/providers/ThemeProvider';
+
 
 
 interface ApartmentCardProps {
@@ -28,15 +30,16 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
     onPress,
     style,
 }) => {
-
-    const statusText = status ? "Zauzeto" : "Slobodno";
-    const statusColor = status ? "#FF3B30" : "#34C759";
-
     const imageSource = imageUrl ? { uri: imageUrl } : { uri: "https://picsum.photos/300/300" };
+    const { Colors } = useTheme();
+    
+    const statusText = status ? "Zauzeto" : "Slobodno";
+    const statusColor = status ? Colors.statusOccupied : Colors.statusAvailable;
 
     return (
         <TouchableOpacity
-            style={[style, styles.container]}
+            // style={[style, styles.container]}
+            style={[style, { ...styles.container, backgroundColor: Colors.background, shadowColor: Colors.shadowColor }]}
             onPress={onPress}
             activeOpacity={0.7}
         >

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View, ScrollViewProps } from 'react-native';
 import styles from './index.styles';
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export type ReservationDetailsTemplateProps = {
     headerCard: React.ReactNode;
@@ -19,8 +20,10 @@ const ReservationDetailsTemplate: React.FC<ReservationDetailsTemplateProps> = ({
     primaryAction,
     scrollProps
 }) => {
+    const { Colors } = useTheme();
     return (
-        <View style={styles.root}>
+        // <View style={styles.root}>
+        <View style={[styles.root, { backgroundColor: Colors.screenBackground }]}>
             <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
