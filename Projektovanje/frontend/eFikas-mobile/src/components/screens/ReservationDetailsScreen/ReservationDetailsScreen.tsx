@@ -1,101 +1,4 @@
-// import React from "react";
-// import { View } from "react-native";
-// import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";
-// import ApartmentCard from "@/src/components/organisms/ApartmentCard/ApartmentCard";
-// import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard";
-// import DescriptionBox from "@/src/components/atoms/DescriptionBox/DescriptionBox";
-// import { BasicButton } from "@/src/components/atoms/BasicButton/BasicButton";
-// import { Icon } from "@/src/components/atoms/Icon/Icon";
-// import { Label } from "@/src/components/atoms/Label/Label";
-// import { Colors } from "@/src/styles/style";
-
-
-// const ReservationDetailsScreen = () => {
-
-//     // --- INFO ITEMS ---
-//     const infoItems = [
-//         (
-//             <ApartmentFeatureCard
-//                 label="Janko Janković"
-//                 icon={<Icon name="User" size={22} color={Colors.primary} />}
-//             />
-//         ),
-//         (
-//             <ApartmentFeatureCard
-//                 label="066/123-123"
-//                 icon={<Icon name="Phone" size={22} color={Colors.primary} />}
-//             />
-//         ),
-//         (
-//             <ApartmentFeatureCard
-//                 label="3 osobe"
-//                 icon={<Icon name="Users" size={22} color={Colors.primary} />}
-//             />
-//         ),
-//         (
-//             <ApartmentFeatureCard
-//                 label="Dokument"
-//                 icon={<Icon name="IdCard" size={22} color={Colors.primary} />}
-//                 rightElement={<Icon name="ChevronRight" size={22} color={Colors.iconMenu} />}
-//             />
-//         ),
-//         (
-//             <ApartmentFeatureCard
-//                 label="05.01.2025. 13:30"
-//                 icon={<Icon name="CalendarArrowDown" size={22} color={Colors.primary} />}
-//             />
-//         ),
-//         (
-//             <ApartmentFeatureCard
-//                 label="29.02.2025. 22:25"
-//                 icon={<Icon name="CalendarArrowUp" size={22} color={Colors.primary} />}
-//             />
-//         )
-//     ];
-
-
-//     return (
-//         <ReservationDetailsTemplate
-//             // --- GORNJA KARTICA ---
-//             headerCard={
-//                 <ApartmentCard
-//                     title="Stan Centar"
-//                     subtitle="Jevrejska 14A"
-//                     imageUrl="https://picsum.photos/300/300"
-//                     status={true}
-//                     statusUntil="08.01.2025."
-//                     nextGuestsDate="10.01.2025."
-//                     onPress={() => console.log("Otvori stan")}
-//                 />
-//             }
-
-//             // --- INFO ---
-//             infoItems={infoItems}
-
-//             // --- NAPOMENA HEADER ---
-//             noteHeader={
-//                 <Label text="Napomena" className="font-semibold text-lg" />
-//             }
-
-//             // --- NAPOMENA BODY (textarea) ---
-//             noteBody={
-//                 <DescriptionBox size="lg" />
-//             }
-
-//             // --- DONJE DUGME ---
-//             primaryAction={
-//                 <BasicButton title="Štampaj račun" onPress={() => console.log("print")} />
-//             }
-//         />
-//     );
-// };
-
-// export default ReservationDetailsScreen;
-
-
-
-import React from "react";
-import { View } from "react-native";
+import { ScrollView, View, ScrollViewProps } from 'react-native';
 import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";
 import ApartmentCard from "@/src/components/organisms/ApartmentCard/ApartmentCard";
 import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard";
@@ -106,28 +9,51 @@ import { Label } from "@/src/components/atoms/Label/Label";
 // import { Colors } from "@/src/styles/style";
 import { useTranslation } from "react-i18next";
 import { useTheme } from '@/src/providers/ThemeProvider';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const ReservationDetailsScreen = ({ reservation }) => {
     const { t } = useTranslation();
     const { Colors } = useTheme();
     
+      const formatDateTime = (iso: string) => {
+        if (!iso) return "";
+    
+        // "Europe/Sarajevo" je lokalna zona
+        const local = dayjs.utc(iso).tz("Europe/Sarajevo");
+    
+        const dateStr = `${local.date().toString().padStart(2, "0")}.${(
+          local.month() + 1
+        )
+          .toString()
+          .padStart(2, "0")}.${local.year()}.`;
+        const timeStr = `${local.hour().toString().padStart(2, "0")}:${local.minute()
+          .toString()
+          .padStart(2, "0")}`;
+    
+        return `${dateStr} ${timeStr}`;
+      };
+    
     const infoItems = [
         (
             <ApartmentFeatureCard
-                label={reservation.guestName}
+                label={reservation.guestFullName}
                 icon={<Icon name="User" size={22} color={Colors.primary} />}
             />
         ),
         (
             <ApartmentFeatureCard
-                label={reservation.phone}
+                label={reservation.guestPhoneNumber}
                 icon={<Icon name="Phone" size={22} color={Colors.primary} />}
             />
         ),
         (
             <ApartmentFeatureCard
-                // label={`${reservation.peopleCount} ${t("reservationDetails.person")}`}
-                label={t('reservations.details.peopleCount', { count: reservation.peopleCount })}
+                label={t('reservations.details.peopleCount', { count: reservation.guestNumber })}
                 icon={<Icon name="Users" size={22} color={Colors.primary} />}
             />
         ),
@@ -140,13 +66,13 @@ const ReservationDetailsScreen = ({ reservation }) => {
         ),
         (
             <ApartmentFeatureCard
-                label={reservation.checkIn}
+                label={formatDateTime(reservation.dateTimeOfArrival)}
                 icon={<Icon name="CalendarArrowDown" size={22} color={Colors.primary} />}
             />
-        ),
+        ),   
         (
             <ApartmentFeatureCard
-                label={reservation.checkOut}
+                label={formatDateTime(reservation.dateTimeOfDeparture)}
                 icon={<Icon name="CalendarArrowUp" size={22} color={Colors.primary} />}
             />
         )

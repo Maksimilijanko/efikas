@@ -538,8 +538,12 @@ import { Platform } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { Reservation } from "@/src/types/types";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
-
+dayjs.extend(utc);
+dayjs.extend(timezone);
 interface ReservationsCalendarProps {
   reservations: Reservation[];
   onOpenDetails?: (reservation: Reservation) => void;
@@ -619,7 +623,12 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   // Pomocna funkcija koja izdvaja samo datum iz stringa datuma i vremena
   const getDateOnly = (datetime: string): string => {
-    return datetime.split(" ")[0];
+    // Pretvaramo u Date i formatiramo u YYYY-MM-DD
+    const d = new Date(datetime);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
   };
 
   // Pomocna funkcija za tacno parsiranje datuma (obradjuje format YYYY-MM-DD)
@@ -719,19 +728,20 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   const formatDateTime = (iso: string) => {
     if (!iso) return "";
-    const [datePart, timePart] = iso.split(" ");
-    const d = new Date(datePart);
-    const dateStr = `${String(d.getDate()).padStart(2, "0")}. ${String(
-      d.getMonth() + 1
-    ).padStart(2, "0")}. ${d.getFullYear()}.`;
 
-    // Ako postoji vrijeme i nije 00:00:00, prikazuje se
-    if (timePart && timePart !== "00:00:00") {
-      const [h, m] = timePart.split(":");
-      return `${dateStr} ${h}:${m}`;
-    }
+    // "Europe/Sarajevo" je lokalna zona
+    const local = dayjs.utc(iso).tz("Europe/Sarajevo");
 
-    return dateStr;
+    const dateStr = `${local.date().toString().padStart(2, "0")}. ${(
+      local.month() + 1
+    )
+      .toString()
+      .padStart(2, "0")}. ${local.year()}.`;
+    const timeStr = `${local.hour().toString().padStart(2, "0")}:${local.minute()
+      .toString()
+      .padStart(2, "0")}`;
+
+    return `${dateStr} ${timeStr}`;
   };
 
   const nights =

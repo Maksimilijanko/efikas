@@ -42,8 +42,7 @@ export interface Apartment {
 
 export interface Reservation {
   reservationId: number;
-  apartment: Apartment;
-  // apartmentId: number;  // bilo samo za mock
+  apartment: Apartment; 
   guestFullName: string;
   guestPhoneNumber: string;
   dateTimeOfArrival: string;

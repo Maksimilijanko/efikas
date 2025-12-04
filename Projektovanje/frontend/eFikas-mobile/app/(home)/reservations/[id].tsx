@@ -1,30 +1,26 @@
 import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import ReservationDetailsScreen from "@/src/components/screens/ReservationDetailsScreen/ReservationDetailsScreen";
+import { useReservation } from "@/src/hooks/useReservation";
+import { View, ActivityIndicator } from "react-native";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 const ReservationDetailsById = () => {
   const { id } = useLocalSearchParams();
+  const { Colors } = useTheme();
 
-  // Ovdje kasnije radiš fetch:
-  // const reservation = useQuery(["reservation", id], ...)
+  // id iz URL-a je string, a useReservation ocekuje number
+  const reservationId = Number(id);
 
-  // Za sada mock:
-  const reservation = {
-    id,
-    guestName: "Janko Janković",
-    phone: "066/123-123",
-    peopleCount: 2,
-    checkIn: "05.01.2025. 13:30",
-    checkOut: "29.02.2025. 22:25",
-    apartment: {
-      title: "Stan Centar",
-      subtitle: "Jevrejska 14A",
-      imageUrl: "https://picsum.photos/300/300",
-      status: false,
-      statusUntil: "08.01.2025.",
-      nextGuestsDate: "10.01.2025.",
-    },
-  };
+  const { data: reservation, isLoading } = useReservation(reservationId);
+
+  if (isLoading || !reservation) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return <ReservationDetailsScreen reservation={reservation} />;
 };
