@@ -1,0 +1,16 @@
+package org.unibl.etf.efikas.models.dto.itextpdf;
+
+import com.itextpdf.layout.properties.TextAlignment;
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class MergedCell {
+    private int row;
+    private int column;
+    private int rowSpan;
+    private int colSpan;
+    private String content;
+    private TextAlignment alignment;
+}

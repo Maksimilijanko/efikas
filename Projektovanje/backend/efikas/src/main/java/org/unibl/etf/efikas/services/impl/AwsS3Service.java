@@ -36,8 +36,8 @@ public class AwsS3Service implements S3Service {
 
 
     @Override
-    public FileUploadResponse uploadFile(MultipartFile file) throws IOException {
-        String uniqueName = Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX + FileHelper.getUniqueFileName(file.getOriginalFilename());
+    public FileUploadResponse uploadFile(String prefix, MultipartFile file) throws IOException {
+        String uniqueName = prefix + FileHelper.getUniqueFileName(file.getOriginalFilename());
         try (InputStream is = file.getInputStream()) {
             s3Client.putObject(
                     PutObjectRequest.builder()

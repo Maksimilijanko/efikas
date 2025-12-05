@@ -18,6 +18,7 @@ import org.unibl.etf.efikas.repositories.ApartmentPictureRepository;
 import org.unibl.etf.efikas.repositories.ApartmentRepository;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
+import org.unibl.etf.efikas.util.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class ApartmentService {
         FileUploadResponse s3UploadResponse;
         for (MultipartFile file : files) {
             try {
-                s3UploadResponse = s3Service.uploadFile(file);
+                s3UploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, file);
             } catch (IOException e) {
                 throw new S3UploadException(e.getMessage());
             }
@@ -137,7 +138,7 @@ public class ApartmentService {
         // Upload new images
         List<String> newKeys = new ArrayList<>();
         for (MultipartFile file : newPictures) {
-            FileUploadResponse uploaded = s3Service.uploadFile(file);
+            FileUploadResponse uploaded = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, file);
             newKeys.add(uploaded.getFilePath());
         }
 

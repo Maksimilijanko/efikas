@@ -133,6 +133,25 @@
             <artifactId>modelmapper</artifactId>
             <version>3.2.6</version>
         </dependency>
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.awspring.cloud/spring-cloud-aws-starter-secrets-manager &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.awspring.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-aws-starter-secrets-manager</artifactId>-->
+<!--            <version>3.4.1</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-core</artifactId>
+            <version>9.4.0</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>bouncy-castle-adapter</artifactId>
+            <version>9.4.0</version>
+        </dependency>
     </dependencies>
 
     <build>
