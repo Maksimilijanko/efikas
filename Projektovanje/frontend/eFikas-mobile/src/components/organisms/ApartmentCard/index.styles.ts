@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '@/src/styles/style';
 
 export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 10,
+        backgroundColor: Colors.background,
+        borderRadius: 15,
         padding: 12,
-        shadowColor: '#000',
+        shadowColor: Colors.shadowColor,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 3.8,
@@ -20,16 +21,15 @@ export const styles = StyleSheet.create({
         borderRadius: 10, 
     },
     mainContentWrapper: {
-        height: 130, 
-        flex: 0.9, 
+        flex: 0.9,
         justifyContent: 'space-between',
-    },
-    topRow: {
-        flexDirection: 'row',
+        paddingVertical: 8,
     },
     labelContainer: {
         marginLeft: 10,
-        height: '100%'
+    },
+    topRow: {
+        flexDirection: 'row',
     },
     statusGroup: {},
     statusLine: {

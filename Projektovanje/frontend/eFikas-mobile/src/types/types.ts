@@ -29,25 +29,30 @@ export interface StatisticsResponse {
   data: StatisticsDataPoint[];
 }
 
-export interface Reservation {
-  ReservationId: number;
-  ApartmentId: number;
-  GuestFullName: string;
-  GuestPhoneNumber: string;
-  DateTimeOfArrival: string;
-  DateTimeOfDeparture: string;
-  GuestNumber: number;
-  Price: number;
-  Note: string;
-  PersonalDocumentURL: string;
-  IdTypeOfReservation: number;
-  TypeId: number;
+export interface Apartment {
+  apartmentId: number;
+  name: string;
+  address: string;
+  numberOfBeds: number;
+  numberOfRooms: number;
+  capacity: number;
+  pricePerDay: number;
+  pricePerNight: number;
+  pictures: string[]; 
 }
 
-export interface DashboardResponse {
-  fullName: string;
-  statistics: StatisticsResponse;
-  reservations: Reservation[];
+export interface Reservation {
+  reservationId: number;
+  apartment: Apartment; 
+  guestFullName: string;
+  guestPhoneNumber: string;
+  dateTimeOfArrival: string;
+  dateTimeOfDeparture: string;
+  guestNumber: number;
+  price: number | null;
+  note: string | null;
+  personalDocumentURL: string | null;
+  reservationType: string;
 }
 
 export interface MenuItemProps {

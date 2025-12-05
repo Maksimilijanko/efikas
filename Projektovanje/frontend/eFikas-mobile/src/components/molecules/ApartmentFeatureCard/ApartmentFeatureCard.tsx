@@ -4,6 +4,7 @@ import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import ApartmentAttribute from "../ApartmentAttribute/ApartmentAttribute";
 import { styles } from "./index.styles";
+import { useTheme } from '@/src/providers/ThemeProvider';
 
 interface ApartmentFeatureCardProps {
     label: string;
@@ -17,17 +18,18 @@ const ApartmentFeatureCard = ({
     label,
     icon,
     rightElement,
-    backgroundColor = "#eaeaeaff",
+    backgroundColor,
     onPress,
 }: ApartmentFeatureCardProps) => {
+    const { Colors } = useTheme();
+
+    const bgColor = backgroundColor || Colors.background;
+
     return (
         <Pressable onPress={onPress}>
-            <Box style={[styles.card,{ backgroundColor }]}>
+            <Box style={[styles.card, { backgroundColor: bgColor }]}>
                 <HStack space="sm" style={styles.hstack}>
-                    {/* Lijevi dio: ApartmentAttribute */}
                     <ApartmentAttribute label={label} icon={icon} />
-
-                    {/* Desni dio: opcioni element */}
                     {rightElement && (
                         <Box style={styles.rightElement}>
                             {rightElement}

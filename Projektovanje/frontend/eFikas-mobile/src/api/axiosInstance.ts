@@ -1,62 +1,51 @@
 import axios, { AxiosError } from "axios";
 import { API_BASE_URL } from "../util/apiConstants";
+import { secureStoreService } from "../services/secureStoreService";
+import { SECURE_STORE_KEYS } from "../util/secureStoreKeys";
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
     },
-    withCredentials: true
+    withCredentials: true,
 });
 
-// --- TODO: uncomment when backend gets implemented --- 
-// // Axios request interceptor - for JWT in Authorization header
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         const token = tokenService.getAccessToken();
-//         if (token && config.headers) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }
+// --- REQUEST INTERCEPTOR ---
+axiosInstance.interceptors.request.use(
+    async (config) => {
+        const authResponseString = await secureStoreService.getItemAsync(
+            SECURE_STORE_KEYS.authenticationResponseKey
+        );
+        // console.log("Raw auth string:", authResponseString);
+        let token: string | null = null;
 
-//         return config;
-//     },
-//     (error) => Promise.reject(error)
-// );
+        if (authResponseString) {
+            const authResponse = JSON.parse(authResponseString);
+            token = authResponse.token;
+        }
 
-// // Axios response interceptor - for redirection in case of 401 e.g.
-// axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     async (error: AxiosError) => {
-//         if (error.response?.status === 401 && !error.config?._retry) {
-//             // Prevent infinite loop
-//             (error.config as any)._retry = true;
+        if (token && config.headers) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
 
-//             try {
-//                 // Attempt to refresh access token
-//                 const res = await axios.get(
-//                     API_AUTH_REFRESH_URL,
-//                     {},
-//                 );
-//                 console.log(res);
-//                 const newToken = res.data.accessToken;
-//                 tokenService.setAccessToken(newToken);
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
-//                 // Retry the original request with new token
-//                 if (error.config?.headers) {
-//                     error.config.headers.Authorization = `Bearer ${newToken}`;
-//                 }
 
-//                 return axiosInstance(error.config!);
-//             } catch (refreshError) {
-//                 // Refresh token expired or invalid -> force logout
-//                 tokenService.setAccessToken("");
-//                 // Optionally redirect to login page here
-//                 return Promise.reject(refreshError);
-//             }
-//         }
 
-//         return Promise.reject(error);
-//     }
-// );
+// --- RESPONSE INTERCEPTOR ---
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    async (error: AxiosError) => {
+        if (error.response?.status === 401) {
+            console.warn("Unauthorized (401) — token možda ne postoji ili je istekao.");
+        }
+
+        return Promise.reject(error);
+    }
+);
 
 export default axiosInstance;
