@@ -5,6 +5,7 @@ import { Reservation } from "@/src/types/types";
 // Tip koji dolazi sa backend-a
 interface ApartmentResponse {
   apartmentId: number;
+  name: string,
   address: string;
   numberOfBeds: number;
   numberOfRooms: number;
@@ -33,6 +34,7 @@ const mapReservation = (r: ReservationResponse): Reservation => ({
   reservationId: r.reservationId,
   apartment: {
     apartmentId: r.apartment.apartmentId,
+    name: r.apartment.name,
     address: r.apartment.address,
     numberOfBeds: r.apartment.numberOfBeds,
     numberOfRooms: r.apartment.numberOfRooms,

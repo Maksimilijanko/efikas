@@ -67,6 +67,7 @@ export const lightTheme = {
 
   screenBackground: "#ffffff",
 
+  deleteColor: "#E53935",
   statusOccupied: "#c42f27ff",
   statusAvailable: "#30aa4eff",
 };
@@ -93,6 +94,7 @@ export const darkTheme = {
 
   screenBackground: "#282a2d",
 
+  deleteColor: "#e83633ff",
   statusOccupied: "#FF3B30",
   statusAvailable: "#34C759",
 };

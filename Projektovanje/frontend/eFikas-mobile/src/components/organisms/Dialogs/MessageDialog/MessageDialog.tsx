@@ -1,7 +1,8 @@
 import React from "react";
 import { Modal, View, Text, StyleSheet } from "react-native";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface MessageDialogProps {
   visible: boolean;
@@ -26,6 +27,55 @@ export const MessageDialog: React.FC<MessageDialogProps> = ({
   onSecondary,
   onRequestClose,
 }) => {
+  const { Colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: "rgba(0,0,0,0.60)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  
+    modalContainer: {
+      width: "90%",
+      backgroundColor: Colors.background,
+      borderRadius: 20,
+      paddingVertical: 30,
+      paddingHorizontal: 20,
+      alignItems: "center",
+      elevation: 8,
+      // shadowColor: Colors.shadowColor,
+      shadowOpacity: 0.15,
+      shadowRadius: 10,
+      shadowOffset: { width: 0, height: 4 },
+    },
+  
+    title: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: Colors.textPrimary,
+      textAlign: "center",
+    },
+  
+    description: {
+      fontSize: 14,
+      color: Colors.textSecondary,
+      textAlign: "center",
+      marginBottom: 26,
+    },
+  
+    buttonRow: {
+      flexDirection: "row",
+      width: "100%",
+      justifyContent: "space-between",
+      gap: 10,
+    },
+  
+    buttonWrapper: {
+      flex: 1,
+    },
+  });
 
   return (
     <Modal
@@ -76,50 +126,3 @@ export const MessageDialog: React.FC<MessageDialogProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.45)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  modalContainer: {
-    width: "90%",
-    backgroundColor: Colors.background,
-    borderRadius: 20,
-    paddingVertical: 30,
-    paddingHorizontal: 20,
-    alignItems: "center",
-    elevation: 8,
-    shadowColor: Colors.shadowColor,
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-  },
-
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.textPrimary,
-    textAlign: "center",
-  },
-
-  description: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    textAlign: "center",
-    marginBottom: 26,
-  },
-
-  buttonRow: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
-    gap: 10,
-  },
-
-  buttonWrapper: {
-    flex: 1,
-  },
-});

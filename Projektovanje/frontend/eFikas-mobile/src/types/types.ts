@@ -31,6 +31,7 @@ export interface StatisticsResponse {
 
 export interface Apartment {
   apartmentId: number;
+  name: string;
   address: string;
   numberOfBeds: number;
   numberOfRooms: number;

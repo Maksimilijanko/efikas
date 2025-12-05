@@ -21,16 +21,15 @@ export const styles = StyleSheet.create({
         borderRadius: 10, 
     },
     mainContentWrapper: {
-        height: 130, 
-        flex: 0.9, 
+        flex: 0.9,
         justifyContent: 'space-between',
-    },
-    topRow: {
-        flexDirection: 'row',
+        paddingVertical: 8,
     },
     labelContainer: {
         marginLeft: 10,
-        height: '100%'
+    },
+    topRow: {
+        flexDirection: 'row',
     },
     statusGroup: {},
     statusLine: {

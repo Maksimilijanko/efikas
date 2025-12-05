@@ -303,7 +303,20 @@
             "button": "Štampaj račun",
             "peopleCount_one": "{{count}} osoba",
             "peopleCount_few": "{{count}} osobe",
-            "peopleCount_other": "{{count}} osoba"
+            "peopleCount_other": "{{count}} osoba",
+            "deleteText": "Brisanje rezervacije"
+        }
+    },
+
+    "apartment": {
+        "card": {
+            "status": {
+                "current": "Trenutno: ",
+                "occupied": "Zauzeto",
+                "available": "Slobodno",
+                "until": " do ",
+                "nextGuests": "Sljedeći gosti: "
+            }
         }
     }
 }

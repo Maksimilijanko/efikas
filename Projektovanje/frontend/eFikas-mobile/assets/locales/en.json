@@ -299,7 +299,20 @@
             "button": "Print invoice",
             "peopleCount_one": "{{count}} person",
             "peopleCount_few": "{{count}} people",
-            "peopleCount_other": "{{count}} people"
+            "peopleCount_other": "{{count}} people",
+            "deleteText": "Delete reservation"
+        }
+    },
+
+    "apartment": {
+        "card": {
+            "status": {
+                "current": "Currently: ",
+                "occupied": "Busy",
+                "available": "Free",
+                "until": " until ",
+                "nextGuests": "Next guests: "
+            }
         }
     }
 }
