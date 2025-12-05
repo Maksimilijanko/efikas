@@ -29,7 +29,7 @@ public class ApartmentExpenseService {
 
     // Obtain all apartment expenses for a given apartment
     // Perform ownership check before executing the method logic itself
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public List<ApartmentExpenseResponse> getAllApartmentExpensesForApartment(Integer apartmentId, Authentication authentication) {
         return apartmentExpenseRepository.findApartmentExpenseByApartmentApartmentId(apartmentId)
                 .stream().map((element) -> modelMapper.map(element, ApartmentExpenseResponse.class))
@@ -38,7 +38,7 @@ public class ApartmentExpenseService {
 
     // Create a new expense for a given apartment
     // Perform ownership check before executing the method logic itself
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentExpenseResponse createNewApartmentExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expense) {
         ApartmentExpense apartmentExpense = modelMapper.map(expense, ApartmentExpense.class);
 
@@ -57,7 +57,7 @@ public class ApartmentExpenseService {
         return modelMapper.map(apartmentExpense, ApartmentExpenseResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentExpenseResponse updateApartmentExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expense, String apartmentExpenseName) {
         ApartmentExpenseId apartmentExpenseId = new ApartmentExpenseId();
         apartmentExpenseId.setApartmentId(apartmentId);
@@ -88,7 +88,7 @@ public class ApartmentExpenseService {
         return modelMapper.map(apartmentExpense, ApartmentExpenseResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentExpenseResponse deleteApartmentExpense(Integer apartmentId, Authentication authentication, String apartmentExpenseName) {
         ApartmentExpenseId apartmentExpenseId = new ApartmentExpenseId();
         apartmentExpenseId.setApartmentId(apartmentId);
