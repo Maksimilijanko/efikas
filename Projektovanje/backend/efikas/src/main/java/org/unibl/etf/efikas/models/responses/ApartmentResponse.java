@@ -6,6 +6,7 @@ import java.util.List;
 @Data
 public class ApartmentResponse {
     private Integer apartmentId;
+    private String name;
     private String address;
     private Integer numberOfBeds;
     private Integer numberOfRooms;
