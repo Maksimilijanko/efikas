@@ -72,6 +72,15 @@ export type ApartmentResponse = {
     apartmentId?: number;
     data?: any;
 };
+export interface ApartmentCurrentInfo {
+    id: number;
+    title: string;
+    subtitle: string;
+    imageUrl: string;
+    status: boolean;
+    statusUntil: string | null;
+    nextGuestsDate: string | null;
+}
 
 export interface Reservation {
   reservationId: number;

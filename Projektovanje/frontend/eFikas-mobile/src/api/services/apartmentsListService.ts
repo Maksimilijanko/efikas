@@ -1,17 +1,7 @@
-// services/apartmentsService.ts
-
-export type Apartment = {
-    id: number;
-    title: string;
-    subtitle: string;
-    imageUrl: string;
-    status: boolean;
-    statusUntil: string | null;
-    nextGuestsDate: string | null;
-};
+import { ApartmentCurrentInfo } from "@/src/types/types";
 
 export const apartmentsListService = {
-    getApartments: async (): Promise<Apartment[]> => {
+    getApartments: async (): Promise<ApartmentCurrentInfo[]> => {
         return [
             {
                 id: 1,
