@@ -41,6 +41,16 @@ export interface Apartment {
   pictures: string[]; 
 }
 
+export interface ApartmentCurrentInfo {
+    id: number;
+    title: string;
+    subtitle: string;
+    imageUrl: string;
+    status: boolean;
+    statusUntil: string | null;
+    nextGuestsDate: string | null;
+}
+
 export interface Reservation {
   reservationId: number;
   apartment: Apartment; 
