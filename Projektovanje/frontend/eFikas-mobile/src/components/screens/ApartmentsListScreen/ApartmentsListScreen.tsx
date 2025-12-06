@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ApartmentsListTemplate from "../../templates/ApartmentsListTemplate/ApartmentsListTemplate";
 import ApartmentCard from "../../organisms/ApartmentCard/ApartmentCard";
 import FloatButton from "../../atoms/FloatButton/FloatButton";
 import { Icon } from "../../atoms/Icon/Icon";
-import { Apartment, apartmentsListService } from "@/src/services/apartmentsListService";
+import { useApartmentsList } from "@/src/hooks/useApartmentsList";
 
 
 const ApartmentsListScreen: React.FC = () => {
-  const [apartmentsData, setApartmentsData] = useState<Apartment[]>([]);
+  const { data, isLoading, error } = useApartmentsList();
 
-  useEffect(() => {
-    const load = async () => {
-      const data = await apartmentsListService.getApartments();
-      setApartmentsData(data);
-    };
+  if (isLoading) {
+    return <ApartmentsListTemplate apartments={[]} />;
+  }
 
-    load();
-  }, []);
+  if (error) {
+    return <ApartmentsListTemplate apartments={[]} />;
+  }
 
-  // MAP TO ORGANISMS
-  const apartments = apartmentsData.map((item) => (
+  const apartments = data?.map((item) => (
     <ApartmentCard
       key={item.id}
       title={item.title}
@@ -28,12 +26,10 @@ const ApartmentsListScreen: React.FC = () => {
       status={item.status}
       statusUntil={item.statusUntil}
       nextGuestsDate={item.nextGuestsDate}
-      onPress={() => {
-        console.log("Pressed apartment ID:", item.id);
-      }}
+      onPress={() => console.log("Pressed apartment ID:", item.id)}
       style={{}}
     />
-  ));
+  )) ?? [];
 
   return (
     <ApartmentsListTemplate
