@@ -1,30 +1,32 @@
-import React, { ReactNode } from 'react';
-import { View } from 'react-native';
-import styles from './styles';
+import React, { ReactNode } from "react";
+import { View, StyleSheet } from "react-native";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface Props {
   content: ReactNode;
 }
 
 export default function ProfileTemplate({ content }: Props) {
+  const { Colors } = useTheme();
+  const dynamicStyles = getStyles(Colors);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>{content}</View>
+    <View style={dynamicStyles.container}>
+      <View style={dynamicStyles.content}>{content}</View>
     </View>
   );
 }
 
-
-//PRIMJER POZIVA
-/**
-   <ProfileTemplate
-       content={
-    <>
-      <LabeledTextField label="Ime"/>
-      <LabeledTextField label="Prezime"/>
-      ...
-    </>
-  }
-     />
- */
-
+const getStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.screenBackground,
+    },
+    content: {
+      paddingHorizontal: 20,
+      marginTop: 20,
+      flexDirection: "column",
+      rowGap: 16,
+    },
+  });

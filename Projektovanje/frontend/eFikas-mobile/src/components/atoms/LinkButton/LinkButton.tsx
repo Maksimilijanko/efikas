@@ -2,6 +2,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { Icon } from "../Icon/Icon";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface Props {
     label: string;
@@ -28,7 +29,9 @@ interface Props {
  * <LinkButton label="View more" onPress={() => console.log("Link pressed")} />
  * ```
  */
-function LinkButton({ label, onPress, color = 'rgb(49 118 191)' }: Props) {
+function LinkButton({ label, onPress, color}: Props) {
+    const { Colors } = useTheme();
+    const defaultColor = color || Colors.primary;
     
     return(
         <Pressable onPress={onPress} >
@@ -37,7 +40,7 @@ function LinkButton({ label, onPress, color = 'rgb(49 118 191)' }: Props) {
                     <Text size="sm" style={{ color: color, fontWeight: 'medium', opacity: !pressed ? 1 : 0.5 }} >
                         {label}
                     </Text>
-                    <Icon name="ChevronRight" size={12} color="rgb(49 118 191)" /> 
+                    <Icon name="ChevronRight" size={12} color={defaultColor} /> 
                 </HStack>
             )}
         </Pressable>

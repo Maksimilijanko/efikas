@@ -10,16 +10,16 @@ import {
   FlatList,
 } from "react-native";
 
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard";
-import { Icon } from "@/src/components/atoms/Icon/Icon"; 
-
+import { Icon } from "@/src/components/atoms/Icon/Icon";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface Service {
   id: string;
   name: string;
-  icon: string; 
+  icon: string;
 }
 
 type ServiceKey =
@@ -32,14 +32,13 @@ type ServiceKey =
   | "fen"
   | "balkon";
 
-
 const SERVICE_MAP: Record<ServiceKey, Service> = {
   parking: { id: "parking", name: "Parking", icon: "ParkingCircle" },
   wifi: { id: "wifi", name: "Wi-Fi", icon: "Wifi" },
   klima: { id: "klima", name: "Klima", icon: "Wind" },
   tv: { id: "tv", name: "Smart TV", icon: "Tv" },
   kafa: { id: "kafa", name: "Kafa", icon: "Coffee" },
-  vesmasina: { id: "vesmasina", name: "Veš mašina", icon: "WashingMachine" }, 
+  vesmasina: { id: "vesmasina", name: "Veš mašina", icon: "WashingMachine" },
   fen: { id: "fen", name: "Fen", icon: "Fan" },
   balkon: { id: "balkon", name: "Balkon", icon: "Home" },
 };
@@ -67,6 +66,9 @@ interface LandingApartmentInfoProps extends ServiceProps {
 }
 
 export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
+  const { Colors } = useTheme();
+  const styles = getStyles(Colors);
+
   const { imageUrl, bedrooms = 2, squareMeters = 60, maxGuests = 3 } = props;
 
   const apartmentServices = useMemo(() => getServicesFromProps(props), [props]);
@@ -75,6 +77,7 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
 
   return (
     <>
+      {/* Apartment Main Image */}
       <View style={styles.cardWrapper}>
         <ImageBackground
           source={imageUrl}
@@ -82,57 +85,36 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
           imageStyle={styles.imageStyle}
         >
           <View style={styles.infoContainer}>
-            <View style={styles.attrBox}>
-              <View style={[styles.attrInner, { marginRight: 5 }]}>
-                <Icon name="Bed" size={20} color="#000" />
-                <Text
-                  style={{
-                    marginLeft: 20,
-                    fontSize: 14,
-                    fontWeight: "400",
-                    color: Colors.shadowColor,
-                  }}
-                >
-                  {bedrooms}
-                </Text>
-              </View>
-            </View>
-
+            {/* Bedrooms */}
             <View style={styles.attrBox}>
               <View style={styles.attrInner}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "400",
-                    color: Colors.shadowColor,
-                  }}
-                >
-                  {squareMeters} m²
-                </Text>
+                <Icon name="Bed" size={20} color={Colors.textPrimary} />
+                <Text style={styles.attrText}>{bedrooms}</Text>
               </View>
             </View>
 
+            {/* Square meters */}
             <View style={styles.attrBox}>
-              <View style={[styles.attrInner, { marginRight: 5 }]}>
-                <Icon name="Users" size={20} color="#000" />
-                <Text
-                  style={{
-                    marginLeft: 20,
-                    fontSize: 14,
-                    fontWeight: "400",
-                    color: Colors.shadowColor,
-                  }}
-                >
-                  {maxGuests}
-                </Text>
+              <View style={styles.attrInner}>
+                <Text style={styles.attrText}>{squareMeters} m²</Text>
+              </View>
+            </View>
+
+            {/* Max guests */}
+            <View style={styles.attrBox}>
+              <View style={styles.attrInner}>
+                <Icon name="Users" size={20} color={Colors.textPrimary} />
+                <Text style={styles.attrText}>{maxGuests}</Text>
               </View>
             </View>
           </View>
         </ImageBackground>
       </View>
 
+      {/* Services Header */}
       <View style={styles.servicesHeaderContainer}>
         <Text style={styles.servicesTitle}>Usluge</Text>
+
         {apartmentServices.length > VISIBLE_SERVICES_COUNT && (
           <Pressable onPress={() => setIsModalVisible(true)}>
             <Text style={styles.showAllLink}>Prikaži sve›</Text>
@@ -140,9 +122,10 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
         )}
       </View>
 
-      <View style={serviceStyles.gridContainer}>
+      {/* Visible services grid */}
+      <View style={styles.gridContainer}>
         {visibleServices.map((service) => (
-          <View style={serviceStyles.featureWrapper} key={service.id}>
+          <View style={styles.featureWrapper} key={service.id}>
             <ApartmentFeatureCard
               label={service.name}
               icon={
@@ -152,23 +135,23 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
                   size={22}
                 />
               }
-              backgroundColor="#f0f0f0"
             />
           </View>
         ))}
       </View>
 
+      {/* Modal with full list */}
       <Modal visible={isModalVisible} transparent animationType="fade">
-        <View style={serviceStyles.modalOverlay}>
-          <View style={serviceStyles.modalContainer}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
             <FlatList
               data={apartmentServices}
               keyExtractor={(item) => item.id}
               numColumns={2}
               columnWrapperStyle={{ justifyContent: "space-between" }}
-              contentContainerStyle={serviceStyles.modalListContent}
+              contentContainerStyle={styles.modalListContent}
               renderItem={({ item }) => (
-                <View style={serviceStyles.featureWrapper}>
+                <View style={styles.featureWrapper}>
                   <ApartmentFeatureCard
                     label={item.name}
                     icon={
@@ -178,11 +161,12 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
                         size={22}
                       />
                     }
-                    backgroundColor="#f0f0f0"
+                    backgroundColor={Colors.secondary}
                   />
                 </View>
               )}
             />
+
             <DialogButton
               title="U redu"
               onPress={() => setIsModalVisible(false)}
@@ -194,104 +178,107 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  cardWrapper: {
-    width: "96%",
-    alignSelf: "center",
-    backgroundColor: "rgba(255,255,255,0.8)",
-    borderRadius: 15,
-    marginVertical: 10,
-    marginHorizontal: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 60,
-    elevation: 10,
-  },
-  imageBackground: {
-    width: "100%",
-    aspectRatio: 16 / 9,
-    borderRadius: 15,
-    overflow: "hidden",
-    justifyContent: "flex-end",
-  },
-  imageStyle: {
-    borderRadius: 15,
-  },
-  infoContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    position: "absolute",
-    bottom: 10,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 20,
-  },
-  attrBox: {
-    borderRadius: 10,
-    backgroundColor: "rgba(255,255,255,0.8)",
-  },
-  attrInner: {
-  flexDirection: "row",
-  alignItems: "center",
-  paddingHorizontal: 10,
-  paddingVertical: 8,
-},
-  servicesHeaderContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "96%",
-    alignSelf: "center",
-    marginTop: 7,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-  },
-  servicesTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: Colors.shadowColor,
-  },
-  showAllLink: {
-    fontSize: 14,
-    color: Colors.primary,
-    fontWeight: "400",
-  },
-});
+const getStyles = (Colors: any) =>
+  StyleSheet.create({
+    cardWrapper: {
+      width: "96%",
+      alignSelf: "center",
+      backgroundColor: Colors.secondary,
+      borderRadius: 15,
+      marginVertical: 10,
+      shadowColor: Colors.shadowColor,
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.1,
+      shadowRadius: 60,
+      elevation: 10,
+    },
+    imageBackground: {
+      width: "100%",
+      aspectRatio: 16 / 9,
+      borderRadius: 15,
+      overflow: "hidden",
+      justifyContent: "flex-end",
+    },
+    imageStyle: {
+      borderRadius: 15,
+    },
+    infoContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      position: "absolute",
+      bottom: 10,
+      left: 0,
+      right: 0,
+      paddingHorizontal: 20,
+    },
+    attrBox: {
+      borderRadius: 10,
+      backgroundColor: Colors.secondary,
+    },
+    attrInner: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+    },
+    attrText: {
+      marginLeft: 10,
+      fontSize: 14,
+      fontWeight: "500",
+      color: Colors.textPrimary,
+    },
+    servicesHeaderContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "96%",
+      alignSelf: "center",
+      marginTop: 7,
+      paddingHorizontal: 12,
+      paddingVertical: 5,
+    },
+    servicesTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: Colors.textPrimary,
+    },
+    showAllLink: {
+      fontSize: 14,
+      color: Colors.primary,
+    },
 
-const serviceStyles = StyleSheet.create({
-  gridContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    width: "98%",
-    alignSelf: "center",
-    paddingHorizontal: 10,
-    marginBottom: 20,
-  },
-  featureWrapper: {
-    width: "49%",   
-    marginVertical: 1, 
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.8)",
-  },
-  modalContainer: {
-     width: "94%",
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-     marginTop: -10,          
-  },
-  modalListContent: {
-    paddingBottom: 10,
-  },
-});
+    gridContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      width: "98%",
+      alignSelf: "center",
+      paddingHorizontal: 10,
+      marginBottom: 20,
+    },
+    featureWrapper: {
+      width: "49%",
+      marginVertical: 4,
+    },
 
+    modalOverlay: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0,0,0,0.65)",
+    },
+    modalContainer: {
+      width: "90%",
+      backgroundColor: Colors.background,
+      borderRadius: 20,
+      padding: 8,
+      paddingBottom: 24,
+      alignItems: "center",
+    },
+    modalListContent: {
+      paddingBottom: 24,
+    },
+  });
 
 //Primjer upotrebe iz index.tsx  fajla
 /**

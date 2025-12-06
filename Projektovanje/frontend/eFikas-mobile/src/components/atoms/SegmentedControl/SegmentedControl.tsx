@@ -4,7 +4,8 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
+import { useTheme } from '@/src/providers/ThemeProvider';
 
 type SegmentedControlProps = {
   options: string[];
@@ -14,6 +15,7 @@ type SegmentedControlProps = {
 
 const SegmentedControl: React.FC<SegmentedControlProps> = React.memo(
   ({ options, selectedOption, onOptionPress }) => {
+    const { Colors } = useTheme();
     const { width: windowWidth } = useWindowDimensions();
 
     const internalPadding = 20;
@@ -30,6 +32,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = React.memo(
         ),
       };
     }, [selectedOption, options, itemWidth]);
+
+    const styles = getStyles(Colors);
 
     return (
       <View
@@ -81,36 +85,37 @@ const SegmentedControl: React.FC<SegmentedControlProps> = React.memo(
   }
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    height: 36,
-    backgroundColor: Colors.secondary,
-  },
-  activeBox: {
-    position: 'absolute',
-    borderRadius: 100,
-    shadowColor: Colors.shadowColor,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    elevation: 3,
-    height: '80%',
-    top: '10%',
-    backgroundColor: Colors.background,
-  },
-  labelContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 15,
-    color: Colors.textSecondary,
-    fontWeight: '400',
-  },
-  activeLabel: {
-    color: Colors.textPrimary,
-    fontWeight: '600',
-  },
-});
+const getStyles = (Colors: any) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      height: 36,
+      backgroundColor: Colors.secondary,
+    },
+    activeBox: {
+      position: 'absolute',
+      borderRadius: 100,
+      shadowColor: Colors.shadowColor,
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.1,
+      elevation: 3,
+      height: '80%',
+      top: '10%',
+      backgroundColor: Colors.background,
+    },
+    labelContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    label: {
+      fontSize: 15,
+      color: Colors.textSecondary,
+      fontWeight: '400',
+    },
+    activeLabel: {
+      color: Colors.textPrimary,
+      fontWeight: '600',
+    },
+  });
 
 export { SegmentedControl };
