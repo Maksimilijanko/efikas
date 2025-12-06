@@ -1,25 +1,27 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import { Colors } from '@/src/styles/style';
+// import { Colors } from '@/src/styles/style';
 
 const screenHeight = Dimensions.get('window').height;
 
-const styles = StyleSheet.create({
+const getStyles = (Colors: any) =>
+  StyleSheet.create({
     root: {
-        flex: 1,
-        backgroundColor: Colors.background
+      flex: 1,
+      backgroundColor: Colors.screenBackground,
     },
     scrollContent: {
-        width: '100%',
-        alignItems: 'center',
-        paddingTop: screenHeight * 0.02,
-        paddingBottom: screenHeight * 0.12
+      width: "100%",
+      alignItems: "center",
+      paddingTop: screenHeight * 0.02,
+      paddingBottom: screenHeight * 0.12,
+      backgroundColor: Colors.screenBackground,
     },
     listWrapper: {
-        width: '92%'
+      width: "92%",
     },
     itemWrapper: {
-        marginBottom: 14
-    }
-});
+      marginBottom: 14,
+    },
+  });
 
-export default styles;
+export default getStyles;

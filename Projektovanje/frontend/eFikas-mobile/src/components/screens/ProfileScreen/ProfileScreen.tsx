@@ -6,13 +6,15 @@ import LabeledTextField from "@/src/components/molecules/LabeledTextField/Labele
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { EditDeleteDialog } from "@/src/components/organisms/Dialogs/EditDeleteDialog/EditDeleteDialog";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
 import { useProfile } from "@/src/hooks/useProfile";
 import { ProfileData } from "@/src/types/types";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export default function ProfileScreen() {
     const { t } = useTranslation();
+    const { Colors } = useTheme();
     const navigation = useNavigation();
     const { profile, isLoading, isSaving, updateProfile } = useProfile();
     const [isEditMode, setIsEditMode] = useState(false);

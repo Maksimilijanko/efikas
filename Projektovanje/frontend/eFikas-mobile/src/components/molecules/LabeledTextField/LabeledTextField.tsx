@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { Label } from "@/src/components/atoms/Label/Label";
 import TextField from "@/src/components/atoms/TextField/TextField";
 import { LucideIconName } from "@/src/types/types";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface LabeledTextFieldProps {
   label: string;
@@ -55,6 +56,7 @@ const LabeledTextField = ({
   inputProps,
 }: LabeledTextFieldProps) => {
   const hasError = !!error || !!errorText;
+  const { Colors } = useTheme();
 
   return (
     <View className="w-full">
@@ -62,7 +64,7 @@ const LabeledTextField = ({
         text={`${label}${required ? " *" : ""}`}
         size={labelSize}
         align="left"
-        color={hasError ? "#DC2626" : undefined}
+        color={hasError ? Colors.deleteColor : undefined}
         className="mb-1"
       />
 
@@ -89,7 +91,7 @@ const LabeledTextField = ({
           text={errorText}
           size="xs"
           align="left"
-          color="#DC2626"
+          color={Colors.deleteColor}
           className="mt-1"
         />
       ) : null}

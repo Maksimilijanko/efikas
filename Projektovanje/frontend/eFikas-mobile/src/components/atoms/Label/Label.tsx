@@ -1,4 +1,5 @@
 import { Text } from "@/components/ui/text";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface LabelProps {
   text: string;
@@ -17,6 +18,8 @@ export const Label = ({
   align = "left",
   className = "",
 }: LabelProps) => {
+  const { Colors } = useTheme();
+
   const alignClass =
     align === "center"
       ? "text-center"
@@ -24,11 +27,12 @@ export const Label = ({
       ? "text-right"
       : "text-left";
 
+  const labelColor = color || Colors.textPrimary;    
   return (
     <Text
       size={size}
       className={`font-medium ${alignClass} ${className}`}
-      style={{ color }}
+      style={{ color: labelColor }}
       accessibilityLabel={`${text}${required ? " (required)" : ""}`}
     >
       {text}

@@ -1,8 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Image, Text } from 'react-native';
 import { HStack } from '@/components/ui/hstack';
-import { Colors } from '@/src/styles/style';
-
+// import { Colors } from '@/src/styles/style';
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 const GOOGLE_ICON_URI = 'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-1024.png';
 
@@ -12,6 +12,8 @@ interface GoogleButtonProps {
 
 
 export const GoogleButton: React.FC<GoogleButtonProps> = ({ onPress }) => {
+  const { Colors } = useTheme();
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -32,7 +34,7 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({ onPress }) => {
       <HStack className="items-center space-x-2">
         <Image
           source={{ uri: GOOGLE_ICON_URI }}
-          style={{ width: 18, height: 18 }}
+          style={{ width: 24, height: 24, marginRight: 16 }}
           resizeMode="contain"
         />
         <Text

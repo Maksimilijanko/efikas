@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Platform, Alert } from "react-native";
 import { IconButton } from "@/src/components/atoms/IconButton/IconButton";
-import { Colors } from '@/src/styles/style';
+// import { Colors } from '@/src/styles/style';
 import { MessageDialog } from "@/src/components/organisms/Dialogs/MessageDialog/MessageDialog";
 import { useDownload } from "@/src/hooks/useDownload";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "@/components/ui/spinner";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export type DocumentType = 
     | 'IncomeBook'  // Knjiga prihoda
@@ -20,8 +21,11 @@ export type DocumentItemProps = {
 
 const DocumentItem: React.FC<DocumentItemProps> = ({ title, documentType }) => {
     const { t } = useTranslation();
+    const { Colors } = useTheme();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { downloadDocument, isDownloading, downloadError } = useDownload();
+
+    const styles = getStyles(Colors);
 
     // Reakcija na gresku iz hook-a
     useEffect(() => {
@@ -43,8 +47,8 @@ const DocumentItem: React.FC<DocumentItemProps> = ({ title, documentType }) => {
 
     return (
         <View>
-            <View style={itemStyles.container}>
-                <Text style={[itemStyles.title, { marginRight: 10 }]}>{title}</Text> 
+            <View style={styles.container}>
+                <Text style={[styles.title, { marginRight: 10 }]}>{title}</Text> 
                 {isDownloading ? (
                     <Spinner 
                         size="small" 
@@ -70,35 +74,36 @@ const DocumentItem: React.FC<DocumentItemProps> = ({ title, documentType }) => {
     );
 };
 
-const itemStyles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 36,
-        borderRadius: 20,
-        paddingHorizontal: 24,
-        borderColor: Colors.borderColor,
-        borderWidth: 1,
-        backgroundColor: Colors.background,
-        ...Platform.select({
-          ios: {
-            shadowColor: Colors.shadowColor,
-            shadowOpacity: 0.05,
-            shadowRadius: 4,
-            shadowOffset: { width: 0, height: 4 },
-          },
-          android: { 
-            elevation: 2,
-          },
-        }),
-    },
+const getStyles = (Colors: any) =>
+    StyleSheet.create({
+        container: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingVertical: 36,
+            borderRadius: 20,
+            paddingHorizontal: 24,
+            borderColor: Colors.borderColor,
+            borderWidth: 1,
+            backgroundColor: Colors.background,
+            ...Platform.select({
+              ios: {
+                shadowColor: Colors.shadowColor,
+                shadowOpacity: 0.05,
+                shadowRadius: 4,
+                shadowOffset: { width: 0, height: 4 },
+              },
+              android: { 
+                elevation: 2,
+              },
+            }),
+        },
 
-    title: {
-        fontSize: 18,
-        fontWeight: "600",
-        color: Colors.textPrimary,
-    },
-});
+        title: {
+            fontSize: 18,
+            fontWeight: "600",
+            color: Colors.textPrimary,
+        },
+    });
 
 export default DocumentItem;

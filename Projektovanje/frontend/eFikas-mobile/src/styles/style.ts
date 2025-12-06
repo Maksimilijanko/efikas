@@ -17,6 +17,14 @@ export const Colors = {
   statusOccupied: "#FF3B30",
   statusAvailable: "#34C759",
 
+  // boje za pieChart
+  pieCategory1: '#4285F4',
+  pieCategory2: '#F59A3D',
+  pieCategory3: '#3367D6',
+  pieCategory4: '#FADB4A',
+
+  divider: "#d1d5db",
+
   // For reference from Figma
   dark: {
     primary: '#3176BF',
@@ -70,6 +78,13 @@ export const lightTheme = {
   deleteColor: "#E53935",
   statusOccupied: "#c42f27ff",
   statusAvailable: "#30aa4eff",
+
+  divider: "#d1d5db",
+
+  toastBackground: "#ffffff",
+  success: "#22c55e",
+  error: "#ef4444",
+  info: "#3b82f6",
 };
 
 export const darkTheme = {
@@ -78,11 +93,11 @@ export const darkTheme = {
   secondary: '#303338',
   tertiary: '#999',
   background: '#232528',
-  shadowColor: '#ffffff',
+  shadowColor: '#dcdcdc',
   textPrimary: '#ffffff',
   textSecondary: '#d1d1d1',
   textLight: '#ffffff',
-  iconMenu: '#d9d9d9',
+  iconMenu: '#bcbcbc',
   accent: '#FFA63A',
   calendarPeriod: '#C1D6EC',
   calendarPeriodOverlap: "#8bb3deff",
@@ -97,4 +112,11 @@ export const darkTheme = {
   deleteColor: "#e83633ff",
   statusOccupied: "#FF3B30",
   statusAvailable: "#34C759",
+
+  divider: "#4b5563",
+  
+  toastBackground: "#282a2d",
+  success: "#22c55e",
+  error: "#ef4444",
+  info: "#3b82f6",
 };

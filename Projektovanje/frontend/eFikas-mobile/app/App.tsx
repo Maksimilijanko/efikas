@@ -7,6 +7,7 @@ import { Stack } from "expo-router";
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
+import { ToastConfig } from "@/src/util/ToastConfig"
 
 const queryClient = new QueryClient()
 export default function App() {
@@ -52,7 +53,7 @@ export default function App() {
                     </Stack>
                     
                     {/* Toast component for messages */}
-                    <Toast />
+                    <Toast config={ToastConfig} />
                 </QueryClientProvider>
             </OverlayProvider>
         </GluestackUIProvider>

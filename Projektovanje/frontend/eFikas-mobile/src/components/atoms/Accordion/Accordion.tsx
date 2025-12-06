@@ -36,7 +36,7 @@ export const Accordion = ({
   return (
     <BaseAccordion
       size="lg"
-      variant="filled"
+      variant="unfilled"
       type={type}
       isCollapsible={isCollapsible}
       isDisabled={isDisabled}
