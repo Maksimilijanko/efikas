@@ -18,7 +18,9 @@ import org.unibl.etf.efikas.models.requests.BookRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,6 @@ public class BooksController {
 
     @GetMapping("/{type}")
     public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type) { //, BookRequest request
-        System.out.println("variable: " + type);
         var service = bookPdfFactory.get(type);
 
         InputStream pdfStream;
@@ -79,7 +80,7 @@ public class BooksController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + type + ".pdf\"")
+                        "attachment; filename=\"" + type + "_" + System.currentTimeMillis() + ".pdf\"")
                 .body(responseBody);
     }
 }

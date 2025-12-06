@@ -6,6 +6,9 @@ import lombok.Data;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the table data DTO a table accepts
+ * */
 @Data
 @Builder
 public class TableData {

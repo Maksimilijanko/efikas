@@ -6,6 +6,9 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Represents the raw data (rows) of the income table.
+ * */
 @Data
 @Builder
 public class IncomeEntry {

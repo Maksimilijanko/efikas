@@ -6,9 +6,11 @@ import org.unibl.etf.efikas.models.requests.BookRequest;
 
 import java.util.List;
 
+
 @Data
 @Builder
 public class IncomeBookDTO implements BookRequest {
+    // TODO: make special dto's for taxpayer/store?
     private String taxpayerName;
     private String taxpayerJmbg;
     private String taxpayerAddress;

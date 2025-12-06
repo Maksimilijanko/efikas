@@ -14,6 +14,9 @@ import org.unibl.etf.efikas.models.enums.TableType;
 
 import java.util.List;
 
+/**
+ * Creates information type table about the taxpayer
+ * */
 @Component
 public class InfoTableStrategy implements TableStrategy{
     @Override
@@ -35,7 +38,8 @@ public class InfoTableStrategy implements TableStrategy{
                     .add(new Paragraph(tableData.getTitle()))
                     .setTextAlignment(TextAlignment.CENTER)
                     .simulateBold()
-                    .setBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    .setBorder(Border.NO_BORDER)
+                    .setBackgroundColor(ColorConstants.WHITE);
             table.addHeaderCell(titleCell);
         }
 

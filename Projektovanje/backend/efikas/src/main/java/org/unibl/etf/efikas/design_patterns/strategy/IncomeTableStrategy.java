@@ -15,6 +15,9 @@ import org.unibl.etf.efikas.models.enums.TableType;
 
 import java.util.List;
 
+/**
+ * ConcreteStrategy for the income financial table
+ * */
 @Component
 public class IncomeTableStrategy implements TableStrategy {
 
@@ -49,15 +52,17 @@ public class IncomeTableStrategy implements TableStrategy {
         tableData.getRows().forEach(rowData ->
                 addDataRow(table, rowData, config.getColumnWidths().length));
 
+
         // Add total row if needed
         if (config.isHasTotalRow()) {
-            config.getSpecialRows().stream()
-                    .filter(row -> row.getType() == RowType.TOTAL)
-                    .forEach(row -> addTotalRow(table, row, config.getColumnWidths().length));
+            if(config.getSpecialRows() != null) {
+                config.getSpecialRows().stream()
+                        .filter(row -> row.getType() == RowType.TOTAL)
+                        .forEach(row -> addTotalRow(table, row, config.getColumnWidths().length));
+            }
         }
 
 
-        // jebo me svekar sta ovog ima...
         return table;
     }
 

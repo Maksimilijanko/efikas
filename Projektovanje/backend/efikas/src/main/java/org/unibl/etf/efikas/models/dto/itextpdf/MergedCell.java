@@ -4,6 +4,9 @@ import com.itextpdf.layout.properties.TextAlignment;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Represents a merged cell DTO across rows and/or columns
+ * */
 @Data
 @Builder
 public class MergedCell {

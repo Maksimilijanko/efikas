@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Represents the configuration DTO for a table
+ * */
 @Data
 @Builder
 public class TableConfig {

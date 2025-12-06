@@ -1,4 +1,4 @@
-package org.unibl.etf.efikas.services.interfaces;
+package org.unibl.etf.efikas.handlers;
 
 import org.unibl.etf.efikas.models.enums.BookType;
 

@@ -11,7 +11,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
+/**
+ * Factory class for generating different types of book tables (info/financial) for PDF files.
+ * */
 @Component
 public class BookTableFactory {
     private final Map<TableType, TableStrategy> strategies;
