@@ -17,13 +17,11 @@ const TaskDamageCostTemplate: React.FC<TaskDamageCostTemplateProps> = ({
 }) => {
   return (
     <View style={styles.root}>
+      <View style={styles.dropdownSection}>{dropdown}</View>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-
-        <View style={styles.dropdownSection}>{dropdown}</View>
-
       
         <View style={styles.listSection}>{list}</View>
       </ScrollView>
@@ -48,8 +46,9 @@ const styles = StyleSheet.create({
  
   dropdownSection: {
     width: "92%",
-    marginBottom: 20,
+    marginBottom: 10,
     marginTop:10,
+    marginHorizontal:15,
   },
 
   listSection: {
