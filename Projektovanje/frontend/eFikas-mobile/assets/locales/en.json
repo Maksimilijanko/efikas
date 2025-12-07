@@ -93,6 +93,12 @@
         "editDelete": {
             "edit": "Edit Information",
             "delete": "Delete"
+        },
+
+        "cashRegister": {
+            "cancel": "Cancel",
+            "add": "Add",
+            "title": "Add cash register"
         }
     },
 
@@ -252,16 +258,12 @@
     },
 
     "profile": {
+        "sectionTitle": "Profile information",
         "labels": {
             "firstName": "First Name",
             "lastName": "Last Name",
             "taxId": "Tax ID (JIB)", 
-            "registerNumber": "Register Number",
-            "softwareVersion": "Software Version"
-        },
-        "buttons": {
-            "cancel": "Cancel",
-            "save": "Save"
+            "email": "Email"
         },
         "toastMessages": {
             "fetchErrorTitle": "Loading Error",
@@ -269,6 +271,26 @@
             "updateErrorTitle": "Saving Error",
             "updateErrorMessage": "Could not save the profile.",
             "genericError": "An error occurred."
+        }
+    },
+
+    "cashRegisters": {
+        "sectionTitle": "Cash register information",
+        "fields": {
+          "number": "Register number",
+          "version": "Software version",
+          "numberPlaceholder": "Enter register number",
+          "versionPlaceholder": "Enter software version"
+        },
+        "validation": {
+          "invalidNumber": "Enter a valid register number",
+          "invalidVersion": "Enter software version"
+        },
+        "toastMessages": {
+          "fetchErrorTitle": "Error",
+          "fetchError": "Failed to load cash registers",
+          "createErrorTitle": "Error",
+          "createError": "Failed to create cash register"
         }
     },
 

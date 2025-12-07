@@ -94,6 +94,12 @@
         "editDelete": {
             "edit": "Uredi informacije",
             "delete": "Izbriši"
+        },
+
+        "cashRegister": {
+            "cancel": "Odustani",
+            "add": "Dodaj",
+            "title": "Dodavanje kase"
         }
     },
 
@@ -256,12 +262,12 @@
     },
 
     "profile": {
+        "sectionTitle": "Informacije o profilu",
         "labels": {
             "firstName": "Ime",
             "lastName": "Prezime",
             "taxId": "JIB",
-            "registerNumber": "Broj kase",
-            "softwareVersion": "Verzija softvera"
+            "email": "Email"
         },
         "buttons": {
             "cancel": "Odustani",
@@ -273,6 +279,24 @@
             "updateErrorTitle": "Greška pri čuvanju",
             "updateErrorMessage": "Nije moguće sačuvati profil.",
             "genericError": "Došlo je do greške."
+        }
+    },
+
+    "cashRegisters": {
+        "sectionTitle": "Informacije o kasi",
+        "fields": {
+          "number": "Broj kase",
+          "version": "Verzija softvera"
+        },
+        "validation": {
+          "invalidNumber": "Unesite validan broj kase",
+          "invalidVersion": "Unesite verziju softvera"
+        },
+        "toastMessages": {
+          "fetchErrorTitle": "Greška",
+          "fetchError": "Nije moguće učitati podatke o kasi.",
+          "createErrorTitle": "Greška",
+          "createError": "Nije moguće sačuvati podatke o kasi."
         }
     },
 
