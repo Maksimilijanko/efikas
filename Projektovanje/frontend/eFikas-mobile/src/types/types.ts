@@ -68,9 +68,14 @@ export interface MenuSectionProps {
 };
 
 export interface ProfileData {
-    firstName: string;
-    lastName: string;
-    taxId: string;
-    registerNumber: string;
-    softwareVersion: string;
+    name: string;
+    surname: string;
+    jib: string;
+    email: string;
+}
+
+export interface CashRegister {
+  cashRegisterId: number;
+  cashRegisterNumber: number;
+  softwareVersion: string;
 }

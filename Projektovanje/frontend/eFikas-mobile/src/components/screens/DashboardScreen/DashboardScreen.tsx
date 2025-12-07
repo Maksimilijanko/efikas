@@ -41,7 +41,7 @@ export default function DashboardScreen() {
     );
   }
 
-  const fullName = `${userQuery.profile?.firstName ?? ""} ${userQuery.profile?.lastName ?? ""}`;
+  const fullName = `${userQuery.profile?.name ?? ""} ${userQuery.profile?.surname ?? ""}`;
   const reservations = reservationsQuery.data ?? [];
   const statistics = statsQuery.data?.data ?? [];
 
