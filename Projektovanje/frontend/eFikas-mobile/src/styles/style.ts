@@ -74,8 +74,8 @@ export const lightTheme = {
   tabBarActiveTint: '#3176BF',
 
   screenBackground: "#ffffff",
-
-  deleteColor: "#E53935",
+  successColor: '#4CAF50',
+  deleteColor: "#e83633ff",
   statusOccupied: "#c42f27ff",
   statusAvailable: "#30aa4eff",
 
@@ -85,6 +85,7 @@ export const lightTheme = {
   success: "#22c55e",
   error: "#ef4444",
   info: "#3b82f6",
+
 };
 
 export const darkTheme = {
@@ -110,6 +111,7 @@ export const darkTheme = {
   screenBackground: "#282a2d",
 
   deleteColor: "#e83633ff",
+  successColor: '#4CAF50',
   statusOccupied: "#FF3B30",
   statusAvailable: "#34C759",
 
@@ -119,4 +121,6 @@ export const darkTheme = {
   success: "#22c55e",
   error: "#ef4444",
   info: "#3b82f6",
+ 
+
 };

@@ -282,6 +282,10 @@
         }
     },
 
+    "actions": {
+        "finish": "Završi"
+},
+
     "cashRegisters": {
         "sectionTitle": "Informacije o kasi",
         "fields": {
