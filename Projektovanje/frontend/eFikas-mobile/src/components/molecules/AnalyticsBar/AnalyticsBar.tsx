@@ -1,6 +1,7 @@
 import { Text } from "@/components/ui/text";
-import { Animated, View } from "react-native";
+import { Animated, View, StyleSheet } from "react-native";
 import { styles } from "./index.styles";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface Props {
     label: string;
@@ -10,7 +11,11 @@ interface Props {
     color?: string;
 }
 
-function AnalyticsBar({ label, value, maxValue, color = 'rgb(49 118 191)', currency = 'KM' }: Props) {
+function AnalyticsBar({ label, value, maxValue, color, currency = 'KM' }: Props) {
+    const { Colors } = useTheme();
+    const barColor = color || Colors.primary;
+    const styles = getStyles(Colors);
+
     const progress = Math.min(value / maxValue, 1);
 
     return(
@@ -22,7 +27,7 @@ function AnalyticsBar({ label, value, maxValue, color = 'rgb(49 118 191)', curre
                 <Animated.View
                     style={[
                         styles.barFill,
-                        { width: `${progress * 100}%`, backgroundColor: color },
+                        { width: `${progress * 100}%`, backgroundColor: barColor },
                     ]}
                 />
                 </View>
@@ -31,5 +36,38 @@ function AnalyticsBar({ label, value, maxValue, color = 'rgb(49 118 191)', curre
         </View>
     );
 }
+
+const getStyles = (Colors: any) =>
+  StyleSheet.create({
+    container: {
+      width: "100%",
+    },
+    label: {
+      fontSize: 14,
+      color: Colors.textSecondary,
+      marginBottom: 4,
+    },
+    barContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    barBackground: {
+      flex: 1,
+      height: 12,
+      borderRadius: 8,
+      backgroundColor: Colors.tertiary,
+      overflow: "hidden",
+      marginRight: 8,
+    },
+    barFill: {
+      height: "100%",
+      borderRadius: 8,
+    },
+    valueText: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: Colors.textPrimary,
+    },
+  });
 
 export default AnalyticsBar;

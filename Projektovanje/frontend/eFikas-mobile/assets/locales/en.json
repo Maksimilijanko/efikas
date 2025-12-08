@@ -93,6 +93,12 @@
         "editDelete": {
             "edit": "Edit Information",
             "delete": "Delete"
+        },
+
+        "cashRegister": {
+            "cancel": "Cancel",
+            "add": "Add",
+            "title": "Add cash register"
         }
     },
 
@@ -126,7 +132,11 @@
             "expenses": "Expenses",
             "tasks": "Tasks",
             "damages": "Damages"
-        }
+        },
+        "toastMessages": {
+            "statsErrorTitle": "Error loading statistics",
+            "statsErrorMessage": "Unable to load data. Please try again."
+        } 
     },
 
     "menu": {
@@ -248,16 +258,12 @@
     },
 
     "profile": {
+        "sectionTitle": "Profile information",
         "labels": {
             "firstName": "First Name",
             "lastName": "Last Name",
             "taxId": "Tax ID (JIB)", 
-            "registerNumber": "Register Number",
-            "softwareVersion": "Software Version"
-        },
-        "buttons": {
-            "cancel": "Cancel",
-            "save": "Save"
+            "email": "Email"
         },
         "toastMessages": {
             "fetchErrorTitle": "Loading Error",
@@ -266,6 +272,69 @@
             "updateErrorMessage": "Could not save the profile.",
             "genericError": "An error occurred."
         }
-    }
+    },
 
+    "cashRegisters": {
+        "sectionTitle": "Cash register information",
+        "fields": {
+          "number": "Register number",
+          "version": "Software version",
+          "numberPlaceholder": "Enter register number",
+          "versionPlaceholder": "Enter software version"
+        },
+        "validation": {
+          "invalidNumber": "Enter a valid register number",
+          "invalidVersion": "Enter software version"
+        },
+        "toastMessages": {
+          "fetchErrorTitle": "Error",
+          "fetchError": "Failed to load cash registers",
+          "createErrorTitle": "Error",
+          "createError": "Failed to create cash register"
+        }
+    },
+
+    "reservations": {
+        "navigation": {
+            "reservationDetailsTitle": "Reservation Details"
+        },
+        "toastMessages": {
+            "genericError": "An error occurred.",
+            "fetchErrorTitle": "Failed to Load Reservations",
+            "fetchErrorMessage": "Could not load reservations. Please try again.",
+            "createErrorTitle": "Creation Error",
+            "createErrorMessage": "Reservation was not created. Please check the data.",
+            "createSuccessTitle": "Reservation Created!",
+            "createSuccessMessage": "New reservation has been successfully created.",
+            "updateErrorTitle": "Update Error",
+            "updateErrorMessage": "Reservation was not updated. Please check the data.",
+            "updateSuccessTitle": "Reservation Updated!",
+            "updateSuccessMessage": "Reservation has been successfully updated.",
+            "deleteErrorTitle": "Deletion Error",
+            "deleteErrorMessage": "Reservation was not deleted.",
+            "deleteSuccessTitle": "Reservation Deleted!",
+            "deleteSuccessMessage": "Reservation has been successfully deleted."
+        },
+        "details": {
+            "note": "Note",
+            "document": "Document",
+            "button": "Print invoice",
+            "peopleCount_one": "{{count}} person",
+            "peopleCount_few": "{{count}} people",
+            "peopleCount_other": "{{count}} people",
+            "deleteText": "Delete reservation"
+        }
+    },
+
+    "apartment": {
+        "card": {
+            "status": {
+                "current": "Currently: ",
+                "occupied": "Busy",
+                "available": "Free",
+                "until": " until ",
+                "nextGuests": "Next guests: "
+            }
+        }
+    }
 }

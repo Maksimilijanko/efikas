@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
-import styles from './index.styles';
+import getStyles from './index.styles';
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export type DocumentsDownloadTemplateProps = {
   documentItemComponent: React.ComponentType<{ title: string }>;
@@ -11,6 +12,9 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
   documentItemComponent: ItemComponent,
   documentsData
 }) => {
+  const { Colors } = useTheme();
+  const styles = getStyles(Colors);
+
   return (
     <View style={styles.root}>
       <ScrollView

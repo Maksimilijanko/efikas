@@ -27,7 +27,7 @@ public class ApartmentDamageService {
 
     // Obtain all apartment damages for a given apartment
     // Perform ownership check before executing the method logic itself
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public List<ApartmentDamageResponse> getAllApartmentDamagesForApartment(Integer apartmentId, Authentication authentication) {
         return apartmentDamageRepository.findApartmentDamageByApartmentApartmentId(apartmentId)
                 .stream().map((element) -> modelMapper.map(element, ApartmentDamageResponse.class))
@@ -36,7 +36,7 @@ public class ApartmentDamageService {
 
     // Create new damage for a given apartment
     // Perform ownership check before executing the method logic itself
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentDamageResponse createNewApartmentDamage(Integer apartmentId, Authentication authentication, ApartmentDamageDTO damage) {
         ApartmentDamage apartmentDamage = modelMapper.map(damage, ApartmentDamage.class);
 
@@ -55,7 +55,7 @@ public class ApartmentDamageService {
         return modelMapper.map(apartmentDamage, ApartmentDamageResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentDamageResponse updateApartmentDamage(Integer apartmentId, Authentication authentication, ApartmentDamageDTO damage, String apartmentDamageName) {
         ApartmentDamageId apartmentDamageId = new ApartmentDamageId();
         apartmentDamageId.setApartmentId(apartmentId);
@@ -86,7 +86,7 @@ public class ApartmentDamageService {
         return modelMapper.map(apartmentDamage, ApartmentDamageResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentDamageResponse deleteApartmentDamage(Integer apartmentId, Authentication authentication, String apartmentDamageName) {
         ApartmentDamageId apartmentDamageId = new ApartmentDamageId();
         apartmentDamageId.setApartmentId(apartmentId);

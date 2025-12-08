@@ -40,7 +40,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 <ModalFooter style={styles.buttonsContainer}>
                     <HStack style={{ justifyContent: "space-between", width: "100%" }}>
                         <DialogButton title="Cancel" onPress={onClose} />
-                        <DialogButton title="Confirm" onPress={onConfirm} />
+                        <DialogButton title="Confirm" onPress={() => {onConfirm(); onClose();}} />
                     </HStack>
                 </ModalFooter>
             </ModalContent>

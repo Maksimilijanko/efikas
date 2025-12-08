@@ -14,6 +14,16 @@ export const Colors = {
   calendarPeriodOverlap: "#8bb3deff",
   borderColor: "#E2E2E2",
   deleteColor: "#E53935",
+  statusOccupied: "#FF3B30",
+  statusAvailable: "#34C759",
+
+  // boje za pieChart
+  pieCategory1: '#4285F4',
+  pieCategory2: '#F59A3D',
+  pieCategory3: '#3367D6',
+  pieCategory4: '#FADB4A',
+
+  divider: "#d1d5db",
 
   // For reference from Figma
   dark: {
@@ -64,22 +74,31 @@ export const lightTheme = {
   tabBarActiveTint: '#3176BF',
 
   screenBackground: "#ffffff",
-
-  deleteColor: "#E53935", 
   successColor: '#4CAF50',
+  deleteColor: "#e83633ff",
+  statusOccupied: "#c42f27ff",
+  statusAvailable: "#30aa4eff",
+
+  divider: "#d1d5db",
+
+  toastBackground: "#ffffff",
+  success: "#22c55e",
+  error: "#ef4444",
+  info: "#3b82f6",
+
 };
 
 export const darkTheme = {
   primary: '#3176BF',
   primaryPressed: '#326296',
-  secondary: '#f9f9f9',
+  secondary: '#303338',
   tertiary: '#999',
   background: '#232528',
-  shadowColor: '#ffffff',
+  shadowColor: '#dcdcdc',
   textPrimary: '#ffffff',
   textSecondary: '#d1d1d1',
   textLight: '#ffffff',
-  iconMenu: '#d9d9d9',
+  iconMenu: '#bcbcbc',
   accent: '#FFA63A',
   calendarPeriod: '#C1D6EC',
   calendarPeriodOverlap: "#8bb3deff",
@@ -91,6 +110,17 @@ export const darkTheme = {
 
   screenBackground: "#282a2d",
 
-  deleteColor: "#E53935", 
+  deleteColor: "#e83633ff",
   successColor: '#4CAF50',
+  statusOccupied: "#FF3B30",
+  statusAvailable: "#34C759",
+
+  divider: "#4b5563",
+  
+  toastBackground: "#282a2d",
+  success: "#22c55e",
+  error: "#ef4444",
+  info: "#3b82f6",
+ 
+
 };

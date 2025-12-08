@@ -117,6 +117,9 @@ CREATE TABLE efikas."reservation" (
 
 ALTER TABLE efikas."reservation" DROP COLUMN "IdTypeOfReservation";
 
+ALTER TABLE efikas."apartment" ADD COLUMN "Name" varchar(50);
+
+select * from efikas.app_user;
 select * from efikas.reservation;
 select * from efikas.reservation_type;
 select * from efikas.apartment;

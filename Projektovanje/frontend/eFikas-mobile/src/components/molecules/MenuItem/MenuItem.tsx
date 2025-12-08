@@ -45,7 +45,7 @@ export const MenuItem = ({
       </Pressable>
 
       {showDivider && (
-        <Divider className="bg-gray-300"/>
+        <Divider style={{ backgroundColor: Colors.divider }} />
       )}
     </View>
   );

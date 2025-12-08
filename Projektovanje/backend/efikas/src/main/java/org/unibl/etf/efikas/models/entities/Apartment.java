@@ -16,6 +16,9 @@ public class Apartment {
     @Column(name = "\"ApartmentId\"", nullable = false)
     private Integer apartmentId;
 
+    @Column(name = "\"Name\"", nullable = false, length = 50)
+    private String name;
+
     @Column(name = "\"Address\"", nullable = false, length = 100)
     private String address;
 

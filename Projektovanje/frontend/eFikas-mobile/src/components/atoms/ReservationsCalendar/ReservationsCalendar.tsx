@@ -9,30 +9,23 @@ import {
   Easing,
 } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Platform } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@/src/providers/ThemeProvider";
+import { Reservation } from "@/src/types/types";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
-export interface DbReservation {
-  ReservationId: number;
-  ApartmentId: number;
-  GuestFullName: string;
-  GuestPhoneNumber: string;
-  DateTimeOfArrival: string;
-  DateTimeOfDeparture: string;
-  GuestNumber: number;
-  Price?: number;
-  Note?: string;
-  PersonalDocumentURL?: string;
-  IdTypeOfReservation: number;
-  TypeId: number;
-}
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface ReservationsCalendarProps {
-  reservations: DbReservation[];
-  onOpenDetails?: (reservation: DbReservation) => void;
+  reservations: Reservation[];
+  onOpenDetails?: (reservation: Reservation) => void;
 }
 
 export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
@@ -40,8 +33,9 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
   onOpenDetails,
 }) => {
   const { t, i18n } = useTranslation();
+  const { Colors } = useTheme();
   const [markedDates, setMarkedDates] = useState<{ [key: string]: any }>({});
-  const [selectedReservations, setSelectedReservations] = useState<DbReservation[]>([]);
+  const [selectedReservations, setSelectedReservations] = useState<Reservation[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -108,7 +102,12 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   // Pomocna funkcija koja izdvaja samo datum iz stringa datuma i vremena
   const getDateOnly = (datetime: string): string => {
-    return datetime.split(" ")[0];
+    // Pretvaramo u Date i formatiramo u YYYY-MM-DD
+    const d = new Date(datetime);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
   };
 
   // Pomocna funkcija za tacno parsiranje datuma (obradjuje format YYYY-MM-DD)
@@ -120,7 +119,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
   // ---------------- Obrada rezervacija za kalendar ----------------
   useEffect(() => {
     const marks: { [key: string]: any } = {};
-    const reservationsByDate: { [key: string]: DbReservation[] } = {};
+    const reservationsByDate: { [key: string]: Reservation[] } = {};
 
     const getDateRange = (startDate: string, endDate: string) => {
       const range: string[] = [];
@@ -139,8 +138,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
     // Grupisanje rezervacija po datumu
     reservations.forEach((res) => {
-      const startDate = getDateOnly(res.DateTimeOfArrival);
-      const endDate = getDateOnly(res.DateTimeOfDeparture);
+      const startDate = getDateOnly(res.dateTimeOfArrival);
+      const endDate = getDateOnly(res.dateTimeOfDeparture);
 
       getDateRange(startDate, endDate).forEach((d) => {
         if (!reservationsByDate[d]) {
@@ -152,8 +151,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
     // Oznacavanje svakog perioda rezervacije pojedinacno
     reservations.forEach((res) => {
-      const startDate = getDateOnly(res.DateTimeOfArrival);
-      const endDate = getDateOnly(res.DateTimeOfDeparture);
+      const startDate = getDateOnly(res.dateTimeOfArrival);
+      const endDate = getDateOnly(res.dateTimeOfDeparture);
       const dates = getDateRange(startDate, endDate);
 
       dates.forEach((date, index) => {
@@ -189,8 +188,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
     const list = reservations.filter((r) => {
       // Uporedjuje samo dane, ali ne i sate
-      const startDate = getDateOnly(r.DateTimeOfArrival);
-      const endDate = getDateOnly(r.DateTimeOfDeparture);
+      const startDate = getDateOnly(r.dateTimeOfArrival);
+      const endDate = getDateOnly(r.dateTimeOfDeparture);
       
       return clickedDate >= startDate && clickedDate <= endDate;
     });
@@ -208,19 +207,20 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   const formatDateTime = (iso: string) => {
     if (!iso) return "";
-    const [datePart, timePart] = iso.split(" ");
-    const d = new Date(datePart);
-    const dateStr = `${String(d.getDate()).padStart(2, "0")}. ${String(
-      d.getMonth() + 1
-    ).padStart(2, "0")}. ${d.getFullYear()}.`;
 
-    // Ako postoji vrijeme i nije 00:00:00, prikazuje se
-    if (timePart && timePart !== "00:00:00") {
-      const [h, m] = timePart.split(":");
-      return `${dateStr} ${h}:${m}`;
-    }
+    // "Europe/Sarajevo" je lokalna zona
+    const local = dayjs.utc(iso).tz("Europe/Sarajevo");
 
-    return dateStr;
+    const dateStr = `${local.date().toString().padStart(2, "0")}. ${(
+      local.month() + 1
+    )
+      .toString()
+      .padStart(2, "0")}. ${local.year()}.`;
+    const timeStr = `${local.hour().toString().padStart(2, "0")}:${local.minute()
+      .toString()
+      .padStart(2, "0")}`;
+
+    return `${dateStr} ${timeStr}`;
   };
 
   const nights =
@@ -228,11 +228,13 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
     Math.max(
       1,
       Math.ceil(
-        (parseDate(getDateOnly(current.DateTimeOfDeparture)).getTime() -
-          parseDate(getDateOnly(current.DateTimeOfArrival)).getTime()) /
+        (parseDate(getDateOnly(current.dateTimeOfDeparture)).getTime() -
+          parseDate(getDateOnly(current.dateTimeOfArrival)).getTime()) /
           (1000 * 60 * 60 * 24)
       )
     );
+  
+  const styles = getStyles(Colors);
 
   return (
     <View style={styles.calendarWrapper}>
@@ -243,14 +245,28 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
         enableSwipeMonths
         firstDay={1}
         style={styles.calendar}
-        theme={{
+        theme={{      
           arrowColor: Colors.primary,
           monthTextColor: Colors.textPrimary,
           textMonthFontSize: 18,
           textMonthFontWeight: "600",
           todayTextColor: Colors.primary,
         }}
-      />
+      //   theme={{
+      //     // Header (naziv mjeseca)
+      //     // monthTextColor: Colors.textPrimary,
+      //     textMonthFontSize: 18,
+      //     textMonthFontWeight: "600",
+      //     // Dani u sedmici
+      //     // textSectionTitleColor: Colors.textPrimary,
+      //     // Strelice
+      //     arrowColor: Colors.primary,
+      //     // Dani
+      //     dayTextColor: Colors.textPrimary,
+      //     textDisabledColor: Colors.tertiary,
+      //     todayTextColor: Colors.primary,
+      // }}
+    />
 
       {/* ---------------- MODAL ---------------- */}
       <Modal visible={modalVisible} transparent animationType="fade">
@@ -264,6 +280,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
               },
             ]}
           >
+
             {/* Strelice - samo ako ima vise rezervacija */}
             {selectedReservations.length > 1 && (
               <>
@@ -298,7 +315,14 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
             )}
 
             {/* Naslov */}
-            <Text style={styles.modalTitle}>
+            <Text 
+              style={{
+                fontSize: 18,
+                fontWeight: "700",
+                textAlign: "center",
+                marginBottom: 24,
+                color: Colors.textPrimary,
+              }}>
               {t("reservationsCalendar.modalTitle")}
               {selectedReservations.length > 1 &&
                 ` (${selectedReservations.length})`}
@@ -307,25 +331,25 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
             {/* Podaci o rezervaciji */}
             {current && (
               <View style={styles.resContent}>
-                <Text style={styles.label}>
-                  {t("reservationsCalendar.guestCount")}{" "}<Text style={styles.bold}>{current.GuestNumber}</Text>
+                <Text style={{ fontSize: 15, color: Colors.textPrimary, marginBottom: 6 }}>
+                  {t("reservationsCalendar.guestCount")}{" "}<Text style={styles.bold}>{current.guestNumber}</Text>
                 </Text>
 
-                <Text style={styles.label}>
+                <Text style={{ fontSize: 15, color: Colors.textPrimary, marginBottom: 6 }}>
                   {t("reservationsCalendar.nightsCount")}{" "}<Text style={styles.bold}>{nights}</Text>
                 </Text>
                 
-                <Text style={[styles.label, { marginTop: 12 }]}>
-                  {t("reservationsCalendar.arrival")}{" "}<Text style={styles.bold}>{formatDateTime(current.DateTimeOfArrival)}</Text>
+                <Text style={{ fontSize: 15, color: Colors.textPrimary, marginTop: 12, marginBottom: 6 }}>
+                  {t("reservationsCalendar.arrival")}{" "}<Text style={styles.bold}>{formatDateTime(current.dateTimeOfArrival)}</Text>
                 </Text>
 
-                <Text style={styles.label}>
-                  {t("reservationsCalendar.departure")}{" "}<Text style={styles.bold}>{formatDateTime(current.DateTimeOfDeparture)}</Text>
+                <Text style={{ fontSize: 15, color: Colors.textPrimary, marginBottom: 6 }}>
+                  {t("reservationsCalendar.departure")}{" "}<Text style={styles.bold}>{formatDateTime(current.dateTimeOfDeparture)}</Text>
                 </Text>
 
-                {current.Price && (
-                  <Text style={[styles.label, { marginTop: 12 }]}>
-                    {t("reservationsCalendar.price")}{" "}<Text style={styles.bold}>{current.Price.toFixed(2)} {t("reservationsCalendar.currency")}</Text>
+                {current.price && (
+                  <Text style={{ fontSize: 15, color: Colors.textPrimary, marginTop: 12, marginBottom: 6 }}>
+                    {t("reservationsCalendar.price")}{" "}<Text style={styles.bold}>{current.price.toFixed(2)} {t("reservationsCalendar.currency")}</Text>
                   </Text>
                 )}
               </View>
@@ -343,7 +367,12 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
               />
               <DialogButton
                 title={t("reservationsCalendar.detailsButton")}
-                onPress={() => onOpenDetails && onOpenDetails(current!)}
+                onPress={() => {
+                  animateOut(() => {
+                    setModalVisible(false);
+                    onOpenDetails && onOpenDetails(current!);
+                  });
+                }}
               />
             </View>
           </Animated.View>
@@ -354,88 +383,89 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 };
 
 // ------------------ STYLES ------------------
-const styles = StyleSheet.create({
-  calendar: {
-    borderRadius: 20,
-    overflow: "hidden",
-    backgroundColor: Colors.background,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
+const getStyles = (Colors: any) =>
+  StyleSheet.create({
+    calendar: {
+      borderRadius: 20,
+      overflow: "hidden",
+      backgroundColor: Colors.background,
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
 
-  calendarWrapper: {
-    flex: 1,
-    borderRadius: 20,
-    backgroundColor: Colors.background,
-    width: '100%',
-    // SHADOW
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.shadowColor,
-        shadowOpacity: 0.05,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 4 },
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
+    calendarWrapper: {
+      flex: 1,
+      borderRadius: 20,
+      backgroundColor: Colors.background,
+      width: '100%',
+      // SHADOW
+      ...Platform.select({
+        ios: {
+          shadowColor: Colors.shadowColor,
+          shadowOpacity: 0.05,
+          shadowRadius: 12,
+          shadowOffset: { width: 0, height: 4 },
+        },
+        android: {
+          elevation: 4,
+        },
+      }),
+    },
 
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    modalBackdrop: {
+      flex: 1,
+      backgroundColor: "rgba(0,0,0,0.35)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
 
-  modalContainer: {
-    width: "90%",
-    backgroundColor: Colors.background,
-    borderRadius: 20,
-    padding: 24,
-  },
+    modalContainer: {
+      width: "90%",
+      backgroundColor: Colors.background,
+      borderRadius: 20,
+      padding: 24,
+    },
 
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 24,
-  },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: "700",
+      textAlign: "center",
+      marginBottom: 24,
+    },
 
-  leftArrow: {
-    position: "absolute",
-    top: 16,
-    left: 16,
-    padding: 6,
-    zIndex: 999,
-  },
+    leftArrow: {
+      position: "absolute",
+      top: 16,
+      left: 16,
+      padding: 6,
+      zIndex: 999,
+    },
 
-  rightArrow: {
-    position: "absolute",
-    top: 16,
-    right: 16,
-    padding: 6,
-    zIndex: 999,
-  },
+    rightArrow: {
+      position: "absolute",
+      top: 16,
+      right: 16,
+      padding: 6,
+      zIndex: 999,
+    },
 
-  resContent: {
-    marginBottom: 26,
-  },
+    resContent: {
+      marginBottom: 26,
+    },
 
-  label: {
-    fontSize: 15,
-    color: Colors.textPrimary,
-    marginBottom: 6,
-  },
+    label: {
+      fontSize: 15,
+      color: Colors.textPrimary,
+      marginBottom: 6,
+    },
 
-  bold: {
-    fontWeight: "600",
-  },
+    bold: {
+      fontWeight: "600",
+    },
 
-  buttonRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 20,
-  },
-});
+    buttonRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      gap: 20,
+    },
+  });

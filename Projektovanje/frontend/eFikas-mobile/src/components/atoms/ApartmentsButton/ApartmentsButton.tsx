@@ -3,15 +3,25 @@ import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Icon } from '@/src/components/atoms/Icon/Icon';
 import { Colors } from '@/src/styles/style';
 import { Platform } from 'react-native';
+import { useTheme } from '@/src/providers/ThemeProvider';
 
 interface ApartmentsButtonProps {
   onPress: () => void;
 }
 
 export const ApartmentsButton: React.FC<ApartmentsButtonProps> = ({ onPress }) => {
+  const { Colors } = useTheme();
   return (
     <TouchableOpacity 
-      style={styles.container} 
+      style={[
+        styles.container,
+        {
+          backgroundColor: Colors.background,
+          ...(Platform.OS === 'ios' && {
+            shadowColor: Colors.shadowColor,
+          })
+        }
+      ]}
       onPress={onPress}
       activeOpacity={0.7}
     >
@@ -34,7 +44,7 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: Colors.shadowColor,
-        shadowOpacity: 0.08,
+        shadowOpacity: 0.07,
         shadowRadius: 8,
         shadowOffset: { width: 0, height: 2 },
       },

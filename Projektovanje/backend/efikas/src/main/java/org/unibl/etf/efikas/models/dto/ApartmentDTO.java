@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ApartmentDTO {
-
+    private String name;
     private String address;
     private Integer numberOfBeds;
     private Integer numberOfRooms;

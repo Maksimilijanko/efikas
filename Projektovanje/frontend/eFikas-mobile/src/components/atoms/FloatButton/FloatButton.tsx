@@ -1,4 +1,4 @@
-import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
+import { Fab, FabLabel } from "@/components/ui/fab";
 import { Icon } from "../Icon/Icon";
 
 
@@ -39,7 +39,7 @@ function FloatButton({
 
     return(
         <Fab size={size} placement={placement} onPress={onClick} >
-            <FabIcon as={icon}></FabIcon>
+            <Icon name="Plus" strokeWidth={2.2} size={28} color="white" />
             {label && <FabLabel>{label}</FabLabel>}
         </Fab>
     );

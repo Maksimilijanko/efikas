@@ -29,7 +29,7 @@ public class ApartmentTaskService {
 
     // Obtain all apartment tasks for a given apartment
     // Perform ownership check before executing the method logic itself
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public List<ApartmentTaskResponse> getAllApartmentTasksForApartment(Integer apartmentId, Authentication authentication) {
         return apartmentTaskRepository.findApartmentTaskByApartmentApartmentId(apartmentId)
                 .stream().map((element) -> modelMapper.map(element, ApartmentTaskResponse.class))
@@ -38,7 +38,7 @@ public class ApartmentTaskService {
 
     // Create a new Task for a given apartment
     // Perform ownership check before executing the method logic itself
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentTaskResponse createNewApartmentTask(Integer apartmentId, Authentication authentication, ApartmentTaskDTO task) {
         ApartmentTask apartmentTask = modelMapper.map(task, ApartmentTask.class);
 
@@ -57,7 +57,7 @@ public class ApartmentTaskService {
         return modelMapper.map(apartmentTask, ApartmentTaskResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentTaskResponse updateApartmentTask(Integer apartmentId, Authentication authentication, ApartmentTaskDTO task, String apartmentTaskName) {
         ApartmentTaskId apartmentTaskId = new ApartmentTaskId();
         apartmentTaskId.setApartmentId(apartmentId);
@@ -87,7 +87,7 @@ public class ApartmentTaskService {
         return modelMapper.map(apartmentTask, ApartmentTaskResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
     public ApartmentTaskResponse deleteApartmentTask(Integer apartmentId, Authentication authentication, String apartmentTaskName) {
         ApartmentTaskId apartmentTaskId = new ApartmentTaskId();
         apartmentTaskId.setApartmentId(apartmentId);

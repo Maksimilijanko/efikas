@@ -35,7 +35,7 @@ public class ReservationService {
     private final ModelMapper modelMapper;
     private final S3Service s3Service;
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
     public ReservationResponse createNewReservation(Integer apartmentId, Authentication authentication,
                                                     ReservationDTO reservationDTO, MultipartFile documentPicture) {
         Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
@@ -62,7 +62,7 @@ public class ReservationService {
         return modelMapper.map(reservation, ReservationResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwner(authentication, #apartmentId)")
+    @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
     public List<ReservationResponse> getAllReservations(Integer apartmentId, Authentication authentication) {
         List<Reservation> reservations = reservationRepository.findReservationByApartmentApartmentId(apartmentId.longValue());
 
@@ -70,7 +70,7 @@ public class ReservationService {
                 .map((element) -> modelMapper.map(element, ReservationResponse.class)).collect(Collectors.toList());
     }
 
-    @PreAuthorize("@userSecurity.isOwnerOfReservation(authentication, #reservationId)")
+    @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
     public ReservationResponse getReservation(Long reservationId, Authentication authentication) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
@@ -78,7 +78,7 @@ public class ReservationService {
         return modelMapper.map(reservation, ReservationResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwnerOfReservation(authentication, #reservationId)")
+    @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
     public ReservationResponse updateReservation(Long reservationId, Authentication authentication, ReservationDTO reservationDTO, MultipartFile documentPicture) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
@@ -118,7 +118,7 @@ public class ReservationService {
         return modelMapper.map(reservation, ReservationResponse.class);
     }
 
-    @PreAuthorize("@userSecurity.isOwnerOfReservation(authentication, #reservationId)")
+    @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
     public ReservationResponse deleteReservation(Long reservationId, Authentication authentication) {
         Reservation reservation = reservationRepository.findReservationByReservationId(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
@@ -127,6 +127,16 @@ public class ReservationService {
         reservationRepository.delete(reservation);
 
         return modelMapper.map(reservation, ReservationResponse.class);
+    }
+
+    public List<ReservationResponse> getAllReservationsForUser(Authentication authentication) {
+        String email = authentication.getName();
+
+        List<Reservation> reservations = reservationRepository.findReservationByApartmentUserEmail(email);
+
+        return reservations.stream()
+                .map((element) -> modelMapper.map(element, ReservationResponse.class))
+                .collect(Collectors.toList());
     }
 
 }
