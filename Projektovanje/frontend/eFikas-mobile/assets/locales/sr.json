@@ -270,5 +270,9 @@
             "updateErrorMessage": "Nije moguće sačuvati profil.",
             "genericError": "Došlo je do greške."
         }
+    },
+
+    "actions": {
+        "finish": "Završi"
     }
 }

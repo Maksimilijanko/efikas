@@ -64,6 +64,9 @@ export const lightTheme = {
   tabBarActiveTint: '#3176BF',
 
   screenBackground: "#ffffff",
+
+  deleteColor: "#E53935", 
+  successColor: '#4CAF50',
 };
 
 export const darkTheme = {
@@ -87,4 +90,7 @@ export const darkTheme = {
   tabBarActiveTint: '#4c98e7',
 
   screenBackground: "#282a2d",
+
+  deleteColor: "#E53935", 
+  successColor: '#4CAF50',
 };
