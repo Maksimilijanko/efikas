@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   fullWidthRow: {
-    width: '90%',
+    width: '100%',
     marginBottom: screenHeight * 0.02
   },
   row: {
@@ -30,11 +30,11 @@ const styles = StyleSheet.create({
     marginBottom: screenHeight * 0.02
   },
   leftColumn: {
-    width: '45%',
+    flex: 0.5,
     justifyContent: 'center'
   },
   rightColumn: {
-    width: '50%',
+    flex: 0.45,
     justifyContent: 'space-between'
   },
   formRow: {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, ScrollView, ScrollViewProps, TouchableOpacity, Modal } from 'react-native';
+import React from 'react';
+import { View, ScrollView, ScrollViewProps } from 'react-native';
 import styles from './index.styles';
 
 export type ApartmentScreenTemplateProps = {
@@ -16,7 +16,7 @@ export type ApartmentScreenTemplateProps = {
     scrollProps?: ScrollViewProps;
 };
 
-const ApartmentScreenTemplate: React.FC<ApartmentScreenTemplateProps> = ({
+const AddApartmentTemplate: React.FC<ApartmentScreenTemplateProps> = ({
     nameEdit,
     addressEdit,
     imagePicker,
@@ -29,8 +29,6 @@ const ApartmentScreenTemplate: React.FC<ApartmentScreenTemplateProps> = ({
     saveButton,
     scrollProps
 }) => {
-    const [isModalVisible, setModalVisible] = useState(false);
-
     return (
         <View style={styles.root}>
             <ScrollView
@@ -39,7 +37,6 @@ const ApartmentScreenTemplate: React.FC<ApartmentScreenTemplateProps> = ({
                 {...scrollProps}
             >
                 <View style={styles.inner}>
-
                     <View style={styles.fullWidthRow}>{nameEdit}</View>
                     <View style={styles.fullWidthRow}>{addressEdit}</View>
 
@@ -53,26 +50,16 @@ const ApartmentScreenTemplate: React.FC<ApartmentScreenTemplateProps> = ({
                     </View>
 
                     <View style={styles.fullWidthRow}>{priceSection}</View>
-
-                    <TouchableOpacity onPress={() => setModalVisible(true)}>
-                        <View style={styles.fullWidthRow}>{inventoryLink}</View>
-                    </TouchableOpacity>
-
-                    <Modal
-                        visible={isModalVisible}
-                        transparent
-                        animationType="slide"
-                        onRequestClose={() => setModalVisible(false)}
-                    >
-                        <View style={{ flex: 1 }}>{inventoryModal}</View>
-                    </Modal>
+                    
+                    <View style={styles.fullWidthRow}>{inventoryLink}</View>
 
                     <View style={styles.saveButtonWrapper}>{saveButton}</View>
-
                 </View>
             </ScrollView>
+
+            {inventoryModal}
         </View>
     );
 };
 
-export default ApartmentScreenTemplate;
+export default AddApartmentTemplate;
