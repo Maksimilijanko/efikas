@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
-import { View, Image, TouchableOpacity, Button, Alert, StyleProp } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Image, TouchableOpacity, Alert, StyleProp, ViewStyle } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
-import { Ionicons } from '@expo/vector-icons';
 import styles from './index.styles';
 import { Colors } from '@/src/styles/style';
 import { BasicButton } from '../../atoms/BasicButton/BasicButton';
 import { IconButton } from '../../atoms/IconButton/IconButton';
-import { PropsFilter } from 'react-native-reanimated/lib/typescript/createAnimatedComponent/PropsFilter';
-import { ViewStyle } from '@expo/html-elements/build/primitives/View';
 import { Label } from '../../atoms/Label/Label';
 
 interface ImageItem {
@@ -16,19 +13,29 @@ interface ImageItem {
 
 interface ImagePickerProps {
     style?: StyleProp<ViewStyle>;
+    selectedImages?: string[];
+    onImagesSelected?: (imageUris: string[]) => void;
 }
 
-const ImagePicker = ({ style }: ImagePickerProps) => {
-
-    //dummy data images for demonstration
-    const defaultImages: ImageItem[] = [
-        { uri: 'https://picsum.photos/400/300?1' },
-        { uri: 'https://picsum.photos/400/300?2' },
-        { uri: 'https://picsum.photos/400/300?3' },
-    ];
-
-    const [images, setImages] = useState<ImageItem[]>(defaultImages);
+const ImagePicker = ({ style, selectedImages = [], onImagesSelected }: ImagePickerProps) => {
+    const [images, setImages] = useState<ImageItem[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+    useEffect(() => {
+        if (selectedImages.length > 0) {
+            setImages(selectedImages.map(uri => ({ uri })));
+        } else {
+            setImages([]);
+            setCurrentIndex(0);
+        }
+    }, [selectedImages]);
+
+    const updateImages = (newImages: ImageItem[]) => {
+        setImages(newImages);
+        if (onImagesSelected) {
+            onImagesSelected(newImages.map(img => img.uri));
+        }
+    };
 
     const nextImage = (): void => {
         if (images.length === 0) return;
@@ -42,6 +49,11 @@ const ImagePicker = ({ style }: ImagePickerProps) => {
 
     const getVisibleThumbnails = (): ImageItem[] => {
         if (images.length === 0) return [];
+
+        if (images.length < 3) {
+            return images;
+        }
+
         const visible: ImageItem[] = [];
         for (let i = -1; i <= 1; i++) {
             const index = (currentIndex + i + images.length) % images.length;
@@ -66,8 +78,7 @@ const ImagePicker = ({ style }: ImagePickerProps) => {
 
         if (!result.canceled) {
             const newImages = result.assets.map((asset) => ({ uri: asset.uri }));
-            setImages((prev) => [...prev, ...newImages]);
-            setCurrentIndex(prev => prev); // Ostaje na trenutnoj slici
+            updateImages([...images, ...newImages]); 
         }
     };
 
@@ -77,29 +88,50 @@ const ImagePicker = ({ style }: ImagePickerProps) => {
             'Jeste li sigurni da želite obrisati ovu sliku?',
             [
                 { text: 'Otkaži', style: 'cancel' },
-                { text: 'Obriši', style: 'destructive', onPress: () => deleteImage(index) },
+                {
+                    text: 'Obriši',
+                    style: 'destructive',
+                    onPress: () => deleteImage(index)
+                },
             ]
         );
     };
 
     const deleteImage = (index: number) => {
-        setImages((prev) => {
-            const newImages = prev.filter((_, i) => i !== index);
-            if (newImages.length === 0) {
-                setCurrentIndex(0);
-            } else if (currentIndex >= newImages.length) {
-                setCurrentIndex(newImages.length - 1);
-            }
-            return newImages;
-        });
+        const newImages = images.filter((_, i) => i !== index);
+
+        if (newImages.length === 0) {
+            setCurrentIndex(0);
+        } else if (currentIndex >= newImages.length) {
+            setCurrentIndex(newImages.length - 1);
+        }
+
+        updateImages(newImages); 
     };
 
     const visibleThumbnails = getVisibleThumbnails();
 
     if (images.length === 0) {
         return (
-            <View style={styles.container}>
-                <Button title="Dodaj slike" onPress={pickImage} />
+            <View style={[style, styles.container]}>
+                <View style={styles.labelHolder}>
+                    <Label color={Colors.textPrimary} text={"Slike"} size={"md"} />
+                </View>
+                <View style={styles.emptyState}>
+                    <Label
+                        color={Colors.textSecondary}
+                        text={"Nema dodatih slika"}
+                        size={"sm"}
+                    />
+                </View>
+                <View style={styles.buttonWrapper}>
+                    <BasicButton
+                        title="Dodaj slike"
+                        onPress={pickImage}
+                        className='w-full h-full'
+                        textClassName="text-center"
+                    />
+                </View>
             </View>
         );
     }
@@ -107,44 +139,72 @@ const ImagePicker = ({ style }: ImagePickerProps) => {
     return (
         <View style={[style, styles.container]}>
             <View style={styles.labelHolder}>
-                <Label color={Colors.textPrimary} text={"Slike"} size={"lg"} />
+                <Label color={Colors.textPrimary} text={"Slike"} size={"md"} />
             </View>
-            <View style={styles.pickerHolder} >
-                <TouchableOpacity onLongPress={() => confirmDelete(currentIndex)} style={styles.mainImageTouchable} >
-                    <Image source={{ uri: images[currentIndex].uri }} style={styles.mainImage} />
+            <View style={styles.pickerHolder}>
+                <TouchableOpacity
+                    onLongPress={() => confirmDelete(currentIndex)}
+                    style={styles.mainImageTouchable}
+                >
+                    <Image
+                        source={{ uri: images[currentIndex].uri }}
+                        style={styles.mainImage}
+                    />
                 </TouchableOpacity>
 
                 <View style={styles.bottomRow}>
                     <View style={styles.carouselSpace} />
-                    <IconButton onPress={nextImage} iconName="ChevronLeft" size={24} color={Colors.primary} />
 
+                    <IconButton
+                        onPress={prevImage}
+                        iconName="ChevronLeft"
+                        size={24}
+                        color={Colors.primary}
+                    />
 
                     <View style={styles.thumbnailRow}>
                         {visibleThumbnails.map((img, index) => {
-                            const realIndex = (currentIndex - 1 + index + images.length) % images.length;
+                           
+                            const realIndex = images.length < 3
+                                ? index
+                                : (currentIndex - 1 + index + images.length) % images.length;
+
                             return (
                                 <TouchableOpacity
-                                    key={realIndex}
+                                    key={`${img.uri}-${index}`}
                                     onPress={() => setCurrentIndex(realIndex)}
                                     onLongPress={() => confirmDelete(realIndex)}
                                     style={styles.touchableThumbnail}
                                 >
                                     <Image
                                         source={{ uri: img.uri }}
-                                        style={[styles.thumbnail, { opacity: realIndex === currentIndex ? 1 : 0.5 }]}
+                                        style={[
+                                            styles.thumbnail,
+                                            { opacity: realIndex === currentIndex ? 1 : 0.5 }
+                                        ]}
                                     />
                                 </TouchableOpacity>
                             );
                         })}
                     </View>
 
-                    <IconButton onPress={nextImage} iconName="ChevronRight" size={24} color={Colors.primary} />
+                    <IconButton
+                        onPress={nextImage}
+                        iconName="ChevronRight"
+                        size={24}
+                        color={Colors.primary}
+                    />
 
                     <View style={styles.carouselSpace} />
                 </View>
             </View>
             <View style={styles.buttonWrapper}>
-                <BasicButton title="Dodaj" onPress={pickImage} className='w-full h-full' />
+                <BasicButton
+                    title="Dodaj još"
+                    onPress={pickImage}
+                    className='w-full h-full'
+                    textClassName="text-center"
+                />
             </View>
         </View>
     );

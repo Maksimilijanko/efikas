@@ -1,3 +1,4 @@
+import { Colors } from '@/src/styles/style';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -5,10 +6,10 @@ const styles = StyleSheet.create({
         aspectRatio: 4 / 5,
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        minHeight: 250
+        minHeight: 200
     },
     labelHolder: {
-        width: '90%'
+        width: '100%'
     },
     pickerHolder: {
         height: '85%',
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     carouselSpace: {
-        width: '10%'
+        width: '2%'
     },
     thumbnailRow: {
         width: '60%',
@@ -50,10 +51,19 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     buttonWrapper: {
-        height: '15%',
+        height: '25%',
         width: '50%',
-        alignItems: 'center'
-    }
+        alignItems: 'center',
+        alignSelf: 'center'
+    },
+    emptyState: {
+        padding: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: Colors.secondary,
+        borderRadius: 8,
+        marginVertical: 10,
+    },
 });
 
 export default styles;
