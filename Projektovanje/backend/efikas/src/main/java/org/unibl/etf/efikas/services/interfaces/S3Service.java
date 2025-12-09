@@ -11,7 +11,7 @@ public interface S3Service {
      * Uploads a file to a S3 bucket.
      * @param file The {@code MultipartFile} object to be saved to the S3 bucket.
      * */
-    FileUploadResponse uploadFile(MultipartFile file) throws IOException;
+    FileUploadResponse uploadFile(String prefix, MultipartFile file) throws IOException;
 
     /**
      * Downloads a file from the S3 bucket.

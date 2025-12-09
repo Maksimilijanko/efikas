@@ -30,11 +30,21 @@ export const useAuth = () => {
             }
         },
         onError: (error: Error) => {
+            
             toastService.error(
                 t('auth.login.toastMessages.errorTitle'),
                 t('auth.login.toastMessages.errorMsg')
             );
-            console.log("Login error: ", error.message);
+            
+            // If it's an Axios error
+            if ((error as any).isAxiosError) {
+                console.log("Axios error details:", {
+                    status: (error as any).response?.status,
+                    statusText: (error as any).response?.statusText,
+                    data: (error as any).response?.data,
+                    headers: (error as any).response?.headers,
+                });
+            }
         },
     });
 
@@ -43,6 +53,7 @@ export const useAuth = () => {
             authService.register(registerRequest),
         onSuccess: (response) => {
             if (response.status === 200) {
+                console.log("User succesfully logged in.");
                 toastService.success(
                     t('auth.register.toastMessages.successTitle'),
                     t('auth.register.toastMessages.successMsg')
