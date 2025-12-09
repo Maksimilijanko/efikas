@@ -3,7 +3,7 @@ import {
   View,
   Image,
   Pressable,
-  Text, 
+  Text,
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
@@ -55,7 +55,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
     if (selectedIndex === null) return;
     setSelectedIndex((prevIndex) => Math.max(prevIndex! - 1, 0));
   };
-  
+
   const imageDisplayHeight = screenHeight * 0.8;
   const arrowHeight = 30;
 
@@ -64,10 +64,10 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
       <Label
         text="Galerija"
         color={Colors.textPrimary}
-        size="2xl"
+        size="xl"
         className="font-bold mb-4"
       />
-      
+
       <View style={styles.imageRow}>
         {firstFour.map((img, index) => {
           const isLast = index === 3 && extra > 0;
@@ -114,11 +114,11 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
               {selectedIndex > 0 && (
                 <Pressable
                   style={[
-                    styles.arrowButton, 
-                    styles.arrowLeft, 
-                    { 
-                      top: '50%', 
-                      marginTop: -(arrowHeight / 2) 
+                    styles.arrowButton,
+                    styles.arrowLeft,
+                    {
+                      top: '50%',
+                      marginTop: -(arrowHeight / 2)
                     }
                   ]}
                   onPress={goToPrev}
@@ -130,11 +130,11 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
               {selectedIndex < images.length - 1 && (
                 <Pressable
                   style={[
-                    styles.arrowButton, 
-                    styles.arrowRight, 
-                    { 
-                      top: '50%', 
-                      marginTop: -(arrowHeight / 2) 
+                    styles.arrowButton,
+                    styles.arrowRight,
+                    {
+                      top: '50%',
+                      marginTop: -(arrowHeight / 2)
                     }
                   ]}
                   onPress={goToNext}
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   modalImage: {
     width: '100%',
   },
-  
+
   modalCloseButton: {
     position: 'absolute',
     top: 50,

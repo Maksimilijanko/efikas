@@ -3,13 +3,8 @@ import { ScrollView, View, StyleSheet, Dimensions, ScrollViewProps } from 'react
 import { Colors } from '@/src/styles/style';
 
 export type ApartmentDetailsTemplateProps = {
-  heroImage: React.ReactNode;
-  heroTags: React.ReactNode;
-  servicesHeader: React.ReactNode;
-  services: React.ReactNode[];
-  galleryHeader: React.ReactNode;
-  galleryItems: React.ReactNode[];
-  availabilityHeader: React.ReactNode;
+  basicInfo: React.ReactNode;
+  gallery: React.ReactNode; 
   calendar: React.ReactNode;
   scrollProps?: ScrollViewProps;
 };
@@ -17,13 +12,8 @@ export type ApartmentDetailsTemplateProps = {
 const screenHeight = Dimensions.get('window').height;
 
 const ApartmentDetailsTemplate: React.FC<ApartmentDetailsTemplateProps> = ({
-  heroImage,
-  heroTags,
-  servicesHeader,
-  services,
-  galleryHeader,
-  galleryItems,
-  availabilityHeader,
+  basicInfo,
+  gallery,
   calendar,
   scrollProps
 }) => {
@@ -36,41 +26,23 @@ const ApartmentDetailsTemplate: React.FC<ApartmentDetailsTemplateProps> = ({
       >
         <View style={styles.heroSection}>
           <View style={styles.heroWrapper}>
-            {heroImage}
-            <View style={styles.heroTagsWrapper}>
-              {heroTags}
-            </View>
+            {basicInfo}
           </View>
         </View>
 
         <View style={styles.section}>
-          <View style={styles.sectionHeaderRow}>{servicesHeader}</View>
-          <View style={styles.servicesGrid}>
-            {services.map((item, index) => (
-              <View key={index} style={styles.serviceItem}>
-                {item}
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionHeaderRow}>{galleryHeader}</View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.galleryRow}
           >
-            {galleryItems.map((item, index) => (
-              <View key={index} style={styles.galleryItem}>
-                {item}
-              </View>
-            ))}
+            <View style={styles.galleryItem}>
+              {gallery} 
+            </View>
           </ScrollView>
         </View>
 
         <View style={styles.section}>
-          <View style={styles.sectionHeaderRow}>{availabilityHeader}</View>
           <View style={styles.calendarWrapper}>{calendar}</View>
         </View>
       </ScrollView>
@@ -79,39 +51,25 @@ const ApartmentDetailsTemplate: React.FC<ApartmentDetailsTemplateProps> = ({
 };
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: Colors.secondary
-  },
+  root: { flex: 1, backgroundColor: Colors.secondary },
   scrollContent: {
     width: '100%',
     alignItems: 'center',
     paddingTop: screenHeight * 0.02,
     paddingBottom: screenHeight * 0.1
   },
-  heroSection: {
-    width: '92%',
-    marginBottom: screenHeight * 0.025
-  },
+  heroSection: { width: '92%', marginBottom: screenHeight * 0.025 },
   heroWrapper: {
     width: '100%',
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: 'visible',
     position: 'relative',
     alignItems: 'center'
   },
-  heroTagsWrapper: {
-    position: 'absolute',
-    bottom: 14,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    gap: 10
-  },
-  section: {
-    width: '92%',
-    marginBottom: screenHeight * 0.03
+  section: { 
+    width: '100%', 
+    marginBottom: screenHeight * 0.03 ,
+    alignItems: 'center'
   },
   sectionHeaderRow: {
     width: '100%',
@@ -127,13 +85,15 @@ const styles = StyleSheet.create({
     marginBottom: screenHeight * 0.012
   },
   galleryRow: {
-    paddingRight: 8
+    width: '100%',
+    flexGrow: 1,
+    justifyContent: 'center'
   },
   galleryItem: {
-    marginRight: 8
+    width: '92%'
   },
   calendarWrapper: {
-    width: '100%'
+    width: '92%'
   }
 });
 
