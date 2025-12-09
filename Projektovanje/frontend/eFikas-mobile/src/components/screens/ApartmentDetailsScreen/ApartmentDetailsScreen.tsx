@@ -1,95 +1,75 @@
-// src/screens/ApartmentDetailsScreen/ApartmentDetailsScreen.tsx
+import React from "react";
+import { View, ActivityIndicator } from "react-native";
+import { useQuery } from "@tanstack/react-query";
 
-import React, { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
-
+import LandingApartmentInfo from "@/src/components/organisms/LandingApartmentInfo/LandingApartmentInfo";
 import ApartmentDetailsTemplate from "../../templates/ApartmentDetailsTemplate/ApartmentDetailsTemplate";
 import { apartmentDetailsService } from "@/src/api/services/apartmentDetailsService";
-import { Icon } from "../../atoms/Icon/Icon";
 import { Gallery } from "../../organisms/Gallery/Gallery";
+import { ReservationsCalendar } from "../../atoms/ReservationsCalendar/ReservationsCalendar";
+import { Label } from "../../atoms/Label/Label";
+import { Colors } from "@/src/styles/style";
 
-const ApartmentDetailsScreen: React.FC = () => {
-  const [details, setDetails] = useState<any>(null);
+export default function ApartmentScreen() {
 
-  useEffect(() => {
-    apartmentDetailsService.getApartmentDetails(1).then(setDetails);
-  }, []);
+  const {
+    data: apartment,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["apartment-details", 1],
+    queryFn: () => apartmentDetailsService.getApartmentDetails(1),
+  });
 
-  if (!details) return null;
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
-  const heroImage = (
-    <Image
-      source={{ uri: details.heroImageUrl }}
-      style={{ width: "100%", height: 230 }}
-      resizeMode="cover"
-    />
-  );
+  const servicesProps = {
+    wifi: apartment.services.some((s) => s.name === "WiFi"),
+    parking: apartment.services.some((s) => s.name === "Parking"),
+    klima: apartment.services.some((s) => s.name === "AC"),
+    tv: apartment.services.some((s) => s.name === "TV"),
 
-  const heroTags = details.tags.map((tag: string, i: number) => (
-    <View
-      key={i}
-      style={{
-        paddingHorizontal: 10,
-        paddingVertical: 4,
-        backgroundColor: "rgba(0,0,0,0.6)",
-        borderRadius: 12
-      }}
-    >
-      <Text style={{ color: "white", fontSize: 13 }}>{tag}</Text>
-    </View>
-  ));
+    kafa: apartment.services.some((s) => s.name === "Kitchen"),
+    vesmasina: apartment.services.some((s) => s.name === "Washing Machine"),
+    fen: apartment.services.some((s) => s.name === "Hair Dryer"),
+    balkon: apartment.services.some((s) => s.name === "Balcony"),
+  };
 
-  const services = details.services.map((s: any, i: number) => (
-    <View
-      key={i}
-      style={{
-        backgroundColor: "white",
-        padding: 14,
-        borderRadius: 12,
-        alignItems: "center"
-      }}
-    >
-      <Icon name={s.icon} size={20} />
-      <Text style={{ marginTop: 6 }}>{s.label}</Text>
-    </View>
-  ));
-
-  const galleryItems = details.galleryImages.map((url: string, i: number) => (
-    <Image
-      key={i}
-      source={{ uri: url }}
-      style={{ width: 160, height: 110, borderRadius: 12 }}
-    />
-  ));
-
-  
-
-  const calendar = (
-    <View
-      style={{
-        width: "100%",
-        height: 200,
-        backgroundColor: "#ececec",
-        borderRadius: 12,
-        alignItems: "center",
-        justifyContent: "center"
-      }}
-    >
-      <Text>Calendar Placeholder</Text>
-    </View>
-  );
 
   return (
     <ApartmentDetailsTemplate
-      heroImage={heroImage}
-      heroTags={heroTags}
-      servicesHeader={<Text style={{ fontSize: 18, fontWeight: "600" }}>Usluge</Text>}
-      services={services}
-      gallery={<Gallery images={details.galleryImages} style={[{width: '100%', height: 250}]} />}
-      availabilityHeader={<Text style={{ fontSize: 18, fontWeight: "600" }}>Dostupnost</Text>}
-      calendar={calendar}
+      basicInfo={
+        <LandingApartmentInfo
+          imageUrl={{ uri: apartment.heroImageUrl }}
+          bedrooms={apartment.bedrooms}
+          squareMeters={apartment.squareMeters}
+          maxGuests={apartment.maxGuests}
+          {...servicesProps}
+        />
+      }
+      gallery={
+        <Gallery
+          style={[{ width: "100%" }]}
+          images={apartment.galleryImages}
+        />
+      }
+      calendar={
+        <View>
+          <Label
+            text="Dostupnost"
+            color={Colors.textPrimary}
+            size="xl"
+            className="font-bold mb-4"
+          />
+          <ReservationsCalendar reservations={apartment.availability} />
+        </View>
+      }
     />
   );
-};
-
-export default ApartmentDetailsScreen;
+}

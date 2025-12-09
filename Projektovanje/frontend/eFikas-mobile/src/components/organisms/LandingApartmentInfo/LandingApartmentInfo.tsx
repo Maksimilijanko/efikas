@@ -10,11 +10,11 @@ import {
   FlatList,
 } from "react-native";
 
-// import { Colors } from "@/src/styles/style";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { Label } from "../../atoms/Label/Label";
 
 interface Service {
   id: string;
@@ -113,7 +113,12 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
 
       {/* Services Header */}
       <View style={styles.servicesHeaderContainer}>
-        <Text style={styles.servicesTitle}>Usluge</Text>
+        <Label
+          text="Usluge"
+          color={Colors.textPrimary}
+          size="xl"
+          className="font-bold mb-4"
+        />
 
         {apartmentServices.length > VISIBLE_SERVICES_COUNT && (
           <Pressable onPress={() => setIsModalVisible(true)}>
@@ -181,7 +186,6 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
 const getStyles = (Colors: any) =>
   StyleSheet.create({
     cardWrapper: {
-      width: "96%",
       alignSelf: "center",
       backgroundColor: Colors.secondary,
       borderRadius: 15,
@@ -231,10 +235,9 @@ const getStyles = (Colors: any) =>
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      width: "96%",
+      width: "100%",
       alignSelf: "center",
       marginTop: 7,
-      paddingHorizontal: 12,
       paddingVertical: 5,
     },
     servicesTitle: {
@@ -251,9 +254,8 @@ const getStyles = (Colors: any) =>
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "space-between",
-      width: "98%",
+      width: "100%",
       alignSelf: "center",
-      paddingHorizontal: 10,
       marginBottom: 20,
     },
     featureWrapper: {
@@ -277,6 +279,7 @@ const getStyles = (Colors: any) =>
     },
     modalListContent: {
       paddingBottom: 24,
+      width: '100%'
     },
   });
 

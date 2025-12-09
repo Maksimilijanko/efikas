@@ -1,34 +1,46 @@
-// src/services/apartmentDetailsService.ts
+import { Reservation } from "@/src/types/types";
+
+const MOCK_APARTMENT_DETAILS = {
+  id: 1,
+  title: "Modern Loft – Banja Luka",
+  address: "Ulica kralja Petra I Karađorđevića 73",
+  heroImageUrl: "https://picsum.photos/id/1018/900/600",
+
+  bedrooms: 4,
+  squareMeters: 150,
+  maxGuests: 8,
+
+  tags: ["WiFi", "Parking", "Klima", "TV"],
+
+  services: [
+  { name: "WiFi" },
+  { name: "Parking" },
+  { name: "AC" },
+  { name: "TV" },
+  { name: "Kitchen" },
+  { name: "Washing Machine" },
+  { name: "Hair Dryer" },
+  { name: "Balcony" },
+],
+
+  galleryImages: [
+    "https://picsum.photos/id/1068/800/600",
+    "https://picsum.photos/id/1070/800/600",
+    "https://picsum.photos/id/1084/800/600",
+    "https://picsum.photos/id/1080/800/600",
+    "https://picsum.photos/id/1074/800/600",
+    "https://picsum.photos/id/1062/800/600"
+  ],
+
+  availability: [] as Reservation[]
+};
+
 
 export const apartmentDetailsService = {
   getApartmentDetails: async (id: number) => {
     return {
-      id,
-      title: "Modern Loft – Banja Luka",
-      address: "Ulica kralja Petra I Karađorđevića 73",
-      heroImageUrl: "https://picsum.photos/id/1018/900/600",
-
-      tags: ["WiFi", "Parking", "Klima", "TV"],
-
-      services: [
-        { icon: "Wifi", label: "WiFi" },
-        { icon: "Car", label: "Parking" },
-        { icon: "Snowflake", label: "Klima" },
-        { icon: "Tv", label: "Smart TV" },
-        { icon: "CookingPot", label: "Kuhinja" },
-        { icon: "Bath", label: "Kupatilo" }
-      ],
-
-      galleryImages: [
-        "https://picsum.photos/id/1025/600/400",
-        "https://picsum.photos/id/1035/600/400",
-        "https://picsum.photos/id/1041/600/400",
-        "https://picsum.photos/id/1043/600/400"
-      ],
-
-      availability: {
-        reservedDates: ["2025-02-10", "2025-02-11", "2025-02-12"]
-      }
+      ...MOCK_APARTMENT_DETAILS,
+      id 
     };
   }
 };
