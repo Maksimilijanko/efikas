@@ -11,13 +11,7 @@ import java.util.List;
 @Builder
 public class IncomeBookDTO implements BookRequest {
     // TODO: make special dto's for taxpayer/store?
-    private String taxpayerName;
-    private String taxpayerJmbg;
-    private String taxpayerAddress;
-    private String storeName;
-    private String storeAddress;
-    private String activity;
-    private String activityCode;
-    private String jib;
+    private TaxpayerDTO taxpayer;
+    private StoreDTO store;
     private List<IncomeEntry> entries;
 }

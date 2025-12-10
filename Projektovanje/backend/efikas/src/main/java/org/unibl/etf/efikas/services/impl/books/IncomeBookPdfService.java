@@ -13,6 +13,7 @@ import org.unibl.etf.efikas.models.dto.itextpdf.TableData;
 import org.unibl.etf.efikas.models.enums.BookType;
 import org.unibl.etf.efikas.models.enums.TableType;
 import org.unibl.etf.efikas.handlers.BookTypeHandler;
+import org.unibl.etf.efikas.services.IncomeBookService;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,9 +31,11 @@ import java.util.List;
 public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> implements BookTypeHandler {
 
     private final BookTableFactory bookTableFactory;
+    private final IncomeBookService incomeBookService;
 
-    public IncomeBookPdfService(BookTableFactory bookTableFactory) {
+    public IncomeBookPdfService(BookTableFactory bookTableFactory, IncomeBookService incomeBookService) {
         this.bookTableFactory = bookTableFactory;
+        this.incomeBookService = incomeBookService;
     }
 
 
@@ -99,7 +102,6 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
                 ))
                 .config(
                         TableConfig.builder()
-                                // 8 columns, but image has 11
                                 .columnWidths(new float[]{0.5f, 1.5f, 3f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f})
                                 .hasTitleRow(true)
                                 .hasTotalRow(true)
