@@ -11,5 +11,4 @@ public class ApartmentDTO {
     private Integer capacity;
     private Double pricePerNight;
     private Double pricePerDay;
-
 }
