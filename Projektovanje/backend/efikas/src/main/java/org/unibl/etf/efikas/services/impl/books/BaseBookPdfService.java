@@ -1,0 +1,64 @@
+package org.unibl.etf.efikas.services.impl.books;
+
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.event.PdfDocumentEvent;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.unibl.etf.efikas.handlers.HeaderEventHandler;
+import org.unibl.etf.efikas.models.requests.BookRequest;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Base class for handling service of PDF creation. Defines document properties such as header, logos, etc. of the document.
+ * */
+public abstract class BaseBookPdfService<T extends BookRequest> {
+
+    @Value("classpath:logos/eFikas-logo.png")
+    private Resource logoResource;
+
+    @Value("classpath:fonts/DejaVuSans.ttf")
+    private Resource fontResource;
+
+    /**
+     * Creates the generic look of a document.
+     * */
+    protected Document createDocument(PdfWriter writer) throws IOException {
+        PdfDocument pdf = new PdfDocument(writer);
+
+        // Create FRESH font for each document
+        byte[] fontBytes = fontResource.getInputStream().readAllBytes();
+        PdfFont cyrillicFont = PdfFontFactory.createFont(fontBytes, PdfEncodings.IDENTITY_H);
+
+        // Create FRESH logo for each document
+        byte[] logoBytes = logoResource.getInputStream().readAllBytes();
+        Image logo = new Image(ImageDataFactory.create(logoBytes));
+
+        // Register header with fresh objects
+        pdf.addEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(logo, cyrillicFont));
+
+        // Create document
+        Document document = new Document(pdf);
+        document.setMargins(20, 20, 20, 20);
+        document.setFont(cyrillicFont);  // Use the fresh font
+        document.setFontSize(10);
+        document.add(new Paragraph("\n\n\n"));
+
+        return document;
+    }
+
+    /**
+     * Generates a PDF of a financial book.
+     * @return InputStream A stream for performance reasons in case of bigger files.
+     * */
+    public abstract InputStream generatePdf(T request) throws IOException;
+}

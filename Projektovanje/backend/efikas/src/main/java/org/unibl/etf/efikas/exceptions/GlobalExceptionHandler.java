@@ -16,4 +16,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleS3DeletionException(S3DeletionException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
+
+    @ExceptionHandler(BookPdfGenerationException.class)
+    public ResponseEntity<?> handleS3DeletionException(BookPdfGenerationException ex){
+        return ResponseEntity.internalServerError().body(ex.getMessage());
+    }
 }

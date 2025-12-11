@@ -7,6 +7,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.exceptions.S3UploadException;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
+import org.unibl.etf.efikas.util.Constants;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,7 +34,7 @@ public class S3Controller {
     public ResponseEntity<?> uploadFile(@RequestParam("image") MultipartFile file) {
         FileUploadResponse fileUploadResponse = null;
         try {
-            fileUploadResponse = s3Service.uploadFile(file);
+            fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, file);
         } catch (IOException e) {
             throw new S3UploadException(e.getMessage());
         }

@@ -20,6 +20,7 @@ import org.unibl.etf.efikas.repositories.ApartmentRepository;
 import org.unibl.etf.efikas.repositories.ReservationRepository;
 import org.unibl.etf.efikas.repositories.ReservationTypeRepository;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
+import org.unibl.etf.efikas.util.Constants;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,7 +52,7 @@ public class ReservationService {
 
         FileUploadResponse fileUploadResponse = null;
         try {
-            fileUploadResponse = s3Service.uploadFile(documentPicture);
+            fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
         } catch (IOException e) {
             throw new S3UploadException(e.getMessage());
         }
@@ -106,7 +107,7 @@ public class ReservationService {
         // Upload the new picture to S3 bucket
         FileUploadResponse fileUploadResponse;
         try {
-            fileUploadResponse = s3Service.uploadFile(documentPicture);
+            fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
         } catch (IOException e) {
             throw new S3UploadException(e.getMessage());
         }
