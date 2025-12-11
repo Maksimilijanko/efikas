@@ -76,7 +76,6 @@ public class IncomeTableStrategy implements TableStrategy {
     private void addDataRow(Table table, List<String> rowData, int totalColumns) {
         for (int i = 0; i < totalColumns; i++) {
             String value = i < rowData.size() ? rowData.get(i) : "";
-            System.out.println("VALUE: " + value);
             TextAlignment alignment = getAlignment(i);
 
             Cell cell = createCell(value, 1, 1).setTextAlignment(alignment);
