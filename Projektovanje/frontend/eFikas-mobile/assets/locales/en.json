@@ -272,6 +272,10 @@
             "taxId": "Tax ID (JIB)", 
             "email": "Email"
         },
+        "buttons": {
+            "cancel": "Cancel",
+            "save": "Save"
+        },
         "toastMessages": {
             "fetchErrorTitle": "Loading Error",
             "fetchErrorMessage": "Could not load profile data.",

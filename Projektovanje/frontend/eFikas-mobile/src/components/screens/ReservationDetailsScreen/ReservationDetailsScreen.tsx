@@ -1,5 +1,5 @@
-import { View, Pressable, StyleSheet } from "react-native";
-import React, { useState, useLayoutEffect } from "react";
+import { Pressable } from "react-native";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";
 import ApartmentCard from "@/src/components/organisms/ApartmentCard/ApartmentCard";
@@ -22,6 +22,19 @@ import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+// Helper funkcije
+const formatDateTime = (iso: string) => {
+  if (!iso) return "";
+  const local = dayjs.utc(iso).tz("Europe/Sarajevo");
+  return local.format("DD.MM.YYYY HH:mm");
+};
+
+const calculateNights = (arrivalDate: string, departureDate: string) => {
+  const arrival = dayjs(arrivalDate);
+  const departure = dayjs(departureDate);
+  return Math.max(1, departure.diff(arrival, "day"));
+};
 
 const ReservationDetailsScreen = ({ reservation }) => {
   const { t } = useTranslation();
@@ -63,7 +76,8 @@ const ReservationDetailsScreen = ({ reservation }) => {
     toggleDialog("fiscalization", false);
   };
 
-  useLayoutEffect(() => {
+  // header - tri tackice
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Pressable
@@ -76,120 +90,163 @@ const ReservationDetailsScreen = ({ reservation }) => {
     });
   }, [navigation, Colors.textPrimary]);
 
-  const formatDateTime = (iso: string) => {
-    if (!iso) return "";
-    const local = dayjs.utc(iso).tz("Europe/Sarajevo");
-    return local.format("DD.MM.YYYY HH:mm");
-  };
-
-  // Izracunavanje broja nocenja
-  const calculateNights = () => {
-    const arrival = dayjs(reservation.dateTimeOfArrival);
-    const departure = dayjs(reservation.dateTimeOfDeparture);
-    return Math.max(1, departure.diff(arrival, 'day'));
-  };
-
-  const INFO_ITEMS = [
-    { key: "guest", label: reservation.guestFullName, icon: "User" as const, },
-    { key: "phone", label: reservation.guestPhoneNumber, icon: "Phone" as const, },
-    { key: "people", 
-      label: t("reservations.details.peopleCount", {
-        count: reservation.guestNumber,
-      }), 
-      icon: "Users" as const, 
-    },
-    { key: "document", label: t("reservations.details.document"), icon: "IdCard" as const,
-      rightElement: (
-        <Icon name="ChevronRight" size={22} color={Colors.iconMenu} />
-      ),
-      onPress: () => toggleDialog("idDocument", true),
-    },
-    { key: "arrival", label: formatDateTime(reservation.dateTimeOfArrival), icon: "CalendarArrowDown" as const, },
-    { key: "departure", label: formatDateTime(reservation.dateTimeOfDeparture), icon: "CalendarArrowUp" as const, },
-  ];
-
-  const infoItems = INFO_ITEMS.map((item) => (
-    <ApartmentFeatureCard
-      key={item.key}
-      label={item.label}
-      icon={<Icon name={item.icon} size={22} color={Colors.primary} />}
-      rightElement={item.rightElement}
-      onPress={item.onPress}
-    />
-  ));
-
-  // -------------------- Dialog konfiguracije --------------------
-  const dialogConfigs = {
-    idDocument: {
-      visible: dialogs.idDocument,
-      onClose: () => toggleDialog("idDocument", false),
-      documentUrl: reservation.personalDocumentURL,
-    },
-    editDelete: {
-      visible: dialogs.editDelete,
-      onClose: () => toggleDialog("editDelete", false),
-      onEdit: () => {
-        toggleDialog("editDelete", false);
-        // router.push("/(tabs)/reservations")   // TODO: otvaranje sceen-a za dodavanje rezervacije
+  // Memoizacija INFO_ITEMS
+  const INFO_ITEMS = useMemo(
+    () => [
+      {
+        key: "guest",
+        label: reservation.guestFullName,
+        icon: "User" as const,
       },
-      onDelete: () => {
-        toggleDialog("editDelete", false);
-        toggleDialog("deleteConfirm", true);
+      {
+        key: "phone",
+        label: reservation.guestPhoneNumber,
+        icon: "Phone" as const,
       },
-      showDelete: true,
-      deleteText: t("reservations.details.deleteText"),
-    },
-    deleteConfirm: {
-      visible: dialogs.deleteConfirm,
-      title: t("reservations.details.deleteConfirm.title"),
-      description: t("reservations.details.deleteConfirm.description"),
-      primaryText: t("reservations.details.deleteConfirm.confirm"),
-      secondaryText: t("reservations.details.deleteConfirm.cancel"),
-      onPrimary: handleDelete,
-      onSecondary: () => toggleDialog("deleteConfirm", false),
-      onRequestClose: () => toggleDialog("deleteConfirm", false),
-    },
-    fiscalization: {
-      visible: dialogs.fiscalization,
-      onClose: () => toggleDialog("fiscalization", false),
-      title: t("reservations.details.fiscalization.title"),
-      items: [
-        {
-          label: t("reservations.details.fiscalization.reservationType"),
-          value: reservation.reservationType,
-          isBold: true,
+      {
+        key: "people",
+        label: t("reservations.details.peopleCount", {
+          count: reservation.guestNumber,
+        }),
+        icon: "Users" as const,
+      },
+      {
+        key: "document",
+        label: t("reservations.details.document"),
+        icon: "IdCard" as const,
+        rightElement: (
+          <Icon name="ChevronRight" size={22} color={Colors.iconMenu} />
+        ),
+        onPress: () => toggleDialog("idDocument", true),
+      },
+      {
+        key: "arrival",
+        label: formatDateTime(reservation.dateTimeOfArrival),
+        icon: "CalendarArrowDown" as const,
+      },
+      {
+        key: "departure",
+        label: formatDateTime(reservation.dateTimeOfDeparture),
+        icon: "CalendarArrowUp" as const,
+      },
+    ],
+    [
+      reservation.guestFullName,
+      reservation.guestPhoneNumber,
+      reservation.guestNumber,
+      reservation.dateTimeOfArrival,
+      reservation.dateTimeOfDeparture,
+      Colors.iconMenu,
+      t,
+    ]
+  );
+
+  // wrap-ovano sa useMemo
+  const infoItems = useMemo(
+    () =>
+      INFO_ITEMS.map((item) => (
+        <ApartmentFeatureCard
+          key={item.key}
+          label={item.label}
+          icon={<Icon name={item.icon} size={22} color={Colors.primary} />}
+          rightElement={item.rightElement}
+          onPress={item.onPress}
+        />
+      )),
+    [INFO_ITEMS, Colors.primary]
+  );
+
+  // wrap-ovano sa useMemo
+  const dialogConfigs = useMemo(
+    () => ({
+      idDocument: {
+        visible: dialogs.idDocument,
+        onClose: () => toggleDialog("idDocument", false),
+        documentUrl: reservation.personalDocumentURL,
+      },
+      editDelete: {
+        visible: dialogs.editDelete,
+        onClose: () => toggleDialog("editDelete", false),
+        onEdit: () => {
+          toggleDialog("editDelete", false);
+          // router.push("/(tabs)/reservations")   // TODO: otvaranje sceen-a za dodavanje rezervacije
         },
-        { 
-          label: t("reservations.details.fiscalization.peopleCount"),
-          value: reservation.guestNumber, 
-          isBold: true 
+        onDelete: () => {
+          toggleDialog("editDelete", false);
+          toggleDialog("deleteConfirm", true);
         },
-        { 
-          label: t("reservations.details.fiscalization.nightsCount"), 
-          value: calculateNights(), 
-          isBold: true 
-        },
-        {
-          label: t("reservations.details.fiscalization.amount"), 
-          value: reservation.price 
-            ? `${reservation.price.toFixed(2)} ${t("reservationsCalendar.currency")}` 
-            : "N/A",
-          isBold: true,
-          marginTop: 12,
-        },
-      ],
-      buttons: [
-        {
-          title: t("reservations.details.fiscalization.button.confirmButton"), 
-          onPress: handleFiscalizationConfirm,
-        },
-        {
-          title: t("reservations.details.fiscalization.button.cancelButton"), 
-          onPress: () => toggleDialog("fiscalization", false),
-        },
-      ],
-    },
-  };
+        showDelete: true,
+        deleteText: t("reservations.details.deleteText"),
+      },
+      deleteConfirm: {
+        visible: dialogs.deleteConfirm,
+        title: t("reservations.details.deleteConfirm.title"),
+        description: t("reservations.details.deleteConfirm.description"),
+        primaryText: t("reservations.details.deleteConfirm.confirm"),
+        secondaryText: t("reservations.details.deleteConfirm.cancel"),
+        onPrimary: handleDelete,
+        onSecondary: () => toggleDialog("deleteConfirm", false),
+        onRequestClose: () => toggleDialog("deleteConfirm", false),
+      },
+      fiscalization: {
+        visible: dialogs.fiscalization,
+        onClose: () => toggleDialog("fiscalization", false),
+        title: t("reservations.details.fiscalization.title"),
+        items: [
+          {
+            label: t("reservations.details.fiscalization.reservationType"),
+            value: reservation.reservationType,
+            isBold: true,
+          },
+          {
+            label: t("reservations.details.fiscalization.peopleCount"),
+            value: reservation.guestNumber,
+            isBold: true,
+          },
+          {
+            label: t("reservations.details.fiscalization.nightsCount"),
+            value: calculateNights(
+              reservation.dateTimeOfArrival,
+              reservation.dateTimeOfDeparture
+            ),
+            isBold: true,
+          },
+          {
+            label: t("reservations.details.fiscalization.amount"),
+            value: reservation.price
+              ? `${reservation.price.toFixed(2)} ${t(
+                  "reservationsCalendar.currency"
+                )}`
+              : "N/A",
+            isBold: true,
+            marginTop: 12,
+          },
+        ],
+        buttons: [
+          {
+            title: t("reservations.details.fiscalization.button.confirmButton"),
+            onPress: handleFiscalizationConfirm,
+          },
+          {
+            title: t("reservations.details.fiscalization.button.cancelButton"),
+            onPress: () => toggleDialog("fiscalization", false),
+          },
+        ],
+      },
+    }),
+    [
+      dialogs,
+      reservation.personalDocumentURL,
+      reservation.reservationType,
+      reservation.guestNumber,
+      reservation.dateTimeOfArrival,
+      reservation.dateTimeOfDeparture,
+      reservation.price,
+      t,
+      handleDelete,
+      handleFiscalizationConfirm,
+    ]
+  );
 
   return (
     <>
