@@ -1,9 +1,7 @@
-import { Text } from "react-native";
+import ApartmentsListScreen from '@/src/components/screens/ApartmentsListScreen/ApartmentsListScreen';
 
-export default function Apartments() {
-    return(
-        <>
-            <Text>Stranica za stanove</Text>
-        </>
+export default function MyApartments() {
+    return (
+        <ApartmentsListScreen />
     );
 }

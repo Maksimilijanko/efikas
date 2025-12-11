@@ -23,6 +23,7 @@ interface ApartmentCardProps {
   nextGuestsDate?: string;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
+  showArrow?: boolean;
 }
 
 const ApartmentCard: React.FC<ApartmentCardProps> = ({
@@ -34,6 +35,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
   nextGuestsDate,
   onPress,
   style,
+  showArrow = true,
 }) => {
   const imageSource = imageUrl
     ? { uri: imageUrl }
@@ -114,12 +116,14 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
         )}
       </View>
 
-      <Icon
-        name="ChevronRight"
-        size={28}
-        color={Colors.iconMenu}
-        style={styles.icon}
-      />
+      {showArrow && (
+        <Icon
+          name="ChevronRight"
+          size={28}
+          color={Colors.iconMenu}
+          style={styles.icon}
+        />
+      )}
     </TouchableOpacity>
   );
 };

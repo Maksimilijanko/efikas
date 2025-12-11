@@ -2,19 +2,21 @@ import React from "react";
 import { Modal, View, Text, Image, StyleSheet } from "react-native";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 // import { Colors } from "@/src/styles/style";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
 
-interface DocumentDialogProps {
+interface IdDocumentDialogProps {
   visible: boolean;
-  documentUrl?: string; // URL ili lokalna putanja slike
+  documentUrl?: string;
   onClose: () => void;
 }
 
-export const DocumentDialog: React.FC<DocumentDialogProps> = ({
+export const IdDocumentDialog: React.FC<IdDocumentDialogProps> = ({
   visible,
   documentUrl,
   onClose,
 }) => {
+    const { t } = useTranslation();
     const { Colors } = useTheme();
 
     const styles = StyleSheet.create({
@@ -44,10 +46,11 @@ export const DocumentDialog: React.FC<DocumentDialogProps> = ({
           borderRadius: 10,
         },
         noDocumentText: {
-          fontSize: 14,
+          fontSize: 16,
+          fontWeight: "400",
           color: Colors.textSecondary,
           textAlign: "center",
-          marginBottom: 20,
+          marginBottom: 32,
         },
     });
 
@@ -64,10 +67,12 @@ export const DocumentDialog: React.FC<DocumentDialogProps> = ({
               <Image source={{ uri: documentUrl }} style={styles.documentImage} resizeMode="contain" />
             ) : (
               <Text style={styles.noDocumentText}>
-                Za ovu rezervaciju nema dokumenta gosta
+                 {t("dialogs.message.details.message")}
               </Text>
             )}
-            <DialogButton title="U redu" onPress={onClose} />
+            <DialogButton 
+              title={t("dialogs.message.details.button")}
+              onPress={onClose} />
           </View>
         </View>
       </Modal>

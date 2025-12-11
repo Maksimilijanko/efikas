@@ -101,6 +101,7 @@ const DamageScreen = () => {
 
    const floatingButtonComponent = (
        <FloatButton 
+            size="lg"
            onClick={handleOpenDialog} 
         />
     );

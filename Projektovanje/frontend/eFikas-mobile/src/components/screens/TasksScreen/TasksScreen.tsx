@@ -101,6 +101,7 @@ const TasksScreen = () => {
 
    const floatingButtonComponent = (
        <FloatButton 
+            size="lg"
            onClick={handleOpenDialog} 
         />
    );

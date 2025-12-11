@@ -100,6 +100,13 @@
             "cancel": "Odustani",
             "add": "Dodaj",
             "title": "Dodavanje kase"
+        },
+
+        "message": {
+            "details": {
+                "message": "Za ovu rezervaciju nije pronađen lični dokument",
+                "button": "U redu"
+            }
         }
     },
 
@@ -332,7 +339,24 @@
             "peopleCount_one": "{{count}} osoba",
             "peopleCount_few": "{{count}} osobe",
             "peopleCount_other": "{{count}} osoba",
-            "deleteText": "Brisanje rezervacije"
+            "deleteText": "Brisanje rezervacije",
+            "deleteConfirm": {
+                "title": "Da li ste sigurni da želite obrisati rezervaciju?",
+                "description": "Svi podaci biće obrisani",
+                "confirm": "Potvrdi",
+                "cancel": "Odustani"
+            },
+            "fiscalization": {
+                "title": "Provjera informacija za fiskalizaciju",
+                "reservationType": "Usluga:",
+                "peopleCount": "Broj osoba:",
+                "nightsCount": "Broj noćenja:",
+                "amount": "Iznos:",
+                "button": {
+                    "confirmButton": "Potvrdi",
+                    "cancelButton": "Odustani"
+                }
+            }
         }
     },
 

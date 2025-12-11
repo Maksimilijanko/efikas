@@ -101,6 +101,7 @@ const ExpensesScreen = () => {
 
    const floatingButtonComponent = (
         <FloatButton 
+            size="lg"
            onClick={handleOpenDialog} 
         />
     );
