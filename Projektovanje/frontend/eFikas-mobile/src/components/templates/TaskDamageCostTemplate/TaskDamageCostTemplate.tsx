@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Dimensions } from "react-native";
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export type TaskDamageCostTemplateProps = {
   dropdown: React.ReactNode;
@@ -15,6 +16,9 @@ const TaskDamageCostTemplate: React.FC<TaskDamageCostTemplateProps> = ({
   list,
   floatingButton,
 }) => {
+  const { Colors } = useTheme();
+  const styles = getStyles(Colors);
+
   return (
     <View style={styles.root}>
       <View style={styles.dropdownSection}>{dropdown}</View>
@@ -32,35 +36,33 @@ const TaskDamageCostTemplate: React.FC<TaskDamageCostTemplateProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: Colors.secondary,
-  },
-  scrollContent: {
-    paddingTop: 15,
-    paddingBottom: 120, 
-    alignItems: "center",
-  },
 
- 
-  dropdownSection: {
-    width: "92%",
-    marginBottom: 10,
-    marginTop:10,
-    marginHorizontal:15,
-  },
-
-  listSection: {
-    width: "92%",
-    marginBottom: screenHeight * 0.05,
-  },
-
-  floatingBtnWrapper: {
-    position: "absolute",
-    bottom: 25,
-    right: 25,
-  },
-});
+const getStyles = (theme: any) =>
+  StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: theme.screenBackground,
+    },
+    scrollContent: {
+      paddingTop: 15,
+      paddingBottom: 120,
+      alignItems: "center",
+    },
+    dropdownSection: {
+      width: "92%",
+      marginBottom: 10,
+      marginTop: 10,
+      marginHorizontal: 15,
+    },
+    listSection: {
+      width: "92%",
+      marginBottom: screenHeight * 0.05,
+    },
+    floatingBtnWrapper: {
+      position: "absolute",
+      bottom: 25,
+      right: 25,
+    },
+  });
 
 export default TaskDamageCostTemplate;

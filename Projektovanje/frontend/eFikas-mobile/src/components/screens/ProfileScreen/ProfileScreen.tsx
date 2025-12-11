@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Pressable,
@@ -67,7 +67,8 @@ export default function ProfileScreen() {
     []
   );
 
-  React.useLayoutEffect(() => {
+  // header - tri tackice
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         if (isEditMode) return null;
@@ -81,7 +82,7 @@ export default function ProfileScreen() {
         );
       },
     });
-  }, [navigation, isEditMode]);
+  }, [navigation, isEditMode, Colors.textPrimary]);
 
   const renderField = (
     fieldKey: keyof ProfileData,

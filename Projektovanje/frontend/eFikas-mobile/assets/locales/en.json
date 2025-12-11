@@ -99,6 +99,13 @@
             "cancel": "Cancel",
             "add": "Add",
             "title": "Add cash register"
+        },
+
+        "message": {
+            "details": {
+                "message": "No ID document found for this reservation",
+                "button": "OK"
+            }
         }
     },
 
@@ -265,6 +272,10 @@
             "taxId": "Tax ID (JIB)", 
             "email": "Email"
         },
+        "buttons": {
+            "cancel": "Cancel",
+            "save": "Save"
+        },
         "toastMessages": {
             "fetchErrorTitle": "Loading Error",
             "fetchErrorMessage": "Could not load profile data.",
@@ -322,7 +333,24 @@
             "peopleCount_one": "{{count}} person",
             "peopleCount_few": "{{count}} people",
             "peopleCount_other": "{{count}} people",
-            "deleteText": "Delete reservation"
+            "deleteText": "Delete reservation",
+            "deleteConfirm": {
+                "title": "Are you sure you want to delete the reservation?",
+                "description": "All data will be deleted",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+            "fiscalization": {
+                "title": "Check Fiscalization Information",
+                "reservationType": "Service:",
+                "peopleCount": "Number of people:",
+                "nightsCount": "Number of nights:",
+                "amount": "Amount:",
+                "button": {
+                    "confirmButton": "Confirm",
+                    "cancelButton": "Cancel"
+                }
+            }
         }
     },
 

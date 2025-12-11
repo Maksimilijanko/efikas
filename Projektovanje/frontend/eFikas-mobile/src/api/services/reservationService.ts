@@ -29,7 +29,7 @@ interface ReservationResponse {
   reservationType: string;
 }
 
-// Pomocna funkcija za mapiranje ReservationResponse → Reservation
+// Pomocna funkcija za mapiranje ReservationResponse -> Reservation
 const mapReservation = (r: ReservationResponse): Reservation => ({
   reservationId: r.reservationId,
   apartment: {
@@ -95,7 +95,11 @@ export const reservationService = {
   },
 
   deleteReservation: async (reservationId: number) => {
+    console.log('BRISANJE REZERVACIJE', reservationId)
     const res = await axiosInstance.delete(API_URLS.reservations.delete(reservationId));
     return res.data;
+    // console.log('BRISANJE REZERVACIJE', API_URLS.reservations.delete(reservationId))
+    // console.log(axiosInstance.delete(API_URLS.reservations.delete(reservationId)));
+    // return await axiosInstance.delete(API_URLS.reservations.delete(reservationId));
   },
 };

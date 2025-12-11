@@ -117,6 +117,7 @@ export const useDeleteReservation = (reservationId: number, apartmentId: number)
   return useMutation({
     mutationFn: async () => {
       try {
+        console.log("Brisanje rezervacije - hook:", reservationId);
         return await reservationService.deleteReservation(reservationId);
       } catch (err: any) {
         const errorMessage =

@@ -53,6 +53,7 @@ export interface Reservation {
   note: string | null;
   personalDocumentURL: string | null;
   reservationType: string;
+  reservationTypeId?: number;
 }
 
 export interface MenuItemProps {
