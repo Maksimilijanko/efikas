@@ -1,18 +1,11 @@
 package org.unibl.etf.efikas.services;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.unibl.etf.efikas.models.dto.ApartmentDamageDTO;
-import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
-import org.unibl.etf.efikas.models.entities.Apartment;
-import org.unibl.etf.efikas.models.entities.ApartmentDamage;
-import org.unibl.etf.efikas.models.entities.ApartmentDamageId;
 import org.unibl.etf.efikas.models.entities.IncomeBook;
-import org.unibl.etf.efikas.models.responses.ApartmentDamageResponse;
 import org.unibl.etf.efikas.repositories.IncomeBookRepository;
 
 @Service
