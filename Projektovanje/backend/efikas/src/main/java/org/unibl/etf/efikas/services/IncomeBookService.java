@@ -2,11 +2,15 @@ package org.unibl.etf.efikas.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
 import org.unibl.etf.efikas.models.entities.IncomeBook;
+import org.unibl.etf.efikas.models.requests.FinancialBookRequest;
 import org.unibl.etf.efikas.repositories.IncomeBookRepository;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class IncomeBookService {
@@ -18,11 +22,41 @@ public class IncomeBookService {
         this.modelMapper = modelMapper;
     }
 
-    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
-    public Integer createNewIncome(IncomeEntry incomeEntry, Authentication authentication) {
-        IncomeBook incomeBook = modelMapper.map(incomeEntry, IncomeBook.class);
-        incomeBookRepository.save(incomeBook);
+    public List<IncomeEntry> getAll() {
+        return incomeBookRepository.findAll().stream()
+                .map(ib -> modelMapper.map(ib, IncomeEntry.class))
+                .toList();
+    }
 
-        return 0;
+    @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
+    public IncomeEntry createNewIncome(IncomeEntry incomeEntry) {
+        IncomeBook incomeBook = modelMapper.map(incomeEntry, IncomeBook.class);
+        IncomeBook saved = incomeBookRepository.save(incomeBook);
+
+        return modelMapper.map(saved, IncomeEntry.class);
+    }
+
+    public IncomeBookDTO getIncomeBookByTime(FinancialBookRequest financialBookRequest) {
+        LocalDate from = financialBookRequest.getFrom(), to = financialBookRequest.getTo();
+        List<IncomeEntry> entries = getAll().stream()
+                .filter(e -> {
+
+                    LocalDate date = e.getAccountingDate();
+                    return (date.isEqual(from) || date.isAfter(from)) &&
+                            (date.isEqual(to) || date.isBefore(to));
+                })
+                .toList();
+
+        IncomeEntry broughtState = getBroughtState(to);
+
+        return IncomeBookDTO.builder()
+                .entries(entries)
+                .build();
+    }
+
+    public IncomeEntry getBroughtState(LocalDate previousDay) {
+        LocalDate firstDayInYear = LocalDate.of(LocalDate.now().getYear(), 1, 1);
+        // TODO:
+        return IncomeEntry.builder().build();
     }
 }

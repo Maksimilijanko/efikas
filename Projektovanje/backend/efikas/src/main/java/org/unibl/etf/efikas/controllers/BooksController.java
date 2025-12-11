@@ -3,11 +3,10 @@ package org.unibl.etf.efikas.controllers;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.exceptions.BookPdfGenerationException;
 import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
 import org.unibl.etf.efikas.models.dto.ApartmentDTO;
@@ -16,14 +15,14 @@ import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
 import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.enums.BookType;
-import org.unibl.etf.efikas.models.requests.BookRequest;
+import org.unibl.etf.efikas.models.requests.FinancialBookRequest;
+import org.unibl.etf.efikas.services.IncomeBookService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +31,15 @@ import java.util.List;
 public class BooksController {
 
     private final BookPdfFactory bookPdfFactory;
+    private final IncomeBookService incomeBookService;
 
-    public BooksController(BookPdfFactory bookPdfFactory) {
+    public BooksController(BookPdfFactory bookPdfFactory, IncomeBookService incomeBookService) {
         this.bookPdfFactory = bookPdfFactory;
+        this.incomeBookService = incomeBookService;
     }
 
-    @GetMapping("/{type}")
-    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type) { //, BookRequest request
+    @GetMapping("/pdf/{type}")
+    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type, @Validated @RequestBody FinancialBookRequest financialBookRequest) {
         var pdfService = bookPdfFactory.get(type);
 
         InputStream pdfStream;
@@ -94,5 +95,37 @@ public class BooksController {
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + type + "_" + System.currentTimeMillis() + ".pdf\"")
                 .body(responseBody);
+    }
+
+    @PostMapping("/income")
+    public ResponseEntity<?> addIncomeEntry(@Validated @RequestBody IncomeEntry incomeEntry) {
+        IncomeEntry saved = incomeBookService.createNewIncome(incomeEntry);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(saved.getId()).toUri();
+
+        return ResponseEntity.created(location).body(saved);
+    }
+
+    @PostMapping("/expenses")
+    public ResponseEntity<?> addExpensesEntry(@RequestBody IncomeEntry incomeEntry) {
+
+
+        return ResponseEntity.created(URI.create("test")).build();
+    }
+
+    @PostMapping("/domestic-guests")
+    public ResponseEntity<?> addDomesticGuestsEntry(@RequestBody IncomeEntry incomeEntry) {
+
+
+        return ResponseEntity.created(URI.create("test")).build();
+    }
+
+    @PostMapping("/foreign-guests")
+    public ResponseEntity<?> addForeignGuestsEntry(@RequestBody IncomeEntry incomeEntry) {
+
+
+        return ResponseEntity.created(URI.create("test")).build();
     }
 }
