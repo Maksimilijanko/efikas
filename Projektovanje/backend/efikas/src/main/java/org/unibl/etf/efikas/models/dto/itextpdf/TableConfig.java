@@ -16,5 +16,4 @@ public class TableConfig {
     private boolean hasTotalRow;
     private String title;
     private List<MergedCell> mergedCells;
-    private List<SpecialRow> specialRows;
 }

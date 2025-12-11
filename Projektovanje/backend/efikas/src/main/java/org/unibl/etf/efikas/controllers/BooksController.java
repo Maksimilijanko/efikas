@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.unibl.etf.efikas.exceptions.BookPdfGenerationException;
 import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
+import org.unibl.etf.efikas.models.dto.ApartmentDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
+import org.unibl.etf.efikas.models.dto.books.StoreDTO;
+import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.enums.BookType;
 import org.unibl.etf.efikas.models.requests.BookRequest;
 
@@ -36,41 +39,50 @@ public class BooksController {
 
     @GetMapping("/{type}")
     public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type) { //, BookRequest request
-        var service = bookPdfFactory.get(type);
+        var pdfService = bookPdfFactory.get(type);
 
         InputStream pdfStream;
         try {
             // TODO: Generisati ovdje DTO klasu dinamički sa podacima koja implementira BookRequest (u zavisnosti od tipa)
             //  pa je slati servisu, ili u servisu generisati (bez argumenta request u metodi generatePdf interfejsa)?
 
-            IncomeBookDTO request = IncomeBookDTO.builder()
-                    .taxpayerName("Марко Марковић")
-                    .taxpayerJmbg("0123456789123")
-                    .taxpayerAddress("Улица краља Петра I бр. 12, Бања Лука")
-                    .storeName("Марко ДОО")
-                    .storeAddress("Трг Крајине 1, Бања Лука")
+            TaxpayerDTO taxpayer = TaxpayerDTO.builder()
+                    .fullName("Марко Марковић")
+                    .jmbg("0123456789123")
+                    .address("Улица краља Петра I бр. 12, Бања Лука")
+                    .build();
+            StoreDTO store = StoreDTO.builder()
+                    .name("Марко ДОО")
+                    .address("Трг Крајине 1, Бања Лука")
                     .activity("Трговина на мало")
                     .activityCode("4711")
                     .jib("1234567890123")
                     .build();
+            IncomeBookDTO request = IncomeBookDTO.builder()
+                    .taxpayer(taxpayer)
+                    .store(store)
+                    .build();
 
             List<IncomeEntry> entries = new ArrayList<>();
-            entries.add(IncomeEntry.builder()
-                            .ordinalNumber(1)
-                            .accountingDate(LocalDate.now())
-                            .description("Opis")
-                            .salesIncome(new BigDecimal("20.00"))
-                            .otherIncome(new BigDecimal("10.00"))
-                            .financialIncome(new BigDecimal("50.00"))
-                            .totalIncome(new BigDecimal("80.00"))
-                            .calculatedVat(new BigDecimal("66.40")) // ukupno - 17% PDV?
-                    .build()
-            );
-
+            for(int i = 1; i <= 20; i++){
+                entries.add(IncomeEntry.builder()
+                        .id(i)
+                        .apartment(new ApartmentDTO())
+                        .accountingDate(LocalDate.now())
+                        .description("Opis asdhajhdskahfkjdlsahfjkahsjkfhkjl")
+                        .productSaleRevenue(new BigDecimal("0"))
+                        .goodsSaleRevenue(new BigDecimal("10.00"))
+                        .serviceSaleRevenue(new BigDecimal("100.00"))
+                        .otherRevenue(new BigDecimal("10.00"))
+                        .financialRevenue(new BigDecimal("50.00"))
+                        .totalRevenue(new BigDecimal("170.00"))
+                        .vatAmount(new BigDecimal("28.90")) // 17% PDV od ukupno?
+                        .build()
+                );
+            }
             request.setEntries(entries);
 
-
-            pdfStream = service.generatePdf(request);
+            pdfStream = pdfService.generatePdf(request);
         } catch (IOException e) {
             throw new BookPdfGenerationException(e.getMessage());
         }

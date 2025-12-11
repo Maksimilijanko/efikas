@@ -23,6 +23,9 @@ import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Service for generating the PDF for income books.
@@ -43,7 +46,8 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
     public InputStream generatePdf(IncomeBookDTO request) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        try (PdfWriter writer = new PdfWriter(baos); Document document = createDocument(writer)) {
+        try (PdfWriter writer = new PdfWriter(baos);
+             Document document = createDocument(writer)) {
             // Add taxpayer info table
             document.add(getTaxpayerTable(request));
             document.add(new Paragraph("\n"));
@@ -70,24 +74,6 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
     }
 
     private Table getIncomeTable(IncomeBookDTO request) {
-//        SpecialRow startBalance = SpecialRow.builder()
-//                .label("Донесено стање")
-//                .type(RowType.START_BALANCE)
-//                .startColumn(2) // Starts at column 3 (0-based index)
-//                .endColumn(2)
-//                .build();
-//
-//        SpecialRow totalRow = SpecialRow.builder()
-//                .label("Укупно за пренос")
-//                .type(RowType.TOTAL)
-//                .startColumn(2) // Starts at column 3
-//                .endColumn(2)
-//                .build();
-//
-//        List<SpecialRow> specialRows = new ArrayList<>();
-//        specialRows.add(startBalance);
-//        specialRows.add(totalRow);
-
         TableData receiptData = TableData.builder()
                 .title("КЊИГА ПРИХОДА")
                 .headers(List.of(
@@ -95,6 +81,8 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
                         "Датум књижења",
                         "Опис промјене (назив, број и датум документа за књижење)",
                         "Наплаћени приходи од продаје производа",
+                        "Наплаћени приходи од продаје робе",
+                        "Наплаћени приходи од продаје услуга",
                         "Наплаћени остали приходи",
                         "Наплаћени финансијски приходи",
                         "Укупно наплаћени приходи",
@@ -102,10 +90,20 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
                 ))
                 .config(
                         TableConfig.builder()
-                                .columnWidths(new float[]{0.5f, 1.5f, 3f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f})
+                                .columnWidths(new float[]{
+                                        40,   // Ред. бр.
+                                        70,   // Датум
+                                        150,  // Опис промјене
+                                        60,   // Производи
+                                        60,   // Роба
+                                        60,   // Услуге
+                                        60,   // Остали приходи
+                                        60,   // Финансијски приходи
+                                        70,   // Укупно
+                                        60    // ПДВ
+                                })
                                 .hasTitleRow(true)
                                 .hasTotalRow(true)
-                                //.specialRows(specialRows)
                                 .build()
                 )
                 .rows(getIncomeData(request))
@@ -115,23 +113,82 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
     }
 
     private List<List<String>> getIncomeData(IncomeBookDTO request) {
-        // Convert your request data to table rows
+        // Convert request data to table rows
         List<List<String>> rows = new ArrayList<>();
 
+        // 1. Check if there is any previous income, if yes add it as a row
+        if(request.getBroughtState() != null) {
+            request.getBroughtState().setAccountingDate(null);
+            request.getBroughtState().setDescription("Донесено стање");
+            List<String> broughtStateRow = createRowFromEntry(request.getBroughtState());
+            rows.add(broughtStateRow);
+        }
+
+        // 2. Add all other entries as rows
         for (IncomeEntry entry : request.getEntries()) {
-            List<String> row = new ArrayList<>();
-            row.add(String.valueOf(entry.getOrdinalNumber()));
-            row.add(entry.getAccountingDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-            row.add(entry.getDescription());
-            row.add(formatAmount(entry.getSalesIncome()));
-            row.add(formatAmount(entry.getOtherIncome()));
-            row.add(formatAmount(entry.getFinancialIncome()));
-            row.add(formatAmount(entry.getTotalIncome()));
-            row.add(formatAmount(entry.getCalculatedVat()));
+            List<String> row = createRowFromEntry(entry);
             rows.add(row);
         }
 
+        // 3. Add the total, cumulative state (of columns) at the end
+        List<String> row = calculateRowTotalForTransfer(request);
+        rows.add(row);
+
         return rows;
+    }
+
+    private List<String> createRowFromEntry(IncomeEntry entry) {
+        List<String> row = new ArrayList<>();
+        String id = entry.getId() != null ? String.valueOf(entry.getId()) : "";
+        String date = entry.getAccountingDate() != null ? entry.getAccountingDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                : "";
+
+        row.add(id);
+        row.add(date);
+        row.add(entry.getDescription());
+        row.add(formatAmount(entry.getProductSaleRevenue()));
+        row.add(formatAmount(entry.getGoodsSaleRevenue()));
+        row.add(formatAmount(entry.getServiceSaleRevenue()));
+        row.add(formatAmount(entry.getOtherRevenue()));
+        row.add(formatAmount(entry.getFinancialRevenue()));
+        row.add(formatAmount(entry.getTotalRevenue()));
+        row.add(formatAmount(entry.getVatAmount()));
+
+        return row;
+    }
+
+    private List<String> calculateRowTotalForTransfer(IncomeBookDTO request) {
+        IncomeEntry entryFromBroughtState = request.getBroughtState() != null
+                ? request.getBroughtState()
+                : IncomeEntry.builder().build(); // all zeros
+
+        IncomeEntry entry = IncomeEntry.builder()
+                .id(null)
+                .accountingDate(null)
+                .description("Укупно за пренос")
+                .productSaleRevenue(sum(request.getEntries(), IncomeEntry::getProductSaleRevenue, entryFromBroughtState))
+                .goodsSaleRevenue(sum(request.getEntries(), IncomeEntry::getGoodsSaleRevenue, entryFromBroughtState))
+                .serviceSaleRevenue(sum(request.getEntries(), IncomeEntry::getServiceSaleRevenue, entryFromBroughtState))
+                .otherRevenue(sum(request.getEntries(), IncomeEntry::getOtherRevenue, entryFromBroughtState))
+                .financialRevenue(sum(request.getEntries(), IncomeEntry::getFinancialRevenue, entryFromBroughtState))
+                .totalRevenue(sum(request.getEntries(), IncomeEntry::getTotalRevenue, entryFromBroughtState))
+                .vatAmount(sum(request.getEntries(), IncomeEntry::getVatAmount, entryFromBroughtState))
+                .build();
+
+        return createRowFromEntry(entry);
+    }
+
+    private BigDecimal sum(List<IncomeEntry> list, Function<IncomeEntry, BigDecimal> getter, IncomeEntry entryFromBroughtState) {
+        BigDecimal listSum = list == null ? BigDecimal.ZERO :
+                list.stream()
+                        .map(getter)
+                        .filter(Objects::nonNull)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal broughtValue = Optional.ofNullable(getter.apply(entryFromBroughtState))
+                .orElse(BigDecimal.ZERO);
+
+        return listSum.add(broughtValue);
     }
 
     private Table getTaxpayerTable(IncomeBookDTO request) {
@@ -147,9 +204,9 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
                 .build();
 
         // Use data from request
-        infoData.getRows().add(List.of("ИМЕ И ПРЕЗИМЕ", request.getTaxpayerName()));
-        infoData.getRows().add(List.of("ЈЕДИНСТВЕНИ МАТИЧНИ БРОЈ ГРАЂАНИНА", request.getTaxpayerJmbg()));
-        infoData.getRows().add(List.of("АДРЕСА СТАНОВАЊА", request.getTaxpayerAddress()));
+        infoData.getRows().add(List.of("ИМЕ И ПРЕЗИМЕ", request.getTaxpayer().getFullName()));
+        infoData.getRows().add(List.of("ЈЕДИНСТВЕНИ МАТИЧНИ БРОЈ ГРАЂАНИНА", request.getTaxpayer().getJmbg()));
+        infoData.getRows().add(List.of("АДРЕСА СТАНОВАЊА", request.getTaxpayer().getAddress()));
 
         return bookTableFactory.createTable(TableType.INFO, infoData);
     }
@@ -166,11 +223,11 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
                 )
                 .build();
 
-        infoData.getRows().add(List.of("НАЗИВ", request.getStoreName()));
-        infoData.getRows().add(List.of("АДРЕСА", request.getStoreAddress()));
-        infoData.getRows().add(List.of("ДЈЕЛАТНОСТ", request.getActivity()));
-        infoData.getRows().add(List.of("ШИФРА ДЈЕЛАТНОСТИ", request.getActivityCode()));
-        infoData.getRows().add(List.of("ЈИБ", request.getJib()));
+        infoData.getRows().add(List.of("НАЗИВ", request.getStore().getName()));
+        infoData.getRows().add(List.of("АДРЕСА", request.getStore().getAddress()));
+        infoData.getRows().add(List.of("ДЈЕЛАТНОСТ", request.getStore().getActivity()));
+        infoData.getRows().add(List.of("ШИФРА ДЈЕЛАТНОСТИ", request.getStore().getActivityCode()));
+        infoData.getRows().add(List.of("ЈИБ", request.getStore().getJib()));
 
         return bookTableFactory.createTable(TableType.INFO, infoData);
     }

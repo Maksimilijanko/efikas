@@ -12,5 +12,7 @@ import java.util.List;
 public class IncomeBookDTO implements BookRequest {
     private TaxpayerDTO taxpayer;
     private StoreDTO store;
-    private List<IncomeEntry> entries;
+    @Builder.Default
+    private IncomeEntry broughtState = IncomeEntry.builder().build();       // Doneseno stanje
+    private List<IncomeEntry> entries;                                      // Svi prihodi izmedju
 }
