@@ -14,5 +14,5 @@ public class IncomeBookDTO implements BookRequest {
     private StoreDTO store;
     @Builder.Default
     private IncomeEntry broughtState = IncomeEntry.builder().build();       // Doneseno stanje
-    private List<IncomeEntry> entries;                                      // Svi prihodi izmedju
+    private List<IncomeEntry> entries;                                      // Svi prihodi poslije
 }

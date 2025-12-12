@@ -9,13 +9,14 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.exceptions.BookPdfGenerationException;
 import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
-import org.unibl.etf.efikas.models.dto.ApartmentDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
 import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.enums.BookType;
-import org.unibl.etf.efikas.models.requests.FinancialBookRequest;
+import org.unibl.etf.efikas.models.requests.CreateIncomeBookRequest;
+import org.unibl.etf.efikas.models.requests.FinancialBookPdfRequest;
+import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 import org.unibl.etf.efikas.services.IncomeBookService;
 
 import java.io.IOException;
@@ -39,7 +40,9 @@ public class BooksController {
     }
 
     @GetMapping("/pdf/{type}")
-    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type, @Validated @RequestBody FinancialBookRequest financialBookRequest) {
+    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type) { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
+        FinancialBookPdfRequest financialBookPdfRequest = null;
+
         var pdfService = bookPdfFactory.get(type);
 
         InputStream pdfStream;
@@ -59,16 +62,19 @@ public class BooksController {
                     .activityCode("4711")
                     .jib("1234567890123")
                     .build();
-            IncomeBookDTO request = IncomeBookDTO.builder()
+            IncomeBookDTO request = IncomeBookDTO.builder() // TODO: BooksController - pdf trenutno samo za knjigu prihoda
                     .taxpayer(taxpayer)
                     .store(store)
                     .build();
+
+//            IncomeEntry broughtState = incomeBookService.getBroughtState(financialBookPdfRequest.getFrom());
+//            if(broughtState != null) request.setBroughtState(broughtState);
 
             List<IncomeEntry> entries = new ArrayList<>();
             for(int i = 1; i <= 20; i++){
                 entries.add(IncomeEntry.builder()
                         .id(i)
-                        .apartment(new ApartmentDTO())
+                        .apartment(new ApartmentResponse())
                         .accountingDate(LocalDate.now())
                         .description("Opis asdhajhdskahfkjdlsahfjkahsjkfhkjl")
                         .productSaleRevenue(new BigDecimal("0"))
@@ -82,6 +88,8 @@ public class BooksController {
                 );
             }
             request.setEntries(entries);
+
+            // TODO: IncomeBookDTO request = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
 
             pdfStream = pdfService.generatePdf(request);
         } catch (IOException e) {
@@ -98,8 +106,8 @@ public class BooksController {
     }
 
     @PostMapping("/income")
-    public ResponseEntity<?> addIncomeEntry(@Validated @RequestBody IncomeEntry incomeEntry) {
-        IncomeEntry saved = incomeBookService.createNewIncome(incomeEntry);
+    public ResponseEntity<?> addIncomeEntry(@Validated @RequestBody CreateIncomeBookRequest createIncomeBookRequest) {
+        IncomeEntry saved = incomeBookService.createNewIncome(createIncomeBookRequest);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")

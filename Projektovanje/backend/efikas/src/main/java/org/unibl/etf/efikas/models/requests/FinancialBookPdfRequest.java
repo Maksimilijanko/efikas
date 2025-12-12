@@ -2,13 +2,14 @@ package org.unibl.etf.efikas.models.requests;
 
 import lombok.Builder;
 import lombok.Data;
-import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
+import org.unibl.etf.efikas.models.dto.books.StoreDTO;
+import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 
 import java.time.LocalDate;
 
 @Data
 @Builder
-public class FinancialBookRequest {
+public class FinancialBookPdfRequest {
     /**
      * "from" date will be 01.01 of current fiscal year
      * */
@@ -19,4 +20,7 @@ public class FinancialBookRequest {
      * */
     @Builder.Default
     private LocalDate to = LocalDate.now();
+
+    private TaxpayerDTO taxpayer;
+    private StoreDTO store;
 }

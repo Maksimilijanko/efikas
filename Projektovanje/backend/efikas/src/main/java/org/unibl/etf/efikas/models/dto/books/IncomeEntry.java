@@ -1,9 +1,12 @@
 package org.unibl.etf.efikas.models.dto.books;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.unibl.etf.efikas.models.dto.ApartmentDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
+import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,12 +16,14 @@ import java.time.LocalDate;
  * */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class IncomeEntry {
     @Builder.Default
     private Integer id = 0;
-    private ApartmentDTO apartment;
+    private ApartmentResponse apartment;
     @Builder.Default
-    private LocalDate accountingDate =  LocalDate.now();
+    private LocalDate accountingDate = LocalDate.now();
     @Builder.Default
     private String description = "";
     @Builder.Default

@@ -51,6 +51,11 @@ public class ApartmentService {
                 .toList();
     }
 
+    public ApartmentResponse getApartmentById(long id) {
+        Apartment apartment = apartmentRepository.findById(id).orElse(null);
+        return modelMapper.map(apartment, ApartmentResponse.class);
+    }
+
     public ApartmentResponse createApartmentWithFiles(ApartmentDTO request, List<MultipartFile> files, String email) {
         Apartment apartment = new Apartment();
         return getApartmentResponseCreate(request, files, email, apartment);

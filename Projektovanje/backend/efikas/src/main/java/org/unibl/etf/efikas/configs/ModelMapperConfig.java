@@ -4,10 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.unibl.etf.efikas.models.dto.ReservationDTO;
+import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
 import org.unibl.etf.efikas.models.entities.ApartmentDamage;
 import org.unibl.etf.efikas.models.entities.ApartmentExpense;
 import org.unibl.etf.efikas.models.entities.ApartmentTask;
 import org.unibl.etf.efikas.models.entities.Reservation;
+import org.unibl.etf.efikas.models.requests.CreateIncomeBookRequest;
 import org.unibl.etf.efikas.models.responses.ApartmentDamageResponse;
 import org.unibl.etf.efikas.models.responses.ApartmentExpenseResponse;
 import org.unibl.etf.efikas.models.responses.ApartmentTaskResponse;
@@ -60,7 +62,6 @@ public class ModelMapperConfig {
         // We skip the reservationId when creating a Reservation from ReservationDTO
         mapper.createTypeMap(ReservationDTO.class, Reservation.class)
                 .addMappings(m -> m.skip(Reservation::setReservationId));
-
 
 
         return mapper;

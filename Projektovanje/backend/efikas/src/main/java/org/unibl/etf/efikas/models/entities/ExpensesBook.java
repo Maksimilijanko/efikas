@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "expenses_book")
+@Table(name = "expenses_book", schema = "efikas")
 public class ExpensesBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,7 +78,8 @@ public class ExpensesBook {
     private BigDecimal totalUnrecognizedExpenses;
 
     @ColumnDefault("now()")
-    @Column(name = "\"CreatedAt\"")
+    @CreationTimestamp
+    @Column(name = "\"CreatedAt\"", nullable = false, updatable = false)
     private Instant createdAt;
 
 }

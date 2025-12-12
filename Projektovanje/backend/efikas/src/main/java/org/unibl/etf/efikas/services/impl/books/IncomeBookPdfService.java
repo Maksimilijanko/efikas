@@ -116,8 +116,10 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
         // Convert request data to table rows
         List<List<String>> rows = new ArrayList<>();
 
+
+
         // 1. Check if there is any previous income, if yes add it as a row
-        if(request.getBroughtState() != null) {
+        if(request.getBroughtState() != null && request.getBroughtState().getId() != 0) {
             request.getBroughtState().setAccountingDate(null);
             request.getBroughtState().setDescription("Донесено стање");
             List<String> broughtStateRow = createRowFromEntry(request.getBroughtState());

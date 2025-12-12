@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.unibl.etf.efikas.models.enums.Gender;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "domestic_guests_book")
+@Table(name = "domestic_guests_book", schema = "efikas")
 public class DomesticGuestsBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,7 +73,8 @@ public class DomesticGuestsBook {
     private String remarks;
 
     @ColumnDefault("now()")
-    @Column(name = "\"CreatedAt\"")
+    @CreationTimestamp
+    @Column(name = "\"CreatedAt\"", nullable = false, updatable = false)
     private Instant createdAt;
 
 }
