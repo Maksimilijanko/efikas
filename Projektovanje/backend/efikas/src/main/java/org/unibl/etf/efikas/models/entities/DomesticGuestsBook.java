@@ -1,12 +1,11 @@
 package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
+import org.hibernate.type.SqlTypes;
 import org.unibl.etf.efikas.models.enums.Gender;
 
 import java.time.Instant;
@@ -33,6 +32,8 @@ public class DomesticGuestsBook {
     @Column(name = "\"Surname\"", nullable = false, length = 50)
     private String surname;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "\"Gender\"", columnDefinition = "person_gender not null")
     private Gender gender;
 

@@ -4,17 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
-import org.unibl.etf.efikas.models.dto.books.IncomeBroughtStateDTO;
-import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
+import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
 import org.unibl.etf.efikas.models.entities.IncomeBook;
 import org.unibl.etf.efikas.models.requests.CreateIncomeBookRequest;
 import org.unibl.etf.efikas.models.requests.FinancialBookPdfRequest;
 import org.unibl.etf.efikas.repositories.IncomeBookRepository;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service

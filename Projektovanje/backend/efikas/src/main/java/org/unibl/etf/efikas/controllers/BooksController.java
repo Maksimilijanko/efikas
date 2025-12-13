@@ -1,5 +1,7 @@
 package org.unibl.etf.efikas.controllers;
 
+import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,34 +14,32 @@ import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
 import org.unibl.etf.efikas.exceptions.InvalidBookPeriodException;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
-import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
+import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
+import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
 import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.enums.BookType;
+import org.unibl.etf.efikas.models.requests.CreateForeignGuestRequest;
 import org.unibl.etf.efikas.models.requests.CreateIncomeBookRequest;
 import org.unibl.etf.efikas.models.requests.FinancialBookPdfRequest;
-import org.unibl.etf.efikas.models.responses.ApartmentResponse;
+import org.unibl.etf.efikas.services.ForeignGuestsBookService;
 import org.unibl.etf.efikas.services.IncomeBookService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/books")
+@AllArgsConstructor
 public class BooksController {
 
     private final BookPdfFactory bookPdfFactory;
     private final IncomeBookService incomeBookService;
+    private final ForeignGuestsBookService foreignGuestsBookService;
 
-    public BooksController(BookPdfFactory bookPdfFactory, IncomeBookService incomeBookService) {
-        this.bookPdfFactory = bookPdfFactory;
-        this.incomeBookService = incomeBookService;
-    }
 
     // =========================================== PDF endpoints ===========================================
 
@@ -61,6 +61,7 @@ public class BooksController {
         var pdfService = bookPdfFactory.get(type);
         IncomeBookDTO request = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
 
+
         try (InputStream pdfStream = pdfService.generatePdf(request)) {  // try-with-resources without resource leaks
             StreamingResponseBody responseBody = outputStream -> {
                 try {
@@ -78,6 +79,27 @@ public class BooksController {
         } catch (IOException e) {
             throw new BookPdfGenerationException("Failed to generate PDF");
         }
+    }
+
+    // test endpoint
+    @GetMapping("/foreign-guests/pdf-data")
+    public ResponseEntity<List<ForeignGuestsEntry>> getPdfData(
+            @RequestParam Integer apartmentId,
+            @RequestParam(required = false)
+            LocalDate fromDate,
+            @RequestParam(required = false)
+            LocalDate toDate,
+            @RequestParam(required = false) Boolean active
+    ) {
+        List<ForeignGuestsEntry> result =
+                foreignGuestsBookService.findForPdf(
+                        apartmentId,
+                        fromDate,
+                        toDate,
+                        active
+                );
+
+        return ResponseEntity.ok(result);
     }
 
     // =========================================== POST endpoints ===========================================
@@ -108,10 +130,14 @@ public class BooksController {
     }
 
     @PostMapping("/foreign-guests")
-    public ResponseEntity<?> addForeignGuestsEntry(@RequestBody IncomeEntry incomeEntry) {
+    public ResponseEntity<?> addForeignGuestsEntry(@RequestBody CreateForeignGuestRequest createForeignGuestRequest) {
+        ForeignGuestsEntry saved = foreignGuestsBookService.createNewForeignGuest(createForeignGuestRequest);
 
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(saved.getId()).toUri();
 
-        return ResponseEntity.created(URI.create("test")).build();
+        return ResponseEntity.created(location).body(saved);
     }
 
     // =========================================== GET endpoints ===========================================

@@ -2,7 +2,7 @@ package org.unibl.etf.efikas.design_patterns.factory;
 
 import com.itextpdf.layout.element.Table;
 import org.springframework.stereotype.Component;
-import org.unibl.etf.efikas.design_patterns.strategy.TableStrategy;
+import org.unibl.etf.efikas.design_patterns.strategy.interfaces.TableStrategy;
 import org.unibl.etf.efikas.models.dto.itextpdf.TableData;
 import org.unibl.etf.efikas.models.enums.TableType;
 

@@ -1,11 +1,9 @@
-package org.unibl.etf.efikas.models.dto.books;
+package org.unibl.etf.efikas.models.dto.books.entries;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.unibl.etf.efikas.models.dto.ApartmentDTO;
-import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 
 import java.math.BigDecimal;

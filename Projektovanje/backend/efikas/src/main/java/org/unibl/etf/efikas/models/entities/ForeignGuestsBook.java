@@ -1,12 +1,12 @@
 package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.ToString;
+import org.hibernate.annotations.*;
+import org.hibernate.type.SqlTypes;
 import org.unibl.etf.efikas.models.enums.Gender;
 
 import java.time.Instant;
@@ -14,6 +14,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "foreign_guests_book", schema = "efikas")
 public class ForeignGuestsBook {
@@ -33,6 +34,8 @@ public class ForeignGuestsBook {
     @Column(name = "\"Surname\"", nullable = false, length = 50)
     private String surname;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "\"Gender\"", columnDefinition = "person_gender not null")
     private Gender gender;
 
@@ -63,6 +66,8 @@ public class ForeignGuestsBook {
     @Column(name = "\"VisaNumber\"", nullable = false, length = 20)
     private String visaNumber;
 
+    // Ivan: OVDJE NEDOSTAJE 'datum dozvole boravka' - permittedResidenceDate, zaboravio unijeti u bazu :/
+
     @Column(name = "\"EntryDate\"", nullable = false)
     private LocalDate entryDate;
 
@@ -70,10 +75,10 @@ public class ForeignGuestsBook {
     private String entryPlace;
 
     @Column(name = "\"AccomodationUnitNumber\"", nullable = false)
-    private Integer accomodationUnitNumber;
+    private Integer accommodationUnitNumber;
 
     @Column(name = "\"AccomodationUnitFloor\"", nullable = false)
-    private Integer accomodationUnitFloor;
+    private Integer accommodationUnitFloor;
 
     @Column(name = "\"DateTimeOfArrival\"", nullable = false)
     private Instant dateTimeOfArrival;

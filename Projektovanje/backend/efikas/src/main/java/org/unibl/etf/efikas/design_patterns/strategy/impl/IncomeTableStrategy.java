@@ -1,4 +1,4 @@
-package org.unibl.etf.efikas.design_patterns.strategy;
+package org.unibl.etf.efikas.design_patterns.strategy.impl;
 
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.layout.borders.Border;
@@ -9,6 +9,7 @@ import com.itextpdf.layout.properties.Property;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import org.springframework.stereotype.Component;
+import org.unibl.etf.efikas.design_patterns.strategy.interfaces.TableStrategy;
 import org.unibl.etf.efikas.models.dto.itextpdf.TableConfig;
 import org.unibl.etf.efikas.models.dto.itextpdf.TableData;
 import org.unibl.etf.efikas.models.enums.TableType;
