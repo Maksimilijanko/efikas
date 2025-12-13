@@ -3,7 +3,6 @@ package org.unibl.etf.efikas.security;
 import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
