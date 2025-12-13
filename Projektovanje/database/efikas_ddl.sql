@@ -124,3 +124,13 @@ select * from efikas.reservation;
 select * from efikas.reservation_type;
 select * from efikas.apartment;
 
+update efikas.apartment set "Name" = 'Apartman srece' where apartment."ApartmentId" = 4 ;
+
+INSERT INTO "efikas"."reservation" (
+    "ApartmentId", "GuestFullName", "GuestPhoneNumber",
+    "DateTimeOfArrival", "DateTimeOfDeparture", "GuestNumber", "Price",
+    "Note", "PersonalDocumentURL", "TypeId"
+) VALUES
+      (4, 'Ivan Milic', '+38765111222', '2025-11-10 13:00:00', '2025-11-13 10:00:00', 4, 270.0, 'Direktna rezervacija.', NULL, 2);
+
+select * from efikas.apartment_trait;

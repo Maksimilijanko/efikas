@@ -74,6 +74,8 @@ public class ApartmentService {
         apartment.setCapacity(request.getCapacity());
         apartment.setPricePerDay(request.getPricePerDay());
         apartment.setPricePerNight(request.getPricePerNight());
+        apartment.setName(request.getName());
+        apartment.setTraits(request.getTraits());
         apartment.setUser(appUserRepository.findByEmail(email).orElse(null));
 
         Apartment savedApartment = apartmentRepository.save(apartment);
@@ -130,6 +132,8 @@ public class ApartmentService {
         apartment.setCapacity(dto.getCapacity());
         apartment.setPricePerDay(dto.getPricePerDay());
         apartment.setPricePerNight(dto.getPricePerNight());
+        apartment.setName(dto.getName());
+        apartment.setTraits(dto.getTraits());
 
         Apartment updatedApartment = apartmentRepository.save(apartment);
 

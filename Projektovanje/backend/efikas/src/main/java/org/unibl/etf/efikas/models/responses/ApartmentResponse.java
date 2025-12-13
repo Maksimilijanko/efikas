@@ -2,6 +2,7 @@ package org.unibl.etf.efikas.models.responses;
 
 import lombok.Data;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ApartmentResponse {
@@ -14,4 +15,5 @@ public class ApartmentResponse {
     private Double pricePerDay;
     private Double pricePerNight;
     private List<String> pictures;          // picture URLs
+    private Map<String, Boolean> traits;
 }
