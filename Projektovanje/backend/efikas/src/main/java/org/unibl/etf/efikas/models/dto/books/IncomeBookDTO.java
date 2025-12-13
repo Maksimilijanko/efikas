@@ -2,6 +2,7 @@ package org.unibl.etf.efikas.models.dto.books;
 
 import lombok.Builder;
 import lombok.Data;
+import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 import org.unibl.etf.efikas.models.requests.BookRequest;
 
 import java.util.List;
@@ -10,14 +11,10 @@ import java.util.List;
 @Data
 @Builder
 public class IncomeBookDTO implements BookRequest {
-    // TODO: make special dto's for taxpayer/store?
-    private String taxpayerName;
-    private String taxpayerJmbg;
-    private String taxpayerAddress;
-    private String storeName;
-    private String storeAddress;
-    private String activity;
-    private String activityCode;
-    private String jib;
-    private List<IncomeEntry> entries;
+    private TaxpayerDTO taxpayer;
+    private StoreDTO store;
+    private DateRangeDTO period;
+    @Builder.Default
+    private IncomeEntry broughtState = IncomeEntry.builder().build();       // Doneseno stanje
+    private List<IncomeEntry> entries;                                      // Svi prihodi poslije
 }

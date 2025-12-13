@@ -1,7 +1,12 @@
 package org.unibl.etf.efikas.models.dto.books;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.unibl.etf.efikas.models.dto.ApartmentDTO;
+import org.unibl.etf.efikas.models.entities.Apartment;
+import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,13 +16,30 @@ import java.time.LocalDate;
  * */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class IncomeEntry {
-    private Integer ordinalNumber;
-    private LocalDate accountingDate;
-    private String description;
-    private BigDecimal salesIncome;
-    private BigDecimal otherIncome;
-    private BigDecimal financialIncome;
-    private BigDecimal totalIncome;
-    private BigDecimal calculatedVat;
+    @Builder.Default
+    private Integer id = 0;
+    private ApartmentResponse apartment;
+    @Builder.Default
+    private LocalDate accountingDate = LocalDate.now();
+    @Builder.Default
+    private String description = "";
+    @Builder.Default
+    private BigDecimal productSaleRevenue = BigDecimal.ZERO;
+    @Builder.Default
+    private BigDecimal goodsSaleRevenue = BigDecimal.ZERO;
+    @Builder.Default
+    private BigDecimal serviceSaleRevenue = BigDecimal.ZERO;
+    @Builder.Default
+    private BigDecimal otherRevenue = BigDecimal.ZERO;
+    @Builder.Default
+    private BigDecimal financialRevenue = BigDecimal.ZERO;
+    @Builder.Default
+    private BigDecimal totalRevenue = BigDecimal.ZERO;
+    @Builder.Default
+    private BigDecimal vatAmount = BigDecimal.ZERO;
+
+
 }

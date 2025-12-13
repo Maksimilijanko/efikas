@@ -13,7 +13,9 @@ import com.itextpdf.layout.element.Paragraph;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.unibl.etf.efikas.handlers.HeaderEventHandler;
+import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 import org.unibl.etf.efikas.models.requests.BookRequest;
+import org.unibl.etf.efikas.util.Constants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +34,7 @@ public abstract class BaseBookPdfService<T extends BookRequest> {
     /**
      * Creates the generic look of a document.
      * */
-    protected Document createDocument(PdfWriter writer) throws IOException {
+    protected Document createDocument(PdfWriter writer, DateRangeDTO dateRangeDTO) throws IOException {
         PdfDocument pdf = new PdfDocument(writer);
 
         // Create FRESH font for each document
@@ -44,13 +46,13 @@ public abstract class BaseBookPdfService<T extends BookRequest> {
         Image logo = new Image(ImageDataFactory.create(logoBytes));
 
         // Register header with fresh objects
-        pdf.addEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(logo, cyrillicFont));
+        pdf.addEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(logo, cyrillicFont, dateRangeDTO));
 
         // Create document
         Document document = new Document(pdf);
         document.setMargins(20, 20, 20, 20);
         document.setFont(cyrillicFont);  // Use the fresh font
-        document.setFontSize(10);
+        document.setFontSize(Constants.PdfFonts.GLOBAL_FONT_SIZE);
         document.add(new Paragraph("\n\n\n"));
 
         return document;
