@@ -47,7 +47,7 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try (PdfWriter writer = new PdfWriter(baos);
-             Document document = createDocument(writer)) {
+             Document document = createDocument(writer, request.getPeriod())) {
             // Add taxpayer info table
             document.add(getTaxpayerTable(request));
             document.add(new Paragraph("\n"));
@@ -75,37 +75,9 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
 
     private Table getIncomeTable(IncomeBookDTO request) {
         TableData receiptData = TableData.builder()
-                .title("КЊИГА ПРИХОДА")
-                .headers(List.of(
-                        "Ред. бр.",
-                        "Датум књижења",
-                        "Опис промјене (назив, број и датум документа за књижење)",
-                        "Наплаћени приходи од продаје производа",
-                        "Наплаћени приходи од продаје робе",
-                        "Наплаћени приходи од продаје услуга",
-                        "Наплаћени остали приходи",
-                        "Наплаћени финансијски приходи",
-                        "Укупно наплаћени приходи",
-                        "Обрачунати ПДВ"
-                ))
-                .config(
-                        TableConfig.builder()
-                                .columnWidths(new float[]{
-                                        40,   // Ред. бр.
-                                        70,   // Датум
-                                        150,  // Опис промјене
-                                        60,   // Производи
-                                        60,   // Роба
-                                        60,   // Услуге
-                                        60,   // Остали приходи
-                                        60,   // Финансијски приходи
-                                        70,   // Укупно
-                                        60    // ПДВ
-                                })
-                                .hasTitleRow(true)
-                                .hasTotalRow(true)
-                                .build()
-                )
+                .title(generateTitle())
+                .headers(generateFinancialTableHeaders())
+                .config(generateFinancialTableConfig())
                 .rows(getIncomeData(request))
                 .build();
 
@@ -117,9 +89,8 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
         List<List<String>> rows = new ArrayList<>();
 
 
-
         // 1. Check if there is any previous income, if yes add it as a row
-        if(request.getBroughtState() != null && request.getBroughtState().getId() != 0) {
+        if(request.getBroughtState() != null) {
             request.getBroughtState().setAccountingDate(null);
             request.getBroughtState().setDescription("Донесено стање");
             List<String> broughtStateRow = createRowFromEntry(request.getBroughtState());
@@ -237,5 +208,44 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
     private String formatAmount(BigDecimal amount) {
         if (amount == null) return "";
         return String.format("%.2f", amount);
+    }
+
+    // TODO: Put all of this in a Strategy interface? Needs other books done though to see if its a good "strategy" :) ...
+    private String generateTitle() {
+        return "КЊИГА ПРИХОДА";
+    }
+
+    private List<String> generateFinancialTableHeaders() {
+        return List.of(
+                "Ред. бр.",
+                "Датум књижења",
+                "Опис промјене (назив, број и датум документа за књижење)",
+                "Наплаћени приходи од продаје производа",
+                "Наплаћени приходи од продаје робе",
+                "Наплаћени приходи од продаје услуга",
+                "Наплаћени остали приходи",
+                "Наплаћени финансијски приходи",
+                "Укупно наплаћени приходи",
+                "Обрачунати ПДВ"
+        );
+    }
+
+    private TableConfig generateFinancialTableConfig() {
+        return TableConfig.builder()
+                .columnWidths(new float[]{
+                        40,   // Ред. бр.
+                        70,   // Датум
+                        150,  // Опис промјене
+                        60,   // Производи
+                        60,   // Роба
+                        60,   // Услуге
+                        60,   // Остали приходи
+                        60,   // Финансијски приходи
+                        70,   // Укупно
+                        60    // ПДВ
+                })
+                .hasTitleRow(true)
+                .hasTotalRow(true)
+                .build();
     }
 }

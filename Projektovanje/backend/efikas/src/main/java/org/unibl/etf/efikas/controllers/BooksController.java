@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.exceptions.BookPdfGenerationException;
 import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
+import org.unibl.etf.efikas.exceptions.InvalidBookPeriodException;
+import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
 import org.unibl.etf.efikas.models.dto.books.StoreDTO;
@@ -39,71 +41,46 @@ public class BooksController {
         this.incomeBookService = incomeBookService;
     }
 
+    // =========================================== PDF endpoints ===========================================
+
     @GetMapping("/pdf/{type}")
-    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type) { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
-        FinancialBookPdfRequest financialBookPdfRequest = null;
-
-        var pdfService = bookPdfFactory.get(type);
-
-        InputStream pdfStream;
-        try {
-            // TODO: Generisati ovdje DTO klasu dinamički sa podacima koja implementira BookRequest (u zavisnosti od tipa)
-            //  pa je slati servisu, ili u servisu generisati (bez argumenta request u metodi generatePdf interfejsa)?
-
-            TaxpayerDTO taxpayer = TaxpayerDTO.builder()
-                    .fullName("Марко Марковић")
-                    .jmbg("0123456789123")
-                    .address("Улица краља Петра I бр. 12, Бања Лука")
-                    .build();
-            StoreDTO store = StoreDTO.builder()
-                    .name("Марко ДОО")
-                    .address("Трг Крајине 1, Бања Лука")
-                    .activity("Трговина на мало")
-                    .activityCode("4711")
-                    .jib("1234567890123")
-                    .build();
-            IncomeBookDTO request = IncomeBookDTO.builder() // TODO: BooksController - pdf trenutno samo za knjigu prihoda
-                    .taxpayer(taxpayer)
-                    .store(store)
-                    .build();
-
-//            IncomeEntry broughtState = incomeBookService.getBroughtState(financialBookPdfRequest.getFrom());
-//            if(broughtState != null) request.setBroughtState(broughtState);
-
-            List<IncomeEntry> entries = new ArrayList<>();
-            for(int i = 1; i <= 20; i++){
-                entries.add(IncomeEntry.builder()
-                        .id(i)
-                        .apartment(new ApartmentResponse())
-                        .accountingDate(LocalDate.now())
-                        .description("Opis asdhajhdskahfkjdlsahfjkahsjkfhkjl")
-                        .productSaleRevenue(new BigDecimal("0"))
-                        .goodsSaleRevenue(new BigDecimal("10.00"))
-                        .serviceSaleRevenue(new BigDecimal("100.00"))
-                        .otherRevenue(new BigDecimal("10.00"))
-                        .financialRevenue(new BigDecimal("50.00"))
-                        .totalRevenue(new BigDecimal("170.00"))
-                        .vatAmount(new BigDecimal("28.90")) // 17% PDV od ukupno?
-                        .build()
-                );
-            }
-            request.setEntries(entries);
-
-            // TODO: IncomeBookDTO request = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
-
-            pdfStream = pdfService.generatePdf(request);
-        } catch (IOException e) {
-            throw new BookPdfGenerationException(e.getMessage());
+    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type, @RequestBody DateRangeDTO dateRangeDTO) { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
+        if(dateRangeDTO.getFrom().isAfter(dateRangeDTO.getTo())) {
+            throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
-        StreamingResponseBody responseBody = pdfStream::transferTo;
+        // TODO: needs to be fetched from database, have taxpayerId and storeId in request?
+        TaxpayerDTO taxpayer = getTaxpayerDTO();
+        StoreDTO store = getStoreDTO();
+        FinancialBookPdfRequest financialBookPdfRequest = FinancialBookPdfRequest.builder()
+                .taxpayer(taxpayer)
+                .store(store)
+                .period(dateRangeDTO)
+                .build();
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + type + "_" + System.currentTimeMillis() + ".pdf\"")
-                .body(responseBody);
+        var pdfService = bookPdfFactory.get(type);
+        IncomeBookDTO request = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
+
+        try (InputStream pdfStream = pdfService.generatePdf(request)) {  // try-with-resources without resource leaks
+            StreamingResponseBody responseBody = outputStream -> {
+                try {
+                    pdfStream.transferTo(outputStream);
+                } catch (IOException e) {
+                    throw new BookPdfGenerationException("Failed to stream PDF content");
+                }
+            };
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + type + "_" + System.currentTimeMillis() + ".pdf\"")
+                    .body(responseBody);
+        } catch (IOException e) {
+            throw new BookPdfGenerationException("Failed to generate PDF");
+        }
     }
+
+    // =========================================== POST endpoints ===========================================
 
     @PostMapping("/income")
     public ResponseEntity<?> addIncomeEntry(@Validated @RequestBody CreateIncomeBookRequest createIncomeBookRequest) {
@@ -135,5 +112,45 @@ public class BooksController {
 
 
         return ResponseEntity.created(URI.create("test")).build();
+    }
+
+    // =========================================== GET endpoints ===========================================
+    // Test endpoint
+    @GetMapping("/income")
+    public ResponseEntity<?> getIncomeBookByTime() { // @RequestBody FinancialBookPdfRequest
+        TaxpayerDTO taxpayer = getTaxpayerDTO();
+        StoreDTO store = getStoreDTO();
+
+        FinancialBookPdfRequest financialBookPdfRequest = FinancialBookPdfRequest.builder()
+                .taxpayer(taxpayer)
+                .store(store)
+                .period(DateRangeDTO.builder()
+                        .from(LocalDate.of(2025, 12, 13))
+                        .to(LocalDate.of(2025, 12, 13))
+                        .build()
+                )
+                .build();
+
+        IncomeBookDTO dto = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    private TaxpayerDTO getTaxpayerDTO() {
+        return TaxpayerDTO.builder()
+                .fullName("Марко Марковић")
+                .jmbg("0123456789123")
+                .address("Улица краља Петра I бр. 12, Бања Лука")
+                .build();
+    }
+
+    private StoreDTO getStoreDTO() {
+        return StoreDTO.builder()
+                .name("Марко ДОО")
+                .address("Трг Крајине 1, Бања Лука")
+                .activity("Трговина на мало")
+                .activityCode("4711")
+                .jib("1234567890123")
+                .build();
     }
 }

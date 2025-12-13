@@ -21,4 +21,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleS3DeletionException(BookPdfGenerationException ex){
         return ResponseEntity.internalServerError().body(ex.getMessage());
     }
+
+    @ExceptionHandler(InvalidBookPeriodException.class)
+    public ResponseEntity<?> handleBookDatePeriodException(InvalidBookPeriodException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 }

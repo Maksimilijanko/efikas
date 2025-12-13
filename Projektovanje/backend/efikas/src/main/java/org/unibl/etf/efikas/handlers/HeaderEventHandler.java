@@ -1,10 +1,7 @@
 package org.unibl.etf.efikas.handlers;
 
-import com.itextpdf.commons.actions.IEvent;
-import com.itextpdf.commons.actions.IEventHandler;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.Rectangle;
-import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.event.AbstractPdfDocumentEvent;
@@ -14,22 +11,18 @@ import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
-
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 
 /**
  * Handler for handling PDF events, such as creation of the header of the document.
  * */
+@AllArgsConstructor
 public class HeaderEventHandler extends AbstractPdfDocumentEventHandler {
 
     private final Image logo;
     private final PdfFont font;
-
-    public HeaderEventHandler(Image logo, PdfFont font) {
-        this.logo = logo;
-        this.font = font;
-    }
-
+    private final DateRangeDTO period;
 
     @Override
     protected void onAcceptedEvent(AbstractPdfDocumentEvent abstractPdfDocumentEvent) {
@@ -46,7 +39,7 @@ public class HeaderEventHandler extends AbstractPdfDocumentEventHandler {
         canvas.add(logo);
 
         // ---- TITLE TOP CENTER ----
-        Paragraph title = new Paragraph("Књига прихода")
+        Paragraph title = new Paragraph("Књига прихода") // TODO: parameterize title
                 .setFont(font)
                 .setFontSize(12)
                 .simulateBold()
@@ -58,7 +51,7 @@ public class HeaderEventHandler extends AbstractPdfDocumentEventHandler {
                 TextAlignment.CENTER
         );
 
-        Paragraph subTitle = new Paragraph("Од датума: " + LocalDate.now() + ", До датума: " + LocalDate.of(2025, 12, 31))
+        Paragraph subTitle = new Paragraph("Од датума: " + period.getFrom() + ", До датума: " + period.getTo())
                 .setFont(font)
                 .setFontSize(10)
                 .setTextAlignment(TextAlignment.CENTER);
