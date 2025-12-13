@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, TouchableOpacity, Alert, StyleProp, ViewStyle } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
-import styles from './index.styles';
-import { Colors } from '@/src/styles/style';
 import { BasicButton } from '../../atoms/BasicButton/BasicButton';
 import { IconButton } from '../../atoms/IconButton/IconButton';
 import { Label } from '../../atoms/Label/Label';
+import { useTheme } from '@/src/providers/ThemeProvider';
+import { useStyles } from '@/src/hooks/useStyles';
+import { getStyles } from './index.styles';
 
 interface ImageItem {
     uri: string;
@@ -18,6 +19,10 @@ interface ImagePickerProps {
 }
 
 const ImagePicker = ({ style, selectedImages = [], onImagesSelected }: ImagePickerProps) => {
+    
+    const { Colors } = useTheme();
+    const styles = useStyles(getStyles);
+    
     const [images, setImages] = useState<ImageItem[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
 

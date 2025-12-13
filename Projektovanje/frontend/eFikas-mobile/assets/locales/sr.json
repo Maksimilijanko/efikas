@@ -4,11 +4,8 @@
         "home": "Početna",
         "menu": "Meni"
     },
-
-
     "auth": {
         "orSeparator": "ili",
-
         "login": {
             "password": "Lozinka",
             "loginButton": "Prijavite se",
@@ -21,7 +18,6 @@
             },
             "loadingTitle": "Prijava u toku"
         },
-
         "register": {
             "firstName": "Ime",
             "lastName": "Prezime",
@@ -36,7 +32,6 @@
             },
             "loadingTitle": "Registracija u toku"
         },
-
         "logout": {
             "toastMessages": {
                 "successTitle": "Odjava uspela!",
@@ -45,7 +40,6 @@
                 "errorMsg": "Neuspela odjava. Proverite vezu ili pokušajte ponovo."
             }
         },
-
         "errors": {
             "emailError": "Email mora biti bar 6 karaktera",
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
@@ -53,28 +47,23 @@
             "passwordMismatchError": "Lozinke se ne podudaraju"
         }
     },
-
-
     "dialogs": {
         "logout": {
             "message": "Da li ste sigurni da želite da se odjavite sa ovog naloga?",
             "cancelButton": "Odustani",
             "confirmButton": "Potvrdi"
         },
-
         "report": {
             "title": "Opišite Vaš problem",
             "placeholder": "Opis problema...",
             "cancelButton": "Odustani",
             "sendButton": "Pošalji"
         },
-
         "download": {
             "title": "Dokument se preuzima",
             "subtitle": "Provjerite folder sa preuzimanjima",
             "okButton": "U redu"
         },
-
         "language": {
             "title": "Jezik",
             "langEn": "Engleski",
@@ -82,7 +71,6 @@
             "cancelButton": "Odustani",
             "confirmButton": "Potvrdi"
         },
-
         "theme": {
             "title": "Tema",
             "lightTheme": "Svijetla",
@@ -90,30 +78,35 @@
             "cancelButton": "Odustani",
             "confirmButton": "Potvrdi"
         },
-
         "editDelete": {
             "edit": "Uredi informacije",
             "delete": "Izbriši"
         },
-
         "cashRegister": {
             "cancel": "Odustani",
             "add": "Dodaj",
             "title": "Dodavanje kase"
         }
     },
-
     "chart": {
         "months": [
-            "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", 
-            "Jul", "Avg", "Sep", "Okt", "Nov", "Dec"
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "Maj",
+            "Jun",
+            "Jul",
+            "Avg",
+            "Sep",
+            "Okt",
+            "Nov",
+            "Dec"
         ]
     },
-
     "welcome": {
         "loginButton": "Prijavi se"
     },
-
     "dashboard": {
         "navigation": {
             "apartmentsTitle": "Stanovi",
@@ -137,27 +130,23 @@
         "toastMessages": {
             "statsErrorTitle": "Greška pri učitavanju statistike",
             "statsErrorMessage": "Nije moguće učitati podatke. Molimo pokušajte ponovo."
-        } 
+        }
     },
-
     "menu": {
         "stackNavigation": {
             "profile": "Profil",
             "notifications": "Obavještenja",
             "myApartments": "Moji stanovi",
-            
             "expenses": "Troškovi",
             "statistics": "Statistika",
             "incomeBook": "Knjiga prihoda",
             "expensesBook": "Knjiga rashoda",
             "guestBook": "Knjiga gostiju",
-
             "settingsMain": "Podešavanja",
             "language": "Jezik",
             "theme": "Tema",
             "bugReport": "Prijava greške",
             "aboutApp": "O aplikaciji"
-
         },
         "title": {
             "profile": "Profil",
@@ -177,7 +166,6 @@
             "aboutApp": "O aplikaciji",
             "logout": "Odjava"
         },
-
         "mainSettings": {
             "settings": {
                 "general": {
@@ -192,21 +180,55 @@
             }
         }
     },
-
     "calendar": {
         "months": [
-            "Januar", "Februar", "Mart", "April", "Maj", "Jun",
-            "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"
+            "Januar",
+            "Februar",
+            "Mart",
+            "April",
+            "Maj",
+            "Jun",
+            "Jul",
+            "Avgust",
+            "Septembar",
+            "Oktobar",
+            "Novembar",
+            "Decembar"
         ],
         "monthsShort": [
-            "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", 
-            "Jul", "Avg", "Sep", "Okt", "Nov", "Dec"
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "Maj",
+            "Jun",
+            "Jul",
+            "Avg",
+            "Sep",
+            "Okt",
+            "Nov",
+            "Dec"
         ],
-        "dayNames": ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"],
-        "dayNamesShort": ["NED", "PON", "UTO", "SRI", "ČET", "PET", "SUB"],
+        "dayNames": [
+            "Nedelja",
+            "Ponedeljak",
+            "Utorak",
+            "Sreda",
+            "Četvrtak",
+            "Petak",
+            "Subota"
+        ],
+        "dayNamesShort": [
+            "NED",
+            "PON",
+            "UTO",
+            "SRI",
+            "ČET",
+            "PET",
+            "SUB"
+        ],
         "today": "Danas"
     },
-
     "reservationsCalendar": {
         "modalTitle": "Informacije o boravku",
         "guestCount": "Broj gostiju:",
@@ -218,7 +240,6 @@
         "okButton": "U redu",
         "detailsButton": "Detalji"
     },
-
     "aboutApp": {
         "title": "O aplikaciji",
         "systemName": "eFikas",
@@ -229,20 +250,16 @@
             "appVersion": "Verzija aplikacije",
             "team": "Razvojni tim",
             "contact": "Kontakt i podrška",
-
             "content_fiscalization": "Fiskalizacija u realnom vremenu",
             "content_reservations": "Upravljanje rezervacijama",
             "content_statistics": "Statistika poslovanja",
             "content_multiLang": "Podrška za više jezika",
-
             "content_platforms": "Dostupnost za Android i iOS",
             "content_cashRegister": "Povezivanje sa fiskalnom kasom",
-
             "content_versionNumber": "Verzija 1.0",
             "content_releaseDate": "Datum izdavanja: 01.01.2026."
         }
     },
-
     "books": {
         "documents": {
             "downloadErrorTitle": "Greška preuzimanja",
@@ -255,12 +272,10 @@
             "ForeignGuestsBook": "Knjiga stranih gostiju"
         }
     },
-
     "notifications": {
         "title": "Obavještenja",
         "description": "Dobijate podsjetnike o važnim događajima - dolascima gostiju, plaćanjima, zadacima i održavanju smještaja"
     },
-
     "profile": {
         "sectionTitle": "Informacije o profilu",
         "labels": {
@@ -281,25 +296,23 @@
             "genericError": "Došlo je do greške."
         }
     },
-
     "cashRegisters": {
         "sectionTitle": "Informacije o kasi",
         "fields": {
-          "number": "Broj kase",
-          "version": "Verzija softvera"
+            "number": "Broj kase",
+            "version": "Verzija softvera"
         },
         "validation": {
-          "invalidNumber": "Unesite validan broj kase",
-          "invalidVersion": "Unesite verziju softvera"
+            "invalidNumber": "Unesite validan broj kase",
+            "invalidVersion": "Unesite verziju softvera"
         },
         "toastMessages": {
-          "fetchErrorTitle": "Greška",
-          "fetchError": "Nije moguće učitati podatke o kasi.",
-          "createErrorTitle": "Greška",
-          "createError": "Nije moguće sačuvati podatke o kasi."
+            "fetchErrorTitle": "Greška",
+            "fetchError": "Nije moguće učitati podatke o kasi.",
+            "createErrorTitle": "Greška",
+            "createError": "Nije moguće sačuvati podatke o kasi."
         }
     },
-
     "reservations": {
         "navigation": {
             "reservationDetailsTitle": "Detalji rezervacije"
@@ -331,7 +344,6 @@
             "deleteText": "Brisanje rezervacije"
         }
     },
-
     "apartment": {
         "card": {
             "status": {
@@ -342,5 +354,53 @@
                 "nextGuests": "Sljedeći gosti: "
             }
         }
+    },
+    "addApartment": {
+        "fields": {
+            "name": "Naziv",
+            "address": "Adresa",
+            "noBeds": "Broj kreveta",
+            "noBedrooms": "Broj soba",
+            "capacity": "Kapacitet",
+            "price": "Cijena",
+            "overnightPrice": "Boravak sa noćenjem",
+            "dayPrice": "Dnevni boravak",
+            "inventory": "Inventar"
+        },
+        "validation": {
+            "errorTitle": "Greška",
+            "nameError": "Unesite naziv apartmana",
+            "addressError": "Unesite adresu",
+            "bedsError": "Broj kreveta nije ispravan",
+            "bedroomsError": "Broj soba nije ispravan",
+            "capacityError": "Kapacitet nije ispravan",
+            "overnightPriceError": "Cijena noćenja nije ispravna",
+            "dayPriceError": "Dnevna cijena nije ispravna"
+        },
+        "messages": {
+            "successTitle": "Uspjeh",
+            "successMessage": "Apartman dodat",
+            "errorTitle": "Greška",
+            "errorMessage": "Došlo je do greške"
+        },
+        "buttons": {
+            "save": "Sačuvaj",
+            "saving": "Čuvanje..."
+        }
+    },
+    "inventoryModal": {
+            "features": {
+                "parking": "Parking",
+                "tv": "TV",
+                "wifi": "Wi-Fi",
+                "fen": "Fen",
+                "klima": "Klima",
+                "vesMasina": "Veš mašina",
+                "kafa": "Kafa",
+                "balkon": "Balkon"
+            },
+            "buttons": {
+                "save": "Sačuvaj"
+            }
     }
 }

@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export const getStyles = (Colors: any) =>
+  StyleSheet.create({
     backdrop: {
         flex: 1,
-        backgroundColor: "rgba(0,0,0,0.55)",
+        backgroundColor: Colors.shadowColor,
         justifyContent: "center", 
         alignItems: "center"
     },
@@ -13,11 +14,10 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-
     modalBox: {
         width: "100%",        
         maxHeight: "85%",       
-        backgroundColor: "white",
+        backgroundColor: Colors.background,
         padding: 20,
         borderRadius: 16,
         elevation: 6,
@@ -28,3 +28,4 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 10 
     }
 });
+

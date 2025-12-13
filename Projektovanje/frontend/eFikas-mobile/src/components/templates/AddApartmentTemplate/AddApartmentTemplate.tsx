@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, ScrollView, ScrollViewProps } from 'react-native';
-import styles from './index.styles';
+import { getStyles } from './index.styles';
+import { useTheme } from '@/src/providers/ThemeProvider';
+import { useStyles } from '@/src/hooks/useStyles';
 
 export type ApartmentScreenTemplateProps = {
     nameEdit: React.ReactNode;
@@ -29,6 +31,11 @@ const AddApartmentTemplate: React.FC<ApartmentScreenTemplateProps> = ({
     saveButton,
     scrollProps
 }) => {
+
+    const { Colors } = useTheme();
+
+    const styles = useStyles(getStyles);
+
     return (
         <View style={styles.root}>
             <ScrollView

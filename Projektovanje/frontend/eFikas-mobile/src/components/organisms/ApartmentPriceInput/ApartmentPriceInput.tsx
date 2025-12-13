@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import TextField from "../../atoms/TextField/TextField";
 import { Label } from "../../atoms/Label/Label";
-import { Colors } from "@/src/styles/style";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface PriceInputRowProps {
   label: string;
@@ -17,6 +17,9 @@ export const PriceInputRow: React.FC<PriceInputRowProps> = ({
   onChangeText,
   placeholder = "",
 }) => {
+
+  const { Colors } = useTheme();
+
   return (
     <View style={styles.row}>
       <Label text={label} size="md" color={Colors.textSecondary} />
