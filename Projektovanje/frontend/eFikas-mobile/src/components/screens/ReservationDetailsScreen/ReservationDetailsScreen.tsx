@@ -250,49 +250,39 @@ const ReservationDetailsScreen = ({ reservation }) => {
 
   return (
     <>
-        <ReservationDetailsTemplate
-            headerCard={
-                <ApartmentCard
-                    name={reservation.apartment.name}
-                    address={reservation.apartment.address}
-                    imageUrl={reservation.apartment.imageUrl}   // TODO slika stana (reservation.apartment.pictures) 
-                    onPress={() => console.log("Otvori stan")}
-                />
-            }
-            infoItems={
-                infoItems
-            }
-            noteHeader={
-                <Label 
-                    text={t("reservations.details.note")}
-                    align="left"
-                    size="xl"
-                    color={Colors.textPrimary}
-                />
-            }
-            noteBody={
-                <DescriptionBox size="lg" />
-            }
-            primaryAction={
-                <BasicButton title={t("reservations.details.button")} onPress={() => console.log("print")} />
-            }
-        />
-        <DocumentDialog
-            visible={isDocumentDialogVisible}
-            documentUrl={documentUrl}
-            onClose={() => setDocumentDialogVisible(false)}
-        />
-         <EditDeleteDialog
-            visible={isDialogVisible}
-            onClose={() => setIsDialogVisible(false)}
-            onEdit={() => {}}
-            onDelete={handleDelete}
-            showDelete={true}
-            deleteText={t("reservations.details.deleteText")}
-        />
-    </>
-    );
-}
+      <ReservationDetailsTemplate
+        headerCard={
+          <ApartmentCard
+            title={reservation.apartment.name}
+            subtitle={reservation.apartment.address}
+            imageUrl={reservation.apartment.pictures?.[0] ?? undefined}
+            onPress={() => console.log("...")}
+            showArrow={false}
+          />
+        }
+        infoItems={infoItems}
+        noteHeader={
+          <Label
+            text={t("reservations.details.note")}
+            align="left"
+            size="xl"
+            color={Colors.textPrimary}
+          />
+        }
+        noteBody={
+          <DescriptionBox
+            size="lg"
+            placeholder={reservation.note ?? ""}
+            isReadOnly
+          />
+        }
+        primaryAction={
+          <BasicButton
+            title={t("reservations.details.button")}
+            onPress={() => toggleDialog("fiscalization", true)}
+          />
+        }
+      />
 
       {/* Svi dialozi na ekranu */}
       <IdDocumentDialog {...dialogConfigs.idDocument} />

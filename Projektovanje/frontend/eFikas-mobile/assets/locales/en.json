@@ -87,7 +87,6 @@
             "add": "Add",
             "title": "Add cash register"
         },
-
         "message": {
             "details": {
                 "message": "No ID document found for this reservation",
@@ -424,6 +423,32 @@
         },
         "buttons": {
             "save": "Save"
+        }
+    },
+    "apartmentDetails": {
+        "loading": {
+            "error": "An error occurred while loading the apartment.",
+            "retry": "Try again"
+        },
+        "calendar": {
+            "availability": "Availability"
+        }
+    },
+    "landingApartmentInfo": {
+        "services": {
+            "title": "Services",
+            "showAll": "Show all›",
+            "parking": "Parking",
+            "wifi": "Wi-Fi",
+            "klima": "Air Conditioning",
+            "tv": "Smart TV",
+            "kafa": "Coffee Maker",
+            "vesmasina": "Washing Machine",
+            "fen": "Fan",
+            "balkon": "Balcony"
+        },
+        "buttons": {
+            "ok": "OK"
         }
     }
 }

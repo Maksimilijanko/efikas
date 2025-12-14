@@ -87,7 +87,6 @@
             "add": "Dodaj",
             "title": "Dodavanje kase"
         },
-
         "message": {
             "details": {
                 "message": "Za ovu rezervaciju nije pronađen lični dokument",
@@ -303,11 +302,9 @@
             "genericError": "Došlo je do greške."
         }
     },
-
     "actions": {
         "finish": "Završi"
-},
-
+    },
     "cashRegisters": {
         "sectionTitle": "Informacije o kasi",
         "fields": {
@@ -418,18 +415,44 @@
         }
     },
     "inventoryModal": {
-            "features": {
-                "parking": "Parking",
-                "tv": "TV",
-                "wifi": "Wi-Fi",
-                "fen": "Fen",
-                "klima": "Klima",
-                "vesMasina": "Veš mašina",
-                "kafa": "Kafa",
-                "balkon": "Balkon"
-            },
-            "buttons": {
-                "save": "Sačuvaj"
-            }
+        "features": {
+            "parking": "Parking",
+            "tv": "TV",
+            "wifi": "Wi-Fi",
+            "fen": "Fen",
+            "klima": "Klima",
+            "vesMasina": "Veš mašina",
+            "kafa": "Kafa",
+            "balkon": "Balkon"
+        },
+        "buttons": {
+            "save": "Sačuvaj"
+        }
+    },
+    "apartmentDetails": {
+        "loading": {
+            "error": "Doslo je do greske pri ucitavanju stana.",
+            "retry": "Pokusaj ponovo"
+        },
+        "calendar": {
+            "availability": "Dostupnost"
+        }
+    },
+    "landingApartmentInfo": {
+        "services": {
+            "title": "Usluge",
+            "showAll": "Prikaži sve›",
+            "parking": "Parking",
+            "wifi": "Wi-Fi",
+            "klima": "Klima",
+            "tv": "Smart TV",
+            "kafa": "Kafa",
+            "vesmasina": "Veš mašina",
+            "fen": "Fen",
+            "balkon": "Balkon"
+        },
+        "buttons": {
+            "ok": "U redu"
+        }
     }
 }

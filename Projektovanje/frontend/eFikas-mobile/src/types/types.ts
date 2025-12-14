@@ -80,7 +80,7 @@ export interface ApartmentCurrentInfo {
     status: boolean;
     statusUntil: string | null;
     nextGuestsDate: string | null;
-}
+};
 
 export interface Reservation {
   reservationId: number;
@@ -95,7 +95,7 @@ export interface Reservation {
   personalDocumentURL: string | null;
   reservationType: string;
   reservationTypeId?: number;
-}
+};
 
 export interface MenuItemProps {
   id: string;
