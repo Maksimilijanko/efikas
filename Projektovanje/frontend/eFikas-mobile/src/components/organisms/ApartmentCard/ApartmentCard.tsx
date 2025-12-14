@@ -10,7 +10,6 @@ import {
 import { styles } from "./index.styles";
 import { Icon } from "../../atoms/Icon/Icon";
 import { Label } from "../../atoms/Label/Label";
-// import { Colors } from '@/src/styles/style';
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useTranslation } from "react-i18next";
 

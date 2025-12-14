@@ -349,53 +349,5 @@
                 "nextGuests": "Next guests: "
             }
         }
-    },
-    "addApartment": {
-        "fields": {
-            "name": "Naziv",
-            "address": "Adresa",
-            "noBeds": "Broj kreveta",
-            "noBedrooms": "Broj soba",
-            "capacity": "Kapacitet",
-            "price": "Cijena",
-            "overnightPrice": "Boravak sa noćenjem",
-            "dayPrice": "Dnevni boravak",
-            "inventory": "Inventar"
-        },
-        "validation": {
-            "errorTitle": "Greška",
-            "nameError": "Unesite naziv apartmana",
-            "addressError": "Unesite adresu",
-            "bedsError": "Broj kreveta nije ispravan",
-            "bedroomsError": "Broj soba nije ispravan",
-            "capacityError": "Kapacitet nije ispravan",
-            "overnightPriceError": "Cijena noćenja nije ispravna",
-            "dayPriceError": "Dnevna cijena nije ispravna"
-        },
-        "messages": {
-            "successTitle": "Uspjeh",
-            "successMessage": "Apartman dodat",
-            "errorTitle": "Greška",
-            "errorMessage": "Došlo je do greške"
-        },
-        "buttons": {
-            "save": "Sačuvaj",
-            "saving": "Čuvanje..."
-        }
-    },
-    "inventoryModal": {
-        "features": {
-            "parking": "Parking",
-            "tv": "TV",
-            "wifi": "Wi-Fi",
-            "fen": "Fan",
-            "klima": "Air Conditioning",
-            "vesMasina": "Washing Machine",
-            "kafa": "Coffee Maker",
-            "balkon": "Balcony"
-        },
-        "buttons": {
-            "save": "Save"
-        }
     }
 }
