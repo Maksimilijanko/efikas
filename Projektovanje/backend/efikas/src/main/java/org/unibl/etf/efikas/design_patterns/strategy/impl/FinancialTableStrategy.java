@@ -18,10 +18,10 @@ import org.unibl.etf.efikas.util.Constants;
 import java.util.List;
 
 /**
- * ConcreteStrategy for the income financial table
+ * ConcreteStrategy for the financial table
  * */
 @Component
-public class IncomeTableStrategy implements TableStrategy {
+public class FinancialTableStrategy implements TableStrategy {
 
     @Override
     public Table createTable(TableData tableData) {

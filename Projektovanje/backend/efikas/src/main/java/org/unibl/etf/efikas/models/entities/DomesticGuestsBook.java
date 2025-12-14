@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
 import org.unibl.etf.efikas.models.enums.Gender;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "domestic_guests_book", schema = "efikas")
 public class DomesticGuestsBook {
     @Id
@@ -56,10 +58,10 @@ public class DomesticGuestsBook {
     private String jmbg;
 
     @Column(name = "\"AccomodationUnitNumber\"", nullable = false)
-    private Integer accomodationUnitNumber;
+    private Integer accommodationUnitNumber;
 
     @Column(name = "\"AccomodationUnitFloor\"", nullable = false)
-    private Integer accomodationUnitFloor;
+    private Integer accommodationUnitFloor;
 
     @Column(name = "\"DateTimeOfArrival\"", nullable = false)
     private Instant dateTimeOfArrival;

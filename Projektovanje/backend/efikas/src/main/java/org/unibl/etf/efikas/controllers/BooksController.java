@@ -13,12 +13,10 @@ import org.unibl.etf.efikas.exceptions.BookPdfGenerationException;
 import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
 import org.unibl.etf.efikas.exceptions.InvalidBookPeriodException;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
-import org.unibl.etf.efikas.models.dto.books.ForeignGuestsBookDTO;
-import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
+import org.unibl.etf.efikas.models.dto.books.*;
+import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
-import org.unibl.etf.efikas.models.dto.books.StoreDTO;
-import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.enums.BookType;
 import org.unibl.etf.efikas.models.requests.*;
 import org.unibl.etf.efikas.services.DomesticGuestsBookService;
@@ -36,7 +34,6 @@ import java.util.List;
 @RequestMapping("/api/v1/books")
 @AllArgsConstructor
 public class BooksController {
-
     private final BookPdfFactory bookPdfFactory;
     private final IncomeBookService incomeBookService;
     private final ForeignGuestsBookService foreignGuestsBookService;
@@ -67,54 +64,56 @@ public class BooksController {
     }
 
     @GetMapping("/pdf/FOREIGN_GUESTS")
-    public ResponseEntity<StreamingResponseBody> downloadForeignGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {
+    public ResponseEntity<StreamingResponseBody> downloadForeignGuestsBookPdf() throws IOException { //@RequestBody GuestsBookRequest guestsBookRequest
+        // Currently for easier testing
+        GuestsBookRequest guestsBookRequest = GuestsBookRequest.builder()
+                .apartmentId(2)
+                .period(
+                        DateRangeDTO.builder()
+                                .from(LocalDate.of(2025, 12, 13))
+                                .to(LocalDate.of(2025, 12, 20))
+                                .build()
+                )
+                .build();
+
+
         LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
         var pdfService = bookPdfFactory.get(BookType.FOREIGN_GUESTS);
-        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, false );
+        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, false);
 
         return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.FOREIGN_GUESTS);
     }
 
     @GetMapping("/pdf/DOMESTIC_GUESTS")
-    public ResponseEntity<StreamingResponseBody> downloadDomesticGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {
+    public ResponseEntity<StreamingResponseBody> downloadDomesticGuestsBookPdf() throws IOException {  //@RequestBody GuestsBookRequest guestsBookRequest
+        // Currently for easier testing
+        GuestsBookRequest guestsBookRequest = GuestsBookRequest.builder()
+                .apartmentId(2)
+                .period(
+                        DateRangeDTO.builder()
+                                .from(LocalDate.of(2025, 12, 14))
+                                .to(LocalDate.of(2025, 12, 21))
+                                .build()
+                )
+                .build();
+
+
         LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
         var pdfService = bookPdfFactory.get(BookType.DOMESTIC_GUESTS);
-        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, false);
+        DomesticGuestsBookDTO request = domesticGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, true);
 
         return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.DOMESTIC_GUESTS);
     }
 
-    private ResponseEntity<StreamingResponseBody> getStreamingResponseBodyResponseEntity(
-            BaseBookPdfService<BookRequest> pdfService,
-            BookRequest request,
-            BookType type
-    ) {
-        try (InputStream pdfStream = pdfService.generatePdf(request)) {  // try-with-resources without resource leaks
-            StreamingResponseBody responseBody = outputStream -> {
-                try {
-                    pdfStream.transferTo(outputStream);
-                } catch (IOException e) {
-                    throw new BookPdfGenerationException("Failed to stream PDF content");
-                }
-            };
 
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + type + "_" + System.currentTimeMillis() + ".pdf\"")
-                    .body(responseBody);
-        } catch (IOException e) {
-            throw new BookPdfGenerationException("Failed to generate PDF");
-        }
-    }
 
     // test endpoint
     @GetMapping("/foreign-guests/pdf-data")
@@ -158,14 +157,18 @@ public class BooksController {
     }
 
     @PostMapping("/domestic-guests")
-    public ResponseEntity<?> addDomesticGuestsEntry(@RequestBody IncomeEntry incomeEntry) {
+    public ResponseEntity<?> addDomesticGuestsEntry(@Validated @RequestBody CreateDomesticGuestRequest createDomesticGuestRequest) {
+        DomesticGuestsEntry saved = domesticGuestsBookService.createNewDomesticGuest(createDomesticGuestRequest);
 
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(saved).toUri();
 
-        return ResponseEntity.created(URI.create("test")).build();
+        return ResponseEntity.created(location).body(saved);
     }
 
     @PostMapping("/foreign-guests")
-    public ResponseEntity<?> addForeignGuestsEntry(@RequestBody CreateForeignGuestRequest createForeignGuestRequest) {
+    public ResponseEntity<?> addForeignGuestsEntry(@Validated @RequestBody CreateForeignGuestRequest createForeignGuestRequest) {
         ForeignGuestsEntry saved = foreignGuestsBookService.createNewForeignGuest(createForeignGuestRequest);
 
         URI location = ServletUriComponentsBuilder
@@ -197,6 +200,7 @@ public class BooksController {
         return ResponseEntity.ok(dto);
     }
 
+    // =========================================== Private helpers ===========================================
     private TaxpayerDTO getTaxpayerDTO() {
         return TaxpayerDTO.builder()
                 .fullName("Марко Марковић")
@@ -213,5 +217,29 @@ public class BooksController {
                 .activityCode("4711")
                 .jib("1234567890123")
                 .build();
+    }
+
+    private ResponseEntity<StreamingResponseBody> getStreamingResponseBodyResponseEntity(
+            BaseBookPdfService<BookRequest> pdfService,
+            BookRequest request,
+            BookType type
+    ) {
+        try (InputStream pdfStream = pdfService.generatePdf(request)) {  // try-with-resources without resource leaks
+            StreamingResponseBody responseBody = outputStream -> {
+                try {
+                    pdfStream.transferTo(outputStream);
+                } catch (IOException e) {
+                    throw new BookPdfGenerationException("Failed to stream PDF content");
+                }
+            };
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + type + "_" + System.currentTimeMillis() + ".pdf\"")
+                    .body(responseBody);
+        } catch (IOException e) {
+            throw new BookPdfGenerationException("Failed to generate PDF");
+        }
     }
 }

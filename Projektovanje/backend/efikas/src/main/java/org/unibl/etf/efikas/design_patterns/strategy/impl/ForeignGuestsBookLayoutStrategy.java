@@ -93,7 +93,7 @@ public class ForeignGuestsBookLayoutStrategy implements BookLayoutStrategy<Forei
         LocalDateTime departureDateTime = LocalDateTime.ofInstant(entry.getDateTimeOfDeparture(), zone);
 
         row.add(String.valueOf(entry.getId()));
-        row.add(entry.getName() + entry.getSurname());
+        row.add(entry.getName() + " " + entry.getSurname());
         row.add(gender);
         row.add(formatDate(entry.getBirthDate()));
         row.add(entry.getBirthPlace() + ", " + entry.getBirthCountry());

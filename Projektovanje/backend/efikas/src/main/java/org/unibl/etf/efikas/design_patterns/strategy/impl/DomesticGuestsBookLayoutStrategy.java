@@ -1,12 +1,21 @@
 package org.unibl.etf.efikas.design_patterns.strategy.impl;
 
+import org.springframework.stereotype.Component;
 import org.unibl.etf.efikas.design_patterns.strategy.interfaces.BookLayoutStrategy;
 import org.unibl.etf.efikas.models.dto.books.DomesticGuestsBookDTO;
+import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.dto.itextpdf.TableConfig;
+import org.unibl.etf.efikas.models.enums.Gender;
+import org.unibl.etf.efikas.util.Constants;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component(Constants.SpringQualifiers.DOMESTIC_GUESTS_BOOK_LAYOUT_STRATEGY)
 public class DomesticGuestsBookLayoutStrategy implements BookLayoutStrategy<DomesticGuestsBookDTO> {
     @Override
     public String generateTitle() {
@@ -55,10 +64,43 @@ public class DomesticGuestsBookLayoutStrategy implements BookLayoutStrategy<Dome
 
     @Override
     public List<List<String>> getTableData(DomesticGuestsBookDTO request) {
+        // Convert request data to table rows
         List<List<String>> rows = new ArrayList<>();
 
-
+        // Add all entries as rows
+        for (DomesticGuestsEntry entry : request.getEntries()) {
+            List<String> row = createRowFromEntry(entry);
+            rows.add(row);
+        }
 
         return rows;
+    }
+
+    private List<String> createRowFromEntry(DomesticGuestsEntry entry) {
+        List<String> row = new ArrayList<>();
+        String gender = entry.getGender() == Gender.Male ? "Мушки" : "Женски";
+        ZoneId zone = ZoneId.systemDefault(); // system's default time zone
+        LocalDateTime arrivalDateTime = LocalDateTime.ofInstant(entry.getDateTimeOfArrival(), zone);
+        LocalDateTime departureDateTime = LocalDateTime.ofInstant(entry.getDateTimeOfDeparture(), zone);
+
+        row.add(String.valueOf(entry.getId()));
+        row.add(entry.getName() + " " + entry.getSurname());
+        row.add(gender);
+        row.add(formatDate(entry.getBirthDate()));
+        row.add(entry.getBirthPlace() + ", " + entry.getBirthMunicipality() + ", " + entry.getBirthCountry());
+        row.add(entry.getAddress());
+        row.add(entry.getJmbg());
+        row.add(entry.getAccommodationUnitNumber() + ", " + entry.getAccommodationUnitFloor());
+        row.add(formatDate(arrivalDateTime));
+        row.add(formatDate(departureDateTime));
+        row.add(entry.getIssuedInvoiceNumber().toString());
+        row.add(entry.getRemarks());
+
+        return row;
+    }
+
+    private String formatDate(Temporal date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd. MM. yyyy");
+        return formatter.format(date);
     }
 }

@@ -15,6 +15,7 @@ public class Constants {
     public static class SpringQualifiers {
         public static final String INCOME_BOOK_LAYOUT_STRATEGY = "IncomeBookLayoutStrategy";
         public static final String FOREIGN_GUESTS_BOOK_LAYOUT_STRATEGY = "ForeignGuestsBookLayoutStrategy";
+        public static final String DOMESTIC_GUESTS_BOOK_LAYOUT_STRATEGY = "DomesticGuestsBookLayoutStrategy";
     }
 
 
