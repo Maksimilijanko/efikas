@@ -38,8 +38,40 @@ export interface Apartment {
   capacity: number;
   pricePerDay: number;
   pricePerNight: number;
-  pictures: string[]; 
+  pictures: string[];
+  inventory: ApartmentInventory; 
 }
+
+
+export type ApartmentInventory = {
+    parking: boolean;
+    tv: boolean;
+    wifi: boolean;
+    fen: boolean;
+    klima: boolean;
+    vesMasina: boolean;
+    kafa: boolean;
+    balkon: boolean;
+};
+
+export type CreateApartmentPayload = {
+    name: string;
+    address: string;
+    noBeds: number;           
+    noBedrooms: number;       
+    capacity: number;        
+    overnightPrice: number;   
+    dayPrice: number;        
+    images: string[];
+    inventory: ApartmentInventory;
+};
+
+export type ApartmentResponse = {
+    success: boolean;
+    message?: string;
+    apartmentId?: number;
+    data?: any;
+};
 
 export interface Reservation {
   reservationId: number;

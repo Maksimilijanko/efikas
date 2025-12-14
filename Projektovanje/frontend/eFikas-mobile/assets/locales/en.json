@@ -4,11 +4,8 @@
         "home": "Home",
         "menu": "Menu"
     },
-
-
     "auth": {
         "orSeparator": "or",
-
         "login": {
             "password": "Password",
             "loginButton": "Sign in",
@@ -21,7 +18,6 @@
             },
             "loadingTitle": "Logging in"
         },
-
         "register": {
             "firstName": "First name",
             "lastName": "Last name",
@@ -36,7 +32,6 @@
             },
             "loadingTitle": "Registering"
         },
-
         "logout": {
             "toastMessages": {
                 "successTitle": "Logged Out",
@@ -45,7 +40,6 @@
                 "errorMsg": "Logout failed. Check your connection or try again."
             }
         },
-
         "errors": {
             "emailError": "Email has to be at least 6 characters",
             "passwordLengthError": "Password has to be at least 8 characters",
@@ -53,27 +47,23 @@
             "passwordMismatchError": "Passwords do not match"
         }
     },
-
     "dialogs": {
         "logout": {
             "message": "Are you sure you want to log out from this account?",
             "cancelButton": "Cancel",
             "confirmButton": "Confirm"
         },
-
         "report": {
             "title": "Describe Your problem",
             "placeholder": "Description of the problem...",
             "cancelButton": "Cancel",
             "sendButton": "Send"
         },
-
         "download": {
             "title": "Document is downloading",
             "subtitle": "Check the downloads folder",
             "okButton": "OK"
         },
-
         "language": {
             "title": "Language",
             "langEn": "English",
@@ -81,7 +71,6 @@
             "cancelButton": "Cancel",
             "confirmButton": "Confirm"
         },
-
         "theme": {
             "title": "Theme",
             "lightTheme": "Light",
@@ -89,12 +78,10 @@
             "cancelButton": "Cancel",
             "confirmButton": "Confirm"
         },
-
         "editDelete": {
             "edit": "Edit Information",
             "delete": "Delete"
         },
-
         "cashRegister": {
             "cancel": "Cancel",
             "add": "Add",
@@ -108,18 +95,25 @@
             }
         }
     },
-
     "chart": {
         "months": [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
         ]
     },
-
     "welcome": {
         "loginButton": "Log In"
     },
-
     "dashboard": {
         "navigation": {
             "apartmentsTitle": "Apartments",
@@ -143,24 +137,20 @@
         "toastMessages": {
             "statsErrorTitle": "Error loading statistics",
             "statsErrorMessage": "Unable to load data. Please try again."
-        } 
+        }
     },
-
     "menu": {
         "stackNavigation": {
             "profile": "Profile",
             "notifications": "Notifications",
             "myApartments": "My apartments",
-            
             "expenses": "Expenses",
             "statistics": "Statistics",
             "incomeBook": "Income book",
             "expensesBook": "Expenses book",
             "guestBook": "Guest book",
-
             "settingsMain": "Settings",
             "aboutApp": "About the app"
-
         },
         "title": {
             "profile": "Profile",
@@ -180,7 +170,6 @@
             "aboutApp": "About App",
             "logout": "Log Out"
         },
-
         "mainSettings": {
             "settings": {
                 "general": {
@@ -195,21 +184,55 @@
             }
         }
     },
-
     "calendar": {
         "months": [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
         ],
         "monthsShort": [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
         ],
-        "dayNames": [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
-        "dayNamesShort": [ "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" ],
+        "dayNames": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ],
+        "dayNamesShort": [
+            "SUN",
+            "MON",
+            "TUE",
+            "WED",
+            "THU",
+            "FRI",
+            "SAT"
+        ],
         "today": "Today"
     },
-
     "reservationsCalendar": {
         "modalTitle": "Stay Information",
         "guestCount": "Guest Count:",
@@ -221,7 +244,6 @@
         "okButton": "OK",
         "detailsButton": "Details"
     },
-
     "aboutApp": {
         "title": "About App",
         "systemName": "eFikas",
@@ -232,20 +254,16 @@
             "appVersion": "App Version",
             "team": "Development Team",
             "contact": "Contact & Support",
-
             "content_fiscalization": "Real-time fiscalization",
             "content_reservations": "Reservation management",
             "content_statistics": "Business statistics",
             "content_multiLang": "Multi-language support",
-
             "content_platforms": "Available for Android and iOS",
             "content_cashRegister": "Connection with fiscal cash register",
-
             "content_versionNumber": "Version 1.0",
             "content_releaseDate": "Release date: 01/01/2026"
         }
     },
-
     "books": {
         "documents": {
             "downloadErrorTitle": "Download Error",
@@ -258,18 +276,16 @@
             "ForeignGuestsBook": "Foreign Guests Book"
         }
     },
-
     "notifications": {
         "title": "Notifications",
         "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance"
     },
-
     "profile": {
         "sectionTitle": "Profile information",
         "labels": {
             "firstName": "First Name",
             "lastName": "Last Name",
-            "taxId": "Tax ID (JIB)", 
+            "taxId": "Tax ID (JIB)",
             "email": "Email"
         },
         "buttons": {
@@ -284,27 +300,25 @@
             "genericError": "An error occurred."
         }
     },
-
     "cashRegisters": {
         "sectionTitle": "Cash register information",
         "fields": {
-          "number": "Register number",
-          "version": "Software version",
-          "numberPlaceholder": "Enter register number",
-          "versionPlaceholder": "Enter software version"
+            "number": "Register number",
+            "version": "Software version",
+            "numberPlaceholder": "Enter register number",
+            "versionPlaceholder": "Enter software version"
         },
         "validation": {
-          "invalidNumber": "Enter a valid register number",
-          "invalidVersion": "Enter software version"
+            "invalidNumber": "Enter a valid register number",
+            "invalidVersion": "Enter software version"
         },
         "toastMessages": {
-          "fetchErrorTitle": "Error",
-          "fetchError": "Failed to load cash registers",
-          "createErrorTitle": "Error",
-          "createError": "Failed to create cash register"
+            "fetchErrorTitle": "Error",
+            "fetchError": "Failed to load cash registers",
+            "createErrorTitle": "Error",
+            "createError": "Failed to create cash register"
         }
     },
-
     "reservations": {
         "navigation": {
             "reservationDetailsTitle": "Reservation Details"
@@ -353,7 +367,6 @@
             }
         }
     },
-
     "apartment": {
         "card": {
             "status": {
@@ -363,6 +376,54 @@
                 "until": " until ",
                 "nextGuests": "Next guests: "
             }
+        }
+    },
+    "addApartment": {
+        "fields": {
+            "name": "Naziv",
+            "address": "Adresa",
+            "noBeds": "Broj kreveta",
+            "noBedrooms": "Broj soba",
+            "capacity": "Kapacitet",
+            "price": "Cijena",
+            "overnightPrice": "Boravak sa noćenjem",
+            "dayPrice": "Dnevni boravak",
+            "inventory": "Inventar"
+        },
+        "validation": {
+            "errorTitle": "Greška",
+            "nameError": "Unesite naziv apartmana",
+            "addressError": "Unesite adresu",
+            "bedsError": "Broj kreveta nije ispravan",
+            "bedroomsError": "Broj soba nije ispravan",
+            "capacityError": "Kapacitet nije ispravan",
+            "overnightPriceError": "Cijena noćenja nije ispravna",
+            "dayPriceError": "Dnevna cijena nije ispravna"
+        },
+        "messages": {
+            "successTitle": "Uspjeh",
+            "successMessage": "Apartman dodat",
+            "errorTitle": "Greška",
+            "errorMessage": "Došlo je do greške"
+        },
+        "buttons": {
+            "save": "Sačuvaj",
+            "saving": "Čuvanje..."
+        }
+    },
+    "inventoryModal": {
+        "features": {
+            "parking": "Parking",
+            "tv": "TV",
+            "wifi": "Wi-Fi",
+            "fen": "Fan",
+            "klima": "Air Conditioning",
+            "vesMasina": "Washing Machine",
+            "kafa": "Coffee Maker",
+            "balkon": "Balcony"
+        },
+        "buttons": {
+            "save": "Save"
         }
     }
 }
