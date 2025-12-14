@@ -74,8 +74,8 @@ export type ApartmentResponse = {
 };
 export interface ApartmentCurrentInfo {
     id: number;
-    title: string;
-    subtitle: string;
+    name: string;
+    address: string;
     imageUrl: string;
     status: boolean;
     statusUntil: string | null;
