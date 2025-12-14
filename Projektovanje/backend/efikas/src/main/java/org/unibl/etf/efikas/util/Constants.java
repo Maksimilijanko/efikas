@@ -10,9 +10,6 @@ public class Constants {
         public static final int GLOBAL_FONT_SIZE = 8;
         public static final int FINANCIAL_TABLE_FONT_SIZE = 5;
         public static final int FINANCIAL_TABLE_HEADER_FONT_SIZE = 7;
-
-
-        public static final String TEST = "";
     }
 
     public static class SpringQualifiers {

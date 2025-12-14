@@ -49,7 +49,7 @@ public class ForeignGuestsBookPdfService extends BaseBookPdfService<ForeignGuest
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try (PdfWriter writer = new PdfWriter(baos);
-             Document document = createDocument(writer, DateRangeDTO.builder().build())) { // TODO: FIX period parameterizing!
+             Document document = createDocument(writer, request.getPeriod(), "Књига страних гостију")) {
 
 
             // Add foreign guests table

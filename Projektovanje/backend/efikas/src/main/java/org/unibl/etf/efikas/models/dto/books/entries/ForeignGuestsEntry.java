@@ -29,7 +29,8 @@ public class ForeignGuestsEntry {
     private LocalDate passportIssuedDate;
     private String visaType;
     private String visaNumber;
-    private LocalDate permittedResidenceDate;
+    @Builder.Default
+    private LocalDate permittedResidenceDate = LocalDate.now();     // TODO: popuniti u bazi
     private LocalDate entryDate;
     private String entryPlace;
     private Integer accommodationUnitNumber;

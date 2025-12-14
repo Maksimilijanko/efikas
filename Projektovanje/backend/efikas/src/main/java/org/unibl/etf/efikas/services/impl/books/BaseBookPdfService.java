@@ -37,7 +37,7 @@ public abstract class BaseBookPdfService<T extends BookRequest> {
     /**
      * Creates the generic look of a document.
      * */
-    protected Document createDocument(PdfWriter writer, DateRangeDTO dateRangeDTO) throws IOException {
+    protected Document createDocument(PdfWriter writer, DateRangeDTO dateRangeDTO, String title) throws IOException {
         PdfDocument pdf = new PdfDocument(writer);
 
         // Create FRESH font for each document
@@ -49,7 +49,9 @@ public abstract class BaseBookPdfService<T extends BookRequest> {
         Image logo = new Image(ImageDataFactory.create(logoBytes));
 
         // Register header with fresh objects
-        pdf.addEventHandler(PdfDocumentEvent.START_PAGE, new PageLayoutEventHandler(logo, cyrillicFont, dateRangeDTO, LocalDate.now()));
+        pdf.addEventHandler(PdfDocumentEvent.START_PAGE, new PageLayoutEventHandler(
+                logo, cyrillicFont, dateRangeDTO, title, LocalDate.now())
+        );
 
         // Create document
         Document document = new Document(pdf);

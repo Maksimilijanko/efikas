@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.efikas.models.dto.DateRangeDTO;
+import org.unibl.etf.efikas.models.dto.books.ForeignGuestsBookDTO;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
 import org.unibl.etf.efikas.models.entities.ForeignGuestsBook;
 import org.unibl.etf.efikas.models.requests.CreateForeignGuestRequest;
@@ -42,13 +44,17 @@ public class ForeignGuestsBookService {
     }
 
 
-    public List<ForeignGuestsEntry> findForPdf(
+    public ForeignGuestsBookDTO findForPdf(
             Integer apartmentId,
             LocalDate fromDate,
             LocalDate toDate,
             Boolean active
     ) {
         validateFilters(fromDate, toDate, active);
+        DateRangeDTO period = DateRangeDTO.builder()
+                .from(fromDate)
+                .to(toDate)
+                .build();
 
         Specification<ForeignGuestsBook> spec =
                 ForeignGuestsPdfSpecifications.forApartment(apartmentId)
@@ -57,9 +63,16 @@ public class ForeignGuestsBookService {
                         .and(ForeignGuestsPdfSpecifications.active(active))
                         .and(ForeignGuestsPdfSpecifications.orderForPdf());
 
-        return foreignGuestsBookRepository.findAll(spec).stream()
+        List<ForeignGuestsEntry> entries = foreignGuestsBookRepository.findAll(spec).stream()
                 .map(fgb -> modelMapper.map(fgb, ForeignGuestsEntry.class))
                 .toList();
+
+        System.out.println("ENTRIES: " + entries);
+
+        return ForeignGuestsBookDTO.builder()
+                .period(period)
+                .entries(entries)
+                .build();
     }
 
     private void validateFilters(

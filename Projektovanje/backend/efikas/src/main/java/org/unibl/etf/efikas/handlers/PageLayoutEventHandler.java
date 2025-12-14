@@ -30,6 +30,7 @@ public class PageLayoutEventHandler extends AbstractPdfDocumentEventHandler {
     private final Image logo;
     private final PdfFont font;
     private final DateRangeDTO period;
+    private final String title;
     private final LocalDate printingDate;
 
     // Placeholder za ukupan broj stranica (mora biti jedinstven)
@@ -39,7 +40,7 @@ public class PageLayoutEventHandler extends AbstractPdfDocumentEventHandler {
     @Override
     protected void onAcceptedEvent(AbstractPdfDocumentEvent abstractPdfDocumentEvent) {
         PdfDocumentEvent docEvent = (PdfDocumentEvent) abstractPdfDocumentEvent;
-        PdfDocument pdfDocument = (PdfDocument) docEvent.getDocument();
+        //PdfDocument pdfDocument = (PdfDocument) docEvent.getDocument();
         PdfPage page = docEvent.getPage();
         Rectangle pageSize = page.getPageSize();
 
@@ -52,7 +53,7 @@ public class PageLayoutEventHandler extends AbstractPdfDocumentEventHandler {
         canvas.add(logo);
 
         // ---- TITLE TOP CENTER ----
-        Paragraph title = new Paragraph("Књига прихода") // TODO: parameterize title
+        Paragraph title = new Paragraph(this.title)
                 .setFont(font)
                 .setFontSize(12)
                 .simulateBold()

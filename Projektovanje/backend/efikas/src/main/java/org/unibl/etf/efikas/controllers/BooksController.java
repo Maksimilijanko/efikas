@@ -13,17 +13,18 @@ import org.unibl.etf.efikas.exceptions.BookPdfGenerationException;
 import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
 import org.unibl.etf.efikas.exceptions.InvalidBookPeriodException;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
+import org.unibl.etf.efikas.models.dto.books.ForeignGuestsBookDTO;
 import org.unibl.etf.efikas.models.dto.books.IncomeBookDTO;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
 import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.enums.BookType;
-import org.unibl.etf.efikas.models.requests.CreateForeignGuestRequest;
-import org.unibl.etf.efikas.models.requests.CreateIncomeBookRequest;
-import org.unibl.etf.efikas.models.requests.FinancialBookPdfRequest;
+import org.unibl.etf.efikas.models.requests.*;
+import org.unibl.etf.efikas.services.DomesticGuestsBookService;
 import org.unibl.etf.efikas.services.ForeignGuestsBookService;
 import org.unibl.etf.efikas.services.IncomeBookService;
+import org.unibl.etf.efikas.services.impl.books.BaseBookPdfService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,12 +40,13 @@ public class BooksController {
     private final BookPdfFactory bookPdfFactory;
     private final IncomeBookService incomeBookService;
     private final ForeignGuestsBookService foreignGuestsBookService;
+    private final DomesticGuestsBookService domesticGuestsBookService;
 
 
     // =========================================== PDF endpoints ===========================================
 
-    @GetMapping("/pdf/{type}")
-    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@PathVariable BookType type, @RequestBody DateRangeDTO dateRangeDTO) { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
+    @GetMapping("/pdf/INCOME")
+    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@RequestBody DateRangeDTO dateRangeDTO) throws IOException { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
         if(dateRangeDTO.getFrom().isAfter(dateRangeDTO.getTo())) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
@@ -58,10 +60,43 @@ public class BooksController {
                 .period(dateRangeDTO)
                 .build();
 
-        var pdfService = bookPdfFactory.get(type);
+        var pdfService = bookPdfFactory.get(BookType.INCOME);
         IncomeBookDTO request = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
 
+        return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.INCOME);
+    }
 
+    @GetMapping("/pdf/FOREIGN_GUESTS")
+    public ResponseEntity<StreamingResponseBody> downloadForeignGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {
+        LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
+        if(from.isAfter(to)) {
+            throw new InvalidBookPeriodException("From date can not come after To date range");
+        }
+
+        var pdfService = bookPdfFactory.get(BookType.FOREIGN_GUESTS);
+        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, false );
+
+        return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.FOREIGN_GUESTS);
+    }
+
+    @GetMapping("/pdf/DOMESTIC_GUESTS")
+    public ResponseEntity<StreamingResponseBody> downloadDomesticGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {
+        LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
+        if(from.isAfter(to)) {
+            throw new InvalidBookPeriodException("From date can not come after To date range");
+        }
+
+        var pdfService = bookPdfFactory.get(BookType.DOMESTIC_GUESTS);
+        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, false);
+
+        return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.DOMESTIC_GUESTS);
+    }
+
+    private ResponseEntity<StreamingResponseBody> getStreamingResponseBodyResponseEntity(
+            BaseBookPdfService<BookRequest> pdfService,
+            BookRequest request,
+            BookType type
+    ) {
         try (InputStream pdfStream = pdfService.generatePdf(request)) {  // try-with-resources without resource leaks
             StreamingResponseBody responseBody = outputStream -> {
                 try {
@@ -83,7 +118,7 @@ public class BooksController {
 
     // test endpoint
     @GetMapping("/foreign-guests/pdf-data")
-    public ResponseEntity<List<ForeignGuestsEntry>> getPdfData(
+    public ResponseEntity<?> getPdfData(
             @RequestParam Integer apartmentId,
             @RequestParam(required = false)
             LocalDate fromDate,
@@ -91,7 +126,7 @@ public class BooksController {
             LocalDate toDate,
             @RequestParam(required = false) Boolean active
     ) {
-        List<ForeignGuestsEntry> result =
+        ForeignGuestsBookDTO result =
                 foreignGuestsBookService.findForPdf(
                         apartmentId,
                         fromDate,

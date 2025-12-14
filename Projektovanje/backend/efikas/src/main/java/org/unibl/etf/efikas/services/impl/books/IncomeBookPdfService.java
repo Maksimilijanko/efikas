@@ -55,7 +55,7 @@ public class IncomeBookPdfService extends BaseBookPdfService<IncomeBookDTO> impl
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try (PdfWriter writer = new PdfWriter(baos);
-             Document document = createDocument(writer, request.getPeriod())) {
+             Document document = createDocument(writer, request.getPeriod(), "Књига прихода")) {
             // Add taxpayer info table
             document.add(getTaxpayerTable(request));
             document.add(new Paragraph("\n"));
