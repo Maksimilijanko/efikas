@@ -1,22 +1,12 @@
-// services/apartmentsService.ts
-
-export type Apartment = {
-    id: number;
-    title: string;
-    subtitle: string;
-    imageUrl: string;
-    status: boolean;
-    statusUntil: string | null;
-    nextGuestsDate: string | null;
-};
+import { ApartmentCurrentInfo } from "@/src/types/types";
 
 export const apartmentsListService = {
-    getApartments: async (): Promise<Apartment[]> => {
+    getApartments: async (): Promise<ApartmentCurrentInfo[]> => {
         return [
             {
                 id: 1,
-                title: 'Modern Loft',
-                subtitle: 'Ulica kralja Petra I Karađorđevića 73',
+                name: 'Modern Loft',
+                address: 'Ulica kralja Petra I Karadjordjevica 73',
                 imageUrl: 'https://picsum.photos/id/1018/600/400',
                 status: true,
                 statusUntil: '11.02.2026.',
@@ -24,8 +14,8 @@ export const apartmentsListService = {
             },
             {
                 id: 2,
-                title: 'Cozy Studio',
-                subtitle: 'Ulica Veselina Masleše 18',
+                name: 'Cozy Studio',
+                address: 'Ulica Veselina Maslese 18',
                 imageUrl: 'https://picsum.photos/id/1025/600/400',
                 status: false,
                 statusUntil: null,
@@ -33,8 +23,8 @@ export const apartmentsListService = {
             },
             {
                 id: 3,
-                title: 'Family Apartment',
-                subtitle: 'Ulica Aleja Svetog Save 5',
+                name: 'Family Apartment',
+                address: 'Ulica Aleja Svetog Save 5',
                 imageUrl: 'https://picsum.photos/id/1035/600/400',
                 status: true,
                 statusUntil: '12.01.2026.',
