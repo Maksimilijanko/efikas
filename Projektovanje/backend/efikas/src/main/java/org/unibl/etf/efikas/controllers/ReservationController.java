@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.unibl.etf.efikas.models.dto.ApartmentDTO;
 import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.ReservationDTO;
+import org.unibl.etf.efikas.models.requests.UpdateReservationRequest;
 import org.unibl.etf.efikas.models.responses.ReservationResponse;
 import org.unibl.etf.efikas.services.ReservationService;
 
@@ -63,12 +64,12 @@ public class ReservationController {
 
     @PutMapping(value = "/reservations/{reservationId}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateReservation(@PathVariable Integer reservationId,
-                                               @RequestPart("reservation") ReservationDTO reservationDTO,
+                                               @RequestPart("reservation") UpdateReservationRequest updateReservationRequest,
                                                @RequestPart("picture") MultipartFile documentPicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         ReservationResponse response = reservationService
-                .updateReservation(reservationId, authentication, reservationDTO, documentPicture);
+                .updateReservation(reservationId, authentication, updateReservationRequest, documentPicture);
 
         // TODO: implement upsert behavior
 

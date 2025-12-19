@@ -45,7 +45,6 @@ public class DomesticGuestsBookService {
 
 
     public DomesticGuestsBookDTO findForPdf(
-            Integer apartmentId,
             LocalDate fromDate,
             LocalDate toDate,
             Boolean active
@@ -57,13 +56,13 @@ public class DomesticGuestsBookService {
                 .build();
 
         Specification<GuestsBook> spec =
-                DomesticGuestsPdfSpecifications.forApartment(apartmentId)
-                        .or(DomesticGuestsPdfSpecifications.dateOfArrival(fromDate))
-                        .or(DomesticGuestsPdfSpecifications.dateOfDeparture(toDate))
-                        .or(DomesticGuestsPdfSpecifications.active(active))
-                        .or(DomesticGuestsPdfSpecifications.orderForPdf());
+                DomesticGuestsPdfSpecifications.dateOfArrival(fromDate)
+                        .and(DomesticGuestsPdfSpecifications.dateOfDeparture(toDate))
+                        .or(DomesticGuestsPdfSpecifications.active(active));
+                        //.or(DomesticGuestsPdfSpecifications.orderForPdf());
 
         List<DomesticGuestsEntry> entries = domesticGuestsBookRepository.findAll(spec).stream()
+                .filter(GuestsBook::getIsLocal)
                 .map(fgb -> modelMapper.map(fgb, DomesticGuestsEntry.class))
                 .toList();
 

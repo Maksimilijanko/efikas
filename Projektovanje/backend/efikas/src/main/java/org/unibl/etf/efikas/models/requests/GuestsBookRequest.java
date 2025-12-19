@@ -8,5 +8,5 @@ import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 @Builder
 public class GuestsBookRequest {
     private DateRangeDTO period;
-    private int apartmentId;
+    private boolean active;
 }

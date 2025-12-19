@@ -42,7 +42,6 @@ public class ForeignGuestsBookService {
 
 
     public ForeignGuestsBookDTO findForPdf(
-            Integer apartmentId,
             LocalDate fromDate,
             LocalDate toDate,
             Boolean active
@@ -54,13 +53,13 @@ public class ForeignGuestsBookService {
                 .build();
 
         Specification<GuestsBook> spec =
-                ForeignGuestsPdfSpecifications.forApartment(apartmentId)
-                        .and(ForeignGuestsPdfSpecifications.entryDateFrom(fromDate))
+                ForeignGuestsPdfSpecifications.entryDateFrom(fromDate)
                         .and(ForeignGuestsPdfSpecifications.entryDateTo(toDate))
-                        .and(ForeignGuestsPdfSpecifications.active(active))
-                        .and(ForeignGuestsPdfSpecifications.orderForPdf());
+                        .and(ForeignGuestsPdfSpecifications.active(active));
+                        //.or(ForeignGuestsPdfSpecifications.orderForPdf());
 
         List<ForeignGuestsEntry> entries = foreignGuestsBookRepository.findAll(spec).stream()
+                .filter(gb -> !gb.getIsLocal())
                 .map(fgb -> modelMapper.map(fgb, ForeignGuestsEntry.class))
                 .toList();
 

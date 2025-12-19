@@ -28,7 +28,7 @@ public class DomesticGuestsEntry {
     private Integer accommodationUnitFloor;
     private Instant dateTimeOfArrival;
     private Instant dateTimeOfDeparture;
-    private Integer issuedInvoiceNumber;
+    private String issuedInvoiceNumber;
     private String remarks;
 
 }

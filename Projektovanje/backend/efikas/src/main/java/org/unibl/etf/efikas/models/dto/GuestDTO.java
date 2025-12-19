@@ -31,6 +31,7 @@ import java.time.LocalDate;
         @JsonSubTypes.Type(value = ForeignGuestDTO.class, name = "false")
 })
 public class GuestDTO {
+    private Integer id;
     private String citizenId;
     private Boolean isLocal;
     private String personalDocumentURL;

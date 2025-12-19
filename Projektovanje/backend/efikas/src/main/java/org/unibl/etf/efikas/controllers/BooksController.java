@@ -1,5 +1,6 @@
 package org.unibl.etf.efikas.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +20,11 @@ import org.unibl.etf.efikas.models.dto.books.*;
 import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
+import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.enums.BookType;
 import org.unibl.etf.efikas.models.requests.*;
+import org.unibl.etf.efikas.models.responses.AppUserResponse;
+import org.unibl.etf.efikas.services.AppUserService;
 import org.unibl.etf.efikas.services.DomesticGuestsBookService;
 import org.unibl.etf.efikas.services.ForeignGuestsBookService;
 import org.unibl.etf.efikas.services.IncomeBookService;
@@ -37,6 +41,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BooksController {
     private final BookPdfFactory bookPdfFactory;
+    private final AppUserService appUserService;
     private final IncomeBookService incomeBookService;
     private final ForeignGuestsBookService foreignGuestsBookService;
     private final DomesticGuestsBookService domesticGuestsBookService;
@@ -45,18 +50,19 @@ public class BooksController {
     // =========================================== PDF endpoints ===========================================
 
     @GetMapping("/pdf/INCOME")
-    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@RequestBody DateRangeDTO dateRangeDTO) throws IOException { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
-        if(dateRangeDTO.getFrom().isAfter(dateRangeDTO.getTo())) {
+    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@RequestBody DownloadIncomeBookRequest downloadIncomeBookRequest) throws IOException { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
+        LocalDate from = downloadIncomeBookRequest.getPeriod().getFrom(),  to = downloadIncomeBookRequest.getPeriod().getTo();
+        AppUserResponse appUserResponse = appUserService.getUserById(downloadIncomeBookRequest.getTaxpayerId());
+        if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
-        // TODO: needs to be fetched from database, have taxpayerId and storeId in request?
-        TaxpayerDTO taxpayer = getTaxpayerDTO();
+        TaxpayerDTO taxpayer = getTaxpayerDTO(appUserResponse);
         StoreDTO store = getStoreDTO();
         FinancialBookPdfRequest financialBookPdfRequest = FinancialBookPdfRequest.builder()
                 .taxpayer(taxpayer)
                 .store(store)
-                .period(dateRangeDTO)
+                .period(downloadIncomeBookRequest.getPeriod())
                 .build();
 
         var pdfService = bookPdfFactory.get(BookType.INCOME);
@@ -66,77 +72,31 @@ public class BooksController {
     }
 
     @GetMapping("/pdf/FOREIGN_GUESTS")
-    public ResponseEntity<StreamingResponseBody> downloadForeignGuestsBookPdf() throws IOException { //@RequestBody GuestsBookRequest guestsBookRequest
-        // Currently for easier testing
-        GuestsBookRequest guestsBookRequest = GuestsBookRequest.builder()
-                .apartmentId(2)
-                .period(
-                        DateRangeDTO.builder()
-                                .from(LocalDate.of(2025, 12, 13))
-                                .to(LocalDate.of(2025, 12, 20))
-                                .build()
-                )
-                .build();
-
-
+    public ResponseEntity<StreamingResponseBody> downloadForeignGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {
         LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
         var pdfService = bookPdfFactory.get(BookType.FOREIGN_GUESTS);
-        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, false);
+        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(from, to, guestsBookRequest.isActive());
 
         return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.FOREIGN_GUESTS);
     }
 
     @GetMapping("/pdf/DOMESTIC_GUESTS")
-    public ResponseEntity<StreamingResponseBody> downloadDomesticGuestsBookPdf() throws IOException {  //@RequestBody GuestsBookRequest guestsBookRequest
-        // Currently for easier testing
-        GuestsBookRequest guestsBookRequest = GuestsBookRequest.builder()
-                .apartmentId(2)
-                .period(
-                        DateRangeDTO.builder()
-                                .from(LocalDate.of(2025, 12, 14))
-                                .to(LocalDate.of(2025, 12, 21))
-                                .build()
-                )
-                .build();
-
-
+    public ResponseEntity<StreamingResponseBody> downloadDomesticGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {  //@RequestBody GuestsBookRequest guestsBookRequest
         LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
         var pdfService = bookPdfFactory.get(BookType.DOMESTIC_GUESTS);
-        DomesticGuestsBookDTO request = domesticGuestsBookService.findForPdf(guestsBookRequest.getApartmentId(), from, to, true);
+        DomesticGuestsBookDTO request = domesticGuestsBookService.findForPdf(from, to, guestsBookRequest.isActive());
 
         return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.DOMESTIC_GUESTS);
     }
 
-
-
-    // test endpoint
-    @GetMapping("/foreign-guests/pdf-data")
-    public ResponseEntity<?> getPdfData(
-            @RequestParam Integer apartmentId,
-            @RequestParam(required = false)
-            LocalDate fromDate,
-            @RequestParam(required = false)
-            LocalDate toDate,
-            @RequestParam(required = false) Boolean active
-    ) {
-        ForeignGuestsBookDTO result =
-                foreignGuestsBookService.findForPdf(
-                        apartmentId,
-                        fromDate,
-                        toDate,
-                        active
-                );
-
-        return ResponseEntity.ok(result);
-    }
 
     // =========================================== POST endpoints ===========================================
 
@@ -181,37 +141,37 @@ public class BooksController {
     }
 
     // =========================================== GET endpoints ===========================================
-    // Test endpoint
-    @GetMapping("/income")
-    public ResponseEntity<?> getIncomeBookByTime() { // @RequestBody FinancialBookPdfRequest
-        TaxpayerDTO taxpayer = getTaxpayerDTO();
-        StoreDTO store = getStoreDTO();
-
-        FinancialBookPdfRequest financialBookPdfRequest = FinancialBookPdfRequest.builder()
-                .taxpayer(taxpayer)
-                .store(store)
-                .period(DateRangeDTO.builder()
-                        .from(LocalDate.of(2025, 12, 13))
-                        .to(LocalDate.of(2025, 12, 13))
-                        .build()
-                )
-                .build();
-
-        IncomeBookDTO dto = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
-
-        return ResponseEntity.ok(dto);
-    }
+//    // Test endpoint
+//    @GetMapping("/income")
+//    public ResponseEntity<?> getIncomeBookByTime() { // @RequestBody FinancialBookPdfRequest
+//        TaxpayerDTO taxpayer = getTaxpayerDTO();
+//        StoreDTO store = getStoreDTO();
+//
+//        FinancialBookPdfRequest financialBookPdfRequest = FinancialBookPdfRequest.builder()
+//                .taxpayer(taxpayer)
+//                .store(store)
+//                .period(DateRangeDTO.builder()
+//                        .from(LocalDate.of(2025, 12, 13))
+//                        .to(LocalDate.of(2025, 12, 13))
+//                        .build()
+//                )
+//                .build();
+//
+//        IncomeBookDTO dto = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
+//
+//        return ResponseEntity.ok(dto);
+//    }
 
     // =========================================== Private helpers ===========================================
-    private TaxpayerDTO getTaxpayerDTO() {
+    private TaxpayerDTO getTaxpayerDTO(AppUserResponse appUserResponse) {
         return TaxpayerDTO.builder()
-                .fullName("Марко Марковић")
-                .jmbg("0123456789123")
-                .address("Улица краља Петра I бр. 12, Бања Лука")
+                .fullName(appUserResponse.getName() + " " +  appUserResponse.getSurname())
+                .jmbg(appUserResponse.getJib())
+                .address(appUserResponse.getAddress())
                 .build();
     }
 
-    private StoreDTO getStoreDTO() {
+    private StoreDTO getStoreDTO() {  // TODO: to see if store is necessary
         return StoreDTO.builder()
                 .name("Марко ДОО")
                 .address("Трг Крајине 1, Бања Лука")

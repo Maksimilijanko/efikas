@@ -104,10 +104,9 @@ public class ForeignGuestsBookLayoutStrategy implements BookLayoutStrategy<Forei
         row.add(formatDate(entry.getPermittedResidenceDate()));
         row.add(formatDate(entry.getEntryDate()) + ", " + entry.getEntryPlace());
         row.add(entry.getAccommodationUnitNumber() + ", " + entry.getAccommodationUnitFloor());
-        row.add(formatDate(entry.getEntryDate()));
         row.add(formatDate(arrivalDateTime));
         row.add(formatDate(departureDateTime));
-        row.add(entry.getIssuedInvoiceNumber().toString());
+        row.add(entry.getIssuedInvoiceNumber());
         row.add(entry.getRemarks());
 
         return row;

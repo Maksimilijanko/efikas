@@ -17,9 +17,11 @@ import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
 import org.unibl.etf.efikas.models.entities.Reservation;
 import org.unibl.etf.efikas.models.entities.ReservationType;
+import org.unibl.etf.efikas.models.requests.UpdateReservationRequest;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.models.responses.ReservationResponse;
 import org.unibl.etf.efikas.repositories.ApartmentRepository;
+import org.unibl.etf.efikas.repositories.GuestsBookRepository;
 import org.unibl.etf.efikas.repositories.ReservationRepository;
 import org.unibl.etf.efikas.repositories.ReservationTypeRepository;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
@@ -38,10 +40,14 @@ public class ReservationService {
     private final ApartmentRepository apartmentRepository;
     private final ModelMapper modelMapper;
     private final S3Service s3Service;
+    private final GuestsBookRepository guestsBookRepository;
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
-    public ReservationResponse createNewReservation(Integer apartmentId, Authentication authentication,
-                                                    ReservationDTO reservationDTO, MultipartFile documentPicture) {
+    public ReservationResponse createNewReservation(Integer apartmentId,
+                                                    Authentication authentication,
+                                                    ReservationDTO reservationDTO,
+                                                    MultipartFile documentPicture
+    ) {
 
         System.out.println("TEST 1: " + reservationDTO + "\n");
 
@@ -66,9 +72,11 @@ public class ReservationService {
             throw new S3UploadException(e.getMessage());
         }
         String pictureUrl = fileUploadResponse.getFilePath();
-        reservation.getGuest().setPersonalDocumentURL(pictureUrl);
+        reservation.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
 
         Reservation saved = reservationRepository.save(reservation);
+        saved.getGuest().setPersonalDocumentURL(s3Service.getPresignedUrl(saved.getGuest().getPersonalDocumentURL()));  // User gets the downloadable URL
+
         return modelMapper.map(saved, ReservationResponse.class);
     }
 
@@ -89,24 +97,28 @@ public class ReservationService {
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
-    public ReservationResponse updateReservation(Integer reservationId, Authentication authentication, ReservationDTO reservationDTO, MultipartFile documentPicture) {
+    public ReservationResponse updateReservation(Integer reservationId,
+                                                 Authentication authentication,
+                                                 UpdateReservationRequest updateReservationRequest,
+                                                 MultipartFile documentPicture
+    ) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
-        Apartment apartment = apartmentRepository.findById(reservationDTO.getApartmentId())
+        Apartment apartment = apartmentRepository.findById(updateReservationRequest.getApartmentId())
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         ReservationType reservationType = reservationTypeRepository
-                .findReservationTypeByTypeName(reservationDTO.getReservationType())
+                .findReservationTypeByTypeName(updateReservationRequest.getReservationType())
                 .orElseThrow(() -> new EntityNotFoundException("Reservation type not found!"));
 
 
         reservation.setType(reservationType);
-        reservation.setNote(reservationDTO.getNote());
-        reservation.setPrice(reservationDTO.getPrice());
+        reservation.setNote(updateReservationRequest.getNote());
+        reservation.setPrice(updateReservationRequest.getPrice());
         reservation.setApartment(apartment);
-        reservation.setGuestQuantity(reservationDTO.getGuestQuantity());
-        reservation.setGuest(getGuestFromReservationDTO(reservationDTO));
+        reservation.setGuestQuantity(updateReservationRequest.getGuestQuantity());
+        reservation.setGuest(getGuestFromReservationDTO(updateReservationRequest));
 
         // Delete old picture from S3 bucket
         s3Service.deleteFile(reservation.getGuest().getPersonalDocumentURL());
@@ -120,14 +132,15 @@ public class ReservationService {
         }
 
         String pictureUrl = fileUploadResponse.getFilePath();
-        reservation.getGuest().setPersonalDocumentURL(pictureUrl);
+        reservation.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
 
         Reservation saved = reservationRepository.save(reservation);
+        saved.getGuest().setPersonalDocumentURL(s3Service.getPresignedUrl(saved.getGuest().getPersonalDocumentURL()));  // User gets the downloadable URL
         return modelMapper.map(saved, ReservationResponse.class);
     }
 
-    private GuestsBook getGuestFromReservationDTO(ReservationDTO reservationDTO) {
-        return modelMapper.map(reservationDTO.getGuest(), GuestsBook.class);
+    private GuestsBook getGuestFromReservationDTO(UpdateReservationRequest updateReservationRequest) {
+        return guestsBookRepository.findById(updateReservationRequest.getGuestId()).orElseThrow(() -> new EntityNotFoundException("Guest not found!"));
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")

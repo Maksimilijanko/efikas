@@ -7,11 +7,6 @@ import java.time.LocalDate;
 
 public final class ForeignGuestsPdfSpecifications {
 
-    public static Specification<GuestsBook> forApartment(Integer apartmentId) {
-        return (root, query, cb) ->
-                cb.equal(root.get("apartment").get("id"), apartmentId);
-    }
-
     public static Specification<GuestsBook> entryDateFrom(LocalDate from) {
         return (root, query, cb) ->
                 from == null
