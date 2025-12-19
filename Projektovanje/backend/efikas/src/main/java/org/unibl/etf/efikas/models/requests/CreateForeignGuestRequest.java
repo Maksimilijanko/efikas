@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class CreateForeignGuestRequest {
-    private int apartmentId;
     private String name;
     private String surname;
     private Gender gender;

@@ -89,7 +89,7 @@ public class DomesticGuestsBookLayoutStrategy implements BookLayoutStrategy<Dome
         row.add(formatDate(entry.getBirthDate()));
         row.add(entry.getBirthPlace() + ", " + entry.getBirthMunicipality() + ", " + entry.getBirthCountry());
         row.add(entry.getAddress());
-        row.add(entry.getJmbg());
+        row.add(entry.getCitizenId());
         row.add(entry.getAccommodationUnitNumber() + ", " + entry.getAccommodationUnitFloor());
         row.add(formatDate(arrivalDateTime));
         row.add(formatDate(departureDateTime));

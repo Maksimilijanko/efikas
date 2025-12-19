@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.unibl.etf.efikas.models.enums.Gender;
 
 import java.time.Instant;
@@ -47,6 +50,7 @@ public class GuestsBook {
     @NotNull
     @Column(name = "\"Gender\"", nullable = false)
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Gender gender;
 
     @Size(max = 30)
@@ -78,8 +82,7 @@ public class GuestsBook {
     private String address;
 
     @Size(max = 50)
-    @NotNull
-    @Column(name = "\"Citizenship\"", nullable = false, length = 50)
+    @Column(name = "\"Citizenship\"", length = 50)
     private String citizenship;
 
     @Size(max = 20)
@@ -133,6 +136,7 @@ public class GuestsBook {
     private String remarks;
 
     @ColumnDefault("now()")
+    @CreationTimestamp
     @Column(name = "\"CreatedAt\"")
     private Instant createdAt;
 

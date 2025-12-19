@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
+import org.unibl.etf.efikas.models.dto.ForeignGuestDTO;
 import org.unibl.etf.efikas.models.dto.books.ForeignGuestsBookDTO;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
@@ -19,24 +20,20 @@ import java.util.List;
 @AllArgsConstructor
 public class ForeignGuestsBookService {
     private final GuestsBookRepository foreignGuestsBookRepository;
-    private final ApartmentService apartmentService;
     private final ModelMapper modelMapper;
 
 
-    public List<ForeignGuestsEntry> getAll() {
+    public List<ForeignGuestDTO> getAll() {
         return foreignGuestsBookRepository.findAll().stream()
-                .map(ib -> modelMapper.map(ib, ForeignGuestsEntry.class))
+                .map(ib -> modelMapper.map(ib, ForeignGuestDTO.class))
                 .toList();
     }
 
     /**
      * Persists a new foreign guest entry to the database.
      * */
-    public ForeignGuestsEntry createNewForeignGuest(CreateForeignGuestRequest createForeignGuestRequest) {
-        ForeignGuestsEntry foreignGuestsEntry = modelMapper.map(createForeignGuestRequest, ForeignGuestsEntry.class);
-        foreignGuestsEntry.setApartment(apartmentService.getApartmentById(createForeignGuestRequest.getApartmentId()));
-
-        GuestsBook foreignGuestsBook = modelMapper.map(foreignGuestsEntry, GuestsBook.class);
+    public ForeignGuestsEntry createNewForeignGuest(ForeignGuestDTO createForeignGuestRequest) {
+        GuestsBook foreignGuestsBook = modelMapper.map(createForeignGuestRequest, GuestsBook.class);
         foreignGuestsBook.setId(null);
         GuestsBook saved = foreignGuestsBookRepository.save(foreignGuestsBook);
 

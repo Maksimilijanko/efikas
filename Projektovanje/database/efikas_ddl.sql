@@ -147,13 +147,13 @@ CREATE TABLE IF NOT EXISTS efikas."guests_book" (
     "Name" varchar(50) NOT NULL,
     "Surname" varchar(50) NOT NULL,
     "Gender" person_gender NOT NULL,
-    "PhoneNumber" varchar(30) NOT NULL,
+    "PhoneNumber" varchar(30) UNIQUE NOT NULL,
     "BirthDate" date NOT NULL,
     "BirthPlace" varchar(50) NOT NULL,
     "BirthMunicipality" varchar(50) NULL,           -- locals
     "BirthCountry" varchar(50) NOT NULL,    
     "Address" varchar(50) NOT NULL,
-    "Citizenship" varchar(50) NOT NULL,             -- foreigners
+    "Citizenship" varchar(50) NULL,                 -- foreigners
     "PassportNumber" varchar(20) NULL,              -- foreigners
     "PassportIssuedDate" date NULL,                 -- foreigners
     "VisaType" varchar(20) NULL,                    -- foreigners

@@ -1,7 +1,9 @@
 package org.unibl.etf.efikas.exceptions;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -59,5 +61,35 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 
+    // Hvatanje duplikata u bazi podataka (UNIQUE constraint)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolation(
+            DataIntegrityViolationException ex) {
+
+        String userMessage = "Duplicate value violates a unique constraint.";
+
+        // Extracting PostgreSQL error details
+        Throwable root = getRootCause(ex);
+
+        if (root instanceof org.postgresql.util.PSQLException psqlEx) {
+            if ("23505".equals(psqlEx.getSQLState())) {         // 23505 is a PSQL error code for duplicate attributes "unique_violation"
+                userMessage = "A record with the same value already exists.";
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(userMessage);
+    }
+
+    private Throwable getRootCause(Throwable ex) {
+        Throwable cause = ex;
+        while (cause.getCause() != null && cause.getCause() != cause) {
+            cause = cause.getCause();
+        }
+        return cause;
+    }
 }

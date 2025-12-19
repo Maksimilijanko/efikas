@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.unibl.etf.efikas.models.enums.Gender;
-import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class DomesticGuestsEntry {
     private Integer id;
-    private ApartmentResponse apartment;
+    private String citizenId;
     private String name;
     private String surname;
     private Gender gender;
@@ -25,7 +24,6 @@ public class DomesticGuestsEntry {
     private String birthMunicipality;
     private String birthCountry;
     private String address;
-    private String jmbg;
     private Integer accommodationUnitNumber;
     private Integer accommodationUnitFloor;
     private Instant dateTimeOfArrival;

@@ -1,6 +1,7 @@
 package org.unibl.etf.efikas.services;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.exceptions.S3UploadException;
+import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.ReservationDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
+import org.unibl.etf.efikas.models.entities.GuestsBook;
 import org.unibl.etf.efikas.models.entities.Reservation;
 import org.unibl.etf.efikas.models.entities.ReservationType;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
@@ -39,7 +42,11 @@ public class ReservationService {
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
     public ReservationResponse createNewReservation(Integer apartmentId, Authentication authentication,
                                                     ReservationDTO reservationDTO, MultipartFile documentPicture) {
+
+        System.out.println("TEST 1: " + reservationDTO + "\n");
+
         Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
+        System.out.println("TEST 2: " + reservationDTO + "\n");
 
         ReservationType reservationType = reservationTypeRepository
                 .findReservationTypeByTypeName(reservationDTO.getReservationType())
@@ -50,6 +57,8 @@ public class ReservationService {
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
         reservation.setApartment(apartment);
 
+
+
         FileUploadResponse fileUploadResponse = null;
         try {
             fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
@@ -59,8 +68,8 @@ public class ReservationService {
         String pictureUrl = fileUploadResponse.getFilePath();
         reservation.getGuest().setPersonalDocumentURL(pictureUrl);
 
-        reservationRepository.save(reservation);
-        return modelMapper.map(reservation, ReservationResponse.class);
+        Reservation saved = reservationRepository.save(reservation);
+        return modelMapper.map(saved, ReservationResponse.class);
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
@@ -97,11 +106,7 @@ public class ReservationService {
         reservation.setPrice(reservationDTO.getPrice());
         reservation.setApartment(apartment);
         reservation.setGuestQuantity(reservationDTO.getGuestQuantity());
-        reservation.getGuest().setDateTimeOfArrival(reservationDTO.getGuest().getDateTimeOfArrival());
-        reservation.getGuest().setDateTimeOfDeparture(reservationDTO.getGuest().getDateTimeOfDeparture());
-        reservation.getGuest().setName(reservationDTO.getGuest().getName());
-        reservation.getGuest().setSurname(reservationDTO.getGuest().getSurname());
-        reservation.getGuest().setPhoneNumber(reservationDTO.getGuest().getPhoneNumber());
+        reservation.setGuest(getGuestFromReservationDTO(reservationDTO));
 
         // Delete old picture from S3 bucket
         s3Service.deleteFile(reservation.getGuest().getPersonalDocumentURL());
@@ -117,8 +122,12 @@ public class ReservationService {
         String pictureUrl = fileUploadResponse.getFilePath();
         reservation.getGuest().setPersonalDocumentURL(pictureUrl);
 
-        reservationRepository.save(reservation);
-        return modelMapper.map(reservation, ReservationResponse.class);
+        Reservation saved = reservationRepository.save(reservation);
+        return modelMapper.map(saved, ReservationResponse.class);
+    }
+
+    private GuestsBook getGuestFromReservationDTO(ReservationDTO reservationDTO) {
+        return modelMapper.map(reservationDTO.getGuest(), GuestsBook.class);
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")

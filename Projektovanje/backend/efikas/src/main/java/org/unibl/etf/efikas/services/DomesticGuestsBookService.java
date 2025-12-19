@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
+import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.books.DomesticGuestsBookDTO;
 import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
@@ -29,17 +30,10 @@ public class DomesticGuestsBookService {
     }
 
     /**
-     * Persists a new foreign guest entry to the database.
+     * Persists a new domestic guest entry to the database.
      * */
-    public DomesticGuestsEntry createNewDomesticGuest(CreateDomesticGuestRequest createDomesticGuestRequest) {
-        DomesticGuestsEntry domesticGuestsEntry = modelMapper.map(createDomesticGuestRequest, DomesticGuestsEntry.class);
-        domesticGuestsEntry.setApartment(apartmentService.getApartmentById(createDomesticGuestRequest.getApartmentId()));
-
-
-        //System.out.println("domesticGuestsEntry: " + domesticGuestsEntry);
-
-
-        GuestsBook domesticGuestsBook = modelMapper.map(domesticGuestsEntry, GuestsBook.class);
+    public DomesticGuestsEntry createNewDomesticGuest(DomesticGuestDTO createDomesticGuestRequest) {
+        GuestsBook domesticGuestsBook = modelMapper.map(createDomesticGuestRequest, GuestsBook.class);
         domesticGuestsBook.setId(null);
 
         //System.out.println("domesticGuestsBook: " + domesticGuestsBook);

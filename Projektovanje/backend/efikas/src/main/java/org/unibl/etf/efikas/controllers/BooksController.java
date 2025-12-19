@@ -13,6 +13,8 @@ import org.unibl.etf.efikas.exceptions.BookPdfGenerationException;
 import org.unibl.etf.efikas.design_patterns.factory.BookPdfFactory;
 import org.unibl.etf.efikas.exceptions.InvalidBookPeriodException;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
+import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
+import org.unibl.etf.efikas.models.dto.ForeignGuestDTO;
 import org.unibl.etf.efikas.models.dto.books.*;
 import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
@@ -157,7 +159,7 @@ public class BooksController {
     }
 
     @PostMapping("/domestic-guests")
-    public ResponseEntity<?> addDomesticGuestsEntry(@Validated @RequestBody CreateDomesticGuestRequest createDomesticGuestRequest) {
+    public ResponseEntity<?> addDomesticGuestsEntry(@Validated @RequestBody DomesticGuestDTO createDomesticGuestRequest) {
         DomesticGuestsEntry saved = domesticGuestsBookService.createNewDomesticGuest(createDomesticGuestRequest);
 
         URI location = ServletUriComponentsBuilder
@@ -168,7 +170,7 @@ public class BooksController {
     }
 
     @PostMapping("/foreign-guests")
-    public ResponseEntity<?> addForeignGuestsEntry(@Validated @RequestBody CreateForeignGuestRequest createForeignGuestRequest) {
+    public ResponseEntity<?> addForeignGuestsEntry(@Validated @RequestBody ForeignGuestDTO createForeignGuestRequest) {
         ForeignGuestsEntry saved = foreignGuestsBookService.createNewForeignGuest(createForeignGuestRequest);
 
         URI location = ServletUriComponentsBuilder

@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ForeignGuestsEntry {
     private Integer id;
-    private ApartmentResponse apartment;
+    private String citizenId;
     private String name;
     private String surname;
     private Gender gender;
