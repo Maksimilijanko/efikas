@@ -20,13 +20,13 @@ public class Reservation {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "\"ApartmentId\"", nullable = false)
     private Apartment apartment;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "\"GuestId\"", nullable = false)
     private GuestsBook guest;
 
@@ -43,7 +43,7 @@ public class Reservation {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "\"TypeId\"", nullable = false)
     private ReservationType type;
 

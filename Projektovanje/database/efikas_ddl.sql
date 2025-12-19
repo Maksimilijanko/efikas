@@ -182,13 +182,13 @@ CREATE TABLE efikas."reservation" (
 
     CONSTRAINT "FK_reservation_guests" FOREIGN KEY ("GuestId")
         REFERENCES efikas."guests_book"("GuestsBookId")
-        ON UPDATE CASCADE ON DELETE CASCADE,
+        ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT "FK_reservation_apartment" FOREIGN KEY ("ApartmentId")
         REFERENCES efikas."apartment"("ApartmentId")
-        ON UPDATE CASCADE ON DELETE CASCADE,
+        ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT "FK_reservation_reservation_type" FOREIGN KEY ("TypeId")
         REFERENCES efikas."reservation_type"("TypeId")
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 -- =========================================================================
