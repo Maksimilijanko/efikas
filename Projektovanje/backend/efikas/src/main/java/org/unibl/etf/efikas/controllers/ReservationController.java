@@ -47,7 +47,7 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/reservations/{reservationId}")
-    public ResponseEntity<?> getReservation(@PathVariable Long reservationId) {
+    public ResponseEntity<?> getReservation(@PathVariable Integer reservationId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         ReservationResponse response = reservationService.getReservation(reservationId, authentication);
@@ -56,7 +56,7 @@ public class ReservationController {
     }
 
     @PutMapping(value = "/reservations/{reservationId}", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateReservation(@PathVariable Long reservationId,
+    public ResponseEntity<?> updateReservation(@PathVariable Integer reservationId,
                                                @RequestPart("reservation") ReservationDTO reservationDTO,
                                                @RequestPart("picture") MultipartFile documentPicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -70,7 +70,7 @@ public class ReservationController {
     }
 
     @DeleteMapping(value = "/reservations/{reservationId}")
-    public ResponseEntity<?> deleteReservation(@PathVariable Long reservationId) {
+    public ResponseEntity<?> deleteReservation(@PathVariable Integer reservationId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         ReservationResponse response = reservationService.deleteReservation(reservationId, authentication);

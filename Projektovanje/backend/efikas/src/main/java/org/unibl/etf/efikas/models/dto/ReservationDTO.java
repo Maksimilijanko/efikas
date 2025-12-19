@@ -6,13 +6,10 @@ import java.time.Instant;
 
 @Data
 public class ReservationDTO {
-    private String guestFullName;
-    private String guestPhoneNumber;
-    private Integer guestNumber;
+    private Integer apartmentId;
+    private GuestDTO guest;
+    private Integer guestQuantity;
+    private Double price;
     private String note;
     private String reservationType;
-    private Double price;
-    private Instant dateTimeOfArrival;
-    private Instant dateTimeOfDeparture;
-    private Long apartmentId;
 }

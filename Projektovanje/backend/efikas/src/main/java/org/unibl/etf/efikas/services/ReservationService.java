@@ -46,7 +46,7 @@ public class ReservationService {
                 .orElseThrow(() -> new EntityNotFoundException("Reservation type not found!"));
         reservation.setType(reservationType);
 
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
         reservation.setApartment(apartment);
 
@@ -57,7 +57,7 @@ public class ReservationService {
             throw new S3UploadException(e.getMessage());
         }
         String pictureUrl = fileUploadResponse.getFilePath();
-        reservation.setPersonalDocumentURL(pictureUrl);
+        reservation.getGuest().setPersonalDocumentURL(pictureUrl);
 
         reservationRepository.save(reservation);
         return modelMapper.map(reservation, ReservationResponse.class);
@@ -65,14 +65,14 @@ public class ReservationService {
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
     public List<ReservationResponse> getAllReservations(Integer apartmentId, Authentication authentication) {
-        List<Reservation> reservations = reservationRepository.findReservationByApartmentApartmentId(apartmentId.longValue());
+        List<Reservation> reservations = reservationRepository.findReservationByApartmentApartmentId(apartmentId);
 
         return reservations.stream()
                 .map((element) -> modelMapper.map(element, ReservationResponse.class)).collect(Collectors.toList());
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
-    public ReservationResponse getReservation(Long reservationId, Authentication authentication) {
+    public ReservationResponse getReservation(Integer reservationId, Authentication authentication) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
@@ -80,7 +80,7 @@ public class ReservationService {
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
-    public ReservationResponse updateReservation(Long reservationId, Authentication authentication, ReservationDTO reservationDTO, MultipartFile documentPicture) {
+    public ReservationResponse updateReservation(Integer reservationId, Authentication authentication, ReservationDTO reservationDTO, MultipartFile documentPicture) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
@@ -91,18 +91,20 @@ public class ReservationService {
                 .findReservationTypeByTypeName(reservationDTO.getReservationType())
                 .orElseThrow(() -> new EntityNotFoundException("Reservation type not found!"));
 
+
         reservation.setType(reservationType);
         reservation.setNote(reservationDTO.getNote());
         reservation.setPrice(reservationDTO.getPrice());
         reservation.setApartment(apartment);
-        reservation.setGuestNumber(reservationDTO.getGuestNumber());
-        reservation.setDateTimeOfArrival(reservationDTO.getDateTimeOfArrival());
-        reservation.setDateTimeOfDeparture(reservationDTO.getDateTimeOfDeparture());
-        reservation.setGuestFullName(reservationDTO.getGuestFullName());
-        reservation.setGuestPhoneNumber(reservationDTO.getGuestPhoneNumber());
+        reservation.setGuestQuantity(reservationDTO.getGuestQuantity());
+        reservation.getGuest().setDateTimeOfArrival(reservationDTO.getGuest().getDateTimeOfArrival());
+        reservation.getGuest().setDateTimeOfDeparture(reservationDTO.getGuest().getDateTimeOfDeparture());
+        reservation.getGuest().setName(reservationDTO.getGuest().getName());
+        reservation.getGuest().setSurname(reservationDTO.getGuest().getSurname());
+        reservation.getGuest().setPhoneNumber(reservationDTO.getGuest().getPhoneNumber());
 
         // Delete old picture from S3 bucket
-        s3Service.deleteFile(reservation.getPersonalDocumentURL());
+        s3Service.deleteFile(reservation.getGuest().getPersonalDocumentURL());
 
         // Upload the new picture to S3 bucket
         FileUploadResponse fileUploadResponse;
@@ -113,18 +115,18 @@ public class ReservationService {
         }
 
         String pictureUrl = fileUploadResponse.getFilePath();
-        reservation.setPersonalDocumentURL(pictureUrl);
+        reservation.getGuest().setPersonalDocumentURL(pictureUrl);
 
         reservationRepository.save(reservation);
         return modelMapper.map(reservation, ReservationResponse.class);
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
-    public ReservationResponse deleteReservation(Long reservationId, Authentication authentication) {
+    public ReservationResponse deleteReservation(Integer reservationId, Authentication authentication) {
         Reservation reservation = reservationRepository.findReservationByReservationId(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
-        s3Service.deleteFile(reservation.getPersonalDocumentURL());
+        s3Service.deleteFile(reservation.getGuest().getPersonalDocumentURL());
         reservationRepository.delete(reservation);
 
         return modelMapper.map(reservation, ReservationResponse.class);

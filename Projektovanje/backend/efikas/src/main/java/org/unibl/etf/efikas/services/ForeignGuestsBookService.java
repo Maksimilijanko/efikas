@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 import org.unibl.etf.efikas.models.dto.books.ForeignGuestsBookDTO;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
-import org.unibl.etf.efikas.models.entities.ForeignGuestsBook;
+import org.unibl.etf.efikas.models.entities.GuestsBook;
 import org.unibl.etf.efikas.models.requests.CreateForeignGuestRequest;
-import org.unibl.etf.efikas.repositories.ForeignGuestsBookRepository;
+import org.unibl.etf.efikas.repositories.GuestsBookRepository;
 import org.unibl.etf.efikas.repositories.specifications.ForeignGuestsPdfSpecifications;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ForeignGuestsBookService {
-    private final ForeignGuestsBookRepository foreignGuestsBookRepository;
+    private final GuestsBookRepository foreignGuestsBookRepository;
     private final ApartmentService apartmentService;
     private final ModelMapper modelMapper;
 
@@ -36,9 +36,9 @@ public class ForeignGuestsBookService {
         ForeignGuestsEntry foreignGuestsEntry = modelMapper.map(createForeignGuestRequest, ForeignGuestsEntry.class);
         foreignGuestsEntry.setApartment(apartmentService.getApartmentById(createForeignGuestRequest.getApartmentId()));
 
-        ForeignGuestsBook foreignGuestsBook = modelMapper.map(foreignGuestsEntry, ForeignGuestsBook.class);
+        GuestsBook foreignGuestsBook = modelMapper.map(foreignGuestsEntry, GuestsBook.class);
         foreignGuestsBook.setId(null);
-        ForeignGuestsBook saved = foreignGuestsBookRepository.save(foreignGuestsBook);
+        GuestsBook saved = foreignGuestsBookRepository.save(foreignGuestsBook);
 
         return modelMapper.map(saved, ForeignGuestsEntry.class);
     }
@@ -56,7 +56,7 @@ public class ForeignGuestsBookService {
                 .to(toDate)
                 .build();
 
-        Specification<ForeignGuestsBook> spec =
+        Specification<GuestsBook> spec =
                 ForeignGuestsPdfSpecifications.forApartment(apartmentId)
                         .and(ForeignGuestsPdfSpecifications.entryDateFrom(fromDate))
                         .and(ForeignGuestsPdfSpecifications.entryDateTo(toDate))

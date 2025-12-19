@@ -23,7 +23,7 @@ import java.util.Optional;
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
     public Optional<String> register(Map<String, String> user) {
@@ -32,6 +32,7 @@ public class AppUserService {
         String name = user.get("name");
         String surname = user.get("surname");
         String jib = user.get("jib");
+        String address = user.get("address");
 
         if (appUserRepository.existsByEmail(email)) {
             return Optional.of("Email already exists.");
@@ -42,6 +43,7 @@ public class AppUserService {
         newUser.setName(name);
         newUser.setSurname(surname);
         newUser.setJib(jib);
+        newUser.setAddress(address);
         // hashing the password
         newUser.setPasswordHash(passwordEncoder.encode(password));
 
@@ -81,6 +83,7 @@ public class AppUserService {
         user.setSurname(userDto.getSurname());
         user.setJib(userDto.getJib());
         user.setEmail(userDto.getEmail());
+        user.setAddress(userDto.getAddress());
 
         return modelMapper.map(appUserRepository.save(user), AppUserResponse.class);
     }
