@@ -43,6 +43,20 @@ public class DomesticGuestsBookService {
         return modelMapper.map(saved, DomesticGuestsEntry.class);
     }
 
+    /**
+     * Updates a domestic guest
+     * */
+    public DomesticGuestsEntry updateDomesticGuest(int guestId, DomesticGuestDTO updateDomesticGuestRequest) {
+        updateDomesticGuestRequest.setId(guestId);
+        GuestsBook domesticGuestsBook = modelMapper.map(updateDomesticGuestRequest, GuestsBook.class);
+
+        //System.out.println("domesticGuestsBook: " + domesticGuestsBook);
+
+        GuestsBook saved = domesticGuestsBookRepository.save(domesticGuestsBook);
+
+        return modelMapper.map(saved, DomesticGuestsEntry.class);
+    }
+
 
     public DomesticGuestsBookDTO findForPdf(
             LocalDate fromDate,

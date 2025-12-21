@@ -140,27 +140,24 @@ public class BooksController {
         return ResponseEntity.created(location).body(saved);
     }
 
+    // =========================================== PUT endpoints ===========================================
+    @PutMapping("/domestic-guests/{id}")
+    public ResponseEntity<?> addDomesticGuestsEntry(@PathVariable int id, @Validated @RequestBody DomesticGuestDTO createDomesticGuestRequest) {
+        DomesticGuestsEntry saved = domesticGuestsBookService.updateDomesticGuest(id, createDomesticGuestRequest);
+
+        return ResponseEntity.ok(saved);
+    }
+
+    @PutMapping("/foreign-guests/{id}")
+    public ResponseEntity<?> addForeignGuestsEntry(@PathVariable int id, @Validated @RequestBody ForeignGuestDTO createForeignGuestRequest) {
+        ForeignGuestsEntry saved = foreignGuestsBookService.updateForeignGuest(id, createForeignGuestRequest);
+
+        return ResponseEntity.ok(saved);
+    }
+
+
     // =========================================== GET endpoints ===========================================
-//    // Test endpoint
-//    @GetMapping("/income")
-//    public ResponseEntity<?> getIncomeBookByTime() { // @RequestBody FinancialBookPdfRequest
-//        TaxpayerDTO taxpayer = getTaxpayerDTO();
-//        StoreDTO store = getStoreDTO();
-//
-//        FinancialBookPdfRequest financialBookPdfRequest = FinancialBookPdfRequest.builder()
-//                .taxpayer(taxpayer)
-//                .store(store)
-//                .period(DateRangeDTO.builder()
-//                        .from(LocalDate.of(2025, 12, 13))
-//                        .to(LocalDate.of(2025, 12, 13))
-//                        .build()
-//                )
-//                .build();
-//
-//        IncomeBookDTO dto = incomeBookService.getIncomeBookByTime(financialBookPdfRequest);
-//
-//        return ResponseEntity.ok(dto);
-//    }
+
 
     // =========================================== Private helpers ===========================================
     private TaxpayerDTO getTaxpayerDTO(AppUserResponse appUserResponse) {

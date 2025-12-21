@@ -5,8 +5,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
+import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.ForeignGuestDTO;
 import org.unibl.etf.efikas.models.dto.books.ForeignGuestsBookDTO;
+import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
 import org.unibl.etf.efikas.models.requests.CreateForeignGuestRequest;
@@ -36,6 +38,17 @@ public class ForeignGuestsBookService {
         GuestsBook foreignGuestsBook = modelMapper.map(createForeignGuestRequest, GuestsBook.class);
         foreignGuestsBook.setId(null);
         GuestsBook saved = foreignGuestsBookRepository.save(foreignGuestsBook);
+
+        return modelMapper.map(saved, ForeignGuestsEntry.class);
+    }
+
+    /**
+     * Updates a foreign guest
+     * */
+    public ForeignGuestsEntry updateForeignGuest(int guestId, ForeignGuestDTO updateForeignGuestRequest) {
+        updateForeignGuestRequest.setId(guestId);
+        GuestsBook foreignGuest = modelMapper.map(updateForeignGuestRequest, GuestsBook.class);
+        GuestsBook saved = foreignGuestsBookRepository.save(foreignGuest);
 
         return modelMapper.map(saved, ForeignGuestsEntry.class);
     }
