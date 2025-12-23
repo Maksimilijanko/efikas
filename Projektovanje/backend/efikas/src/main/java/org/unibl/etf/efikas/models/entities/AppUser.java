@@ -1,8 +1,12 @@
 package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -20,6 +24,7 @@ public class AppUser {
     @Column(name = "\"Surname\"", nullable = false, length = 50)
     private String surname;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "\"JIB\"", nullable = false, length = 13)
     private String jib;
 
@@ -28,5 +33,10 @@ public class AppUser {
 
     @Column(name = "\"Email\"", nullable = false, length = 50)
     private String email;
+
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "\"Address\"", nullable = false, length = 50)
+    private String address;
 
 }

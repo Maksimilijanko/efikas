@@ -40,7 +40,7 @@ public class ApartmentDamageService {
     public ApartmentDamageResponse createNewApartmentDamage(Integer apartmentId, Authentication authentication, ApartmentDamageDTO damage) {
         ApartmentDamage apartmentDamage = modelMapper.map(damage, ApartmentDamage.class);
 
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         apartmentDamage.setApartment(apartment);
@@ -65,7 +65,7 @@ public class ApartmentDamageService {
         ApartmentDamage apartmentDamage = apartmentDamageRepository.findApartmentDamageById(apartmentDamageId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment damage not found!"));
 
-        apartmentRepository.findById(apartmentId.longValue())
+        apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         apartmentDamageRepository.delete(apartmentDamage);

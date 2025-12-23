@@ -51,7 +51,7 @@ public class ApartmentService {
                 .toList();
     }
 
-    public ApartmentResponse getApartmentById(long id) {
+    public ApartmentResponse getApartmentById(int id) {
         Apartment apartment = apartmentRepository.findById(id).orElse(null);
         return modelMapper.map(apartment, ApartmentResponse.class);
     }
@@ -118,7 +118,7 @@ public class ApartmentService {
             String userEmail
     ) throws IOException {
 
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found"));
 
         // Throw an exception if the apartment belongs to a different user
@@ -176,7 +176,7 @@ public class ApartmentService {
     }
 
     public ApartmentResponse deleteApartment(Integer apartmentId) throws IOException {
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apartment not found"));
 
         List<ApartmentPicture> pictures = apartmentPictureRepository.findApartmentPictureByApartment(apartment);
