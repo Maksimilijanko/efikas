@@ -6,6 +6,9 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 @Setter
 @Entity
@@ -42,6 +45,14 @@ public class Apartment {
     @JoinColumn(name = "\"UserId\"", nullable = false)
     private AppUser user;
 
-    // TODO: change ApartmentTrait to be here, even though it's OneToMany multiplicity
+    @ElementCollection
+    @CollectionTable(
+            name = "\"apartment_trait\"",
+            schema = "efikas",
+            joinColumns = @JoinColumn(name = "\"ApartmentId\"")
+    )
+    @MapKeyColumn(name = "\"TraitName\"")
+    @Column(name = "\"TraitValue\"")
+    private Map<String, Boolean> traits = new HashMap<>();
 
 }

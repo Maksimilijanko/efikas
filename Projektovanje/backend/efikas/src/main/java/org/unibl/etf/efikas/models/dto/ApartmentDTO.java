@@ -2,6 +2,8 @@ package org.unibl.etf.efikas.models.dto;
 
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class ApartmentDTO {
     private String name;
@@ -11,5 +13,5 @@ public class ApartmentDTO {
     private Integer capacity;
     private Double pricePerNight;
     private Double pricePerDay;
-
+    private Map<String, Boolean> traits;
 }

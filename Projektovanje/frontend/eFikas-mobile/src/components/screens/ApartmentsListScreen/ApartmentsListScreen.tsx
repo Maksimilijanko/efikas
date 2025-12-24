@@ -20,8 +20,8 @@ const ApartmentsListScreen: React.FC = () => {
   const apartments = data?.map((item) => (
     <ApartmentCard
       key={item.id}
-      title={item.title}
-      subtitle={item.subtitle}
+      name={item.name}
+      address={item.address}
       imageUrl={item.imageUrl}
       status={item.status}
       statusUntil={item.statusUntil}

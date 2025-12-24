@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, Dimensions } from 'react-native';
-import { Colors } from '@/src/styles/style';
+// import { Colors } from '@/src/styles/style';
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 export type ApartmentsListTemplateProps = {
   apartments: React.ReactNode[];
@@ -13,6 +14,9 @@ const ApartmentsListTemplate: React.FC<ApartmentsListTemplateProps> = ({
   apartments,
   floatingActionButton
 }) => {
+  const { Colors } = useTheme();
+  const styles = getStyles(Colors);
+
   return (
     <View style={styles.root}>
       <ScrollView
@@ -37,30 +41,30 @@ const ApartmentsListTemplate: React.FC<ApartmentsListTemplateProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: Colors.secondary
-  },
-  scrollContent: {
-    width: '100%',
-    alignItems: 'center',
-    paddingTop: screenHeight * 0.02,
-    paddingBottom: screenHeight * 0.12
-  },
-  listSection: {
-    width: '92%'
-  },
-  apartmentItem: {
-    marginBottom: screenHeight * 0.015
-  },
-  fabWrapper: {
-    position: 'absolute',
-    right: 24,
-    bottom: 40,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-});
+const getStyles = (theme: any) =>
+  StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: theme.screenBackground,
+    },
+    scrollContent: {
+      width: '100%',
+      alignItems: 'center',
+      paddingTop: screenHeight * 0.02,
+      paddingBottom: screenHeight * 0.12,
+    },
+    listSection: {
+      width: '92%',
+    },
+    apartmentItem: {
+      marginBottom: screenHeight * 0.015,
+    },
+    fabWrapper: {
+      position: "absolute",
+      bottom: 20,
+      right: 20,
+      zIndex: 10,
+    },
+  });
 
 export default ApartmentsListTemplate;

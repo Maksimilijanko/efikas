@@ -1,393 +1,454 @@
 {
-  "tabs": {
-    "reservations": "Reservations",
-    "home": "Home",
-    "menu": "Menu"
-  },
-  "auth": {
-    "orSeparator": "or",
-    "login": {
-      "password": "Password",
-      "loginButton": "Sign in",
-      "forgotPassword": "Forgot password?",
-      "toastMessages": {
-        "successTitle": "You have successfully logged in!",
-        "successMsg": "You may now use the app.",
-        "errorTitle": "Error!",
-        "errorMsg": "Check Your email and password."
-      },
-      "loadingTitle": "Logging in"
+    "tabs": {
+        "reservations": "Reservations",
+        "home": "Home",
+        "menu": "Menu"
     },
-    "register": {
-      "firstName": "First name",
-      "lastName": "Last name",
-      "password": "Password",
-      "repeatPassword": "Confirm password",
-      "registerButton": "Sign up",
-      "toastMessages": {
-        "successTitle": "You have successfully registered!",
-        "successMsg": "Try to sign in with Your new account.",
-        "errorTitle": "Error!",
-        "errorMsg": "Please check Your entered data."
-      },
-      "loadingTitle": "Registering"
-    },
-    "logout": {
-      "toastMessages": {
-        "successTitle": "Logged Out",
-        "successMsg": "You have successfully logged out.",
-        "errorTitle": "Logout Failed",
-        "errorMsg": "Logout failed. Check your connection or try again."
-      }
-    },
-    "errors": {
-      "emailError": "Email has to be at least 6 characters",
-      "passwordLengthError": "Password has to be at least 8 characters",
-      "jibLengthError": "JIB has to be exactly 13 digits long",
-      "passwordMismatchError": "Passwords do not match"
-    }
-  },
-  "dialogs": {
-    "logout": {
-      "message": "Are you sure you want to log out from this account?",
-      "cancelButton": "Cancel",
-      "confirmButton": "Confirm"
-    },
-    "report": {
-      "title": "Describe Your problem",
-      "placeholder": "Description of the problem...",
-      "cancelButton": "Cancel",
-      "sendButton": "Send"
-    },
-    "download": {
-      "title": "Document is downloading",
-      "subtitle": "Check the downloads folder",
-      "okButton": "OK"
-    },
-    "language": {
-      "title": "Language",
-      "langEn": "English",
-      "langSr": "Serbian",
-      "cancelButton": "Cancel",
-      "confirmButton": "Confirm"
-    },
-    "theme": {
-      "title": "Theme",
-      "lightTheme": "Light",
-      "darkTheme": "Dark",
-      "cancelButton": "Cancel",
-      "confirmButton": "Confirm"
-    },
-    "editDelete": {
-      "edit": "Edit Information",
-      "delete": "Delete"
-    },
-    "cashRegister": {
-      "cancel": "Cancel",
-      "add": "Add",
-      "title": "Add cash register"
-    }
-  },
-  "chart": {
-    "months": [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ]
-  },
-  "welcome": {
-    "loginButton": "Log In"
-  },
-  "dashboard": {
-    "navigation": {
-      "apartmentsTitle": "Apartments",
-      "reservationsTitle": "Reservations",
-      "expensesTitle": "Expenses",
-      "tasksTitle": "Tasks",
-      "damagesTitle": "Damages",
-      "statisticsTitle": "Statistics"
-    },
-    "loading": "Loading...",
-    "greeting": "Hello,",
-    "sections": {
-      "reservationsTitle": "Reservations",
-      "statisticsTitle": "Statistics"
-    },
-    "shortcuts": {
-      "expenses": "Expenses",
-      "tasks": "Tasks",
-      "damages": "Damages"
-    },
-    "toastMessages": {
-      "statsErrorTitle": "Error loading statistics",
-      "statsErrorMessage": "Unable to load data. Please try again."
-    }
-  },
-  "menu": {
-    "stackNavigation": {
-      "profile": "Profile",
-      "notifications": "Notifications",
-      "myApartments": "My apartments",
-      "expenses": "Expenses",
-      "statistics": "Statistics",
-      "incomeBook": "Income book",
-      "expensesBook": "Expenses book",
-      "guestBook": "Guest book",
-      "settingsMain": "Settings",
-      "aboutApp": "About the app"
-    },
-    "title": {
-      "profile": "Profile",
-      "accounting": "Accounting",
-      "settings": "Settings"
-    },
-    "item": {
-      "profile": "Profile",
-      "notifications": "Notifications",
-      "myApartments": "My Apartments",
-      "expenses": "Expenses",
-      "statistics": "Statistics",
-      "incomeBook": "Income Book",
-      "expenseBook": "Expense Book",
-      "guestBook": "Guest Book",
-      "settings": "Settings",
-      "aboutApp": "About App",
-      "logout": "Log Out"
-    },
-    "mainSettings": {
-      "settings": {
-        "general": {
-          "mainTitle": "General",
-          "languageTitle": "Language",
-          "themeTitle": "Theme"
+    "auth": {
+        "orSeparator": "or",
+        "login": {
+            "password": "Password",
+            "loginButton": "Sign in",
+            "forgotPassword": "Forgot password?",
+            "toastMessages": {
+                "successTitle": "You have successfully logged in!",
+                "successMsg": "You may now use the app.",
+                "errorTitle": "Error!",
+                "errorMsg": "Check Your email and password."
+            },
+            "loadingTitle": "Logging in"
         },
-        "feedback": {
-          "mainTitle": "Feedback",
-          "bugReportTitle": "Report an error"
+        "register": {
+            "firstName": "First name",
+            "lastName": "Last name",
+            "password": "Password",
+            "repeatPassword": "Confirm password",
+            "registerButton": "Sign up",
+            "toastMessages": {
+                "successTitle": "You have successfully registered!",
+                "successMsg": "Try to sign in with Your new account.",
+                "errorTitle": "Error!",
+                "errorMsg": "Please check Your entered data."
+            },
+            "loadingTitle": "Registering"
+        },
+        "logout": {
+            "toastMessages": {
+                "successTitle": "Logged Out",
+                "successMsg": "You have successfully logged out.",
+                "errorTitle": "Logout Failed",
+                "errorMsg": "Logout failed. Check your connection or try again."
+            }
+        },
+        "errors": {
+            "emailError": "Email has to be at least 6 characters",
+            "passwordLengthError": "Password has to be at least 8 characters",
+            "jibLengthError": "JIB has to be exactly 13 digits long",
+            "passwordMismatchError": "Passwords do not match"
         }
-      }
+    },
+    "dialogs": {
+        "logout": {
+            "message": "Are you sure you want to log out from this account?",
+            "cancelButton": "Cancel",
+            "confirmButton": "Confirm"
+        },
+        "report": {
+            "title": "Describe Your problem",
+            "placeholder": "Description of the problem...",
+            "cancelButton": "Cancel",
+            "sendButton": "Send"
+        },
+        "download": {
+            "title": "Document is downloading",
+            "subtitle": "Check the downloads folder",
+            "okButton": "OK"
+        },
+        "language": {
+            "title": "Language",
+            "langEn": "English",
+            "langSr": "Serbian",
+            "cancelButton": "Cancel",
+            "confirmButton": "Confirm"
+        },
+        "theme": {
+            "title": "Theme",
+            "lightTheme": "Light",
+            "darkTheme": "Dark",
+            "cancelButton": "Cancel",
+            "confirmButton": "Confirm"
+        },
+        "editDelete": {
+            "edit": "Edit Information",
+            "delete": "Delete"
+        },
+        "cashRegister": {
+            "cancel": "Cancel",
+            "add": "Add",
+            "title": "Add cash register"
+        },
+        "message": {
+            "details": {
+                "message": "No ID document found for this reservation",
+                "button": "OK"
+            }
+        }
+    },
+    "chart": {
+        "months": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ]
+    },
+    "welcome": {
+        "loginButton": "Log In"
+    },
+    "dashboard": {
+        "navigation": {
+            "apartmentsTitle": "Apartments",
+            "reservationsTitle": "Reservations",
+            "expensesTitle": "Expenses",
+            "tasksTitle": "Tasks",
+            "damagesTitle": "Damages",
+            "statisticsTitle": "Statistics"
+        },
+        "loading": "Loading...",
+        "greeting": "Hello,",
+        "sections": {
+            "reservationsTitle": "Reservations",
+            "statisticsTitle": "Statistics"
+        },
+        "shortcuts": {
+            "expenses": "Expenses",
+            "tasks": "Tasks",
+            "damages": "Damages"
+        },
+        "toastMessages": {
+            "statsErrorTitle": "Error loading statistics",
+            "statsErrorMessage": "Unable to load data. Please try again."
+        }
+    },
+    "menu": {
+        "stackNavigation": {
+            "profile": "Profile",
+            "notifications": "Notifications",
+            "myApartments": "My apartments",
+            "expenses": "Expenses",
+            "statistics": "Statistics",
+            "incomeBook": "Income book",
+            "expensesBook": "Expenses book",
+            "guestBook": "Guest book",
+            "settingsMain": "Settings",
+            "aboutApp": "About the app"
+        },
+        "title": {
+            "profile": "Profile",
+            "accounting": "Accounting",
+            "settings": "Settings"
+        },
+        "item": {
+            "profile": "Profile",
+            "notifications": "Notifications",
+            "myApartments": "My Apartments",
+            "expenses": "Expenses",
+            "statistics": "Statistics",
+            "incomeBook": "Income Book",
+            "expenseBook": "Expense Book",
+            "guestBook": "Guest Book",
+            "settings": "Settings",
+            "aboutApp": "About App",
+            "logout": "Log Out"
+        },
+        "mainSettings": {
+            "settings": {
+                "general": {
+                    "mainTitle": "General",
+                    "languageTitle": "Language",
+                    "themeTitle": "Theme"
+                },
+                "feedback": {
+                    "mainTitle": "Feedback",
+                    "bugReportTitle": "Report an error"
+                }
+            }
+        }
+    },
+    "calendar": {
+        "months": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        "monthsShort": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ],
+        "dayNames": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ],
+        "dayNamesShort": [
+            "SUN",
+            "MON",
+            "TUE",
+            "WED",
+            "THU",
+            "FRI",
+            "SAT"
+        ],
+        "today": "Today"
+    },
+    "reservationsCalendar": {
+        "modalTitle": "Stay Information",
+        "guestCount": "Guest Count:",
+        "nightsCount": "Number of Nights:",
+        "arrival": "Arrival:",
+        "departure": "Departure:",
+        "price": "Price:",
+        "currency": "BAM",
+        "okButton": "OK",
+        "detailsButton": "Details"
+    },
+    "aboutApp": {
+        "title": "About App",
+        "systemName": "eFikas",
+        "systemDesc": "Electronic fiscal and control administrative system",
+        "accordion": {
+            "functionalities": "Functionalities",
+            "compatibility": "Compatibility",
+            "appVersion": "App Version",
+            "team": "Development Team",
+            "contact": "Contact & Support",
+            "content_fiscalization": "Real-time fiscalization",
+            "content_reservations": "Reservation management",
+            "content_statistics": "Business statistics",
+            "content_multiLang": "Multi-language support",
+            "content_platforms": "Available for Android and iOS",
+            "content_cashRegister": "Connection with fiscal cash register",
+            "content_versionNumber": "Version 1.0",
+            "content_releaseDate": "Release date: 01/01/2026"
+        }
+    },
+    "books": {
+        "documents": {
+            "downloadErrorTitle": "Download Error",
+            "downloadErrorMessage": "Download failed"
+        },
+        "bookTitles": {
+            "ExpenseBook": "Expense Book",
+            "IncomeBook": "Income Book",
+            "DomesticGuestsBook": "Domestic Guests Book",
+            "ForeignGuestsBook": "Foreign Guests Book"
+        }
+    },
+    "notifications": {
+        "title": "Notifications",
+        "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance"
+    },
+    "profile": {
+        "sectionTitle": "Profile information",
+        "labels": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "taxId": "Tax ID (JIB)",
+            "email": "Email"
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "save": "Save"
+        },
+        "toastMessages": {
+            "fetchErrorTitle": "Loading Error",
+            "fetchErrorMessage": "Could not load profile data.",
+            "updateErrorTitle": "Saving Error",
+            "updateErrorMessage": "Could not save the profile.",
+            "genericError": "An error occurred."
+        }
+    },
+    "cashRegisters": {
+        "sectionTitle": "Cash register information",
+        "fields": {
+            "number": "Register number",
+            "version": "Software version",
+            "numberPlaceholder": "Enter register number",
+            "versionPlaceholder": "Enter software version"
+        },
+        "validation": {
+            "invalidNumber": "Enter a valid register number",
+            "invalidVersion": "Enter software version"
+        },
+        "toastMessages": {
+            "fetchErrorTitle": "Error",
+            "fetchError": "Failed to load cash registers",
+            "createErrorTitle": "Error",
+            "createError": "Failed to create cash register"
+        }
+    },
+    "reservations": {
+        "navigation": {
+            "reservationDetailsTitle": "Reservation Details"
+        },
+        "toastMessages": {
+            "genericError": "An error occurred.",
+            "fetchErrorTitle": "Failed to Load Reservations",
+            "fetchErrorMessage": "Could not load reservations. Please try again.",
+            "createErrorTitle": "Creation Error",
+            "createErrorMessage": "Reservation was not created. Please check the data.",
+            "createSuccessTitle": "Reservation Created!",
+            "createSuccessMessage": "New reservation has been successfully created.",
+            "updateErrorTitle": "Update Error",
+            "updateErrorMessage": "Reservation was not updated. Please check the data.",
+            "updateSuccessTitle": "Reservation Updated!",
+            "updateSuccessMessage": "Reservation has been successfully updated.",
+            "deleteErrorTitle": "Deletion Error",
+            "deleteErrorMessage": "Reservation was not deleted.",
+            "deleteSuccessTitle": "Reservation Deleted!",
+            "deleteSuccessMessage": "Reservation has been successfully deleted."
+        },
+        "details": {
+            "note": "Note",
+            "document": "Document",
+            "button": "Print invoice",
+            "peopleCount_one": "{{count}} person",
+            "peopleCount_few": "{{count}} people",
+            "peopleCount_other": "{{count}} people",
+            "deleteText": "Delete reservation",
+            "deleteConfirm": {
+                "title": "Are you sure you want to delete the reservation?",
+                "description": "All data will be deleted",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+            "fiscalization": {
+                "title": "Check Fiscalization Information",
+                "reservationType": "Service:",
+                "peopleCount": "Number of people:",
+                "nightsCount": "Number of nights:",
+                "amount": "Amount:",
+                "button": {
+                    "confirmButton": "Confirm",
+                    "cancelButton": "Cancel"
+                }
+            }
+        }
+    },
+    "apartment": {
+        "card": {
+            "status": {
+                "current": "Currently: ",
+                "occupied": "Busy",
+                "available": "Free",
+                "until": " until ",
+                "nextGuests": "Next guests: "
+            }
+        }
+    },
+    "addApartment": {
+        "fields": {
+            "name": "Name",
+            "address": "Address",
+            "noBeds": "Number of beds",
+            "noBedrooms": "Number of bedrooms",
+            "capacity": "Capacity",
+            "price": "Price",
+            "overnightPrice": "Overnight stay",
+            "dayPrice": "Daily stay",
+            "inventory": "Inventory"
+        },
+        "validation": {
+            "errorTitle": "Error",
+            "nameError": "Enter apartment name",
+            "addressError": "Enter address",
+            "bedsError": "Invalid number of beds",
+            "bedroomsError": "Invalid number of bedrooms",
+            "capacityError": "Invalid capacity",
+            "overnightPriceError": "Invalid overnight price",
+            "dayPriceError": "Invalid daily price"
+        },
+        "messages": {
+            "successTitle": "Success",
+            "successMessage": "Apartment added",
+            "errorTitle": "Error",
+            "errorMessage": "An error occurred"
+        },
+        "buttons": {
+            "save": "Save",
+            "saving": "Saving..."
+        }
+    },
+    "inventoryModal": {
+        "features": {
+            "parking": "Parking",
+            "tv": "TV",
+            "wifi": "Wi-Fi",
+            "fen": "Fan",
+            "klima": "Air Conditioning",
+            "vesMasina": "Washing Machine",
+            "kafa": "Coffee Maker",
+            "balkon": "Balcony"
+        },
+        "buttons": {
+            "save": "Save"
+        }
+    },
+    "apartmentDetails": {
+        "loading": {
+            "error": "An error occurred while loading the apartment.",
+            "retry": "Try again"
+        },
+        "calendar": {
+            "availability": "Availability"
+        }
+    },
+    "landingApartmentInfo": {
+        "services": {
+            "title": "Services",
+            "showAll": "Show all›",
+            "parking": "Parking",
+            "wifi": "Wi-Fi",
+            "klima": "Air Conditioning",
+            "tv": "Smart TV",
+            "kafa": "Coffee Maker",
+            "vesmasina": "Washing Machine",
+            "fen": "Fan",
+            "balkon": "Balcony"
+        },
+        "buttons": {
+            "ok": "OK"
+        }
     }
-  },
-  "calendar": {
-    "months": [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ],
-    "monthsShort": [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ],
-    "dayNames": [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ],
-    "dayNamesShort": ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
-    "today": "Today"
-  },
-  "reservationsCalendar": {
-    "modalTitle": "Stay Information",
-    "guestCount": "Guest Count:",
-    "nightsCount": "Number of Nights:",
-    "arrival": "Arrival:",
-    "departure": "Departure:",
-    "price": "Price:",
-    "currency": "BAM",
-    "okButton": "OK",
-    "detailsButton": "Details"
-  },
-  "aboutApp": {
-    "title": "About App",
-    "systemName": "eFikas",
-    "systemDesc": "Electronic fiscal and control administrative system",
-    "accordion": {
-      "functionalities": "Functionalities",
-      "compatibility": "Compatibility",
-      "appVersion": "App Version",
-      "team": "Development Team",
-      "contact": "Contact & Support",
-      "content_fiscalization": "Real-time fiscalization",
-      "content_reservations": "Reservation management",
-      "content_statistics": "Business statistics",
-      "content_multiLang": "Multi-language support",
-      "content_platforms": "Available for Android and iOS",
-      "content_cashRegister": "Connection with fiscal cash register",
-      "content_versionNumber": "Version 1.0",
-      "content_releaseDate": "Release date: 01/01/2026"
-    }
-  },
-  "books": {
-    "documents": {
-      "downloadErrorTitle": "Download Error",
-      "downloadErrorMessage": "Download failed"
-    },
-    "bookTitles": {
-      "ExpenseBook": "Expense Book",
-      "IncomeBook": "Income Book",
-      "DomesticGuestsBook": "Domestic Guests Book",
-      "ForeignGuestsBook": "Foreign Guests Book"
-    }
-  },
-  "notifications": {
-    "title": "Notifications",
-    "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance"
-  },
-  "profile": {
-    "sectionTitle": "Profile information",
-    "labels": {
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "taxId": "Tax ID (JIB)",
-      "email": "Email"
-    },
-    "toastMessages": {
-      "fetchErrorTitle": "Loading Error",
-      "fetchErrorMessage": "Could not load profile data.",
-      "updateErrorTitle": "Saving Error",
-      "updateErrorMessage": "Could not save the profile.",
-      "genericError": "An error occurred."
-    }
-  },
-  "cashRegisters": {
-    "sectionTitle": "Cash register information",
-    "fields": {
-      "number": "Register number",
-      "version": "Software version",
-      "numberPlaceholder": "Enter register number",
-      "versionPlaceholder": "Enter software version"
-    },
-    "validation": {
-      "invalidNumber": "Enter a valid register number",
-      "invalidVersion": "Enter software version"
-    },
-    "toastMessages": {
-      "fetchErrorTitle": "Error",
-      "fetchError": "Failed to load cash registers",
-      "createErrorTitle": "Error",
-      "createError": "Failed to create cash register"
-    }
-  },
-  "reservations": {
-    "navigation": {
-      "reservationDetailsTitle": "Reservation Details"
-    },
-    "toastMessages": {
-      "genericError": "An error occurred.",
-      "fetchErrorTitle": "Failed to Load Reservations",
-      "fetchErrorMessage": "Could not load reservations. Please try again.",
-      "createErrorTitle": "Creation Error",
-      "createErrorMessage": "Reservation was not created. Please check the data.",
-      "createSuccessTitle": "Reservation Created!",
-      "createSuccessMessage": "New reservation has been successfully created.",
-      "updateErrorTitle": "Update Error",
-      "updateErrorMessage": "Reservation was not updated. Please check the data.",
-      "updateSuccessTitle": "Reservation Updated!",
-      "updateSuccessMessage": "Reservation has been successfully updated.",
-      "deleteErrorTitle": "Deletion Error",
-      "deleteErrorMessage": "Reservation was not deleted.",
-      "deleteSuccessTitle": "Reservation Deleted!",
-      "deleteSuccessMessage": "Reservation has been successfully deleted."
-    },
-    "details": {
-      "note": "Note",
-      "document": "Document",
-      "button": "Print invoice",
-      "peopleCount_one": "{{count}} person",
-      "peopleCount_few": "{{count}} people",
-      "peopleCount_other": "{{count}} people",
-      "deleteText": "Delete reservation"
-    }
-  },
-  "apartment": {
-    "card": {
-      "status": {
-        "current": "Currently: ",
-        "occupied": "Busy",
-        "available": "Free",
-        "until": " until ",
-        "nextGuests": "Next guests: "
-      }
-    }
-  },
-  "addApartment": {
-    "fields": {
-      "name": "Name",
-      "address": "Address",
-      "noBeds": "Number of beds",
-      "noBedrooms": "Number of bedrooms",
-      "capacity": "Capacity",
-      "price": "Price",
-      "overnightPrice": "Overnight stay",
-      "dayPrice": "Daily stay",
-      "inventory": "Inventory"
-    },
-    "validation": {
-      "errorTitle": "Error",
-      "nameError": "Enter apartment name",
-      "addressError": "Enter address",
-      "bedsError": "Invalid number of beds",
-      "bedroomsError": "Invalid number of bedrooms",
-      "capacityError": "Invalid capacity",
-      "overnightPriceError": "Invalid overnight price",
-      "dayPriceError": "Invalid daily price"
-    },
-    "messages": {
-      "successTitle": "Success",
-      "successMessage": "Apartment added",
-      "errorTitle": "Error",
-      "errorMessage": "An error occurred"
-    },
-    "buttons": {
-      "save": "Save",
-      "saving": "Saving..."
-    }
-  },
-  "inventoryModal": {
-    "features": {
-      "parking": "Parking",
-      "tv": "TV",
-      "wifi": "Wi-Fi",
-      "fen": "Fan",
-      "klima": "Air Conditioning",
-      "vesMasina": "Washing Machine",
-      "kafa": "Coffee Maker",
-      "balkon": "Balcony"
-    },
-    "buttons": {
-      "save": "Save"
-    }
-  }
 }

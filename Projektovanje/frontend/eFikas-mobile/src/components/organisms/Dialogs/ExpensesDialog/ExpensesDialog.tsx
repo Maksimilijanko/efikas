@@ -16,7 +16,7 @@ import { Modal, ModalContent } from '@/components/ui/modal'
 import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton' 
 import { Label } from '@/src/components/atoms/Label/Label' 
 import TextField from '@/src/components/atoms/TextField/TextField'
-import Dropdown from '@/src/components/atoms/Dropdown/Dropdown' 
+import {Dropdown} from '@/src/components/atoms/Dropdown/Dropdown' 
 import { Colors } from '@/src/styles/style'
 
 type TSelectedItem = any
@@ -168,6 +168,25 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
             },
           ]}
         >
+          
+          <View style={styles.contentArea}>
+            <Label
+              text="Kategorija troška"
+              color={Colors.textPrimary}
+              size="md"
+              className="mb-2 mt-4"
+            />
+            <Dropdown
+              label={''}
+              placeholder="Izaberite kategoriju..."
+              options={EXPENSE_CATEGORIES}
+              optionLabel="name"
+              optionValue="id"
+              selectedValue={currentSelectedValue}
+              setSelectedValue={handleCategoryChange}
+            />
+          </View>
+          
           <ScrollView
             ref={scrollViewRef}
             contentContainerStyle={styles.scrollContent}
@@ -175,24 +194,6 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.contentArea}>
-              <View style={styles.categoryDropdownWrapper}>
-                <Label
-                  text="Kategorija troška"
-                  color={Colors.textPrimary}
-                  size="md"
-                  className="mb-2 mt-4"
-                /> 
-                <Dropdown
-                  label={''} 
-                  placeholder="Izaberite kategoriju..."
-                  textInputPlaceholder="Pretraži kategorije"
-                  options={EXPENSE_CATEGORIES}
-                  optionLabel="name"
-                  optionValue="id"
-                  selectedValue={currentSelectedValue}
-                  setSelectedValue={handleCategoryChange}
-                />
-              </View>
               
               <Label text="Trošak" color={Colors.textPrimary} size="md" className="mb-2 mt-4" />
               <TextField
@@ -252,6 +253,7 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
                   {napomena.length}/150
                 </Text>
               </View>
+
             </View>
           </ScrollView>
 
@@ -266,7 +268,7 @@ export const ExpensesDialog: React.FC<ExpensesDialogProps> = ({
         </View>
       </ModalContent>
     </Modal>
-  )
+  ) 
 }
 
 const styles = StyleSheet.create({

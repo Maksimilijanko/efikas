@@ -72,6 +72,15 @@ export type ApartmentResponse = {
     apartmentId?: number;
     data?: any;
 };
+export interface ApartmentCurrentInfo {
+    id: number;
+    name: string;
+    address: string;
+    imageUrl: string;
+    status: boolean;
+    statusUntil: string | null;
+    nextGuestsDate: string | null;
+};
 
 export interface Reservation {
   reservationId: number;
@@ -85,7 +94,8 @@ export interface Reservation {
   note: string | null;
   personalDocumentURL: string | null;
   reservationType: string;
-}
+  reservationTypeId?: number;
+};
 
 export interface MenuItemProps {
   id: string;

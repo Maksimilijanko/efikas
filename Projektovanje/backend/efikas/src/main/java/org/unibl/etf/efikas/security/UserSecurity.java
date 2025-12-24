@@ -21,7 +21,7 @@ public class UserSecurity {
     private final CashRegisterRepository cashRegisterRepository;
 
     // Check if the user is the owner of the apartment
-    public boolean isApartmentOwner(Authentication authentication, Long apartmentId) {
+    public boolean isApartmentOwner(Authentication authentication, Integer apartmentId) {
         String email = authentication.getName();
 
         return apartmentRepository.findById(apartmentId)
@@ -30,7 +30,7 @@ public class UserSecurity {
                 .orElse(false);
     }
 
-    public boolean isReservationOwner(Authentication authentication, Long reservationId) {
+    public boolean isReservationOwner(Authentication authentication, Integer reservationId) {
         String email = authentication.getName();
 
         // We need to check here for existence, so we can get 404 back instead of 403.

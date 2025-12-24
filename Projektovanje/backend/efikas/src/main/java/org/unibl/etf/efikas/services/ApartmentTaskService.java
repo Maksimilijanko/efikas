@@ -42,7 +42,7 @@ public class ApartmentTaskService {
     public ApartmentTaskResponse createNewApartmentTask(Integer apartmentId, Authentication authentication, ApartmentTaskDTO task) {
         ApartmentTask apartmentTask = modelMapper.map(task, ApartmentTask.class);
 
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         apartmentTask.setApartment(apartment);
@@ -66,7 +66,7 @@ public class ApartmentTaskService {
         ApartmentTask apartmentTask = apartmentTaskRepository.findApartmentTaskById(apartmentTaskId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment Task not found!"));
 
-        apartmentRepository.findById(apartmentId.longValue())
+        apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         apartmentTaskRepository.delete(apartmentTask);

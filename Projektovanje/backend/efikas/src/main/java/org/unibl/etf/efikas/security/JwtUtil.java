@@ -1,9 +1,10 @@
 package org.unibl.etf.efikas.security;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 import java.util.function.Function;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,21 +13,29 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+
 @Component
 public class JwtUtil {
+    private final SecretKey secretKey;
+    private final long tokenValidity;
 
-    @Value("${jwt.secret}")
-    private String secretKey;
-
-    @Value("${jwt.token.validity:86400000}")
-    private long tokenValidity;
+    public JwtUtil(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.token.validity:86400000}") long tokenValidity
+    ) {
+        this.tokenValidity = tokenValidity;
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .issuer("eFikas")
+                .subject(email)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + tokenValidity))
+                .id(UUID.randomUUID().toString())
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -54,14 +63,13 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(getSigningKey())
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
-    private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    private SecretKey getSigningKey() {
+        return secretKey;
     }
 }

@@ -1,5 +1,6 @@
 package org.unibl.etf.efikas.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.models.dto.ChangePasswordDTO;
 import org.unibl.etf.efikas.models.dto.UserDTO;
+import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
@@ -23,8 +25,14 @@ import java.util.Optional;
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+
+    public AppUserResponse getUserById(int userId) {
+        AppUser appUser = appUserRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return modelMapper.map(appUser, AppUserResponse.class);
+    }
 
     public Optional<String> register(Map<String, String> user) {
         String email = user.get("email");
@@ -32,6 +40,7 @@ public class AppUserService {
         String name = user.get("name");
         String surname = user.get("surname");
         String jib = user.get("jib");
+        String address = user.get("address");
 
         if (appUserRepository.existsByEmail(email)) {
             return Optional.of("Email already exists.");
@@ -42,6 +51,7 @@ public class AppUserService {
         newUser.setName(name);
         newUser.setSurname(surname);
         newUser.setJib(jib);
+        newUser.setAddress(address);
         // hashing the password
         newUser.setPasswordHash(passwordEncoder.encode(password));
 
@@ -81,6 +91,7 @@ public class AppUserService {
         user.setSurname(userDto.getSurname());
         user.setJib(userDto.getJib());
         user.setEmail(userDto.getEmail());
+        user.setAddress(userDto.getAddress());
 
         return modelMapper.map(appUserRepository.save(user), AppUserResponse.class);
     }

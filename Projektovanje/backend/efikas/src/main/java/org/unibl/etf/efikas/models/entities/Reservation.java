@@ -1,12 +1,12 @@
 package org.unibl.etf.efikas.models.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.Instant;
 
 @Getter
 @Setter
@@ -18,41 +18,32 @@ public class Reservation {
     @Column(name = "\"ReservationId\"", nullable = false)
     private Integer reservationId;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "\"ApartmentId\"", nullable = false)
     private Apartment apartment;
 
-    @Column(name = "\"GuestFullName\"", nullable = false, length = 100)
-    private String guestFullName;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
+    @JoinColumn(name = "\"GuestId\"", nullable = false)
+    private GuestsBook guest;
 
-    @Column(name = "\"GuestPhoneNumber\"", nullable = false, length = 30)
-    private String guestPhoneNumber;
-
-    @Column(name = "\"DateTimeOfArrival\"", nullable = false)
-    private Instant dateTimeOfArrival;
-
-    @Column(name = "\"DateTimeOfDeparture\"", nullable = false)
-    private Instant dateTimeOfDeparture;
-
-    @Column(name = "\"GuestNumber\"", nullable = false)
-    private Integer guestNumber;
+    @NotNull
+    @Column(name = "\"GuestQuantity\"", nullable = false)
+    private Integer guestQuantity;
 
     @Column(name = "\"Price\"")
     private Double price;
 
+    @Size(max = 256)
     @Column(name = "\"Note\"", length = 256)
     private String note;
 
-    @Column(name = "\"PersonalDocumentURL\"", length = 100)
-    private String personalDocumentURL;
-
-    // This is redundant; therefore, we don't need it.
-//    @Column(name = "\"IdTypeOfReservation\"", nullable = false)
-//    private Integer idTypeOfReservation;
-
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "\"TypeId\"", nullable = false)
     private ReservationType type;
 

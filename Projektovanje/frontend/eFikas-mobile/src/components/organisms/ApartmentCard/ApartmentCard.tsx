@@ -14,25 +14,27 @@ import { useTheme } from "@/src/providers/ThemeProvider";
 import { useTranslation } from "react-i18next";
 
 interface ApartmentCardProps {
-  title: string;
-  subtitle: string;
+  name: string;
+  address: string;
   imageUrl: string;
   status?: boolean;
   statusUntil?: string;
   nextGuestsDate?: string;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
+  showArrow?: boolean;
 }
 
 const ApartmentCard: React.FC<ApartmentCardProps> = ({
-  title,
-  subtitle,
+  name,
+  address,
   imageUrl,
   status,
   statusUntil,
   nextGuestsDate,
   onPress,
   style,
+  showArrow = true,
 }) => {
   const imageSource = imageUrl
     ? { uri: imageUrl }
@@ -68,12 +70,12 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
             <Label
               className="font-bold"
               size="2xl"
-              text={title}
+              text={name}
               color={Colors.textPrimary}
             />
             <Label
               className="font-semibold"
-              text={subtitle}
+              text={address}
               color={Colors.textSecondary}
             />
           </View>
@@ -113,12 +115,14 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
         )}
       </View>
 
-      <Icon
-        name="ChevronRight"
-        size={28}
-        color={Colors.iconMenu}
-        style={styles.icon}
-      />
+      {showArrow && (
+        <Icon
+          name="ChevronRight"
+          size={28}
+          color={Colors.iconMenu}
+          style={styles.icon}
+        />
+      )}
     </TouchableOpacity>
   );
 };

@@ -18,6 +18,7 @@ import org.unibl.etf.efikas.repositories.ApartmentPictureRepository;
 import org.unibl.etf.efikas.repositories.ApartmentRepository;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 import org.unibl.etf.efikas.services.interfaces.S3Service;
+import org.unibl.etf.efikas.util.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +51,11 @@ public class ApartmentService {
                 .toList();
     }
 
+    public ApartmentResponse getApartmentById(int id) {
+        Apartment apartment = apartmentRepository.findById(id).orElse(null);
+        return modelMapper.map(apartment, ApartmentResponse.class);
+    }
+
     public ApartmentResponse createApartmentWithFiles(ApartmentDTO request, List<MultipartFile> files, String email) {
         Apartment apartment = new Apartment();
         return getApartmentResponseCreate(request, files, email, apartment);
@@ -68,6 +74,8 @@ public class ApartmentService {
         apartment.setCapacity(request.getCapacity());
         apartment.setPricePerDay(request.getPricePerDay());
         apartment.setPricePerNight(request.getPricePerNight());
+        apartment.setName(request.getName());
+        apartment.setTraits(request.getTraits());
         apartment.setUser(appUserRepository.findByEmail(email).orElse(null));
 
         Apartment savedApartment = apartmentRepository.save(apartment);
@@ -76,7 +84,7 @@ public class ApartmentService {
         FileUploadResponse s3UploadResponse;
         for (MultipartFile file : files) {
             try {
-                s3UploadResponse = s3Service.uploadFile(file);
+                s3UploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, file);
             } catch (IOException e) {
                 throw new S3UploadException(e.getMessage());
             }
@@ -110,7 +118,7 @@ public class ApartmentService {
             String userEmail
     ) throws IOException {
 
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found"));
 
         // Throw an exception if the apartment belongs to a different user
@@ -124,6 +132,8 @@ public class ApartmentService {
         apartment.setCapacity(dto.getCapacity());
         apartment.setPricePerDay(dto.getPricePerDay());
         apartment.setPricePerNight(dto.getPricePerNight());
+        apartment.setName(dto.getName());
+        apartment.setTraits(dto.getTraits());
 
         Apartment updatedApartment = apartmentRepository.save(apartment);
 
@@ -137,7 +147,7 @@ public class ApartmentService {
         // Upload new images
         List<String> newKeys = new ArrayList<>();
         for (MultipartFile file : newPictures) {
-            FileUploadResponse uploaded = s3Service.uploadFile(file);
+            FileUploadResponse uploaded = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, file);
             newKeys.add(uploaded.getFilePath());
         }
 
@@ -166,7 +176,7 @@ public class ApartmentService {
     }
 
     public ApartmentResponse deleteApartment(Integer apartmentId) throws IOException {
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apartment not found"));
 
         List<ApartmentPicture> pictures = apartmentPictureRepository.findApartmentPictureByApartment(apartment);
