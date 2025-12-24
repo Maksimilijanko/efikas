@@ -1,4 +1,4 @@
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/src/components/ui/switch";
 import { Colors } from "@/src/styles/style";
 
 interface Props {

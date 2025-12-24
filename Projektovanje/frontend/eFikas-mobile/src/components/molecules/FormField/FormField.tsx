@@ -1,11 +1,14 @@
-import { FormControl, FormControlHelper, FormControlHelperText, 
-        FormControlError, FormControlErrorIcon, FormControlErrorText } from "@/components/ui/form-control";
-import LabeledTextField from "../LabeledTextField/LabeledTextField";
+import {
+    FormControl,
+    FormControlError, FormControlErrorIcon, FormControlErrorText,
+    FormControlHelper, FormControlHelperText
+} from "@/src/components/ui/form-control";
 import { LucideIconName } from "@/src/types/types";
-import { Icon } from "../../atoms/Icon/Icon";
 import { AlertTriangleIcon } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
 import { useState } from "react";
+import { TouchableOpacity } from "react-native";
+import { Icon } from "../../atoms/Icon/Icon";
+import LabeledTextField from "../LabeledTextField/LabeledTextField";
 
 
 interface Props {

@@ -1,4 +1,4 @@
-import { Fab, FabLabel } from "@/components/ui/fab";
+import { Fab, FabLabel } from "@/src/components/ui/fab";
 import { Icon } from "../Icon/Icon";
 
 

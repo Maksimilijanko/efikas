@@ -26,6 +26,7 @@ export default function MenuRootLayout() {
             <Stack.Screen name="(bookkeeping)/incomeBook" options={{ title: t('menu.stackNavigation.incomeBook') }} />
             <Stack.Screen name="(bookkeeping)/expensesBook" options={{ title: t('menu.stackNavigation.expensesBook') }} />
             <Stack.Screen name="(bookkeeping)/guestBook" options={{ title: t('menu.stackNavigation.guestBook') }} />
+            <Stack.Screen name="(bookkeeping)/pdfView" options={{ title: t('menu.stackNavigation.pdfView') }} />
 
 
             {/* ========================================== SEKCIJA PODEŠAVANJA ========================================== */}

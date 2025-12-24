@@ -1,9 +1,9 @@
-import { HStack } from "@/components/ui/hstack";
-import { Modal, ModalBackdrop, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@/components/ui/modal";
-import { Text } from "@/components/ui/text";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
+import { HStack } from "@/src/components/ui/hstack";
+import { Modal, ModalBackdrop, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@/src/components/ui/modal";
+import { Text } from "@/src/components/ui/text";
 import { useTheme } from "@/src/providers/ThemeProvider";
-import { Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 interface SettingsDialogProps {
     visible: boolean;

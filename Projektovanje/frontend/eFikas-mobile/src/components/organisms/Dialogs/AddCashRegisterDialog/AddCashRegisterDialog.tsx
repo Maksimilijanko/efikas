@@ -1,17 +1,17 @@
-import { useState, useCallback } from "react";
-import {
-  View,
-  Modal,
-  StyleSheet,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { useTheme } from "@/src/providers/ThemeProvider";
-import { useTranslation } from "react-i18next";
-import { ModalHeader } from "@/components/ui/modal";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 import LabeledTextField from "@/src/components/molecules/LabeledTextField/LabeledTextField";
+import { ModalHeader } from "@/src/components/ui/modal";
+import { useTheme } from "@/src/providers/ThemeProvider";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 
 interface Props {
   visible: boolean;

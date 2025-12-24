@@ -1,10 +1,10 @@
+import { Box } from "@/src/components/ui/box";
+import { HStack } from "@/src/components/ui/hstack";
+import { useTheme } from '@/src/providers/ThemeProvider';
 import React from "react";
 import { Pressable } from "react-native";
-import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
 import ApartmentAttribute from "../ApartmentAttribute/ApartmentAttribute";
 import { styles } from "./index.styles";
-import { useTheme } from '@/src/providers/ThemeProvider';
 
 interface ApartmentFeatureCardProps {
     label: string;

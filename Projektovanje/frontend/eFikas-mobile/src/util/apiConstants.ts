@@ -1,5 +1,5 @@
 const scheme = "http"
-const address = "192.168.10.5";    // TODO: Naći način da se gađa jedinstveni backend. Expo ne dozvoljava localhost izvršavanje jer to gađa sam uređaj - mora LAN za sad!
+const address = "192.168.50.44";    // TODO: Naći način da se gađa jedinstveni backend. Expo ne dozvoljava localhost izvršavanje jer to gađa sam uređaj - mora LAN za sad!
 const port = "8080";
 const version = "v1";
 export const API_BASE_URL = `${scheme}://${address}:${port}/api/${version}`;
@@ -42,4 +42,9 @@ export const API_URLS = {
         delete: (id: number) => `${API_BASE_URL}/cash-registers/${id}`,
     },
     
+    books: {
+        getIncomeBookPdf: `${API_BASE_URL}/books/pdf/INCOME`,
+        getDomesticGuestsBookPdf: `${API_BASE_URL}/books/pdf/DOMESTIC_GUESTS`,
+        getForeignGuestsBookPdf: `${API_BASE_URL}/books/pdf/FOREIGN_GUESTS`,
+    }
 }

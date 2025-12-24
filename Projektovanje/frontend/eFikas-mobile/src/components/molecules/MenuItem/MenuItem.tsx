@@ -1,9 +1,8 @@
-import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { Divider } from "@/components/ui/divider";
-import { Icon } from "@/src/components/atoms/Icon/Icon"; 
-import { LucideIconName } from "@/src/types/types";
+import { Icon } from "@/src/components/atoms/Icon/Icon";
+import { Divider } from "@/src/components/ui/divider";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { LucideIconName } from "@/src/types/types";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface MenuItemProps {
   text: string;

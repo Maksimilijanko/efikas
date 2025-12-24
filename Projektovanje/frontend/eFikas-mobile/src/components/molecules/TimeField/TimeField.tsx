@@ -1,6 +1,6 @@
-import { HStack } from "@/components/ui/hstack";
-import { InputField } from "@/components/ui/input";
-import { Text } from "@/components/ui/text";
+import { HStack } from "@/src/components/ui/hstack";
+import { InputField } from "@/src/components/ui/input";
+import { Text } from "@/src/components/ui/text";
 import { useState } from "react";
 import TextField from "../../atoms/TextField/TextField";
 import { styles } from "./index.styles";

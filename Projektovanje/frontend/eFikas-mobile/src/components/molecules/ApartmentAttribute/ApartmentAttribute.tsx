@@ -1,8 +1,8 @@
-import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
-import { Text } from "@/components/ui/text";
-import { styles } from "./index.styles";
+import { Box } from "@/src/components/ui/box";
+import { HStack } from "@/src/components/ui/hstack";
+import { Text } from "@/src/components/ui/text";
 import { useTheme } from '@/src/providers/ThemeProvider';
+import { styles } from "./index.styles";
 
 interface Props {
     label: string;

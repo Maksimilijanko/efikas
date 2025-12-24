@@ -1,6 +1,6 @@
-import { Button, ButtonText } from "@/components/ui/button";
-import { HStack } from "@/components/ui/hstack";
-import { Spinner } from "@/components/ui/spinner";
+import { Button, ButtonText } from "@/src/components/ui/button";
+import { HStack } from "@/src/components/ui/hstack";
+import { Spinner } from "@/src/components/ui/spinner";
 
 interface LoginButtonProps {
   title?: string;

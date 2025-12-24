@@ -1,6 +1,6 @@
-import { Divider } from "@/components/ui/divider";
-import { HStack } from "@/components/ui/hstack";
-import { Text } from "@/components/ui/text";
+import { Divider } from "@/src/components/ui/divider";
+import { HStack } from "@/src/components/ui/hstack";
+import { Text } from "@/src/components/ui/text";
 
 interface Props {
     label: string;

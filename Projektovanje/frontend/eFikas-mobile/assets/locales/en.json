@@ -148,6 +148,7 @@
             "incomeBook": "Income book",
             "expensesBook": "Expenses book",
             "guestBook": "Guest book",
+            "pdfView": "PDF View of book",
             "settingsMain": "Settings",
             "aboutApp": "About the app"
         },

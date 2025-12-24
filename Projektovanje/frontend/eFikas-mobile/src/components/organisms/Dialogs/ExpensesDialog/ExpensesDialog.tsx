@@ -1,22 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react' 
-import {
-  View,
-  StyleSheet,
-  Platform,
-  useWindowDimensions,
-  ScrollView,
-  Keyboard,
-  TouchableOpacity,
-  TextInput,
-  Text,
-} from 'react-native'
 import { Edit2 } from 'lucide-react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import {
+    Keyboard,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useWindowDimensions,
+    View
+} from 'react-native'
 
-import { Modal, ModalContent } from '@/components/ui/modal'
-import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton' 
-import { Label } from '@/src/components/atoms/Label/Label' 
+import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton'
+import { Dropdown } from '@/src/components/atoms/Dropdown/Dropdown'
+import { Label } from '@/src/components/atoms/Label/Label'
 import TextField from '@/src/components/atoms/TextField/TextField'
-import {Dropdown} from '@/src/components/atoms/Dropdown/Dropdown' 
+import { Modal, ModalContent } from '@/src/components/ui/modal'
 import { Colors } from '@/src/styles/style'
 
 type TSelectedItem = any

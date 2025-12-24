@@ -121,3 +121,20 @@ export interface CashRegister {
   cashRegisterNumber: number;
   softwareVersion: string;
 }
+
+// ================ Book DTOs ===================
+export interface DateRangeDTO {
+  from: string;
+  to: string;
+}
+
+export interface DownloadIncomeBookRequest {
+  taxpayerId: number; 
+  storeId: number;
+  period: DateRangeDTO;
+}
+
+export interface GuestsBookRequest {
+  period: DateRangeDTO;
+  active: boolean;
+}

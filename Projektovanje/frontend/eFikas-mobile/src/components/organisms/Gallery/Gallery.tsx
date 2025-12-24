@@ -1,22 +1,21 @@
+import { ChevronLeft, ChevronRight, X } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
-  View,
-  Image,
-  Pressable,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
+    Image,
+    Pressable,
+    Text,
+    useWindowDimensions,
+    View
 } from 'react-native';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react-native';
 import {
-  Modal as BaseModal,
-  ModalContent,
-  ModalBackdrop,
-} from '../../../../components/ui/modal';
+    Modal as BaseModal,
+    ModalBackdrop,
+    ModalContent,
+} from '../../ui/modal';
 
-import { Label } from '../../atoms/Label/Label';
-import { useTheme } from '@/src/providers/ThemeProvider';
 import { useStyles } from '@/src/hooks/useStyles';
+import { useTheme } from '@/src/providers/ThemeProvider';
+import { Label } from '../../atoms/Label/Label';
 import { getStyles } from './index.styles';
 
 const Modal = ({

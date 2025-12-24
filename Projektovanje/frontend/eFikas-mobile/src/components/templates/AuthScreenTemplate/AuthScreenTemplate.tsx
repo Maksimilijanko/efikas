@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  ImageBackground,
-  Image,
-  Dimensions,
-  ScrollView,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  LayoutAnimation,
-  UIManager,
-  StyleSheet,
-} from 'react-native';
-import { VStack } from '@/components/ui/vstack';
+import { VStack } from '@/src/components/ui/vstack';
 import { useTheme } from '@/src/providers/ThemeProvider';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    Dimensions,
+    Image,
+    ImageBackground,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    UIManager,
+    View
+} from 'react-native';
 
 
 interface AuthScreenTemplateProps {
