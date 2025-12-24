@@ -379,35 +379,35 @@
     },
     "addApartment": {
         "fields": {
-            "name": "Naziv",
-            "address": "Adresa",
-            "noBeds": "Broj kreveta",
-            "noBedrooms": "Broj soba",
-            "capacity": "Kapacitet",
-            "price": "Cijena",
-            "overnightPrice": "Boravak sa noćenjem",
-            "dayPrice": "Dnevni boravak",
-            "inventory": "Inventar"
+            "name": "Name",
+            "address": "Address",
+            "noBeds": "Number of beds",
+            "noBedrooms": "Number of bedrooms",
+            "capacity": "Capacity",
+            "price": "Price",
+            "overnightPrice": "Overnight stay",
+            "dayPrice": "Daily stay",
+            "inventory": "Inventory"
         },
         "validation": {
-            "errorTitle": "Greška",
-            "nameError": "Unesite naziv apartmana",
-            "addressError": "Unesite adresu",
-            "bedsError": "Broj kreveta nije ispravan",
-            "bedroomsError": "Broj soba nije ispravan",
-            "capacityError": "Kapacitet nije ispravan",
-            "overnightPriceError": "Cijena noćenja nije ispravna",
-            "dayPriceError": "Dnevna cijena nije ispravna"
+            "errorTitle": "Error",
+            "nameError": "Enter apartment name",
+            "addressError": "Enter address",
+            "bedsError": "Invalid number of beds",
+            "bedroomsError": "Invalid number of bedrooms",
+            "capacityError": "Invalid capacity",
+            "overnightPriceError": "Invalid overnight price",
+            "dayPriceError": "Invalid daily price"
         },
         "messages": {
-            "successTitle": "Uspjeh",
-            "successMessage": "Apartman dodat",
-            "errorTitle": "Greška",
-            "errorMessage": "Došlo je do greške"
+            "successTitle": "Success",
+            "successMessage": "Apartment added",
+            "errorTitle": "Error",
+            "errorMessage": "An error occurred"
         },
         "buttons": {
-            "save": "Sačuvaj",
-            "saving": "Čuvanje..."
+            "save": "Save",
+            "saving": "Saving..."
         }
     },
     "inventoryModal": {

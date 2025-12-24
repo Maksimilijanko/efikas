@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
+import { useState } from 'react';
+import { View, Alert } from 'react-native';
 import AddApartmentTemplate from '../../templates/AddApartmentTemplate/AddApartmentTemplate';
 import LabeledTextField from '../../molecules/LabeledTextField/LabeledTextField';
 import ImagePicker from '../../organisms/ImagePicker/ImagePicker';
