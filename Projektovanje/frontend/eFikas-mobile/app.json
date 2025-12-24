@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/appLogo.png",
     "scheme": "efikasmobile",
+    "owner": "etf-bl-efikas",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
