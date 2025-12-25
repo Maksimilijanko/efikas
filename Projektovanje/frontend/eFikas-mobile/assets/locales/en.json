@@ -266,8 +266,14 @@
     },
     "books": {
         "documents": {
+            "incomeBookDownloadTitle": "IncomeBook",
+            "domesticGuestsBookDownloadTitle": "DomesticGuestsBook",
+            "foreignGuestsBookDownloadTitle": "ForeignGuestsBook",
+
             "downloadErrorTitle": "Download Error",
-            "downloadErrorMessage": "Download failed"
+            "downloadErrorMessage": "Download failed",
+            "downloadSuccessMessage": "Download successful",
+            "downloadSuccessDescription": "You can now view the PDF of the book"
         },
         "bookTitles": {
             "ExpenseBook": "Expense Book",

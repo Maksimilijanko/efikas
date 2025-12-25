@@ -10,7 +10,9 @@ interface Props {
 export default function ViewPdfScreen({ pdfUri }: Props) {
     const { Colors } = useTheme();
     const styles = getStyles(Colors);
-    const pdfSource = { uri: pdfUri };
+    const pdfSource = { uri: pdfUri, cache: true };
+
+    console.log("PDF SOURCE: ", pdfSource);
 
     return (
         <View style={styles.pdfSection}>

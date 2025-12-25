@@ -6,6 +6,7 @@ import { GuestsBookRequest } from '@/src/types/types';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import { bookService } from '@/src/api/services/bookService';
 import { GuestBookType } from '@/src/types/enums';
+import { toastService } from '@/src/services/toastService';
 
 interface RawDocumentData {
     id: string;
@@ -48,27 +49,17 @@ const GuestsBookScreen: React.FC = () => {
   const downloadPDF = async (request: GuestsBookRequest) => {
       try {
         setIsDownloading(true);
-  
+        
         const dirs = ReactNativeBlobUtil.fs.dirs;
-        const fileName = `Income_Book_${request.period.from}_${request.period.to}.pdf`;
-        const downloadPath = `${dirs.DownloadDir}/${fileName}`;
-  
-        const exists = await ReactNativeBlobUtil.fs.exists(downloadPath);
-        if (exists) {
-          setPdfPath(downloadPath);
-          return;
-        }
-  
-        const resp = await bookService.downloadGuestsBook(GuestBookType.DOMESTIC_GUESTS, request);
-  
-        // Save streamed PDF to file
-        await ReactNativeBlobUtil.fs.writeFile(
-          downloadPath,
-          resp.data,
-          'base64'
-        );
-  
-        setPdfPath(downloadPath);
+        const downloadPath = `${dirs.DownloadDir}/${t('books.documents.domesticGuestsBookDownloadTitle')}_${Date.now()}.pdf`;
+        
+        const bookType = GuestBookType.DOMESTIC_GUESTS;
+        const res = await bookService.downloadGuestsBook(downloadPath, bookType, request);
+        const realPath = res.path();
+        toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
+
+        // Optional - if we want to open it immediately in the viewer:
+        setPdfPath(`file://${realPath}`);
       } catch (err) {
         console.error('Download failed:', err);
       } finally {

@@ -50,9 +50,13 @@ public class BooksController {
     // =========================================== PDF endpoints ===========================================
 
     @GetMapping("/pdf/INCOME")
-    public ResponseEntity<StreamingResponseBody> downloadBookPdf(@RequestBody DownloadIncomeBookRequest downloadIncomeBookRequest) throws IOException { //, @RequestBody FinancialBookPdfRequest financialBookPdfRequest
-        LocalDate from = downloadIncomeBookRequest.getPeriod().getFrom(),  to = downloadIncomeBookRequest.getPeriod().getTo();
-        AppUserResponse appUserResponse = appUserService.getUserById(downloadIncomeBookRequest.getTaxpayerId());
+    public ResponseEntity<StreamingResponseBody> downloadBookPdf(
+            @RequestParam Integer taxpayerId,
+            @RequestParam(required = false) Integer storeId,
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to
+    ) throws IOException {
+        AppUserResponse appUserResponse = appUserService.getUserById(taxpayerId);
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
@@ -62,7 +66,10 @@ public class BooksController {
         FinancialBookPdfRequest financialBookPdfRequest = FinancialBookPdfRequest.builder()
                 .taxpayer(taxpayer)
                 .store(store)
-                .period(downloadIncomeBookRequest.getPeriod())
+                .period(DateRangeDTO.builder()
+                        .from(from)
+                        .to(to)
+                        .build())
                 .build();
 
         var pdfService = bookPdfFactory.get(BookType.INCOME);
@@ -72,27 +79,33 @@ public class BooksController {
     }
 
     @GetMapping("/pdf/FOREIGN_GUESTS")
-    public ResponseEntity<StreamingResponseBody> downloadForeignGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {
-        LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
+    public ResponseEntity<StreamingResponseBody> downloadForeignGuestsBookPdf(
+            @RequestParam(required = false) Boolean active,
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to
+    ) throws IOException {
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
         var pdfService = bookPdfFactory.get(BookType.FOREIGN_GUESTS);
-        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(from, to, guestsBookRequest.isActive());
+        ForeignGuestsBookDTO request = foreignGuestsBookService.findForPdf(from, to, active);
 
         return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.FOREIGN_GUESTS);
     }
 
     @GetMapping("/pdf/DOMESTIC_GUESTS")
-    public ResponseEntity<StreamingResponseBody> downloadDomesticGuestsBookPdf(@RequestBody GuestsBookRequest guestsBookRequest) throws IOException {  //@RequestBody GuestsBookRequest guestsBookRequest
-        LocalDate from = guestsBookRequest.getPeriod().getFrom(), to = guestsBookRequest.getPeriod().getTo();
+    public ResponseEntity<StreamingResponseBody> downloadDomesticGuestsBookPdf(
+            @RequestParam(required = false) Boolean active,
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to
+    ) throws IOException {  //@RequestBody GuestsBookRequest guestsBookRequest
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
         }
 
         var pdfService = bookPdfFactory.get(BookType.DOMESTIC_GUESTS);
-        DomesticGuestsBookDTO request = domesticGuestsBookService.findForPdf(from, to, guestsBookRequest.isActive());
+        DomesticGuestsBookDTO request = domesticGuestsBookService.findForPdf(from, to, active);
 
         return getStreamingResponseBodyResponseEntity(pdfService, request, BookType.DOMESTIC_GUESTS);
     }

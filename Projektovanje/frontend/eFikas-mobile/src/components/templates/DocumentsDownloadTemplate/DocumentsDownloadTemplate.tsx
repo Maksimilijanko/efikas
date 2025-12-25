@@ -47,10 +47,11 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 
   useEffect(() => {
     if (pdfPath && !isDownloading) {
+      console.log("Path: ", pdfPath);
       router.push({
         pathname: '/pdfView',
         params: {
-          uri: `file://${pdfPath}`
+          uri: `${pdfPath}`
         }
       });
     }

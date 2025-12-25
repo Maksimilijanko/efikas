@@ -269,8 +269,14 @@
     },
     "books": {
         "documents": {
+            "incomeBookDownloadTitle": "KnjigaPrihoda",
+            "domesticGuestsBookDownloadTitle": "KnjigaDomacihGostiju",
+            "foreignGuestsBookDownloadTitle": "KnjigaStranihGostiju",
+
             "downloadErrorTitle": "Greška preuzimanja",
-            "downloadErrorMessage": "Neuspješno preuzimanje"
+            "downloadErrorMessage": "Neuspješno preuzimanje",
+            "downloadSuccessMessage": "Uspješno preuzimanje",
+            "downloadSuccessDescription": "PDF knjige možete sada pregledati"
         },
         "bookTitles": {
             "ExpenseBook": "Knjiga rashoda",
