@@ -1,5 +1,6 @@
 package org.unibl.etf.efikas.models.enums;
 
 public enum Gender {
-    MALE, FEMALE
+    // mora ovako, bez caps lock-a, zbog čuvanja u bazu i mapiranja na ENUM tip
+    Male, Female
 }

@@ -1,11 +1,9 @@
-import { Colors } from "@/src/styles/style";
 import { Dimensions, StyleSheet } from "react-native";
-
 
 const screenHeight = Dimensions.get('window').height;
 
 
-const styles = StyleSheet.create({
+const getStyles = (Colors: any) => StyleSheet.create({
   root: { flex: 1, backgroundColor: Colors.secondary },
   scrollContent: {
     width: '100%',
@@ -52,5 +50,4 @@ const styles = StyleSheet.create({
   }
 });
 
-
-export default styles;
+export default getStyles;

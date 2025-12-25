@@ -2,7 +2,7 @@ package org.unibl.etf.efikas.models.requests;
 
 import lombok.Builder;
 import lombok.Data;
-import org.unibl.etf.efikas.models.dto.books.IncomeEntry;
+import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
 import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package org.unibl.etf.efikas.design_patterns.strategy;
+package org.unibl.etf.efikas.design_patterns.strategy.interfaces;
 
 import com.itextpdf.layout.element.Table;
 import org.unibl.etf.efikas.models.dto.itextpdf.TableData;

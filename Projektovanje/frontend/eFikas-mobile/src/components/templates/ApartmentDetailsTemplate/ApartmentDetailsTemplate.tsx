@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, Dimensions, ScrollViewProps } from 'react-native';
-import styles from './index.styles';
+import { useTheme } from '@/src/providers/ThemeProvider'; 
+import getStyles from './index.styles';
 
 export type ApartmentDetailsTemplateProps = {
   basicInfo: React.ReactNode;
@@ -10,7 +11,6 @@ export type ApartmentDetailsTemplateProps = {
 };
 
 
-
 const ApartmentDetailsTemplate: React.FC<ApartmentDetailsTemplateProps> = ({
   basicInfo,
   gallery,
@@ -18,6 +18,8 @@ const ApartmentDetailsTemplate: React.FC<ApartmentDetailsTemplateProps> = ({
   scrollProps
 }) => {
 
+  const { Colors } = useTheme();
+  const styles = getStyles(Colors);
 
   return (
     <View style={styles.root}>

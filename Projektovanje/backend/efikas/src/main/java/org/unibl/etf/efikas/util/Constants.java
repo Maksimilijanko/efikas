@@ -1,6 +1,7 @@
 package org.unibl.etf.efikas.util;
 
 public class Constants {
+    public static final int BCRYPT_STRENGTH = 12;
 
     public static class Aws {
         public static final String S3_BUCKET_IMAGES_FOLDER_PREFIX = "images/";
@@ -10,6 +11,12 @@ public class Constants {
         public static final int GLOBAL_FONT_SIZE = 8;
         public static final int FINANCIAL_TABLE_FONT_SIZE = 5;
         public static final int FINANCIAL_TABLE_HEADER_FONT_SIZE = 7;
+    }
+
+    public static class SpringQualifiers {
+        public static final String INCOME_BOOK_LAYOUT_STRATEGY = "IncomeBookLayoutStrategy";
+        public static final String FOREIGN_GUESTS_BOOK_LAYOUT_STRATEGY = "ForeignGuestsBookLayoutStrategy";
+        public static final String DOMESTIC_GUESTS_BOOK_LAYOUT_STRATEGY = "DomesticGuestsBookLayoutStrategy";
     }
 
 

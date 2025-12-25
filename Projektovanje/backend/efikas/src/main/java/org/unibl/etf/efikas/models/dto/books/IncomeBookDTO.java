@@ -3,6 +3,7 @@ package org.unibl.etf.efikas.models.dto.books;
 import lombok.Builder;
 import lombok.Data;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
+import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
 import org.unibl.etf.efikas.models.requests.BookRequest;
 
 import java.util.List;

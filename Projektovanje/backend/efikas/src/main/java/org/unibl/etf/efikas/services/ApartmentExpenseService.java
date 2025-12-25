@@ -42,7 +42,7 @@ public class ApartmentExpenseService {
     public ApartmentExpenseResponse createNewApartmentExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expense) {
         ApartmentExpense apartmentExpense = modelMapper.map(expense, ApartmentExpense.class);
 
-        Apartment apartment = apartmentRepository.findById(apartmentId.longValue())
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         apartmentExpense.setApartment(apartment);
@@ -67,7 +67,7 @@ public class ApartmentExpenseService {
         ApartmentExpense apartmentExpense = apartmentExpenseRepository.findApartmentExpenseById(apartmentExpenseId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment expense not found!"));
 
-        apartmentRepository.findById(apartmentId.longValue())
+        apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
         apartmentExpenseRepository.delete(apartmentExpense);

@@ -1,5 +1,6 @@
 package org.unibl.etf.efikas.configs;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,22 +19,23 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.unibl.etf.efikas.security.JwtAuthFilter;
 import org.unibl.etf.efikas.security.JwtAuthenticationEntryPoint;
+import org.unibl.etf.efikas.util.Constants;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
+
+
     // Server-side hashing function
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(Constants.BCRYPT_STRENGTH);
     }
 
-    @Autowired
-    private JwtAuthFilter jwtAuthFilter;
-
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -55,7 +57,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/js/**", "/css/**", "/images/**",
                                 "/api/users/login", "/api/users/register",
                                 "/api/v1/users/login", "/api/v1/users/register",
-                                "/api/v1/books/*", "/api/v1/books/pdf/*",
+                                "/api/v1/books/**",
                                 "/actuator/health",
                                 "/error",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html")
@@ -73,4 +75,5 @@ public class SecurityConfig implements WebMvcConfigurer {
             throws Exception {
         return config.getAuthenticationManager();
     }
+
 }
