@@ -8,6 +8,10 @@ const getStyles = (Colors: any) =>
     root: {
       flex: 1,
       backgroundColor: Colors.screenBackground,
+      paddingTop: screenHeight * 0.02,
+      paddingBottom: screenHeight * 0.02,
+      alignItems: 'center',
+      justifyContent: 'space-between'
     },
     documentsSection: {
       height: '100%', // 35% of screen for documents
