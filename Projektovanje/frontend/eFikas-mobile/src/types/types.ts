@@ -140,3 +140,8 @@ export interface GuestsBookRequest {
   period: DateRangeDTO;
   active: boolean;
 }
+
+export interface BookPath {
+    displayName: string;
+    path: string;
+}

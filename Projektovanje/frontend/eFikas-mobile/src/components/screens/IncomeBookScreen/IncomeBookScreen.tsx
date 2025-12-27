@@ -1,21 +1,20 @@
+import React, { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
+import { useTranslation } from "react-i18next";
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { BasicButton } from '../../atoms/BasicButton/BasicButton';
+import LabeledTextField from '../../molecules/LabeledTextField/LabeledTextField';
+import { VStack } from '../../ui/vstack';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { bookService } from '@/src/api/services/bookService';
 import DocumentItem, { DocumentType } from "@/src/components/molecules/DocumentItem/DocumentItem";
 import DocumentsDownloadTemplate from "@/src/components/templates/DocumentsDownloadTemplate/DocumentsDownloadTemplate";
 import { toastService } from '@/src/services/toastService';
-import { BookkeepingMode, DownloadIncomeBookRequest } from '@/src/types/types';
-import React, { useState } from 'react';
-import { useTranslation } from "react-i18next";
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import { VStack } from '../../ui/vstack';
-
-
-import DateTimePicker from '@react-native-community/datetimepicker';
-import dayjs from 'dayjs';
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { BasicButton } from '../../atoms/BasicButton/BasicButton';
-import LabeledTextField from '../../molecules/LabeledTextField/LabeledTextField';
+import { BookkeepingMode, BookPath, DateRangeDTO, DownloadIncomeBookRequest } from '@/src/types/types';
 import { dateService } from '@/src/services/dateService';
-import { Platform } from 'react-native';
+import { RNBlobUtilService } from '@/src/services/RNBlobUtilService';
+import { PATH_CONSTANTS } from '@/src/util/pathConstants';
 
 interface RawDocumentData {
     id: string;
@@ -31,69 +30,80 @@ const rawIncomeBookData: RawDocumentData[] = [
     },
 ];
 
-
-
-
 const IncomeBookScreen: React.FC = () => {
     const { t } = useTranslation();
-    const [fromDate, setFromDate] = useState<Date | null>(new Date());
-    const [toDate, setToDate] = useState<Date | null>(new Date());
-    const [showFromDatePicker, setShowFromDatePicker] = useState(false);
-    const [showToDatePicker, setShowToDatePicker] = useState(false);
-
     const [pdfPath, setPdfPath] = useState<string | null>(null);
     const [isDownloading, setIsDownloading] = useState(false);
-
-    const [bookkeepingMode, setBookkeepingMode] = useState<BookkeepingMode>('yearly');
-    const dateFormVisible = bookkeepingMode !== 'yearly';
-    
-    const animatedStyle = useAnimatedStyle(() => ({
-        opacity: withTiming(dateFormVisible ? 1 : 0, { duration: 500 }),
-        height: withTiming(dateFormVisible ? 'auto' : 0),
-        marginBottom: 20
-    }));
+    const [bookPaths, setBookPaths] = useState<BookPath[]>([]);
+    const [loadingBooks, setLoadingBooks] = useState(true);
 
     const documentsDataForTemplate = rawIncomeBookData.map(doc => ({
         id: doc.id,
         title: t(doc.titleKey),
     }));
 
-
-    const request: DownloadIncomeBookRequest = {
-        taxpayerId: 1,
-        period: {
-            from: dateFormVisible ? null : `${new Date().getFullYear()}-01-01`,
-            to: dateFormVisible ? null : `${dateService.formatBackendDate(new Date())}`
-        },
-        storeId: 0
+    const loadBooks = async () => {
+        try {
+            setLoadingBooks(true);
+            const result = await RNBlobUtilService.loadDownloadedBooks(PATH_CONSTANTS.incomeBookPath);
+            setBookPaths(result);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoadingBooks(false);
+        }
     };
 
-    const downloadPDF = async (request: DownloadIncomeBookRequest) => {
-        console.log("req 1: ", request);
+    useEffect(() => {
+        loadBooks();
+    }, []);
 
-        if(dateFormVisible && (fromDate == null || toDate == null )) {
+
+    const buildRequest = (dateFormVisible: boolean, period: DateRangeDTO): DownloadIncomeBookRequest => ({
+        period: {
+            from: dateFormVisible
+            ? period.from
+            : `${new Date().getFullYear()}-01-01`,
+            to: dateFormVisible
+            ? period.to
+            : dateService.formatBackendDate(new Date()),
+        },
+        taxpayerId: 1,
+        storeId: 0,
+    });
+
+    
+    const downloadPDF = async (dateFormVisible: boolean, period: DateRangeDTO) => {
+        if(dateFormVisible && (period.from == null || period.to == null )) {
             toastService.error(t('books.documents.customDateErrorMessage'), t('books.documents.customDateErrorDescription'));
             
             return;
         }
 
+        const request = buildRequest(dateFormVisible, period);
+
         try {
-            if(dateFormVisible) {
-                request.period.from = dateService.formatBackendDate(fromDate);
-                request.period.to = dateService.formatBackendDate(toDate);
-            }
-            
             setIsDownloading(true);
-            console.log("req 2: ", request);
 
-            const dirs = ReactNativeBlobUtil.fs.dirs;
-            const downloadPath = `${dirs.DownloadDir}/${t('books.documents.incomeBookDownloadTitle')}_${Date.now()}.pdf`;
-
-            console.log("Downlaod path 1: ", downloadPath);
+            const dir = PATH_CONSTANTS.incomeBookPath;
+            if(!RNBlobUtilService.fileExists(dir)) {
+                RNBlobUtilService.createDirectory(dir);
+            }
+            const downloadPath = `${dir}/${t('books.documents.incomeBookDownloadTitle')}_${Date.now()}.pdf`;
             const resp = await bookService.downloadIncomeBook(downloadPath, request);
 
-            const { status } = resp.info();
-            if (status >= 400) {
+            // If we got here, the file exists
+            const path = resp.path();
+            // ReactNativeBlobUtil doesnt give HTTP status, only state of downloaded file (exists or not)
+            if(RNBlobUtilService.fileExists(path)) {
+                const realPath = Platform.OS === 'android' ? 'file://' + resp.path() : '' + resp.path();
+                toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
+
+                // Optional - if we want to open it immediately in the viewer:
+                setPdfPath(`${realPath}`);
+                await loadBooks();
+            }
+            else {
                 // Try to read backend error message
                 let errorMessage = "Genericka greska";
 
@@ -109,86 +119,30 @@ const IncomeBookScreen: React.FC = () => {
                 throw new Error(errorMessage);
             }
             
-            if(status === 200) {
-                const realPath = Platform.OS === 'android' ? 'file://' + resp.path() : '' + resp.path();
-                toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
-
-                // Optional - if we want to open it immediately in the viewer:
-                setPdfPath(`${realPath}`);
-            }
-            
         } catch (err: any) {
             console.log('Download failed: ', err.message);
 
             if (err.message.includes('Status Code = 16')) {
+                setPdfPath(null);
                 toastService.error(
                     t('books.documents.invalidPeriodMessage'),
                     t('books.documents.fromAfterToDescription')
                 );
             } else {
-                toastService.error(
-                    "1", "2"
-                );
+                toastService.error("1", "2");
             }
         } finally {
             setIsDownloading(false);
         }
     };
 
-    const onFromDateChange = (event, selectedDate) => {
-        setShowFromDatePicker(false);
-        setFromDate(selectedDate);
-        request.period.from = dateService.formatBackendDate(selectedDate);
-    };
-
-    const onToDateChange = (event, selectedDate) => {
-        setShowToDatePicker(false);
-        setToDate(selectedDate);
-    };
-
-    const periodForm = (
-        <Animated.View style={animatedStyle}>
-            <VStack style={{ gap: 10 }}>
-                <LabeledTextField label={t('books.documents.yearFrom')} disabled={true} value={dateService.formatLocalDate(fromDate)} />
-                <BasicButton title="Izaberi" onPress={() => setShowFromDatePicker(true)} />
-            </VStack>
-            
-            <VStack style={{ gap: 10 }}>
-                <LabeledTextField label={t('books.documents.yearTo')} disabled={true} value={dateService.formatLocalDate(toDate)} />
-                <BasicButton title="Izaberi" onPress={() => setShowToDatePicker(true)} />
-            </VStack>
-        </Animated.View>
-    );
-
-    const datePickersContent = (
-        <VStack>
-            {showFromDatePicker && 
-                <DateTimePicker
-                    testID="dateTimePickerFrom"
-                    value={fromDate}
-                    mode={'date'}
-                    is24Hour={true}
-                    onChange={onFromDateChange}
-                /> 
-            }
-            {showToDatePicker && 
-                <DateTimePicker
-                    testID="dateTimePickerTo"
-                    value={toDate}
-                    mode={'date'}
-                    is24Hour={true}
-                    onChange={onToDateChange}
-                /> 
-            }
-        </VStack>
-    );
-
     return (
         <DocumentsDownloadTemplate
             downloadPDF={downloadPDF}
             pdfPath={pdfPath}
             isDownloading={isDownloading}
-            bookRequest={request}
+            bookPaths={bookPaths}
+            isLoadingBooks={loadingBooks}
 
             documentsData={documentsDataForTemplate}
             documentItemComponent={(props) => {
@@ -200,7 +154,6 @@ const IncomeBookScreen: React.FC = () => {
 
                 return (
                     <VStack>
-                        { bookkeepingMode === 'yearly' ? null : periodForm }
                         <DocumentItem
                             title={props.title}
                             documentType={docType}
@@ -209,8 +162,6 @@ const IncomeBookScreen: React.FC = () => {
                     </VStack>
                 );
             }}
-            datePickersContent={datePickersContent}
-            bookkeepingModeChange={setBookkeepingMode}
         />
     );
 };

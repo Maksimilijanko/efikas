@@ -61,6 +61,13 @@ const getStyles = (Colors: any) =>
       color: Colors.gray,
       fontStyle: 'italic',
     },
+
+    periodForm: {
+      width: '100%',
+      paddingLeft: 10,
+      paddingRight: 10,
+      marginBottom: 10
+    }
   });
 
 export default getStyles;

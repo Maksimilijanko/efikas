@@ -85,6 +85,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = React.memo(
   }
 );
 
+SegmentedControl.displayName = 'SegmentedControl';
+
 const getStyles = (Colors: any) =>
   StyleSheet.create({
     container: {

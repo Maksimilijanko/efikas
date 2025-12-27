@@ -7,8 +7,7 @@
     "icon": "./assets/images/appLogo.png",
     "splash": {
       "image": "./assets/images/appLogo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "contain"
     },
     "scheme": "efikasmobile",
     "owner": "etf-bl-efikas",
