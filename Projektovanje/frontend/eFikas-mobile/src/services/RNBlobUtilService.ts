@@ -2,7 +2,20 @@ import { Platform } from "react-native";
 import ReactNativeBlobUtil from "react-native-blob-util"
 import { BookPath } from "../types/types";
 
+
+const BASE_PATH_ANDROID = ReactNativeBlobUtil.fs.dirs.DownloadDir;
+const BASE_PATH_IOS = ReactNativeBlobUtil.fs.dirs.DocumentDir;
+
 export const RNBlobUtilService = {
+    getPdfDownloadPath: (filename: string): string => {
+        if (Platform.OS === 'android') {
+            return `${BASE_PATH_ANDROID}/${filename}`;
+        }
+
+        // iOS
+        return `${BASE_PATH_IOS}/${filename}`;
+    },
+
     createDirectory: (path: string) => {
         if(ReactNativeBlobUtil.fs.exists(path))
             ReactNativeBlobUtil.fs.mkdir(path);

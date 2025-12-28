@@ -15,6 +15,7 @@ import { BookkeepingMode, BookPath, DateRangeDTO, DownloadIncomeBookRequest } fr
 import { dateService } from '@/src/services/dateService';
 import { RNBlobUtilService } from '@/src/services/RNBlobUtilService';
 import { PATH_CONSTANTS } from '@/src/util/pathConstants';
+import { FetchBlobResponse } from 'react-native-blob-util';
 
 interface RawDocumentData {
     id: string;
@@ -38,14 +39,16 @@ const IncomeBookScreen: React.FC = () => {
     const [loadingBooks, setLoadingBooks] = useState(true);
 
     const documentsDataForTemplate = rawIncomeBookData.map(doc => ({
-        id: doc.id,
-        title: t(doc.titleKey),
-    }));
+		id: doc.id,
+		title: t(doc.titleKey),
+		documentType: doc.documentType,
+	}));
 
     const loadBooks = async () => {
+        const path = RNBlobUtilService.getPdfDownloadPath(PATH_CONSTANTS.incomeBookPath);
         try {
             setLoadingBooks(true);
-            const result = await RNBlobUtilService.loadDownloadedBooks(PATH_CONSTANTS.incomeBookPath);
+            const result = await RNBlobUtilService.loadDownloadedBooks(path);
             setBookPaths(result);
         } catch (err) {
             console.log(err);
@@ -72,36 +75,31 @@ const IncomeBookScreen: React.FC = () => {
         storeId: 0,
     });
 
-    
-    const downloadPDF = async (dateFormVisible: boolean, period: DateRangeDTO) => {
-        if(dateFormVisible && (period.from == null || period.to == null )) {
-            toastService.error(t('books.documents.customDateErrorMessage'), t('books.documents.customDateErrorDescription'));
-            
-            return;
-        }
+    const isInvalidPeriod = (period: DateRangeDTO): boolean => {
+        if (!period.from || !period.to) return true;
 
-        const request = buildRequest(dateFormVisible, period);
+        return new Date(period.from) > new Date(period.to);
+    }
 
+    const executePdfAction = async (
+        action: () => Promise<FetchBlobResponse>,
+        onSuccess?: (path: string) => Promise<void> | void
+    ) => {
         try {
             setIsDownloading(true);
 
-            const dir = PATH_CONSTANTS.incomeBookPath;
-            if(!RNBlobUtilService.fileExists(dir)) {
-                RNBlobUtilService.createDirectory(dir);
-            }
-            const downloadPath = `${dir}/${t('books.documents.incomeBookDownloadTitle')}_${Date.now()}.pdf`;
-            const resp = await bookService.downloadIncomeBook(downloadPath, request);
-
-            // If we got here, the file exists
+            const resp = await action();
             const path = resp.path();
-            // ReactNativeBlobUtil doesnt give HTTP status, only state of downloaded file (exists or not)
-            if(RNBlobUtilService.fileExists(path)) {
-                const realPath = Platform.OS === 'android' ? 'file://' + resp.path() : '' + resp.path();
+
+            if (RNBlobUtilService.fileExists(path)) {
+                const realPath =
+                    Platform.OS === 'android' ? `file://${path}` : path;
+                console.log("HELLO: ", realPath);
                 toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
 
                 // Optional - if we want to open it immediately in the viewer:
                 setPdfPath(`${realPath}`);
-                await loadBooks();
+                await onSuccess?.(realPath);
             }
             else {
                 // Try to read backend error message
@@ -116,28 +114,132 @@ const IncomeBookScreen: React.FC = () => {
                     // ignore parsing errors
                 }
 
+                console.log(errorMessage);
                 throw new Error(errorMessage);
             }
-            
         } catch (err: any) {
-            console.log('Download failed: ', err.message);
-
-            if (err.message.includes('Status Code = 16')) {
-                setPdfPath(null);
+            if (err.message?.includes('Status Code = 16')) {
                 toastService.error(
                     t('books.documents.invalidPeriodMessage'),
                     t('books.documents.fromAfterToDescription')
                 );
             } else {
-                toastService.error("1", "2");
+                toastService.error('1', '2');
             }
         } finally {
             setIsDownloading(false);
         }
     };
 
+    const streamPDF = async (dateFormVisible: boolean, period: DateRangeDTO) => {
+        if (isInvalidPeriod(period)) {
+            toastService.error(
+                t('books.documents.invalidPeriodMessage'),
+                t('books.documents.fromAfterToDescription')
+            );
+            return;
+        }
+
+        const request = buildRequest(dateFormVisible, period);
+
+        await executePdfAction(() =>
+            bookService.streamIncomeBook(request)
+        );
+    }
+
+
+    const downloadPDF = async (dateFormVisible: boolean, period: DateRangeDTO) => {
+        if (isInvalidPeriod(period)) {
+            toastService.error(
+                t('books.documents.invalidPeriodMessage'),
+                t('books.documents.fromAfterToDescription')
+            );
+            return;
+        }
+
+        const request = buildRequest(dateFormVisible, period);
+
+        const dir = RNBlobUtilService.getPdfDownloadPath(PATH_CONSTANTS.incomeBookPath);
+        if (!RNBlobUtilService.fileExists(dir)) {
+            RNBlobUtilService.createDirectory(dir);
+        }
+
+        const title = `${t('books.documents.incomeBookDownloadTitle')}_${Date.now()}.pdf`;
+        const path = `${dir}/${title}`;
+
+        await executePdfAction(
+            () => bookService.downloadIncomeBook(path, request),
+            loadBooks
+        );
+    };
+
+    
+    // const downloadPDF = async (dateFormVisible: boolean, period: DateRangeDTO) => {
+    //     if(dateFormVisible && (period.from == null || period.to == null )) {
+    //         toastService.error(t('books.documents.customDateErrorMessage'), t('books.documents.customDateErrorDescription'));
+            
+    //         return;
+    //     }
+
+    //     const request = buildRequest(dateFormVisible, period);
+
+    //     try {
+    //         setIsDownloading(true);
+
+    //         const dir = RNBlobUtilService.getPdfDownloadPath(PATH_CONSTANTS.incomeBookPath);
+    //         if(!RNBlobUtilService.fileExists(dir)) {
+    //             RNBlobUtilService.createDirectory(dir);
+    //         }
+    //         const downloadPath = `${dir}/${t('books.documents.incomeBookDownloadTitle')}_${Date.now()}.pdf`;
+    //         const resp = await bookService.downloadIncomeBook(downloadPath, request);
+
+    //         // If we got here, the file exists
+    //         const path = resp.path();
+    //         // ReactNativeBlobUtil doesnt give HTTP status, only state of downloaded file (exists or not)
+    //         if(RNBlobUtilService.fileExists(path)) {
+    //             const realPath = Platform.OS === 'android' ? 'file://' + resp.path() : '' + resp.path();
+    //             toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
+
+    //             // Optional - if we want to open it immediately in the viewer:
+    //             setPdfPath(`${realPath}`);
+    //             await loadBooks();
+    //         }
+    //         else {
+    //             // Try to read backend error message
+    //             let errorMessage = "Genericka greska";
+
+    //             try {
+    //                 const text = await resp.text(); // or res.json()
+    //                 if (text) {
+    //                     errorMessage = text;
+    //                 }
+    //             } catch {
+    //                 // ignore parsing errors
+    //             }
+
+    //             throw new Error(errorMessage);
+    //         }
+            
+    //     } catch (err: any) {
+    //         console.log('Download failed: ', err.message);
+
+    //         if (err.message.includes('Status Code = 16')) {
+    //             setPdfPath(null);
+    //             toastService.error(
+    //                 t('books.documents.invalidPeriodMessage'),
+    //                 t('books.documents.fromAfterToDescription')
+    //             );
+    //         } else {
+    //             toastService.error("1", "2");
+    //         }
+    //     } finally {
+    //         setIsDownloading(false);
+    //     }
+    // };
+
     return (
         <DocumentsDownloadTemplate
+            streamPDF={streamPDF}
             downloadPDF={downloadPDF}
             pdfPath={pdfPath}
             isDownloading={isDownloading}
@@ -146,20 +248,13 @@ const IncomeBookScreen: React.FC = () => {
 
             documentsData={documentsDataForTemplate}
             documentItemComponent={(props) => {
-                const originalDoc = rawIncomeBookData.find(
-                    doc => t(doc.titleKey) === props.title
-                );
-
-                const docType: DocumentType = originalDoc?.documentType || 'IncomeBook';
-
                 return (
-                    <VStack>
-                        <DocumentItem
-                            title={props.title}
-                            documentType={docType}
-                        />
-                        
-                    </VStack>
+                    <DocumentItem
+						title={props.title}
+						documentType={props.documentType}
+						onPress={props.onPress}
+						onDownloadPress={props.onDownloadPress}
+					/>
                 );
             }}
         />

@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Animated, Platform } from 'react-native';
 import { VStack } from '../../ui/vstack';
+import { FetchBlobResponse } from 'react-native-blob-util';
 
 
 interface RawDocumentData {
@@ -43,12 +44,14 @@ const GuestsBookScreen: React.FC = () => {
 	const documentsDataForTemplate = rawGuestsBookData.map(doc => ({
 		id: doc.id,
 		title: t(doc.titleKey),
+		documentType: doc.documentType,
 	}));
 
 	const loadBooks = async () => {
+		const path = RNBlobUtilService.getPdfDownloadPath(PATH_CONSTANTS.guestsBookPath);
 		try {
 			setLoadingBooks(true);
-			const result = await RNBlobUtilService.loadDownloadedBooks(PATH_CONSTANTS.guestsBookPath);
+			const result = await RNBlobUtilService.loadDownloadedBooks(path);
 			setBookPaths(result);
 		} catch (err) {
 			console.log(err);
@@ -64,50 +67,40 @@ const GuestsBookScreen: React.FC = () => {
 	const buildRequest = (dateFormVisible: boolean, period: DateRangeDTO): GuestsBookRequest => ({
 		period: {
 			from: dateFormVisible
-			? period.from
-			: `${new Date().getFullYear()}-01-01`,
+				? period.from
+				: `${new Date().getFullYear()}-01-01`,
 			to: dateFormVisible
-			? period.to
-			: dateService.formatBackendDate(new Date()),
+				? period.to
+				: dateService.formatBackendDate(new Date()),
 		},
 		active: false,
 	});
 
+	const isInvalidPeriod = (period: DateRangeDTO): boolean => {
+		if (!period.from || !period.to) return true;
 
-	const downloadPDF = async (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => {
-		if (dateFormVisible && (period.from == null || period.to == null)) {
-			toastService.error(t('books.documents.customDateErrorMessage'), t('books.documents.customDateErrorDescription'));
-			return;
-		}
+		return new Date(period.from) > new Date(period.to);
+	}
 
-		const request = buildRequest(dateFormVisible, period);
-
+	const executePdfAction = async (
+		action: () => Promise<FetchBlobResponse>,
+		onSuccess?: (path: string) => Promise<void> | void
+	) => {
 		try {
 			setIsDownloading(true);
 
-			const dir = PATH_CONSTANTS.guestsBookPath;
-			if (!RNBlobUtilService.fileExists(dir)) {
-				RNBlobUtilService.createDirectory(dir);
-			}
-
-			const title = type === GuestBookType.DOMESTIC_GUESTS ?
-				t('books.documents.domesticGuestsBookDownloadTitle')
-				:
-				t('books.documents.foreignGuestsBookDownloadTitle')
-			const downloadPath = `${dir}/${title}_${Date.now()}.pdf`;
-
-			const resp = await bookService.downloadGuestsBook(downloadPath, type, request);
-
-			// If we got here, the file exists
+			const resp = await action();
 			const path = resp.path();
-			// ReactNativeBlobUtil doesnt give HTTP status, only state of downloaded file (exists or not)
+
 			if (RNBlobUtilService.fileExists(path)) {
-				const realPath = Platform.OS === 'android' ? 'file://' + resp.path() : '' + resp.path();
+				const realPath =
+					Platform.OS === 'android' ? `file://${path}` : path;
+				console.log("HELLO: ", realPath);
 				toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
 
 				// Optional - if we want to open it immediately in the viewer:
 				setPdfPath(`${realPath}`);
-				await loadBooks();
+				await onSuccess?.(realPath);
 			}
 			else {
 				// Try to read backend error message
@@ -122,27 +115,72 @@ const GuestsBookScreen: React.FC = () => {
 					// ignore parsing errors
 				}
 
+				console.log(errorMessage);
 				throw new Error(errorMessage);
 			}
-
 		} catch (err: any) {
-			console.log('Download failed: ', err.message);
-
-			if (err.message.includes('Status Code = 16')) {
+			if (err.message?.includes('Status Code = 16')) {
 				toastService.error(
 					t('books.documents.invalidPeriodMessage'),
 					t('books.documents.fromAfterToDescription')
 				);
 			} else {
-				toastService.error("1", "2");
+				toastService.error('1', '2');
 			}
 		} finally {
 			setIsDownloading(false);
 		}
 	};
 
+	const streamPDF = async (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => {
+		if (isInvalidPeriod(period)) {
+			toastService.error(
+				t('books.documents.invalidPeriodMessage'),
+				t('books.documents.fromAfterToDescription')
+			);
+			return;
+		}
+
+		const request = buildRequest(dateFormVisible, period);
+
+		await executePdfAction(() =>
+			bookService.streamGuestsBook(type, request)
+		);
+	}
+
+
+	const downloadPDF = async (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => {
+		if (isInvalidPeriod(period)) {
+			toastService.error(
+				t('books.documents.invalidPeriodMessage'),
+				t('books.documents.fromAfterToDescription')
+			);
+			return;
+		}
+
+		const request = buildRequest(dateFormVisible, period);
+
+		const dir = RNBlobUtilService.getPdfDownloadPath(PATH_CONSTANTS.guestsBookPath);
+		if (!RNBlobUtilService.fileExists(dir)) {
+			RNBlobUtilService.createDirectory(dir);
+		}
+
+		const title =
+			type === GuestBookType.DOMESTIC_GUESTS
+				? t('books.documents.domesticGuestsBookDownloadTitle')
+				: t('books.documents.foreignGuestsBookDownloadTitle');
+
+		const path = `${dir}/${title}_${Date.now()}.pdf`;
+
+		await executePdfAction(
+			() => bookService.downloadGuestsBook(path, type, request),
+			loadBooks
+		);
+	};
+
 	return (
 		<DocumentsDownloadTemplate
+			streamPDFGuests={streamPDF}
 			downloadPDFGuests={downloadPDF}
 			areGuests={true}
 			pdfPath={pdfPath}
@@ -152,19 +190,13 @@ const GuestsBookScreen: React.FC = () => {
 			isLoadingBooks={loadingBooks}
 
 			documentItemComponent={(props) => {
-				const originalDoc = rawGuestsBookData.find(
-					doc => t(doc.titleKey) === props.title
-				);
-				// Postavljanje documentType s fallbackom na 'DomesticGuestsBook'
-				const docType: DocumentType = originalDoc?.documentType || 'DomesticGuestsBook';
-
 				return (
-					<VStack>
-						<DocumentItem
-							title={props.title}
-							documentType={docType} 
-						/>
-                    </VStack>
+					<DocumentItem
+						title={props.title}
+						documentType={props.documentType}
+						onPress={props.onPress}
+						onDownloadPress={props.onDownloadPress}
+					/>
 				);
 			}}
 		/>

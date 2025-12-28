@@ -28,7 +28,8 @@ const getStyles = (Colors: any) =>
       paddingBottom: screenHeight * 0.02,
     },
     listWrapper: {
-      width: "92%",
+      width: "90%",
+      gap: 10
     },
     itemWrapper: {
       marginBottom: 14,
@@ -66,7 +67,8 @@ const getStyles = (Colors: any) =>
       width: '100%',
       paddingLeft: 10,
       paddingRight: 10,
-      marginBottom: 10
+      marginBottom: 10,
+      gap: 10
     }
   });
 
