@@ -27,6 +27,6 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts",
-    "components/ui/**/*",
+    "src/components/ui/**/*",
   ]
 }

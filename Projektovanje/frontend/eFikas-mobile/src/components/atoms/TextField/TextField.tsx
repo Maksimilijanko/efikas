@@ -1,7 +1,7 @@
-import { Input, InputField, InputSlot } from "@/components/ui/input";
-import { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
-import { Icon } from "@/src/components/atoms/Icon/Icon"; 
+import { Icon } from "@/src/components/atoms/Icon/Icon";
+import { Input, InputField, InputSlot } from "@/src/components/ui/input";
 import { LucideIconName } from "@/src/types/types";
+import { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
 
 interface Props {
     size?: "xl" | "lg" | "md" | "sm";

@@ -1,4 +1,4 @@
-import { Text } from "@/components/ui/text";
+import { Text } from "@/src/components/ui/text";
 import { useTheme } from "@/src/providers/ThemeProvider";
 
 interface LabelProps {

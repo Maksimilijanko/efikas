@@ -1,4 +1,4 @@
-import { Textarea, TextareaInput } from "@/components/ui/textarea";
+import { Textarea, TextareaInput } from "@/src/components/ui/textarea";
 
 interface Props {
     size?: 'sm' | 'md' | 'lg' | 'xl';

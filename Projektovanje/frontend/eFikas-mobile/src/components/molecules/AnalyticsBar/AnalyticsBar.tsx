@@ -1,7 +1,6 @@
-import { Text } from "@/components/ui/text";
-import { Animated, View, StyleSheet } from "react-native";
-import { styles } from "./index.styles";
+import { Text } from "@/src/components/ui/text";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { Animated, StyleSheet, View } from "react-native";
 
 interface Props {
     label: string;

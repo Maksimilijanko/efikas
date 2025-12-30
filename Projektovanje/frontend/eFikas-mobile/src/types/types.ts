@@ -2,6 +2,8 @@ import * as LucideIcons from "lucide-react-native";
 
 export type LucideIconName = keyof typeof LucideIcons;
 
+export type BookkeepingMode = 'yearly' | 'custom';
+
 export interface LoginRequest {
     email: string;
     password: string;
@@ -120,4 +122,26 @@ export interface CashRegister {
   cashRegisterId: number;
   cashRegisterNumber: number;
   softwareVersion: string;
+}
+
+// ================ Book DTOs ===================
+export interface DateRangeDTO {
+  from: string | null;
+  to: string | null;
+}
+
+export interface DownloadIncomeBookRequest {
+  taxpayerId: number; 
+  storeId: number;
+  period: DateRangeDTO;
+}
+
+export interface GuestsBookRequest {
+  period: DateRangeDTO;
+  active: boolean;
+}
+
+export interface BookPath {
+    displayName: string;
+    path: string;
 }

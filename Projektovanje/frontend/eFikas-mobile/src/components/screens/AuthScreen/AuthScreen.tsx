@@ -1,4 +1,5 @@
-import { VStack } from "@/components/ui/vstack";
+import { VStack } from "@/src/components/ui/vstack";
+import { useAuth } from "@/src/hooks/useAuth";
 import { Colors } from "@/src/styles/style";
 import { LoginRequest, RegisterRequest } from "@/src/types/types";
 import { useState } from "react";
@@ -11,7 +12,6 @@ import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 import AuthSwitcher from "../../molecules/AuthSwitcher/AuthSwitcher";
 import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
-import { useAuth } from "@/src/hooks/useAuth";
 
 
 // =================================================================

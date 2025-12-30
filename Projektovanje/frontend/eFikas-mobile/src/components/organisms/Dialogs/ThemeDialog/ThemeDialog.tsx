@@ -1,13 +1,13 @@
-import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
-import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
+import { Box } from "@/src/components/ui/box";
+import { HStack } from "@/src/components/ui/hstack";
+import { Pressable } from "@/src/components/ui/pressable";
+import { Text } from "@/src/components/ui/text";
+import { VStack } from "@/src/components/ui/vstack";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, StyleSheet, View } from "react-native";
 import { SettingsDialog } from "../SettingsDialog/SettingsDialog";
-import { Pressable } from "@/components/ui/pressable";
 
 interface ThemeDialogProps {
   visible: boolean;

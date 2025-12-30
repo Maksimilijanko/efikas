@@ -148,6 +148,7 @@
             "incomeBook": "Income book",
             "expensesBook": "Expenses book",
             "guestBook": "Guest book",
+            "pdfView": "Downloaded PDF of book",
             "settingsMain": "Settings",
             "aboutApp": "About the app"
         },
@@ -264,9 +265,26 @@
         }
     },
     "books": {
+        "downloadedList": {
+            "title": "Downloaded books",
+            "noBooks": "You currently have no downloaded books"
+        },
+
         "documents": {
+            "incomeBookDownloadTitle": "IncomeBook",
+            "domesticGuestsBookDownloadTitle": "DomesticGuestsBook",
+            "foreignGuestsBookDownloadTitle": "ForeignGuestsBook",
+            "yearFrom": "Date from",
+            "yearTo": "Date to",
+
             "downloadErrorTitle": "Download Error",
-            "downloadErrorMessage": "Download failed"
+            "downloadErrorMessage": "Download failed",
+            "downloadSuccessMessage": "Download successful",
+            "downloadSuccessDescription": "You can now view the PDF of the book",
+            "customDateErrorMessage": "Error in dates",
+            "customDateErrorDescription": "You must pick a date in 'Custom' mode",
+            "invalidPeriodMessage": "Wrong period",
+            "fromAfterToDescription": "'From' date can not come before 'To' date."
         },
         "bookTitles": {
             "ExpenseBook": "Expense Book",
@@ -320,7 +338,13 @@
     },
     "reservations": {
         "navigation": {
-            "reservationDetailsTitle": "Reservation Details"
+            "reservationDetailsTitle": "Reservation Details",
+            "addReservationTitle": "Add Reservation"
+        },
+        "segments": {
+            "finished": "Finished",
+            "active": "Active",
+            "upcoming": "Upcoming"
         },
         "toastMessages": {
             "genericError": "An error occurred.",

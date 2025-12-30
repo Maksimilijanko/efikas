@@ -253,8 +253,8 @@ const ReservationDetailsScreen = ({ reservation }) => {
       <ReservationDetailsTemplate
         headerCard={
           <ApartmentCard
-            title={reservation.apartment.name}
-            subtitle={reservation.apartment.address}
+            name={reservation.apartment.name}
+            address={reservation.apartment.address}
             imageUrl={reservation.apartment.pictures?.[0] ?? undefined}
             onPress={() => console.log("...")}
             showArrow={false}

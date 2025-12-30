@@ -18,7 +18,7 @@ import LabeledTextField from "@/src/components/molecules/LabeledTextField/Labele
 import ToggleItem from "@/src/components/molecules/ToggleItem/ToggleItem";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import TextField from "@/src/components/atoms/TextField/TextField";
-import { HStack } from "@/components/ui/hstack";
+import { HStack } from "@/src/components/ui/hstack";
 
 import ApartmentSelectDropdown from "../../organisms/ApartmentSelectDropdown/ApartmentSelectDropdown";
 import DateTimeDialog from "../../organisms/Dialogs/DateTimeDialog/DateTimeDialog";
@@ -56,8 +56,8 @@ const AddReservationScreen = () => {
     
     return apartmentsData.map((apt) => ({
       id: String(apt.id),
-      name: apt.title,
-      address: apt.subtitle,
+      name: apt.name,
+      address: apt.address,
       imageUrl: apt.imageUrl,
     }));
   }, [apartmentsData]);

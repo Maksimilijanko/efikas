@@ -3,10 +3,11 @@ import { Modal, Pressable, Text, View, Platform } from "react-native";
 import { Calendar } from "react-native-calendars";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-import { HStack } from "@/components/ui/hstack";
+
 import { useStyles } from "@/src/hooks/useStyles";
 import { getStyles } from "./index.styles";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { HStack } from "@/src/components/ui/hstack";
 
 const dayjs = require("dayjs");
 

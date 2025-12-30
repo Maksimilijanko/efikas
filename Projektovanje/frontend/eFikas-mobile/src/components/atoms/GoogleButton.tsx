@@ -1,6 +1,6 @@
+import { HStack } from '@/src/components/ui/hstack';
 import React from 'react';
-import { TouchableOpacity, Image, Text } from 'react-native';
-import { HStack } from '@/components/ui/hstack';
+import { Image, Text, TouchableOpacity } from 'react-native';
 // import { Colors } from '@/src/styles/style';
 import { useTheme } from "@/src/providers/ThemeProvider";
 

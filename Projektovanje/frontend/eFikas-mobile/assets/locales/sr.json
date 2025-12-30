@@ -4,6 +4,8 @@
         "home": "Početna",
         "menu": "Meni"
     },
+
+    
     "auth": {
         "orSeparator": "ili",
         "login": {
@@ -47,6 +49,8 @@
             "passwordMismatchError": "Lozinke se ne podudaraju"
         }
     },
+
+
     "dialogs": {
         "logout": {
             "message": "Da li ste sigurni da želite da se odjavite sa ovog naloga?",
@@ -94,6 +98,8 @@
             }
         }
     },
+
+
     "chart": {
         "months": [
             "Jan",
@@ -110,9 +116,13 @@
             "Dec"
         ]
     },
+
+
     "welcome": {
         "loginButton": "Prijavi se"
     },
+
+
     "dashboard": {
         "navigation": {
             "apartmentsTitle": "Stanovi",
@@ -138,6 +148,8 @@
             "statsErrorMessage": "Nije moguće učitati podatke. Molimo pokušajte ponovo."
         }
     },
+
+
     "menu": {
         "stackNavigation": {
             "profile": "Profil",
@@ -148,6 +160,7 @@
             "incomeBook": "Knjiga prihoda",
             "expensesBook": "Knjiga rashoda",
             "guestBook": "Knjiga gostiju",
+            "pdfView": "Pregled preuzetog PDF-a",
             "settingsMain": "Podešavanja",
             "language": "Jezik",
             "theme": "Tema",
@@ -186,6 +199,8 @@
             }
         }
     },
+
+
     "calendar": {
         "months": [
             "Januar",
@@ -235,6 +250,8 @@
         ],
         "today": "Danas"
     },
+
+
     "reservationsCalendar": {
         "modalTitle": "Informacije o boravku",
         "guestCount": "Broj gostiju:",
@@ -246,6 +263,8 @@
         "okButton": "U redu",
         "detailsButton": "Detalji"
     },
+
+
     "aboutApp": {
         "title": "O aplikaciji",
         "systemName": "eFikas",
@@ -266,10 +285,29 @@
             "content_releaseDate": "Datum izdavanja: 01.01.2026."
         }
     },
+
+
     "books": {
+        "downloadedList": {
+            "title": "Preuzete knjige",
+            "noBooks": "Trenutno nemate preuzetih knjiga"
+        },
+
         "documents": {
+            "incomeBookDownloadTitle": "KnjigaPrihoda",
+            "domesticGuestsBookDownloadTitle": "KnjigaDomacihGostiju",
+            "foreignGuestsBookDownloadTitle": "KnjigaStranihGostiju",
+            "yearFrom": "Datum od",
+            "yearTo": "Datum do",
+
             "downloadErrorTitle": "Greška preuzimanja",
-            "downloadErrorMessage": "Neuspješno preuzimanje"
+            "downloadErrorMessage": "Neuspješno preuzimanje",
+            "downloadSuccessMessage": "Uspješno preuzimanje",
+            "downloadSuccessDescription": "PDF knjige možete sada pregledati",
+            "customDateErrorMessage": "Greška u datumima",
+            "customDateErrorDescription": "Morate izabrati datum u slučaju prilagođenog rada",
+            "invalidPeriodMessage": "Pogrešan period",
+            "fromAfterToDescription": "Pomiješali ste vrijednosti datuma."
         },
         "bookTitles": {
             "ExpenseBook": "Knjiga rashoda",
@@ -278,10 +316,14 @@
             "ForeignGuestsBook": "Knjiga stranih gostiju"
         }
     },
+
+
     "notifications": {
         "title": "Obavještenja",
         "description": "Dobijate podsjetnike o važnim događajima - dolascima gostiju, plaćanjima, zadacima i održavanju smještaja"
     },
+
+
     "profile": {
         "sectionTitle": "Informacije o profilu",
         "labels": {
@@ -302,9 +344,13 @@
             "genericError": "Došlo je do greške."
         }
     },
+
+
     "actions": {
         "finish": "Završi"
     },
+
+
     "cashRegisters": {
         "sectionTitle": "Informacije o kasi",
         "fields": {
@@ -322,9 +368,17 @@
             "createError": "Nije moguće sačuvati podatke o kasi."
         }
     },
+
+
     "reservations": {
         "navigation": {
-            "reservationDetailsTitle": "Detalji rezervacije"
+            "reservationDetailsTitle": "Detalji rezervacije",
+            "addReservationTitle": "Dodavanje rezervacije"
+        },
+        "segments": {
+            "finished": "Završene",
+            "active": "Aktivne",
+            "upcoming": "Predstojeće"
         },
         "toastMessages": {
             "genericError": "Došlo je do greške.",
@@ -370,6 +424,8 @@
             }
         }
     },
+
+
     "apartment": {
         "card": {
             "status": {
@@ -381,6 +437,8 @@
             }
         }
     },
+
+
     "addApartment": {
         "fields": {
             "name": "Naziv",
@@ -414,6 +472,8 @@
             "saving": "Čuvanje..."
         }
     },
+
+
     "inventoryModal": {
         "features": {
             "parking": "Parking",
@@ -429,6 +489,8 @@
             "save": "Sačuvaj"
         }
     },
+
+
     "apartmentDetails": {
         "loading": {
             "error": "Doslo je do greske pri ucitavanju stana.",
@@ -438,6 +500,8 @@
             "availability": "Dostupnost"
         }
     },
+
+
     "landingApartmentInfo": {
         "services": {
             "title": "Usluge",

@@ -1,15 +1,15 @@
-import React from "react";
-import {
-  Accordion as BaseAccordion,
-  AccordionItem,
-  AccordionHeader,
-  AccordionTrigger,
-  AccordionTitleText,
-  AccordionContent,
-  AccordionContentText,
-} from "@/components/ui/accordion";
-import { Divider } from "@/components/ui/divider";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
+import {
+    AccordionContent,
+    AccordionContentText,
+    AccordionHeader,
+    AccordionItem,
+    AccordionTitleText,
+    AccordionTrigger,
+    Accordion as BaseAccordion,
+} from "@/src/components/ui/accordion";
+import { Divider } from "@/src/components/ui/divider";
+import React from "react";
 
 // Tip za svaki item
 interface AccordionItemData {

@@ -1,8 +1,8 @@
-import { HStack } from "@/components/ui/hstack";
-import { Pressable } from "@/components/ui/pressable";
-import { Text } from "@/components/ui/text";
-import { Icon } from "../Icon/Icon";
+import { HStack } from "@/src/components/ui/hstack";
+import { Pressable } from "@/src/components/ui/pressable";
+import { Text } from "@/src/components/ui/text";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { Icon } from "../Icon/Icon";
 
 interface Props {
     label: string;

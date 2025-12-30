@@ -1,4 +1,4 @@
-import { HStack } from "@/components/ui/hstack";
+import { HStack } from "@/src/components/ui/hstack";
 import { useState } from "react";
 import { SegmentedControl } from "../../atoms/SegmentedControl/SegmentedControl";
 

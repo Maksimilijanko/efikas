@@ -1,12 +1,12 @@
-import React from "react";
-import { Pressable, StyleSheet } from "react-native";
-import { Box } from "@/components/ui/box";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Label } from "@/src/components/atoms/Label/Label";
+import { Box } from "@/src/components/ui/box";
 import { LucideIconName } from "@/src/types/types";
+import React from "react";
+import { Pressable, StyleSheet } from "react-native";
 // import { Colors } from "@/src/styles/style";
-import { Platform } from "react-native";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { Platform } from "react-native";
 
 interface IconCardProps {
   iconName: LucideIconName;

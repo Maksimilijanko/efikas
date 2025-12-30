@@ -1,8 +1,8 @@
-import { Text } from "@/components/ui/text";
+import { Text } from "@/src/components/ui/text";
+import { MenuSectionProps } from "@/src/types/types";
 import { View } from "react-native";
 import { MenuItem } from "../../molecules/MenuItem/MenuItem";
 import { styles } from "./index.styles";
-import { MenuSectionProps } from "@/src/types/types";
 
 
 export default function MenuSection({ title, items }: MenuSectionProps) {

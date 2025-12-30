@@ -1,9 +1,7 @@
-import React from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import { Card } from "@/components/ui/card";
-import { ChevronRight } from "lucide-react-native";
-import { Colors } from "@/src/styles/style";
+import { Card } from "@/src/components/ui/card";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { ChevronRight } from "lucide-react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface ReservationCardProps {
   reservationId: string;

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/src/components/ui/switch";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 // import { Colors } from "@/src/styles/style";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { LucideIconName } from "@/src/types/types";

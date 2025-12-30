@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { Edit2 } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  TextInput,
-  StyleSheet,
-  Platform,
-  useWindowDimensions,
-  ScrollView,
-  Keyboard,
-  TouchableOpacity,
-  Text,
+    Keyboard,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    useWindowDimensions,
+    View,
 } from 'react-native';
-import { Edit2 } from 'lucide-react-native'; 
 
-import { Modal, ModalContent } from '@/components/ui/modal';
 import { DialogButton } from '@/src/components/atoms/DialogButton/DialogButton';
 import { Label } from '@/src/components/atoms/Label/Label';
 import TextField from '@/src/components/atoms/TextField/TextField';
+import { Modal, ModalContent } from '@/src/components/ui/modal';
 import { Colors } from '@/src/styles/style';
 
 const MAX_CHAR_LIMIT = 150;

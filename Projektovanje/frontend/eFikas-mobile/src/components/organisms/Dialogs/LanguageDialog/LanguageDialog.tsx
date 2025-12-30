@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { View, Image, StyleSheet } from "react-native";
-import { useTranslation } from "react-i18next";
-import { SettingsDialog } from "../SettingsDialog/SettingsDialog";
+import { Box } from "@/src/components/ui/box";
+import { HStack } from "@/src/components/ui/hstack";
+import { Pressable } from "@/src/components/ui/pressable";
+import { Text } from "@/src/components/ui/text";
+import { VStack } from "@/src/components/ui/vstack";
 import { useTheme } from "@/src/providers/ThemeProvider";
-import { HStack } from "@/components/ui/hstack";
-import { Pressable } from "@/components/ui/pressable";
-import { VStack } from "@/components/ui/vstack";
-import { Text } from "@/components/ui/text";
-import { Box } from "@/components/ui/box";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Image, StyleSheet, View } from "react-native";
+import { SettingsDialog } from "../SettingsDialog/SettingsDialog";
 
 interface LanguageDialogProps {
   visible: boolean;
