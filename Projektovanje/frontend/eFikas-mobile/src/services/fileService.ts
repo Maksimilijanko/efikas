@@ -1,12 +1,13 @@
 import { Platform } from "react-native";
-import ReactNativeBlobUtil from "react-native-blob-util"
+import ReactNativeBlobUtil from "react-native-blob-util";
 import { BookPath } from "../types/types";
+import { Directory, File, Paths } from "expo-file-system";
 
 
 const BASE_PATH_ANDROID = ReactNativeBlobUtil.fs.dirs.DownloadDir;
 const BASE_PATH_IOS = ReactNativeBlobUtil.fs.dirs.DocumentDir;
 
-export const RNBlobUtilService = {
+export const fileService = {
     getPdfDownloadPath: (filename: string): string => {
         if (Platform.OS === 'android') {
             return `${BASE_PATH_ANDROID}/${filename}`;
@@ -16,15 +17,14 @@ export const RNBlobUtilService = {
         return `${BASE_PATH_IOS}/${filename}`;
     },
 
-    createDirectory: (path: string) => {
-        if(ReactNativeBlobUtil.fs.exists(path))
-            ReactNativeBlobUtil.fs.mkdir(path);
+    fileExists: (path: string): boolean => {
+        const file = new File(Paths.cache, path, "file.txt");
+        return file.exists;
     },
 
-    fileExists: (path: string): boolean => {
-        if(ReactNativeBlobUtil.fs.exists(path)) return true;
-
-        return false;
+    createDirectory: async (path: string) => {
+        const dir = new Directory(path);
+        await dir.create({ intermediates: true });
     },
 
     lsDir: async (path: string): Promise<string[]> => {
@@ -38,7 +38,7 @@ export const RNBlobUtilService = {
             return [];
         }
 
-        const files = await RNBlobUtilService.lsDir(path);
+        const files = await fileService.lsDir(path);
 
         return files
             .filter(name => name.toLowerCase().endsWith('.pdf'))

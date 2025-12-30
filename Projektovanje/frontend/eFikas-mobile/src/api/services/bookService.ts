@@ -1,56 +1,49 @@
-import { RNBlobUtilService } from "@/src/services/RNBlobUtilService";
+import { fileService } from "@/src/services/fileService";
 import { GuestBookType } from "@/src/types/enums";
-import { DownloadIncomeBookRequest, GuestsBookRequest } from "@/src/types/types";
+import { DownloadIncomeBookRequest, GuestsBookRequest, PdfResult } from "@/src/types/types";
 import { API_URLS } from "@/src/util/apiConstants";
 import { Platform } from "react-native";
 import ReactNativeBlobUtil, { FetchBlobResponse } from "react-native-blob-util";
 
 
+import { File, Directory, Paths } from 'expo-file-system';
+
+import * as Sharing from 'expo-sharing';
+
 type BlobFetchOptions = {
-    downloadPath?: string;
-    description?: string;
+  downloadPath?: string; // full file path INCLUDING filename
+  description?: string;
 };
 
-const fetchPdfHelper = (url: string, options?: BlobFetchOptions): Promise<FetchBlobResponse> => {
-    // return ReactNativeBlobUtil.config({
-    //     fileCache: true,
-    //     ...(options?.downloadPath && {
-    //         addAndroidDownloads: {
-    //             useDownloadManager: true,
-    //             notification: true,
-    //             path: options.downloadPath,
-    //             description: options.description,
-    //             mime: 'application/pdf',
-    //             mediaScannable: true,
-    //         },
-    //     }),
-    // }).fetch('GET', url, {
-    //     Accept: 'application/pdf',
-    // });
+const fetchPdfHelper = async (
+  url: string,
+  options?: BlobFetchOptions
+): Promise<PdfResult> => {
+  let file: File;
 
-    const path = options?.downloadPath
-    ? RNBlobUtilService.getPdfDownloadPath(options.downloadPath)
-    : undefined;
+  if (options?.downloadPath) {
+    // Custom absolute path (Documents / Downloads)
+    file = new File(options.downloadPath);
+  } else {
+    // Cache fallback
+    const dir = new Directory(Paths.cache, 'pdfs');
+    await dir.create({ intermediates: true });
 
-    return ReactNativeBlobUtil.config({
-        fileCache: true,
-        path: Platform.OS === 'ios' ? path : undefined,
+    const fileName = `book_${Date.now()}.pdf`;
+    file = new File(dir, fileName);
+  }
 
-        ...(Platform.OS === 'android' && path
-        ? {
-            addAndroidDownloads: {
-                useDownloadManager: true,
-                notification: true,
-                path,
-                description: options?.description,
-                mime: 'application/pdf',
-                mediaScannable: true,
-            },
-            }
-        : {}),
-    }).fetch('GET', url, {
-        Accept: 'application/pdf',
-    });
+  const result = await File.downloadFileAsync(url, file, {
+    headers: {
+      Accept: 'application/pdf',
+    },
+  });
+
+  if (!result.exists) {
+    throw new Error('PDF download failed');
+  }
+
+  return { uri: result.uri };
 };
 
 const buildGuestsBookUrl = (type: GuestBookType, { active, period }: GuestsBookRequest) => {
@@ -67,13 +60,13 @@ const buildIncomeBookUrl = ({ taxpayerId, period }: DownloadIncomeBookRequest) =
 
 export const bookService = {
     /* ==================================== STREAMING BOOKS ==================================== */
-    streamIncomeBook: async (request: DownloadIncomeBookRequest): Promise<FetchBlobResponse>  => {
+    streamIncomeBook: async (request: DownloadIncomeBookRequest): Promise<PdfResult>  => {
         const url = buildIncomeBookUrl(request);
 
         return fetchPdfHelper(url);
     },
 
-    streamGuestsBook: async (type: GuestBookType, request: GuestsBookRequest): Promise<FetchBlobResponse> => {     
+    streamGuestsBook: async (type: GuestBookType, request: GuestsBookRequest): Promise<PdfResult> => {     
         const url = buildGuestsBookUrl(type, request);
         
         return fetchPdfHelper(url);
@@ -81,14 +74,14 @@ export const bookService = {
 
 
     /* ==================================== DOWNLOADING BOOKS ==================================== */
-    downloadIncomeBook: async (downloadPath: string, request: DownloadIncomeBookRequest): Promise<FetchBlobResponse> => {
+    downloadIncomeBook: async (downloadPath: string, request: DownloadIncomeBookRequest): Promise<PdfResult> => {
         const url = buildIncomeBookUrl(request);
         const description = 'Downloading Income Book PDF';
 
         return fetchPdfHelper(url, { downloadPath, description: description });
     },
 
-    downloadGuestsBook: async (downloadPath: string, type: GuestBookType, request: GuestsBookRequest): Promise<FetchBlobResponse> => {
+    downloadGuestsBook: async (downloadPath: string, type: GuestBookType, request: GuestsBookRequest): Promise<PdfResult> => {
         const url = buildGuestsBookUrl(type, request);
         const description = 'Downloading Guests Book PDF';
         

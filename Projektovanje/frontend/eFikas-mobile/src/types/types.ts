@@ -125,6 +125,10 @@ export interface CashRegister {
 }
 
 // ================ Book DTOs ===================
+export type PdfResult = {
+  uri: string;
+};
+
 export interface DateRangeDTO {
   from: string | null;
   to: string | null;

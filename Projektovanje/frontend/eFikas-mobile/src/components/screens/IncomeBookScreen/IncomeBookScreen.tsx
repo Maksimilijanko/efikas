@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
 import { useTranslation } from "react-i18next";
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { BasicButton } from '../../atoms/BasicButton/BasicButton';
-import LabeledTextField from '../../molecules/LabeledTextField/LabeledTextField';
-import { VStack } from '../../ui/vstack';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Platform } from 'react-native';
 
 import { bookService } from '@/src/api/services/bookService';
 import DocumentItem, { DocumentType } from "@/src/components/molecules/DocumentItem/DocumentItem";
 import DocumentsDownloadTemplate from "@/src/components/templates/DocumentsDownloadTemplate/DocumentsDownloadTemplate";
-import { toastService } from '@/src/services/toastService';
-import { BookkeepingMode, BookPath, DateRangeDTO, DownloadIncomeBookRequest } from '@/src/types/types';
 import { dateService } from '@/src/services/dateService';
-import { RNBlobUtilService } from '@/src/services/RNBlobUtilService';
+import { fileService } from '@/src/services/fileService';
+import { toastService } from '@/src/services/toastService';
+import { BookPath, DateRangeDTO, DownloadIncomeBookRequest } from '@/src/types/types';
 import { PATH_CONSTANTS } from '@/src/util/pathConstants';
 import { FetchBlobResponse } from 'react-native-blob-util';
 
@@ -45,10 +40,10 @@ const IncomeBookScreen: React.FC = () => {
 	}));
 
     const loadBooks = async () => {
-        const path = RNBlobUtilService.getPdfDownloadPath(PATH_CONSTANTS.incomeBookPath);
+        const path = fileService.getPdfDownloadPath(PATH_CONSTANTS.incomeBookPath);
         try {
             setLoadingBooks(true);
-            const result = await RNBlobUtilService.loadDownloadedBooks(path);
+            const result = await fileService.loadDownloadedBooks(path);
             setBookPaths(result);
         } catch (err) {
             console.log(err);
@@ -91,7 +86,7 @@ const IncomeBookScreen: React.FC = () => {
             const resp = await action();
             const path = resp.path();
 
-            if (RNBlobUtilService.fileExists(path)) {
+            if (fileService.fileExists(path)) {
                 const realPath =
                     Platform.OS === 'android' ? `file://${path}` : path;
                 console.log("HELLO: ", realPath);
@@ -159,9 +154,9 @@ const IncomeBookScreen: React.FC = () => {
 
         const request = buildRequest(dateFormVisible, period);
 
-        const dir = RNBlobUtilService.getPdfDownloadPath(PATH_CONSTANTS.incomeBookPath);
-        if (!RNBlobUtilService.fileExists(dir)) {
-            RNBlobUtilService.createDirectory(dir);
+        const dir = fileService.getPdfDownloadPath(PATH_CONSTANTS.incomeBookPath);
+        if (!fileService.fileExists(dir)) {
+            fileService.createDirectory(dir);
         }
 
         const title = `${t('books.documents.incomeBookDownloadTitle')}_${Date.now()}.pdf`;
