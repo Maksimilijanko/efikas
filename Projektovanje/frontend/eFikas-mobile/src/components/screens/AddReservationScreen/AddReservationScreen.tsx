@@ -56,8 +56,8 @@ const AddReservationScreen = () => {
     
     return apartmentsData.map((apt) => ({
       id: String(apt.id),
-      name: apt.title,
-      address: apt.subtitle,
+      name: apt.name,
+      address: apt.address,
       imageUrl: apt.imageUrl,
     }));
   }, [apartmentsData]);
