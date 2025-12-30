@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { View, Image, Pressable } from "react-native";
-import { HStack } from "@/components/ui/hstack";
+import { HStack } from "@/src/components/ui/hstack";
 import { Label } from "@/src/components/atoms/Label/Label";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { useStyles } from "@/src/hooks/useStyles";
