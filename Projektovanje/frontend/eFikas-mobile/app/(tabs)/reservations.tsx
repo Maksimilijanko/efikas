@@ -1,9 +1,7 @@
-import { Text } from "react-native";
+import ReservationsScreen from '@/src/components/screens/ReservationsScreen/ReservationsScreen';
 
 export default function Reservations() {
-    return(
-        <>
-            <Text>Stranica za rezervacije</Text>
-        </>
+    return (
+        <ReservationsScreen />
     );
 }

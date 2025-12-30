@@ -340,6 +340,11 @@
         "navigation": {
             "reservationDetailsTitle": "Reservation Details"
         },
+        "segments": {
+            "finished": "Finished",
+            "active": "Active",
+            "upcoming": "Upcoming"
+        },
         "toastMessages": {
             "genericError": "An error occurred.",
             "fetchErrorTitle": "Failed to Load Reservations",

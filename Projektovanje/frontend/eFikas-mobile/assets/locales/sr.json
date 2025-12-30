@@ -374,6 +374,11 @@
         "navigation": {
             "reservationDetailsTitle": "Detalji rezervacije"
         },
+        "segments": {
+            "finished": "Završene",
+            "active": "Aktivne",
+            "upcoming": "Predstojeće"
+        },
         "toastMessages": {
             "genericError": "Došlo je do greške.",
             "fetchErrorTitle": "Greška pri učitavanju rezervacija",
