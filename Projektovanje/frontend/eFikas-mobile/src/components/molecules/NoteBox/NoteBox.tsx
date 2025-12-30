@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Textarea, TextareaInput } from "@/components/ui/textarea";
+import { Textarea, TextareaInput } from "@/src/components/ui/textarea";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import styles from "./index.styles";
 import { useTheme } from "@/src/providers/ThemeProvider";

@@ -10,7 +10,7 @@ import {
 
 import { Label } from "@/src/components/atoms/Label/Label";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
-import { HStack } from "@/components/ui/hstack";
+import { HStack } from "@/src/components/ui/hstack";
 import { Colors } from "@/src/styles/style";
 
 import styles from "./index.styles";
