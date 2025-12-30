@@ -338,7 +338,8 @@
     },
     "reservations": {
         "navigation": {
-            "reservationDetailsTitle": "Reservation Details"
+            "reservationDetailsTitle": "Reservation Details",
+            "addReservationTitle": "Add Reservation"
         },
         "segments": {
             "finished": "Finished",
