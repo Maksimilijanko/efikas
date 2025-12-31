@@ -144,7 +144,7 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 	)
 
 	const datePickersContent = (
-		<VStack>
+		<HStack style={styles.listWrapper}>
 			{showFromDatePicker &&
 				<DateTimePicker
 					testID="dateTimePickerFrom"
@@ -163,12 +163,16 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 					onChange={onToDateChange}
 				/>
 			}
-		</VStack>
+		</HStack>
 	);
 
 	return (
 		<View style={styles.root}>
 			{bookkeepingMode === 'custom' && periodForm}
+
+			<View>
+				{datePickersContent}
+			</View>
 
 			{/* Buttons */}
 			<View style={styles.listWrapper}>
@@ -183,9 +187,6 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 				))}
 			</View>
 
-			<View>
-				{datePickersContent}
-			</View>
 
 			{/* Documents List Section */}
 			<DownloadedBooksList bookPaths={bookPaths} loading={isLoadingBooks} />

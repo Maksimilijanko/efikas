@@ -22,7 +22,7 @@ export default function BookkeepingSwitcher({ onModeChange, initialMode = 'yearl
   const selectedOption = bookkeepingMode === 'yearly' ? 'Godišnja' : 'Prilagođena';
 
   return (
-    <HStack className="w-full justify-center items-center">
+    <HStack>
       <SegmentedControl
         options={['Godišnja', 'Prilagođena']}
         selectedOption={selectedOption}

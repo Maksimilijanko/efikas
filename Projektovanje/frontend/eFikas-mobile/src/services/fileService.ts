@@ -1,50 +1,57 @@
-import { Platform } from "react-native";
-import ReactNativeBlobUtil from "react-native-blob-util";
-import { BookPath } from "../types/types";
 import { Directory, File, Paths } from "expo-file-system";
+import { BookPath } from "../types/types";
 
 
-const BASE_PATH_ANDROID = ReactNativeBlobUtil.fs.dirs.DownloadDir;
-const BASE_PATH_IOS = ReactNativeBlobUtil.fs.dirs.DocumentDir;
+export const BASE_PATH = Paths.document;
 
 export const fileService = {
-    getPdfDownloadPath: (filename: string): string => {
-        if (Platform.OS === 'android') {
-            return `${BASE_PATH_ANDROID}/${filename}`;
-        }
-
-        // iOS
-        return `${BASE_PATH_IOS}/${filename}`;
+    getPdfDirectory: (folder: string) => {
+        return new Directory(BASE_PATH, folder);
     },
 
-    fileExists: (path: string): boolean => {
-        const file = new File(Paths.cache, path, "file.txt");
-        return file.exists;
+    fileExists: async (uri: string): Promise<boolean> => {
+        const file = new File(uri);
+        return await file.exists;
     },
 
     createDirectory: async (path: string) => {
         const dir = new Directory(path);
         await dir.create({ intermediates: true });
     },
+    
+    deleteDirectory: (dir: Directory) => {
+        if(dir.exists)
+            dir.delete();
+    },
+    
+    ensureDirectory: async (dir: Directory) => {
+        if(!dir.exists)
+            await dir.create({ intermediates: true });
+    },
 
-    lsDir: async (path: string): Promise<string[]> => {
-        return await ReactNativeBlobUtil.fs.ls(path);
+    lsDir: (path: string): (Directory | File)[] => {
+        return new Directory(path).list();
     },
 
     loadDownloadedBooks: async (path: string): Promise<BookPath[]> => {
-        if (Platform.OS !== 'android') return [];
-
-        if(!ReactNativeBlobUtil.fs.exists(path)) {
+        if(!new Directory(path).exists) {
             return [];
         }
 
-        const files = await fileService.lsDir(path);
+        const entries = fileService.lsDir(path); // plain objects
+        console.log("ENTR: ", entries)
 
-        return files
-            .filter(name => name.toLowerCase().endsWith('.pdf'))
-            .map(name => ({
-                displayName: name.replace('.pdf', ''),
-                path: `file://${path}/${name}`,
+        return entries
+            .filter(entry =>
+                entry.exists &&
+                entry.uri.toLowerCase().endsWith('.pdf')
+            )
+            .map(entry => ({
+                displayName: entry.uri
+                    .split('/')
+                    .pop()!
+                    .replace('.pdf', ''),
+                path: entry.uri,
             }));
     }
 }

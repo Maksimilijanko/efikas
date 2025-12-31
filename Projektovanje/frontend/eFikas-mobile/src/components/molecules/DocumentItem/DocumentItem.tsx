@@ -61,7 +61,7 @@ const DocumentItem: React.FC<DocumentItemProps> = ({ title, documentType, onPres
                         <IconButton 
                             iconName="Download"
                             onPress={(e) => {
-                                e.stopPropagation();   // 🔥 THIS PREVENTS ROW PRESS
+                                e.stopPropagation();
                                 onDownloadPress();
                             }}
                             size={24}

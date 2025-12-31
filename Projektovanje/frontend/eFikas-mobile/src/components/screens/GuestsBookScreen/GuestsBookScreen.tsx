@@ -7,11 +7,9 @@ import { toastService } from '@/src/services/toastService';
 import { GuestBookType } from '@/src/types/enums';
 import { BookPath, DateRangeDTO, GuestsBookRequest, PdfResult } from '@/src/types/types';
 import { PATH_CONSTANTS } from '@/src/util/pathConstants';
+import * as Sharing from 'expo-sharing';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { Platform } from 'react-native';
-import { FetchBlobResponse } from 'react-native-blob-util';
-import * as Sharing from 'expo-sharing';
 
 interface RawDocumentData {
 	id: string;
@@ -47,10 +45,12 @@ const GuestsBookScreen: React.FC = () => {
 	}));
 
 	const loadBooks = async () => {
-		const path = fileService.getPdfDownloadPath(PATH_CONSTANTS.guestsBookPath);
+		const dir = fileService.getPdfDirectory(PATH_CONSTANTS.guestsBookPath);
+
 		try {
 			setLoadingBooks(true);
-			const result = await fileService.loadDownloadedBooks(path);
+
+			const result = await fileService.loadDownloadedBooks(dir.uri);
 			setBookPaths(result);
 		} catch (err) {
 			console.log(err);
@@ -81,9 +81,12 @@ const GuestsBookScreen: React.FC = () => {
 		return new Date(period.from) > new Date(period.to);
 	}
 
+
 	const executePdfAction = async (
 		action: () => Promise<PdfResult>,
-		onSuccess?: (path: string) => Promise<void> | void
+		onSuccess?: (path: string) => Promise<void> | void,
+		title?: string,
+		isStreaming = true,
 	) => {
 		try {
 			setIsDownloading(true);
@@ -98,46 +101,34 @@ const GuestsBookScreen: React.FC = () => {
 				t('books.documents.downloadSuccessMessage'),
 				t('books.documents.downloadSuccessDescription')
 			);
-
-			// Share / open PDF
-			if (await Sharing.isAvailableAsync()) {
-				await Sharing.shareAsync(uri);
+			
+			if(!isStreaming) {
+				// ✅ Let user manually save / export
+				// if (await Sharing.isAvailableAsync()) {
+				// 	const sharePdfTitle = t('books.documents.sharingSavePdfTitle', {
+				// 		title: title,
+				// 	});
+				// 	await Sharing.shareAsync(uri, {
+				// 		mimeType: 'application/pdf',
+				// 		dialogTitle: sharePdfTitle,
+				// 	});
+				// }
 			}
+			
 
 			setPdfPath(uri);
 			await onSuccess?.(uri);
-			// else {
-			// 	// Try to read backend error message
-			// 	let errorMessage = "Genericka greska";
-
-			// 	try {
-			// 		const text = await resp.text(); // or res.json()
-			// 		if (text) {
-			// 			errorMessage = text;
-			// 		}
-			// 	} catch {
-			// 		// ignore parsing errors
-			// 	}
-
-			// 	console.log(errorMessage);
-			// 	throw new Error(errorMessage);
-			// }
-		} catch (err: any) {
-			if (err.message?.includes('Status Code = 16')) {
-				toastService.error(
-					t('books.documents.invalidPeriodMessage'),
-					t('books.documents.fromAfterToDescription')
-				);
-			} else {
-				toastService.error(
-					t('books.documents.downloadErrorTitle'), 
-					t('books.documents.downloadErrorMessage')
-				);
-			}
+		} catch (err) {
+			console.log("ERROR: ", err.message);
+			toastService.error(
+				t('books.documents.downloadErrorTitle'),
+				t('books.documents.downloadErrorMessage')
+			);
 		} finally {
 			setIsDownloading(false);
 		}
 	};
+
 
 	const streamPDF = async (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => {
 		if (isInvalidPeriod(period)) {
@@ -149,14 +140,18 @@ const GuestsBookScreen: React.FC = () => {
 		}
 
 		const request = buildRequest(dateFormVisible, period);
+		console.log("REQ: ", request)
 
 		await executePdfAction(() =>
-			bookService.streamGuestsBook(type, request)
+			bookService.streamGuestsBook(type, request),
 		);
 	}
 
-
-	const downloadPDF = async (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => {
+	const downloadPDF = async (
+		type: GuestBookType,
+		dateFormVisible: boolean,
+		period: DateRangeDTO
+	) => {
 		if (isInvalidPeriod(period)) {
 			toastService.error(
 				t('books.documents.invalidPeriodMessage'),
@@ -167,23 +162,26 @@ const GuestsBookScreen: React.FC = () => {
 
 		const request = buildRequest(dateFormVisible, period);
 
-		const dir = fileService.getPdfDownloadPath(PATH_CONSTANTS.guestsBookPath);
-		if (!fileService.fileExists(dir)) {
-			fileService.createDirectory(dir);
-		}
+		const dir = fileService.getPdfDirectory(PATH_CONSTANTS.guestsBookPath);
+		console.log("DIR INFO: ", dir.info());
+		console.log("DIR URI: ", dir.uri);
+		await fileService.ensureDirectory(dir);
 
 		const title =
 			type === GuestBookType.DOMESTIC_GUESTS
-				? t('books.documents.domesticGuestsBookDownloadTitle')
-				: t('books.documents.foreignGuestsBookDownloadTitle');
-
-		const path = `${dir}/${title}_${Date.now()}.pdf`;
+			? t('books.documents.domesticGuestsBookDownloadTitle')
+			: t('books.documents.foreignGuestsBookDownloadTitle');
+		const fileName = `${title}_${Date.now()}.pdf`;
+		const filePath = `${dir.uri}${fileName}`;
 
 		await executePdfAction(
-			() => bookService.downloadGuestsBook(path, type, request),
-			loadBooks
+			() => bookService.downloadGuestsBook(filePath, type, request),
+			loadBooks,
+			fileName,
+			false,
 		);
 	};
+
 
 	return (
 		<DocumentsDownloadTemplate
