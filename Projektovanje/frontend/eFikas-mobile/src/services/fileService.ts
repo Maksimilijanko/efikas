@@ -39,7 +39,6 @@ export const fileService = {
         }
 
         const entries = fileService.lsDir(path); // plain objects
-        console.log("ENTR: ", entries)
 
         return entries
             .filter(entry =>

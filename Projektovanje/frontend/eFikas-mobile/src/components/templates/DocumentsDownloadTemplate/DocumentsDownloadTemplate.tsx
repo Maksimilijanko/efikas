@@ -144,7 +144,7 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 	)
 
 	const datePickersContent = (
-		<HStack style={styles.listWrapper}>
+		<HStack>
 			{showFromDatePicker &&
 				<DateTimePicker
 					testID="dateTimePickerFrom"

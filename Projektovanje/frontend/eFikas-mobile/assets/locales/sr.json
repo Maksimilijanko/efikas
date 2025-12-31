@@ -308,7 +308,7 @@
             "customDateErrorDescription": "Morate izabrati datum u slučaju prilagođenog rada",
             "invalidPeriodMessage": "Pogrešan period",
             "fromAfterToDescription": "Pomiješali ste vrijednosti datuma.",
-            "sharingSavePdfTitle": "Sačuvaj {{title}}"
+            "sharingSavePdfTitle": "Podijelite {{title}}"
         },
         "bookTitles": {
             "ExpenseBook": "Knjiga rashoda",

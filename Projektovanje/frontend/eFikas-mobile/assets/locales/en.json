@@ -285,7 +285,7 @@
             "customDateErrorDescription": "You must pick a date in 'Custom' mode",
             "invalidPeriodMessage": "Wrong period",
             "fromAfterToDescription": "'From' date can not come before 'To' date.",
-            "sharingSavePdfTitle": "Save {{title}}"
+            "sharingSavePdfTitle": "Share {{title}}"
         },
         "bookTitles": {
             "ExpenseBook": "Expense Book",

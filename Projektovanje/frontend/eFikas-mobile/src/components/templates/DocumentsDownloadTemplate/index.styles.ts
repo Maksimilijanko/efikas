@@ -29,7 +29,7 @@ const getStyles = (Colors: any) =>
     },
     listWrapper: {
       width: "90%",
-      gap: 10
+      gap: 10,
     },
     itemWrapper: {
       marginBottom: 14,
@@ -65,10 +65,11 @@ const getStyles = (Colors: any) =>
 
     periodForm: {
       width: '100%',
-      paddingLeft: 10,
-      paddingRight: 10,
+      paddingLeft: 20,
+      paddingRight: 20,
       marginBottom: 10,
-      gap: 10
+      gap: 10,
+
     }
   });
 
