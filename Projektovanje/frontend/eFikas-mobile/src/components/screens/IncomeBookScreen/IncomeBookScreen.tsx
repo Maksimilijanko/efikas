@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Platform } from 'react-native';
 import { useTranslation } from "react-i18next";
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { BasicButton } from '../../atoms/BasicButton/BasicButton';
-import LabeledTextField from '../../molecules/LabeledTextField/LabeledTextField';
-import { VStack } from '../../ui/vstack';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Platform } from 'react-native';
 
 import { bookService } from '@/src/api/services/bookService';
 import DocumentItem, { DocumentType } from "@/src/components/molecules/DocumentItem/DocumentItem";
 import DocumentsDownloadTemplate from "@/src/components/templates/DocumentsDownloadTemplate/DocumentsDownloadTemplate";
-import { toastService } from '@/src/services/toastService';
-import { BookkeepingMode, BookPath, DateRangeDTO, DownloadIncomeBookRequest } from '@/src/types/types';
 import { dateService } from '@/src/services/dateService';
-import { RNBlobUtilService } from '@/src/services/RNBlobUtilService';
+import { fileService } from '@/src/services/fileService';
+import { toastService } from '@/src/services/toastService';
+import { BookPath, DateRangeDTO, DownloadIncomeBookRequest, PdfResult } from '@/src/types/types';
 import { PATH_CONSTANTS } from '@/src/util/pathConstants';
+import { FetchBlobResponse } from 'react-native-blob-util';
+import { useDownload } from '@/src/hooks/useDownload';
 
 interface RawDocumentData {
     id: string;
@@ -32,20 +29,28 @@ const rawIncomeBookData: RawDocumentData[] = [
 
 const IncomeBookScreen: React.FC = () => {
     const { t } = useTranslation();
-    const [pdfPath, setPdfPath] = useState<string | null>(null);
-    const [isDownloading, setIsDownloading] = useState(false);
+    const {
+        streamIncomeBook,
+        downloadIncomeBook,
+        isDownloading,
+        pdfPath,
+    } = useDownload();
+
     const [bookPaths, setBookPaths] = useState<BookPath[]>([]);
     const [loadingBooks, setLoadingBooks] = useState(true);
 
     const documentsDataForTemplate = rawIncomeBookData.map(doc => ({
-        id: doc.id,
-        title: t(doc.titleKey),
-    }));
+		id: doc.id,
+		title: t(doc.titleKey),
+		documentType: doc.documentType,
+	}));
+
 
     const loadBooks = async () => {
+        const dir = fileService.getPdfDirectory(PATH_CONSTANTS.incomeBookPath);
         try {
             setLoadingBooks(true);
-            const result = await RNBlobUtilService.loadDownloadedBooks(PATH_CONSTANTS.incomeBookPath);
+            const result = await fileService.loadDownloadedBooks(dir.uri);
             setBookPaths(result);
         } catch (err) {
             console.log(err);
@@ -56,89 +61,12 @@ const IncomeBookScreen: React.FC = () => {
 
     useEffect(() => {
         loadBooks();
-    }, []);
-
-
-    const buildRequest = (dateFormVisible: boolean, period: DateRangeDTO): DownloadIncomeBookRequest => ({
-        period: {
-            from: dateFormVisible
-            ? period.from
-            : `${new Date().getFullYear()}-01-01`,
-            to: dateFormVisible
-            ? period.to
-            : dateService.formatBackendDate(new Date()),
-        },
-        taxpayerId: 1,
-        storeId: 0,
-    });
-
+    }, [isDownloading]);
     
-    const downloadPDF = async (dateFormVisible: boolean, period: DateRangeDTO) => {
-        if(dateFormVisible && (period.from == null || period.to == null )) {
-            toastService.error(t('books.documents.customDateErrorMessage'), t('books.documents.customDateErrorDescription'));
-            
-            return;
-        }
-
-        const request = buildRequest(dateFormVisible, period);
-
-        try {
-            setIsDownloading(true);
-
-            const dir = PATH_CONSTANTS.incomeBookPath;
-            if(!RNBlobUtilService.fileExists(dir)) {
-                RNBlobUtilService.createDirectory(dir);
-            }
-            const downloadPath = `${dir}/${t('books.documents.incomeBookDownloadTitle')}_${Date.now()}.pdf`;
-            const resp = await bookService.downloadIncomeBook(downloadPath, request);
-
-            // If we got here, the file exists
-            const path = resp.path();
-            // ReactNativeBlobUtil doesnt give HTTP status, only state of downloaded file (exists or not)
-            if(RNBlobUtilService.fileExists(path)) {
-                const realPath = Platform.OS === 'android' ? 'file://' + resp.path() : '' + resp.path();
-                toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
-
-                // Optional - if we want to open it immediately in the viewer:
-                setPdfPath(`${realPath}`);
-                await loadBooks();
-            }
-            else {
-                // Try to read backend error message
-                let errorMessage = "Genericka greska";
-
-                try {
-                    const text = await resp.text(); // or res.json()
-                    if (text) {
-                        errorMessage = text;
-                    }
-                } catch {
-                    // ignore parsing errors
-                }
-
-                throw new Error(errorMessage);
-            }
-            
-        } catch (err: any) {
-            console.log('Download failed: ', err.message);
-
-            if (err.message.includes('Status Code = 16')) {
-                setPdfPath(null);
-                toastService.error(
-                    t('books.documents.invalidPeriodMessage'),
-                    t('books.documents.fromAfterToDescription')
-                );
-            } else {
-                toastService.error("1", "2");
-            }
-        } finally {
-            setIsDownloading(false);
-        }
-    };
-
     return (
         <DocumentsDownloadTemplate
-            downloadPDF={downloadPDF}
+            streamPDF={streamIncomeBook}
+            downloadPDF={downloadIncomeBook}
             pdfPath={pdfPath}
             isDownloading={isDownloading}
             bookPaths={bookPaths}
@@ -146,20 +74,13 @@ const IncomeBookScreen: React.FC = () => {
 
             documentsData={documentsDataForTemplate}
             documentItemComponent={(props) => {
-                const originalDoc = rawIncomeBookData.find(
-                    doc => t(doc.titleKey) === props.title
-                );
-
-                const docType: DocumentType = originalDoc?.documentType || 'IncomeBook';
-
                 return (
-                    <VStack>
-                        <DocumentItem
-                            title={props.title}
-                            documentType={docType}
-                        />
-                        
-                    </VStack>
+                    <DocumentItem
+						title={props.title}
+						documentType={props.documentType}
+						onPress={props.onPress}
+						onDownloadPress={props.onDownloadPress}
+					/>
                 );
             }}
         />

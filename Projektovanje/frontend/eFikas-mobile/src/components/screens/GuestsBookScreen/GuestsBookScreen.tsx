@@ -1,17 +1,16 @@
 import { bookService } from '@/src/api/services/bookService';
 import DocumentItem, { DocumentType } from "@/src/components/molecules/DocumentItem/DocumentItem";
 import DocumentsDownloadTemplate from "@/src/components/templates/DocumentsDownloadTemplate/DocumentsDownloadTemplate";
+import { useDownload } from '@/src/hooks/useDownload';
 import { dateService } from '@/src/services/dateService';
-import { RNBlobUtilService } from '@/src/services/RNBlobUtilService';
+import { fileService } from '@/src/services/fileService';
 import { toastService } from '@/src/services/toastService';
 import { GuestBookType } from '@/src/types/enums';
-import { BookkeepingMode, BookPath, DateRangeDTO, GuestsBookRequest } from '@/src/types/types';
+import { BookPath, DateRangeDTO, GuestsBookRequest, PdfResult } from '@/src/types/types';
 import { PATH_CONSTANTS } from '@/src/util/pathConstants';
+import * as Sharing from 'expo-sharing';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { Animated, Platform } from 'react-native';
-import { VStack } from '../../ui/vstack';
-
 
 interface RawDocumentData {
 	id: string;
@@ -34,21 +33,29 @@ const rawGuestsBookData: RawDocumentData[] = [
 
 const GuestsBookScreen: React.FC = () => {
 	const { t } = useTranslation();
+	const {
+		streamGuestsBook,
+		downloadGuestsBook,
+		isDownloading,
+		pdfPath,
+	} = useDownload();
 
-	const [pdfPath, setPdfPath] = useState<string | null>(null);
-	const [isDownloading, setIsDownloading] = useState(false);
 	const [bookPaths, setBookPaths] = useState<BookPath[]>([]);
 	const [loadingBooks, setLoadingBooks] = useState(true);
 
 	const documentsDataForTemplate = rawGuestsBookData.map(doc => ({
 		id: doc.id,
 		title: t(doc.titleKey),
+		documentType: doc.documentType,
 	}));
 
 	const loadBooks = async () => {
+		const dir = fileService.getPdfDirectory(PATH_CONSTANTS.guestsBookPath);
+
 		try {
 			setLoadingBooks(true);
-			const result = await RNBlobUtilService.loadDownloadedBooks(PATH_CONSTANTS.guestsBookPath);
+
+			const result = await fileService.loadDownloadedBooks(dir.uri);
 			setBookPaths(result);
 		} catch (err) {
 			console.log(err);
@@ -59,91 +66,13 @@ const GuestsBookScreen: React.FC = () => {
 
 	useEffect(() => {
 		loadBooks();
-	}, []);
+	}, [isDownloading]);
 
-	const buildRequest = (dateFormVisible: boolean, period: DateRangeDTO): GuestsBookRequest => ({
-		period: {
-			from: dateFormVisible
-			? period.from
-			: `${new Date().getFullYear()}-01-01`,
-			to: dateFormVisible
-			? period.to
-			: dateService.formatBackendDate(new Date()),
-		},
-		active: false,
-	});
-
-
-	const downloadPDF = async (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => {
-		if (dateFormVisible && (period.from == null || period.to == null)) {
-			toastService.error(t('books.documents.customDateErrorMessage'), t('books.documents.customDateErrorDescription'));
-			return;
-		}
-
-		const request = buildRequest(dateFormVisible, period);
-
-		try {
-			setIsDownloading(true);
-
-			const dir = PATH_CONSTANTS.guestsBookPath;
-			if (!RNBlobUtilService.fileExists(dir)) {
-				RNBlobUtilService.createDirectory(dir);
-			}
-
-			const title = type === GuestBookType.DOMESTIC_GUESTS ?
-				t('books.documents.domesticGuestsBookDownloadTitle')
-				:
-				t('books.documents.foreignGuestsBookDownloadTitle')
-			const downloadPath = `${dir}/${title}_${Date.now()}.pdf`;
-
-			const resp = await bookService.downloadGuestsBook(downloadPath, type, request);
-
-			// If we got here, the file exists
-			const path = resp.path();
-			// ReactNativeBlobUtil doesnt give HTTP status, only state of downloaded file (exists or not)
-			if (RNBlobUtilService.fileExists(path)) {
-				const realPath = Platform.OS === 'android' ? 'file://' + resp.path() : '' + resp.path();
-				toastService.success(t('books.documents.downloadSuccessMessage'), t('books.documents.downloadSuccessDescription'));
-
-				// Optional - if we want to open it immediately in the viewer:
-				setPdfPath(`${realPath}`);
-				await loadBooks();
-			}
-			else {
-				// Try to read backend error message
-				let errorMessage = "Genericka greska";
-
-				try {
-					const text = await resp.text(); // or res.json()
-					if (text) {
-						errorMessage = text;
-					}
-				} catch {
-					// ignore parsing errors
-				}
-
-				throw new Error(errorMessage);
-			}
-
-		} catch (err: any) {
-			console.log('Download failed: ', err.message);
-
-			if (err.message.includes('Status Code = 16')) {
-				toastService.error(
-					t('books.documents.invalidPeriodMessage'),
-					t('books.documents.fromAfterToDescription')
-				);
-			} else {
-				toastService.error("1", "2");
-			}
-		} finally {
-			setIsDownloading(false);
-		}
-	};
 
 	return (
 		<DocumentsDownloadTemplate
-			downloadPDFGuests={downloadPDF}
+			streamPDFGuests={streamGuestsBook}
+			downloadPDFGuests={downloadGuestsBook}
 			areGuests={true}
 			pdfPath={pdfPath}
 			isDownloading={isDownloading}
@@ -152,19 +81,13 @@ const GuestsBookScreen: React.FC = () => {
 			isLoadingBooks={loadingBooks}
 
 			documentItemComponent={(props) => {
-				const originalDoc = rawGuestsBookData.find(
-					doc => t(doc.titleKey) === props.title
-				);
-				// Postavljanje documentType s fallbackom na 'DomesticGuestsBook'
-				const docType: DocumentType = originalDoc?.documentType || 'DomesticGuestsBook';
-
 				return (
-					<VStack>
-						<DocumentItem
-							title={props.title}
-							documentType={docType} 
-						/>
-                    </VStack>
+					<DocumentItem
+						title={props.title}
+						documentType={props.documentType}
+						onPress={props.onPress}
+						onDownloadPress={props.onDownloadPress}
+					/>
 				);
 			}}
 		/>
