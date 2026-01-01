@@ -49,10 +49,7 @@ public class ReservationService {
                                                     MultipartFile documentPicture
     ) {
 
-        System.out.println("TEST 1: " + reservationDTO + "\n");
-
-        Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
-        System.out.println("TEST 2: " + reservationDTO + "\n");
+        Reservation reservation = persistGuestIfNonExistant(reservationDTO);
 
         ReservationType reservationType = reservationTypeRepository
                 .findReservationTypeByTypeName(reservationDTO.getReservationType())
@@ -164,4 +161,16 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
+    private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO) {
+        GuestsBook guest = guestsBookRepository
+                .findByCitizenId(reservationDTO.getGuest().getCitizenId())
+                .orElseGet(() -> guestsBookRepository.save(
+                        modelMapper.map(reservationDTO.getGuest(), GuestsBook.class)
+                ));
+
+        Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
+        reservation.setGuest(guest);
+
+        return reservation;
+    }
 }
