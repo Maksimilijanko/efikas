@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.exceptions.S3UploadException;
 import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
+import org.unibl.etf.efikas.models.dto.GuestDTO;
 import org.unibl.etf.efikas.models.dto.ReservationDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
@@ -48,11 +49,7 @@ public class ReservationService {
                                                     ReservationDTO reservationDTO,
                                                     MultipartFile documentPicture
     ) {
-
-        System.out.println("TEST 1: " + reservationDTO + "\n");
-
-        Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
-        System.out.println("TEST 2: " + reservationDTO + "\n");
+        Reservation reservation = persistGuestIfNonExistant(reservationDTO);
 
         ReservationType reservationType = reservationTypeRepository
                 .findReservationTypeByTypeName(reservationDTO.getReservationType())
@@ -62,7 +59,6 @@ public class ReservationService {
         Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
         reservation.setApartment(apartment);
-
 
 
         FileUploadResponse fileUploadResponse = null;
@@ -83,6 +79,7 @@ public class ReservationService {
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
     public List<ReservationResponse> getAllReservations(Integer apartmentId, Authentication authentication) {
         List<Reservation> reservations = reservationRepository.findReservationByApartmentApartmentId(apartmentId);
+        System.out.println("Reservations: " + reservations);
 
         return reservations.stream()
                 .map((element) -> modelMapper.map(element, ReservationResponse.class)).collect(Collectors.toList());
@@ -162,6 +159,19 @@ public class ReservationService {
         return reservations.stream()
                 .map((element) -> modelMapper.map(element, ReservationResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO) {
+        GuestsBook guest = guestsBookRepository
+                .findByCitizenId(reservationDTO.getGuest().getCitizenId())
+                .orElseGet(() -> guestsBookRepository.save(
+                        modelMapper.map(reservationDTO.getGuest(), GuestsBook.class)
+                ));
+
+        Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
+        reservation.setGuest(guest);
+
+        return reservation;
     }
 
 }
