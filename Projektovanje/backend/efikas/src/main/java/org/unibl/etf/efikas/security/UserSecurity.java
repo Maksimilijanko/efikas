@@ -30,18 +30,16 @@ public class UserSecurity {
                 .orElse(false);
     }
 
-    public boolean isReservationOwner(Authentication authentication, Integer reservationId) {
+    public boolean isReservationOwner(Authentication authentication, Integer apartmentId) {
         String email = authentication.getName();
 
-        // We need to check here for existence, so we can get 404 back instead of 403.
-        Reservation reservation = reservationRepository.findById(reservationId)
+        Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
-        return reservationRepository.findById(reservationId)
-                .map(Reservation::getApartment)
-                .map(Apartment::getUser)
-                .map(user -> user.getEmail().equals(email))
-                .orElse(false);
+        return apartment
+                .getUser()
+                .getEmail()
+                .equals(email);
     }
 
     public boolean isCashRegisterOwner(Authentication authentication, Integer cashRegisterId) {
