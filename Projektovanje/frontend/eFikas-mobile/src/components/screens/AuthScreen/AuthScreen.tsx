@@ -12,6 +12,7 @@ import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 import AuthSwitcher from "../../molecules/AuthSwitcher/AuthSwitcher";
 import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
+import { register } from "module";
 
 
 // =================================================================
@@ -103,7 +104,7 @@ const RegisterForm = ({
     isLoading
 }: {
     registerData: RegisterRequest;
-    errorsRegister: { name: boolean; surname: boolean; email: boolean; password: boolean; repeatPassword: boolean; jib: boolean };
+    errorsRegister: { name: boolean; surname: boolean; email: boolean; password: boolean; repeatPassword: boolean; jib: boolean, address: boolean };
     onRegisterDataChange: (field: keyof RegisterRequest, value: string) => void;
     onErrorsRegisterChange: (field: keyof typeof errorsRegister, value: boolean) => void;
     onRegisterPress: () => void;
@@ -119,7 +120,8 @@ const RegisterForm = ({
             email: registerData.email.length < 6,
             password: registerData.password.length < 8,
             repeatPassword: registerData.repeatPassword !== registerData.password,
-            jib: registerData.jib.length !== 13 || !/^\d+$/.test(registerData.jib)
+            jib: registerData.jib.length !== 13 || !/^\d+$/.test(registerData.jib),
+            address: registerData.address.length < 10,
         };
 
         onErrorsRegisterChange('all', newErrors); // handle this in parent
@@ -202,10 +204,21 @@ const RegisterForm = ({
                 errorText={t('auth.errors.jibLengthError')}
                 isInvalid={errorsRegister.jib}
                 onChangeText={(value) => {
-                    // Allow only numbers and limit to 12 characters
+                    // Allow only numbers and limit to 13 characters
                     const numericValue = value.replace(/[^0-9]/g, '');
                     onRegisterDataChange('jib', numericValue);
                     onErrorsRegisterChange('jib', false);
+                }}
+            />
+
+            <FormField
+                label={t('auth.register.address')}
+                placeholder={t('auth.register.addressPlaceholder')}
+                iconName="House"
+                isInvalid={errorsRegister.address}
+                onChangeText={(value) => {
+                    onRegisterDataChange('address', value);
+                    onErrorsRegisterChange('address', false);
                 }}
             />
 
@@ -247,6 +260,7 @@ export default function AuthScreen() {
         password: "",
         repeatPassword: "",
         jib: "",
+        address: ""
     });
     const [errorsRegister, setErrorsRegister] = useState({
         name: false,
@@ -255,6 +269,7 @@ export default function AuthScreen() {
         password: false,
         repeatPassword: false,
         jib: false,
+        address: false,
     });
 
     // TODO: wait for backend

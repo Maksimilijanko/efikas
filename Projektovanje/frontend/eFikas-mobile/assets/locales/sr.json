@@ -26,6 +26,8 @@
             "password": "Lozinka",
             "repeatPassword": "Ponovite lozinku",
             "registerButton": "Registrujte se",
+            "address": "Adresa",
+            "addressPlaceholder": "Ulica 123",
             "toastMessages": {
                 "successTitle": "Uspješno ste se registrovali!",
                 "successMsg": "Pokušajte se prijaviti sa novim nalogom.",
