@@ -16,6 +16,7 @@ export interface RegisterRequest {
     password: string;
     repeatPassword: string;
     jib: string;
+    address: string;
 }
 
 export interface AuthenticationResponse {
