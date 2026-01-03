@@ -2,6 +2,7 @@ import { AuthenticationResponse, LoginRequest, RegisterRequest } from "@/src/typ
 import axiosInstance from "../axiosInstance";
 import { API_URLS } from "@/src/util/apiConstants";
 import { AxiosResponse } from "axios";
+import { register } from "module";
 
 export const authService = {
 
@@ -17,6 +18,8 @@ export const authService = {
   },
 
   register: async (registerRequest: RegisterRequest): Promise<AxiosResponse> => {
+    console.log("REG REQ: ", registerRequest);
+
     const response = await axiosInstance.post<string>(API_URLS.auth.register, registerRequest);
     return response;
   },

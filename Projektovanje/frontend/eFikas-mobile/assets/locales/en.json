@@ -7,9 +7,13 @@
     "auth": {
         "orSeparator": "or",
         "login": {
+            "firstName": "First name",
+            "lastName": "Last name",
             "password": "Password",
             "loginButton": "Sign in",
             "forgotPassword": "Forgot password?",
+            "address": "Address",
+            "addressPlaceholder": "Street 123",
             "toastMessages": {
                 "successTitle": "You have successfully logged in!",
                 "successMsg": "You may now use the app.",
@@ -284,7 +288,8 @@
             "customDateErrorMessage": "Error in dates",
             "customDateErrorDescription": "You must pick a date in 'Custom' mode",
             "invalidPeriodMessage": "Wrong period",
-            "fromAfterToDescription": "'From' date can not come before 'To' date."
+            "fromAfterToDescription": "'From' date can not come before 'To' date.",
+            "sharingSavePdfTitle": "Share {{title}}"
         },
         "bookTitles": {
             "ExpenseBook": "Expense Book",

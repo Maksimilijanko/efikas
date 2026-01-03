@@ -8,25 +8,6 @@ interface Props {
 
 export default function PdfViewer(props: Props) {
     return(
-        // <View style={styles.container}>
-        //     <Pdf
-        //         source={props.pdfSource}
-        //         onLoadComplete={(numberOfPages,filePath) => {
-        //             console.log(`Number of pages: ${numberOfPages}`);
-        //         }}
-        //         onPageChanged={(page,numberOfPages) => {
-        //             console.log(`Current page: ${page}`);
-        //         }}
-        //         onError={(error) => {
-        //             console.log(error);
-        //         }}
-        //         onPressLink={(uri) => {
-        //             console.log(`Link pressed: ${uri}`);
-        //         }}
-        //         style={styles.pdf}
-        //     />
-        // </View>
-
         <Pdf
             source={props.pdfSource}
             onLoadComplete={(numberOfPages,filePath) => {

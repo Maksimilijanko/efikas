@@ -24,14 +24,6 @@ public class ReservationController {
 
     @PostMapping(value = "/apartments/{apartmentId}/reservations", consumes = "multipart/form-data")//
     public ResponseEntity<?> createReservation(@PathVariable Integer apartmentId, @RequestPart("reservation") ReservationDTO reservationDTO, @RequestPart("picture") MultipartFile documentPicture) {
-
-//        @PathVariable Integer apartmentId,
-//        @RequestPart("reservation") ReservationDTO reservationDTO,
-//        @RequestPart("picture") MultipartFile documentPicture
-        //@RequestBody ReservationDTO reservationDTO
-
-        System.out.println("reservationDTO = " + reservationDTO);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 

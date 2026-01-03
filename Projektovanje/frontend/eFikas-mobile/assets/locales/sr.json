@@ -26,6 +26,8 @@
             "password": "Lozinka",
             "repeatPassword": "Ponovite lozinku",
             "registerButton": "Registrujte se",
+            "address": "Adresa",
+            "addressPlaceholder": "Ulica 123",
             "toastMessages": {
                 "successTitle": "Uspješno ste se registrovali!",
                 "successMsg": "Pokušajte se prijaviti sa novim nalogom.",
@@ -307,7 +309,8 @@
             "customDateErrorMessage": "Greška u datumima",
             "customDateErrorDescription": "Morate izabrati datum u slučaju prilagođenog rada",
             "invalidPeriodMessage": "Pogrešan period",
-            "fromAfterToDescription": "Pomiješali ste vrijednosti datuma."
+            "fromAfterToDescription": "Pomiješali ste vrijednosti datuma.",
+            "sharingSavePdfTitle": "Podijelite {{title}}"
         },
         "bookTitles": {
             "ExpenseBook": "Knjiga rashoda",
