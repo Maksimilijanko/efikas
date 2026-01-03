@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useUserReservations } from "@/src/hooks/useUserReservations";
 import ReservationCard from "@/src/components/organisms/ReservationCard/ReservationCard";
-import { SegmentedControl } from "@/src/components/atoms/SegmentedControl/SegmentedControl";
 import { ReservationsCalendar } from "@/src/components/atoms/ReservationsCalendar/ReservationsCalendar";
 import FloatButton from "@/src/components/atoms/FloatButton/FloatButton";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
@@ -13,6 +12,7 @@ import { useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { Pressable } from "react-native";
 import { Reservation } from "@/src/types/types";
+import ReservationsSwitcher from "../../molecules/ReservationsSwitcher/ReservationsSwitcher";
 
 type SegmentOption = "finished" | "active" | "upcoming";
 type ViewMode = "list" | "calendar";
@@ -67,12 +67,6 @@ export default function ReservationsScreen() {
     () => filterReservationsBySegment(reservations, segment),
     [reservations, segment]
   );
-
-  const segmentOptions = useMemo(() => [
-    { label: t("reservations.segments.finished"), value: "finished" },
-    { label: t("reservations.segments.active"), value: "active" },
-    { label: t("reservations.segments.upcoming"), value: "upcoming" }
-  ], [t]);
 
   const toggleView = () => {
     setViewMode((prev) => (prev === "list" ? "calendar" : "list"));
@@ -136,13 +130,9 @@ export default function ReservationsScreen() {
 
         {/* ---- SEGMENTED CONTROL ---- */}
         <View style={styles.segmentedWrapper}>
-          <SegmentedControl
-            options={segmentOptions.map(o => o.label)}
-            selectedOption={segmentOptions.find(o => o.value === segment)?.label || ""}
-            onOptionPress={(label) => {
-              const selected = segmentOptions.find(o => o.label === label);
-              if (selected) setSegment(selected.value as SegmentOption);
-            }}
+          <ReservationsSwitcher
+            segment={segment}
+            onSegmentChange={setSegment}
           />
         </View>
 
