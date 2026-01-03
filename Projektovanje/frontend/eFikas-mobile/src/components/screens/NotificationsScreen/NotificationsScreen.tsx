@@ -4,6 +4,7 @@ import { ToggleItem } from "@/src/components/molecules/ToggleItem/ToggleItem";
 // import { Colors } from '@/src/styles/style';
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { notificationsService } from '@/src/services/notificationsService';
 
 const NotificationsScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -11,9 +12,12 @@ const NotificationsScreen: React.FC = () => {
 
   const styles = getStyles(Colors);
   
-  const handleToggle = (value: boolean) => {
+  const handleToggle = async (value: boolean) => {
     console.log(`Obavještenja su ${value ? 'uključena' : 'isključena'}`);
     // Logika za obavjestenja
+
+	const data = await notificationsService.registerPushTokenAsync();
+	console.log("DATA NOTIF: ", data);
   };
 
   return (

@@ -16,7 +16,7 @@ export const API_URLS = {
         update: `${API_BASE_URL}/users/me`,
     },
 
-     reservations: {
+    reservations: {
         listUser: () => `${API_BASE_URL}/reservations`,
 
         listByApartment: (apartmentId: number) =>
@@ -46,5 +46,9 @@ export const API_URLS = {
         getIncomeBookPdf: `${API_BASE_URL}/books/pdf/INCOME`,
         getDomesticGuestsBookPdf: `${API_BASE_URL}/books/pdf/DOMESTIC_GUESTS`,
         getForeignGuestsBookPdf: `${API_BASE_URL}/books/pdf/FOREIGN_GUESTS`,
-    }
+    },
+
+	notifications: {
+		pushToken: `${API_BASE_URL}/notifications/push-token`
+	}
 }

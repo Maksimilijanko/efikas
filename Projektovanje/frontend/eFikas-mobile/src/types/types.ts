@@ -150,3 +150,9 @@ export interface BookPath {
     displayName: string;
     path: string;
 }
+
+// ================ Notification ===================
+export interface PushNotificationTokenRequest {
+    token: string;
+    userId: number;
+}
