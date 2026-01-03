@@ -1,5 +1,6 @@
 import React from "react";
-import { Modal, View, Text, Image, StyleSheet } from "react-native";
+import { Modal, View, Text, StyleSheet } from "react-native";
+import { Image } from "@/src/components/ui/image";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
 // import { Colors } from "@/src/styles/style";
 import { useTranslation } from "react-i18next";
@@ -18,6 +19,7 @@ export const IdDocumentDialog: React.FC<IdDocumentDialogProps> = ({
 }) => {
     const { t } = useTranslation();
     const { Colors } = useTheme();
+    // console.log("DOCUMENT URL:", documentUrl);
 
     const styles = StyleSheet.create({
         overlay: {
@@ -64,7 +66,12 @@ export const IdDocumentDialog: React.FC<IdDocumentDialogProps> = ({
         <View style={styles.overlay}>
           <View style={styles.modalContainer}>
             {documentUrl ? (
-              <Image source={{ uri: documentUrl }} style={styles.documentImage} resizeMode="contain" />
+              <Image
+                source={{ uri: documentUrl }}
+                alt="document"
+                style={styles.documentImage}
+                resizeMode="contain"
+              />
             ) : (
               <Text style={styles.noDocumentText}>
                  {t("dialogs.message.details.message")}
