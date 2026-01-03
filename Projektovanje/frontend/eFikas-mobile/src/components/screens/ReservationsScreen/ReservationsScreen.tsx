@@ -33,8 +33,8 @@ const filterReservationsBySegment = (
   const now = new Date();
 
   return reservations.filter((r) => {
-    const start = new Date(r.dateTimeOfArrival);
-    const end = new Date(r.dateTimeOfDeparture);
+    const start = new Date(r.guest.dateTimeOfArrival);
+    const end = new Date(r.guest.dateTimeOfDeparture);
 
     switch (segment) {
       case "finished":
@@ -117,8 +117,8 @@ export default function ReservationsScreen() {
                 reservationId={item.reservationId.toString()}
                 name={item.apartment.name}
                 address={item.apartment.address}
-                dateFrom={formatDate(item.dateTimeOfArrival)}
-                dateTo={formatDate(item.dateTimeOfDeparture)}
+                dateFrom={formatDate(item.guest.dateTimeOfArrival)}
+                dateTo={formatDate(item.guest.dateTimeOfDeparture)}
                 onIconPress={() =>
                   router.push(`/(home)/reservations/${item.reservationId}`)
                 }

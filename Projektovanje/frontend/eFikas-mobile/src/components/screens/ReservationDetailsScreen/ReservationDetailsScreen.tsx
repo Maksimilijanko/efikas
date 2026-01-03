@@ -95,18 +95,18 @@ const ReservationDetailsScreen = ({ reservation }) => {
     () => [
       {
         key: "guest",
-        label: reservation.guestFullName,
+        label: `${reservation.guest.name} ${reservation.guest.surname}`,
         icon: "User" as const,
       },
       {
         key: "phone",
-        label: reservation.guestPhoneNumber,
+        label: reservation.guest.phoneNumber,
         icon: "Phone" as const,
       },
       {
         key: "people",
         label: t("reservations.details.peopleCount", {
-          count: reservation.guestNumber,
+          count: reservation.guestQuantity,
         }),
         icon: "Users" as const,
       },
@@ -121,21 +121,22 @@ const ReservationDetailsScreen = ({ reservation }) => {
       },
       {
         key: "arrival",
-        label: formatDateTime(reservation.dateTimeOfArrival),
+        label: formatDateTime(reservation.guest.dateTimeOfArrival),
         icon: "CalendarArrowDown" as const,
       },
       {
         key: "departure",
-        label: formatDateTime(reservation.dateTimeOfDeparture),
+        label: formatDateTime(reservation.guest.dateTimeOfDeparture),
         icon: "CalendarArrowUp" as const,
       },
     ],
     [
-      reservation.guestFullName,
-      reservation.guestPhoneNumber,
-      reservation.guestNumber,
-      reservation.dateTimeOfArrival,
-      reservation.dateTimeOfDeparture,
+      reservation.guest.name,
+      reservation.guest.surname,
+      reservation.guest.phoneNumber,
+      reservation.guestQuantity,
+      reservation.guest.dateTimeOfArrival,
+      reservation.guest.dateTimeOfDeparture,
       Colors.iconMenu,
       t,
     ]
@@ -162,7 +163,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
       idDocument: {
         visible: dialogs.idDocument,
         onClose: () => toggleDialog("idDocument", false),
-        documentUrl: reservation.personalDocumentURL,
+        documentUrl: reservation.guest.personalDocumentURL,
       },
       editDelete: {
         visible: dialogs.editDelete,
@@ -200,14 +201,14 @@ const ReservationDetailsScreen = ({ reservation }) => {
           },
           {
             label: t("reservations.details.fiscalization.peopleCount"),
-            value: reservation.guestNumber,
+            value: reservation.guestQuantity,
             isBold: true,
           },
           {
             label: t("reservations.details.fiscalization.nightsCount"),
             value: calculateNights(
-              reservation.dateTimeOfArrival,
-              reservation.dateTimeOfDeparture
+              reservation.guest.dateTimeOfArrival,
+              reservation.guest.dateTimeOfDeparture
             ),
             isBold: true,
           },
@@ -236,11 +237,11 @@ const ReservationDetailsScreen = ({ reservation }) => {
     }),
     [
       dialogs,
-      reservation.personalDocumentURL,
+      reservation.guest.personalDocumentURL,
       reservation.reservationType,
-      reservation.guestNumber,
-      reservation.dateTimeOfArrival,
-      reservation.dateTimeOfDeparture,
+      reservation.guestQuantity,
+      reservation.guest.dateTimeOfArrival,
+      reservation.guest.dateTimeOfDeparture,
       reservation.price,
       t,
       handleDelete,
