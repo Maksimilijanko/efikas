@@ -14,6 +14,7 @@ import java.io.IOException;
 
 @Configuration
 @Slf4j
+// TODO: delete, not useful anymore with Expo's API
 public class FirebaseConfig {
 
     @Bean

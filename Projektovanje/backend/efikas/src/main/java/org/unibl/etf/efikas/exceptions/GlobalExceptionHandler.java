@@ -85,6 +85,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(userMessage);
     }
 
+    @ExceptionHandler(DuplicatePushTokenException.class)
+    public  ResponseEntity<?> handleDuplicatePushTokenException(DuplicatePushTokenException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
     private Throwable getRootCause(Throwable ex) {
         Throwable cause = ex;
         while (cause.getCause() != null && cause.getCause() != cause) {

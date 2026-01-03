@@ -1,10 +1,12 @@
 package org.unibl.etf.efikas.models.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
+@Builder
 public class NotificationMessageDTO {
     private String recipientToken;
     private String title;

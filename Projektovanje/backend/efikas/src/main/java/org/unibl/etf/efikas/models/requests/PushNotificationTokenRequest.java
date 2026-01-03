@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PushNotificationTokenRequest {
     private String token;
+    private String platform;
     private int userId;
 }

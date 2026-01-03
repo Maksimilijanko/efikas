@@ -19,10 +19,8 @@ public class NotificationsController {
     @PostMapping("/push-token")
     public ResponseEntity<?> pushRegistrationToken(@RequestBody PushNotificationTokenRequest pushNotificationTokenRequest) {
         System.out.println("Push Token: " + pushNotificationTokenRequest);
+        String resp = notificationService.addPushToken(pushNotificationTokenRequest);
 
-        
-
-        return ResponseEntity.ok().build();
-
+        return ResponseEntity.ok(resp);
     }
 }

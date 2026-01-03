@@ -154,5 +154,6 @@ export interface BookPath {
 // ================ Notification ===================
 export interface PushNotificationTokenRequest {
     token: string;
+	platform: 'android' | 'ios';
     userId: number;
 }
