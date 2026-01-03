@@ -84,20 +84,62 @@ export interface ApartmentCurrentInfo {
     nextGuestsDate: string | null;
 };
 
+export interface GuestBase {
+  id: number;
+  citizenId: string | null;
+  isLocal: boolean;
+  personalDocumentURL: string | null;
+
+  name: string;
+  surname: string;
+  gender: "MALE" | "FEMALE";
+  phoneNumber: string;
+
+  birthDate: string;
+  birthPlace: string;
+  birthCountry?: string | null;
+  address?: string | null;
+
+  accommodationUnitNumber?: number | null;
+  accommodationUnitFloor?: number | null;
+
+  dateTimeOfArrival?: string;
+  dateTimeOfDeparture?: string;
+
+  issuedInvoiceNumber?: string | null;
+  remarks?: string | null;
+  createdAt: string;
+}
+
+export interface DomesticGuest extends GuestBase {
+  isLocal: true;
+  birthMunicipality: string;
+}
+
+export interface ForeignGuest extends GuestBase {
+  isLocal: false;
+  citizenship: string;
+  passportNumber: string;
+  passportIssuedDate: string;
+  visaType?: string | null;
+  visaNumber?: string | null;
+  permittedResidenceDate?: string | null;
+  entryDate: string;
+  entryPlace: string;
+}
+
+export type Guest = DomesticGuest | ForeignGuest;
+
 export interface Reservation {
   reservationId: number;
-  apartment: Apartment; 
-  guestFullName: string;
-  guestPhoneNumber: string;
-  dateTimeOfArrival: string;
-  dateTimeOfDeparture: string;
-  guestNumber: number;
+  apartment: Apartment;
+  guest: Guest;
+
+  guestQuantity: number;
   price: number | null;
   note: string | null;
-  personalDocumentURL: string | null;
   reservationType: string;
-  reservationTypeId?: number;
-};
+}
 
 export interface MenuItemProps {
   id: string;
