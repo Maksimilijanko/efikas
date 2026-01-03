@@ -19,6 +19,7 @@ import { useTheme } from "@/src/providers/ThemeProvider";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { calculateNights } from "@/src/util/dateUtils";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,12 +29,6 @@ const formatDateTime = (iso: string) => {
   if (!iso) return "";
   const local = dayjs.utc(iso).tz("Europe/Sarajevo");
   return local.format("DD.MM.YYYY HH:mm");
-};
-
-const calculateNights = (arrivalDate: string, departureDate: string) => {
-  const arrival = dayjs(arrivalDate);
-  const departure = dayjs(departureDate);
-  return Math.max(1, departure.diff(arrival, "day"));
 };
 
 const ReservationDetailsScreen = ({ reservation }) => {

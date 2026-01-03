@@ -8,6 +8,7 @@ import { QuickInfoDialog, QuickInfoItem } from "@/src/components/organisms/Dialo
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { calculateNights } from "@/src/util/dateUtils";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -162,13 +163,9 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
   const getDialogItems = (): QuickInfoItem[] => {
     if (!current) return [];
 
-    const nights = Math.max(
-      1,
-      Math.ceil(
-        (parseDate(getDateOnly(current.guest.dateTimeOfDeparture)).getTime() -
-          parseDate(getDateOnly(current.guest.dateTimeOfArrival)).getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+    const nights = calculateNights(
+      current.guest.dateTimeOfArrival,
+      current.guest.dateTimeOfDeparture
     );
 
     const items: QuickInfoItem[] = [
