@@ -32,5 +32,9 @@ public class ApartmentExpense {
 
     @Column(name = "\"Status\"", nullable = false)
     private Boolean status = false;
+
+    @ManyToOne
+    @JoinColumn(name = "\"ExpenseTypeId\"", nullable = false)
+    private ExpenseType expenseType;
     
 }

@@ -8,4 +8,5 @@ public class ApartmentExpenseDTO {
     private Double amount;
     private String note;
     private Boolean status;
+    private String expenseType;
 }

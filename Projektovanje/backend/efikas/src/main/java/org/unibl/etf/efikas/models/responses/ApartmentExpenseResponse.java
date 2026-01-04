@@ -9,4 +9,5 @@ public class ApartmentExpenseResponse {
     private Double amount;
     private String note;
     private Boolean status;
+    private String expenseType;
 }
