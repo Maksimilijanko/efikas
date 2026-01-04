@@ -5,10 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class PushNotificationTokenRequest {
-    private String token;
-    private String platform;
-    private String email;
+@AllArgsConstructor
+public class ToggleNotificationRequest {
+    private String pushToken;
+    private boolean enabled;
 }

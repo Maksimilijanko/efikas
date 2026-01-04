@@ -6,6 +6,8 @@ import { secureStoreService } from '../services/secureStoreService';
 import { toastService } from '../services/toastService';
 import { LoginRequest, RegisterRequest } from '../types/types';
 import { SECURE_STORE_KEYS } from '../util/secureStoreKeys';
+import { notificationsService } from '../services/notificationsService';
+import { notificationsApiService } from '../api/services/notificationsApiService';
 
 export const useAuth = () => {
     const { t } = useTranslation();
@@ -52,15 +54,20 @@ export const useAuth = () => {
         mutationFn: (registerRequest: RegisterRequest) =>
             authService.register(registerRequest),
         onSuccess: (response) => {
-            if (response.status === 200) {
-                console.log("User succesfully logged in.");
-                toastService.success(
-                    t('auth.register.toastMessages.successTitle'),
-                    t('auth.register.toastMessages.successMsg')
-                );
-            } else {
-                throw new Error(`Registration failed with status: ${response.status}`);
-            }
+			try {
+				if (response.status === 200) {
+					console.log("User succesfully logged in.");
+					toastService.success(
+						t('auth.register.toastMessages.successTitle'),
+						t('auth.register.toastMessages.successMsg')
+					);
+				} else {
+					throw new Error(`Registration failed with status: ${response.status}`);
+				}
+			} catch(err) {
+				console.error("Error in login: ", err.message);
+			}
+            
         },
         onError: (error: Error) => {
             toastService.error(

@@ -22,7 +22,8 @@ public class NotificationScheduler {
 
     @Scheduled(cron = "30 46 18 * * *")
     public void scheduleDailyReminders() {
-        System.out.println("⏱ Scheduling daily reminders - SENDING NOTIFICATIONS");
+        String delimiter = "*".repeat(15);
+        System.out.println(delimiter + " ⏱ Scheduling daily reminders - SENDING NOTIFICATIONS " + delimiter);
 
         LocalDate today = LocalDate.now(ZoneId.systemDefault());
         Instant from = today.minusDays(2)
@@ -40,6 +41,9 @@ public class NotificationScheduler {
         for (var task : upcomingTasks) {
             String message = "Reminder: Your task '" + task.getName() + "' is due soon! (" + toLocalDateTimeString(task.getDateTime()) + ")" ;
             String token = task.getToken();
+            if(!task.isUserEnabledNotification()){
+                continue;
+            }
 
             // Call the async method to send it
             NotificationMessageDTO notificationMessageDTO = NotificationMessageDTO.builder()

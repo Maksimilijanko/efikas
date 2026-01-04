@@ -19,16 +19,17 @@ public interface ApartmentTaskRepository extends JpaRepository<ApartmentTask, Lo
 
     @Query("""
         SELECT new org.unibl.etf.efikas.models.dto.ApartmentTaskNotificationDTO(
-            t.note, 
-            p.pushToken, 
-            t.dateTime
+            task.note, 
+            notification.pushToken, 
+            task.dateTime,
+            notification.enabled
         )
-        FROM ApartmentTask t
-        JOIN t.apartment a
+        FROM ApartmentTask task
+        JOIN task.apartment a
         JOIN a.user u
-        JOIN NotificationPushToken p ON p.user = u
-        WHERE t.dateTime BETWEEN :from AND :to
-        AND t.status = false
+        JOIN NotificationPushToken notification ON notification.user = u
+        WHERE task.dateTime BETWEEN :from AND :to
+        AND task.status = false
     """)
     List<ApartmentTaskNotificationDTO> findUpcomingTaskNotifications(
             @Param("from") Instant from,

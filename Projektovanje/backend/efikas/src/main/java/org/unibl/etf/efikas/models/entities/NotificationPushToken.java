@@ -49,5 +49,10 @@ public class NotificationPushToken {
     @Column(name = "\"CreatedAt\"")
     private Instant createdAt;
 
+    @NotNull
+    @ColumnDefault("true")
+    @Column(name = "\"Enabled\"", nullable = false)
+    private Boolean enabled;
+
 
 }

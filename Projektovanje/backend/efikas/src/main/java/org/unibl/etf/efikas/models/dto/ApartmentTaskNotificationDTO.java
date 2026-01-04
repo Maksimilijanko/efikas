@@ -13,4 +13,5 @@ public class ApartmentTaskNotificationDTO {
     private String name;
     private String token;
     private Instant dateTime;
+    private boolean userEnabledNotification;
 }

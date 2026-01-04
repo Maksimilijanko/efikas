@@ -155,5 +155,10 @@ export interface BookPath {
 export interface PushNotificationTokenRequest {
     token: string;
 	platform: 'android' | 'ios';
-    userId: number;
+    email: string;
+}
+
+export interface ToggleNotificationRequest {
+    pushToken: string;
+	enabled: boolean;
 }

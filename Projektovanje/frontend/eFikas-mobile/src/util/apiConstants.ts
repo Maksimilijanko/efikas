@@ -49,6 +49,7 @@ export const API_URLS = {
     },
 
 	notifications: {
-		pushToken: `${API_BASE_URL}/notifications/push-token`
+		pushToken: `${API_BASE_URL}/notifications/push-token`,
+		toggle: `${API_BASE_URL}/notifications/toggle`,
 	}
 }
