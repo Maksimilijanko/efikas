@@ -12,6 +12,8 @@ import { useTheme } from "@/src/providers/ThemeProvider";
 import { useUserReservations } from "@/src/hooks/useUserReservations";
 import { useDashboardStats } from "@/src/hooks/useDashboardStats";
 import { useProfile } from "@/src/hooks/useProfile";
+import { useEffect } from "react";
+import { notificationsApiService } from "@/src/api/services/notificationsApiService";
 
 export default function DashboardScreen() {
   const { Colors } = useTheme();
@@ -33,6 +35,10 @@ export default function DashboardScreen() {
   const loading =
     userQuery.isLoading || reservationsQuery.isLoading || statsQuery.isLoading;
 
+	useEffect(() => {
+		notificationsApiService.registerPushTokenAsync();
+	}, []);
+
   if (loading) {
     return (
       <View style={{ marginTop: 80, alignItems: "center" }}>
@@ -44,6 +50,8 @@ export default function DashboardScreen() {
   const fullName = `${userQuery.profile?.name ?? ""} ${userQuery.profile?.surname ?? ""}`;
   const reservations = reservationsQuery.data ?? [];
   const statistics = statsQuery.data?.data ?? [];
+
+  
 
   return (
     <DashboardTemplate

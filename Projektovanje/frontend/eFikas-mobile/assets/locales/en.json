@@ -300,7 +300,11 @@
     },
     "notifications": {
         "title": "Notifications",
-        "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance"
+        "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance",
+		"notificationToggleSuccessTitle": "Success!",
+		"notificationToggleSuccessMessage": "You've updated your notifications.",
+		"notificationToggleErrorTitle": "Error in updating your notifications.",
+		"notificationToggleErrorMessage": "Please try again."
     },
     "profile": {
         "sectionTitle": "Profile information",

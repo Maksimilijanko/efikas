@@ -34,6 +34,10 @@ public class AppUserService {
         return modelMapper.map(appUser, AppUserResponse.class);
     }
 
+    public AppUser getUserByEmail(String email) {
+        return appUserRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
     public Optional<String> register(Map<String, String> user) {
         String email = user.get("email");
         String password = user.get("password");
