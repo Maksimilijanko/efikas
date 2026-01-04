@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.unibl.etf.efikas.models.dto.ApartmentExpenseDTO;
 import org.unibl.etf.efikas.models.dto.ReservationDTO;
 import org.unibl.etf.efikas.models.entities.*;
 import org.unibl.etf.efikas.models.responses.ApartmentDamageResponse;
@@ -29,7 +30,11 @@ public class ModelMapperConfig {
                 .addMapping(
                         source -> source.getId().getApartmentId(),
                         ApartmentExpenseResponse::setApartmentId
-                );
+                )
+                .addMapping(
+                        source -> source.getExpenseType().getName(),
+                        ApartmentExpenseResponse::setExpenseType
+                );;
 
         // Provide custom mapping for ApartmentDamageResponse
         mapper.createTypeMap(ApartmentDamage.class, ApartmentDamageResponse.class)
@@ -59,6 +64,12 @@ public class ModelMapperConfig {
         // We skip the reservationId when creating a Reservation from ReservationDTO
         mapper.createTypeMap(ReservationDTO.class, Reservation.class)
                 .addMappings(m -> m.skip(Reservation::setReservationId));
+
+        // Skip the expenseType when creating an ApartmentExpense from ApartmentExpenseDTO
+        mapper.createTypeMap(ApartmentExpenseDTO.class, ApartmentExpense.class)
+                .addMappings(m -> m.skip(ApartmentExpense::setExpenseType));
+
+
 
         return mapper;
     }
