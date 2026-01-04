@@ -192,3 +192,15 @@ export interface BookPath {
     displayName: string;
     path: string;
 }
+
+// ================ Notification ===================
+export interface PushNotificationTokenRequest {
+    token: string;
+	platform: 'android' | 'ios';
+    email: string;
+}
+
+export interface ToggleNotificationRequest {
+    pushToken: string;
+	enabled: boolean;
+}

@@ -1,6 +1,6 @@
-const scheme = "https"
-const address = "efikas-team.com";    // TODO: Naći način da se gađa jedinstveni backend. Expo ne dozvoljava localhost izvršavanje jer to gađa sam uređaj - mora LAN za sad!
-const port = "443";
+const scheme = process.env.EXPO_PUBLIC_API_SCHEME;
+const address = process.env.EXPO_PUBLIC_API_ADDRESS;    
+const port = process.env.EXPO_PUBLIC_API_PORT;
 const version = "v1";
 export const API_BASE_URL = `${scheme}://${address}:${port}/api/${version}`;
 
@@ -16,7 +16,7 @@ export const API_URLS = {
         update: `${API_BASE_URL}/users/me`,
     },
 
-     reservations: {
+    reservations: {
         listUser: () => `${API_BASE_URL}/reservations`,
 
         listByApartment: (apartmentId: number) =>
@@ -46,5 +46,19 @@ export const API_URLS = {
         getIncomeBookPdf: `${API_BASE_URL}/books/pdf/INCOME`,
         getDomesticGuestsBookPdf: `${API_BASE_URL}/books/pdf/DOMESTIC_GUESTS`,
         getForeignGuestsBookPdf: `${API_BASE_URL}/books/pdf/FOREIGN_GUESTS`,
-    }
+    },
+
+	notifications: {
+		pushToken: `${API_BASE_URL}/notifications/push-token`,
+		toggle: `${API_BASE_URL}/notifications/toggle`,
+	},
+
+    apartments: {
+        list: () => `${API_BASE_URL}/apartments`,
+        getById: (id: number) => `${API_BASE_URL}/apartments/${id}`,
+        create: () => `${API_BASE_URL}/apartments`,
+        update: (id: number) => `${API_BASE_URL}/apartments/${id}`,
+        delete: (id: number) => `${API_BASE_URL}/apartments/${id}`,
+    },
+
 }

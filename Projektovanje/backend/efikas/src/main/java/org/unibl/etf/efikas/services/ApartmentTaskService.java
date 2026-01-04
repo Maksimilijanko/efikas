@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.models.dto.ApartmentTaskDTO;
+import org.unibl.etf.efikas.models.dto.ApartmentTaskNotificationDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.ApartmentTask;
 import org.unibl.etf.efikas.models.entities.ApartmentTaskId;
@@ -16,6 +17,7 @@ import org.unibl.etf.efikas.models.responses.ApartmentTaskResponse;
 import org.unibl.etf.efikas.repositories.ApartmentTaskRepository;
 import org.unibl.etf.efikas.repositories.ApartmentRepository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,12 @@ public class ApartmentTaskService {
         return apartmentTaskRepository.findApartmentTaskByApartmentApartmentId(apartmentId)
                 .stream().map((element) -> modelMapper.map(element, ApartmentTaskResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    // Obtain all apartment tasks that aren't finished and between the given date
+    //@PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
+    public List<ApartmentTaskNotificationDTO> getAllByDueDateTimeBetween(Instant from, Instant to) {
+        return apartmentTaskRepository.findUpcomingTaskNotifications(from, to);
     }
 
     // Create a new Task for a given apartment
@@ -100,5 +108,7 @@ public class ApartmentTaskService {
 
         return modelMapper.map(apartmentTask, ApartmentTaskResponse.class);
     }
+
+
 
 }

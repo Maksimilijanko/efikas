@@ -17,6 +17,22 @@ CREATE TABLE efikas."app_user" (
     "Address" varchar(50) NOT NULL
 );
 
+
+CREATE TABLE efikas."notification_push_token" (
+	"TokenId" SERIAL PRIMARY KEY,
+	"UserId" int NOT NULL,
+	"PushToken" varchar(150) NOT NULL UNIQUE,
+	"Platform" varchar(15) NOT NULL CHECK("Platform" IN ('android', 'ios')),
+	"Enabled" boolean NOT NULL DEFAULT true,
+	"LastUsedAt" timestamp DEFAULT CURRENT_TIMESTAMP,
+    "CreatedAt" timestamp DEFAULT CURRENT_TIMESTAMP,
+
+	CONSTRAINT "FK_notification_push_token_user" FOREIGN KEY ("UserId")
+        REFERENCES efikas."app_user"("UserId")
+        ON UPDATE CASCADE ON DELETE RESTRICT
+);
+CREATE INDEX idx_push_tokens_user_id ON efikas."notification_push_token"("UserId");
+CREATE INDEX idx_push_tokens_token ON efikas."notification_push_token"("PushToken");
 -- =========================================================================
 --                                   USERS
 -- =========================================================================
@@ -88,16 +104,24 @@ CREATE TABLE efikas."apartment_damage" (
         ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE efikas."expense_type" (
+	"ExpenseTypeId" SERIAL PRIMARY KEY,
+    "Name" varchar(50) NOT NULL UNIQUE
+);
+
 CREATE TABLE efikas."apartment_expense" (
     "ApartmentId" int NOT NULL,
     "Name" varchar(100) NOT NULL,
     "Amount" DOUBLE PRECISION NOT NULL,
     "Note" varchar(256) NOT NULL,
     "Status" BOOLEAN NOT NULL,
+    "ExpenseTypeId" int NOT NULL,
     CONSTRAINT "PK_apartment_expense" PRIMARY KEY ("ApartmentId", "Name"),
     CONSTRAINT "FK_apartment_expense_apartment" FOREIGN KEY ("ApartmentId")
         REFERENCES efikas."apartment"("ApartmentId")
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT "FK_apartment_expense_expense_type" FOREIGN KEY ("ExpenseTypeId")
+    REFERENCES efikas."expense_type"("ExpenseTypeId")
 );
 
 -- =========================================================================

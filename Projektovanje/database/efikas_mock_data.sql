@@ -49,10 +49,10 @@ INSERT INTO "efikas"."apartment_damage" ("ApartmentId", "Name", "DamagePrice", "
     (2, 'Oguljen zid', 20.0, 'Farba otpala pored kreveta.', false);
 
 -- EXPENSES
-INSERT INTO "efikas"."apartment_expense" ("ApartmentId", "Name", "Amount", "Note", "Status") VALUES
-    (1, 'Račun za struju', 45.5, 'Mjesečni trošak.', true),
-    (1, 'Račun za internet', 15.0, 'Mjesečna pretplata.', true),
-    (2, 'Održavanje lifta', 30.0, 'Trošak održavanja zgrade.', false);
+INSERT INTO "efikas"."apartment_expense" ("ApartmentId", "Name", "Amount", "Note", "Status", "ExpenseTypeId") VALUES
+    (1, 'Račun za struju', 45.5, 'Mjesečni trošak.', true, 1),
+    (1, 'Račun za internet', 15.0, 'Mjesečna pretplata.', true, 1),
+    (2, 'Održavanje lifta', 30.0, 'Trošak održavanja zgrade.', false, 2);
 
 -- RESERVATION TYPES
 INSERT INTO "efikas"."reservation_type" ("TypeName") VALUES
@@ -146,4 +146,11 @@ INSERT INTO "efikas"."expenses_book"(
     120.00, 30.00, 150.00, 0.00, 130.00,
     880.00, 50.00
 );
+
+INSERT INTO efikas."expense_type" ("Name") VALUES 
+('Utilities'), 
+('Maintenance'), 
+('Tax'), 
+('Marketing');
+
 

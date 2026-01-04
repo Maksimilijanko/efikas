@@ -7,11 +7,29 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from "expo-router";
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
+import * as Notifications from 'expo-notifications';
+import { useEffect } from 'react';
+import { notificationsService } from '@/src/services/notificationsService';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true, 
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+	shouldShowBanner: false,
+	shouldShowList: true
+  }),
+});
+
 export default function App() {
     const { t } = useTranslation();
     const { theme } = useTheme();
+
+	useEffect(() => {
+		notificationsService.configureNotifications();
+	}, []);
     
     return(
         <GluestackUIProvider mode={theme}>

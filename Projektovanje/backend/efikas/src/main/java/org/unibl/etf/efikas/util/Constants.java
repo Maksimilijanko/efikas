@@ -19,5 +19,7 @@ public class Constants {
         public static final String DOMESTIC_GUESTS_BOOK_LAYOUT_STRATEGY = "DomesticGuestsBookLayoutStrategy";
     }
 
-
+    public static class Expo {
+        public static final String PUSH_NOTIFICATION_URI = "/--/api/v2/push/send";
+    }
 }

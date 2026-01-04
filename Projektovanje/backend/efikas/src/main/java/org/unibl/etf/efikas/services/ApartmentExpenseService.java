@@ -7,14 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.models.dto.ApartmentExpenseDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.ApartmentExpense;
 import org.unibl.etf.efikas.models.entities.ApartmentExpenseId;
+import org.unibl.etf.efikas.models.entities.ExpenseType;
 import org.unibl.etf.efikas.models.responses.ApartmentExpenseResponse;
 import org.unibl.etf.efikas.repositories.ApartmentExpenseRepository;
 import org.unibl.etf.efikas.repositories.ApartmentRepository;
+import org.unibl.etf.efikas.repositories.ExpenseTypeRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +29,7 @@ public class ApartmentExpenseService {
     private final ApartmentExpenseRepository apartmentExpenseRepository;
     private final ApartmentRepository apartmentRepository;
     private final ModelMapper modelMapper;
+    private final ExpenseTypeRepository expenseTypeRepository;
 
     // Obtain all apartment expenses for a given apartment
     // Perform ownership check before executing the method logic itself
@@ -45,7 +49,12 @@ public class ApartmentExpenseService {
         Apartment apartment = apartmentRepository.findById(apartmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
 
+        ExpenseType expenseType = expenseTypeRepository.findByName(expense.getExpenseType())
+                .orElseThrow(() -> new EntityNotFoundException("Expense type not found!"));
+
+
         apartmentExpense.setApartment(apartment);
+        apartmentExpense.setExpenseType(expenseType);
         ApartmentExpenseId id = new ApartmentExpenseId();
         id.setApartmentId(apartmentId);
         id.setName(expense.getName());
@@ -57,35 +66,39 @@ public class ApartmentExpenseService {
         return modelMapper.map(apartmentExpense, ApartmentExpenseResponse.class);
     }
 
+    @Transactional
     @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")
-    public ApartmentExpenseResponse updateApartmentExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expense, String apartmentExpenseName) {
-        ApartmentExpenseId apartmentExpenseId = new ApartmentExpenseId();
-        apartmentExpenseId.setApartmentId(apartmentId);
-        apartmentExpenseId.setName(apartmentExpenseName);
+    public ApartmentExpenseResponse updateApartmentExpense(Integer apartmentId, Authentication authentication, ApartmentExpenseDTO expenseDTO, String oldName) {
 
-        // I overcomplicated things with this unnecessary composite primary key. Sorry :/
-        ApartmentExpense apartmentExpense = apartmentExpenseRepository.findApartmentExpenseById(apartmentExpenseId)
+        ApartmentExpenseId oldId = new ApartmentExpenseId();
+        oldId.setApartmentId(apartmentId);
+        oldId.setName(oldName);
+
+        ApartmentExpense oldExpense = apartmentExpenseRepository.findApartmentExpenseById(oldId)
                 .orElseThrow(() -> new EntityNotFoundException("Apartment expense not found!"));
 
-        apartmentRepository.findById(apartmentId)
-                .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
+        ExpenseType newType = expenseTypeRepository.findByName(expenseDTO.getExpenseType())
+                .orElseThrow(() -> new EntityNotFoundException("Expense type not found!"));
 
-        apartmentExpenseRepository.delete(apartmentExpense);
+        Apartment apartment = oldExpense.getApartment();
 
-        modelMapper.map(expense, apartmentExpense);
+        apartmentExpenseRepository.delete(oldExpense);
+        apartmentExpenseRepository.flush();
 
-        String newName = expense.getName();
-        if(newName != null && !newName.equals(apartmentExpense.getId().getName())) {
-            ApartmentExpenseId newId = new ApartmentExpenseId();
-            newId.setApartmentId(apartmentId);
-            newId.setName(newName);
+        ApartmentExpense newExpense = new ApartmentExpense();
+        modelMapper.map(expenseDTO, newExpense);
 
-            apartmentExpense.setId(newId);
-        }
+        newExpense.setApartment(apartment);
+        newExpense.setExpenseType(newType);
 
-        apartmentExpenseRepository.save(apartmentExpense);
+        ApartmentExpenseId newId = new ApartmentExpenseId();
+        newId.setApartmentId(apartmentId);
+        newId.setName(expenseDTO.getName());
 
-        return modelMapper.map(apartmentExpense, ApartmentExpenseResponse.class);
+        newExpense.setId(newId);
+        ApartmentExpense saved = apartmentExpenseRepository.save(newExpense);
+
+        return modelMapper.map(saved, ApartmentExpenseResponse.class);
     }
 
     @PreAuthorize("@userSecurity.isApartmentOwner(authentication, #apartmentId)")

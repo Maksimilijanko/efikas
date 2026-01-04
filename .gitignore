@@ -3,3 +3,5 @@
 target/
 *.iml
 application*.properties
+
+efikas-firebase-service-account.json
