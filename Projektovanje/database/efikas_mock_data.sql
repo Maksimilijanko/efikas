@@ -147,3 +147,10 @@ INSERT INTO "efikas"."expenses_book"(
     880.00, 50.00
 );
 
+INSERT INTO efikas."expense_type" ("Name") VALUES 
+('Utilities'), 
+('Maintenance'), 
+('Tax'), 
+('Marketing');
+
+
