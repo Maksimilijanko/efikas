@@ -11,11 +11,12 @@ CREATE TABLE efikas."app_user" (
     "UserId" SERIAL PRIMARY KEY,
     "Name" varchar(50) NOT NULL,
     "Surname" varchar(50) NOT NULL,
-    "JIB" char(13) NOT NULL,
+    "JMBG" char(13) NOT NULL,
     "PasswordHash" varchar(512) NOT NULL,
     "Email" varchar(50) UNIQUE NOT NULL,
     "Address" varchar(50) NOT NULL
 );
+CREATE INDEX idx_app_user_jmbg ON efikas."app_user"("JMBG");
 
 
 CREATE TABLE efikas."notification_push_token" (
@@ -226,6 +227,22 @@ CREATE TABLE efikas."reservation" (
 -- =========================================================================
 --                                   BOOKS
 -- =========================================================================
+CREATE TABLE IF NOT EXISTS efikas."store" (
+	"StoreId" SERIAL PRIMARY KEY,
+	"UserId" int NOT NULL UNIQUE,	-- 1:1 relationship
+	"Name" varchar(50) NOT NULL,
+	"Address" varchar(50) NOT NULL,
+	"Activity" varchar(30) NOT NULL,
+	"ActivityCode" varchar(10) NOT NULL,
+	"JIB" char(13) NOT NULL UNIQUE,
+
+	CONSTRAINT "FK_store_user" FOREIGN KEY ("UserId")
+		REFERENCES efikas."app_user"("UserId")
+		ON UPDATE CASCADE ON DELETE RESTRICT
+);
+CREATE INDEX idx_store_user_id ON efikas."store"("UserId");
+
+
 CREATE TABLE IF NOT EXISTS efikas."income_book"  (
     "IncomeBookId" SERIAL PRIMARY KEY,
     "ApartmentId" int NOT NULL,

@@ -1,11 +1,11 @@
 package org.unibl.etf.efikas.controllers;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -20,21 +20,16 @@ import org.unibl.etf.efikas.models.dto.books.*;
 import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
-import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.enums.BookType;
 import org.unibl.etf.efikas.models.requests.*;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
-import org.unibl.etf.efikas.services.AppUserService;
-import org.unibl.etf.efikas.services.DomesticGuestsBookService;
-import org.unibl.etf.efikas.services.ForeignGuestsBookService;
-import org.unibl.etf.efikas.services.IncomeBookService;
+import org.unibl.etf.efikas.services.*;
 import org.unibl.etf.efikas.services.impl.books.BaseBookPdfService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -42,6 +37,7 @@ import java.util.List;
 public class BooksController {
     private final BookPdfFactory bookPdfFactory;
     private final AppUserService appUserService;
+    private final StoreService storeService;
     private final IncomeBookService incomeBookService;
     private final ForeignGuestsBookService foreignGuestsBookService;
     private final DomesticGuestsBookService domesticGuestsBookService;
@@ -50,7 +46,7 @@ public class BooksController {
     // =========================================== PDF endpoints ===========================================
 
     @GetMapping("/pdf/INCOME")
-    public ResponseEntity<StreamingResponseBody> downloadBookPdf(
+    public ResponseEntity<StreamingResponseBody> downloadIncomeBookPdf(
             @RequestParam Integer taxpayerId,
             @RequestParam(required = false) Integer storeId,
             @RequestParam LocalDate from,
@@ -176,19 +172,14 @@ public class BooksController {
     private TaxpayerDTO getTaxpayerDTO(AppUserResponse appUserResponse) {
         return TaxpayerDTO.builder()
                 .fullName(appUserResponse.getName() + " " +  appUserResponse.getSurname())
-                .jmbg(appUserResponse.getJib())
+                .jmbg(appUserResponse.getJmbg())
                 .address(appUserResponse.getAddress())
                 .build();
     }
 
     private StoreDTO getStoreDTO() {  // TODO: to see if store is necessary
-        return StoreDTO.builder()
-                .name("Марко ДОО")
-                .address("Трг Крајине 1, Бања Лука")
-                .activity("Трговина на мало")
-                .activityCode("4711")
-                .jib("1234567890123")
-                .build();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return storeService.getStoreForActiveUser(authentication);
     }
 
     private ResponseEntity<StreamingResponseBody> getStreamingResponseBodyResponseEntity(

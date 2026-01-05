@@ -1,46 +1,58 @@
 package org.unibl.etf.efikas.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.models.dto.ChangePasswordDTO;
 import org.unibl.etf.efikas.models.dto.UserDTO;
+import org.unibl.etf.efikas.models.dto.books.StoreDTO;
+import org.unibl.etf.efikas.models.requests.CreateStoreRequest;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
 import org.unibl.etf.efikas.models.responses.AuthenticationResponse;
 import org.unibl.etf.efikas.security.JwtUtil;
 import org.unibl.etf.efikas.services.AppUserService;
+import org.unibl.etf.efikas.services.StoreService;
 import org.unibl.etf.efikas.services.interfaces.OAuthService;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@AllArgsConstructor
 public class AppUserController {
 
     private final AppUserService appUserService;
+    private final StoreService storeService;
     private final OAuthService oAuthService;
     private final JwtUtil jwtUtil;
 
-    public AppUserController(AppUserService appUserService, OAuthService oAuthService, JwtUtil jwtUtil) {
-        this.appUserService = appUserService;
-        this.oAuthService = oAuthService;
-        this.jwtUtil = jwtUtil;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> user) {
         return appUserService.register(user)
                 .map(error -> ResponseEntity.badRequest().body(error))
                 .orElseGet(() -> ResponseEntity.ok("User registered successfully."));
+    }
+
+    @PostMapping("/register/store")
+    public ResponseEntity<?> registerStore(@RequestBody CreateStoreRequest createStoreRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        StoreDTO saved = storeService.createStore(createStoreRequest, authentication);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/store/{id}")
+                .buildAndExpand(saved).toUri();
+
+        return ResponseEntity.created(location).body(saved);
     }
 
     @PostMapping("/login")

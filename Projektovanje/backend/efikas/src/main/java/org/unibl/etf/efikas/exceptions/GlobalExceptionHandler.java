@@ -90,6 +90,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
+    @ExceptionHandler(StoreExistsException.class)
+    public  ResponseEntity<?> handleStoreExistsException(StoreExistsException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
     private Throwable getRootCause(Throwable ex) {
         Throwable cause = ex;
         while (cause.getCause() != null && cause.getCause() != cause) {
