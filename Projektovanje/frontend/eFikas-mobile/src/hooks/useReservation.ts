@@ -1,5 +1,5 @@
 import { reservationService } from "@/src/api/services/reservationService";
-import { Reservation } from "@/src/types/types";
+import { Reservation, CreateReservationPayload, UpdateReservationPayload } from "@/src/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toastService } from '../services/toastService';
@@ -56,10 +56,21 @@ export const useCreateReservation = (apartmentId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async ({
+      payload,
+      documentPicture,
+    }: {
+      payload: CreateReservationPayload;
+      documentPicture?: { uri: string; type: string; name: string };
+    }) => {
       try {
-        return await reservationService.createReservation(apartmentId, data);
+        return await reservationService.createReservation(
+          apartmentId, 
+          payload, 
+          documentPicture
+        );
       } catch (err: any) {
+        console.log("=== HOOK ERROR ===", err);
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");
         toastService.error(
@@ -85,9 +96,19 @@ export const useUpdateReservation = (reservationId: number, apartmentId: number)
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async ({
+      payload,
+      documentPicture,
+    }: {
+      payload: UpdateReservationPayload;
+      documentPicture?: { uri: string; type: string; name: string };
+    }) => {
       try {
-        return await reservationService.updateReservation(reservationId, data);
+        return await reservationService.updateReservation(
+          reservationId, 
+          payload, 
+          documentPicture
+        );
       } catch (err: any) {
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");

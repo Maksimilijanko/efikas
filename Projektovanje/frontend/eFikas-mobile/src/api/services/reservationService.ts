@@ -104,10 +104,61 @@
 //   },
 // };
 
+// import axiosInstance from "../axiosInstance";
+// import { API_URLS } from "@/src/util/apiConstants";
+// import { Reservation } from "@/src/types/types";
+
+// export const reservationService = {
+//   getUserReservations: async (): Promise<Reservation[]> => {
+//     const res = await axiosInstance.get<Reservation[]>(
+//       API_URLS.reservations.listUser()
+//     );
+//     return res.data;
+//   },
+
+//   getReservations: async (apartmentId: number): Promise<Reservation[]> => {
+//     const res = await axiosInstance.get<Reservation[]>(
+//       API_URLS.reservations.listByApartment(apartmentId)
+//     );
+//     return res.data;
+//   },
+
+//   getReservation: async (reservationId: number): Promise<Reservation> => {
+//     const res = await axiosInstance.get<Reservation>(
+//       API_URLS.reservations.getById(reservationId)
+//     );
+//     return res.data;
+//   },
+
+//   createReservation: async (apartmentId: number, data: FormData): Promise<Reservation> => {
+//     const res = await axiosInstance.post<Reservation>(
+//       API_URLS.reservations.create(apartmentId),
+//       data,
+//       { headers: { "Content-Type": "multipart/form-data" } }
+//     );
+//     return res.data;
+//   },
+
+//   updateReservation: async (reservationId: number, data: FormData): Promise<Reservation> => {
+//     const res = await axiosInstance.put<Reservation>(
+//       API_URLS.reservations.update(reservationId),
+//       data,
+//       { headers: { "Content-Type": "multipart/form-data" } }
+//     );
+//     return res.data;
+//   },
+
+//   deleteReservation: async (reservationId: number) => {
+//     const res = await axiosInstance.delete(
+//       API_URLS.reservations.delete(reservationId)
+//     );
+//     return res.data;
+//   },
+// };
 
 import axiosInstance from "../axiosInstance";
 import { API_URLS } from "@/src/util/apiConstants";
-import { Reservation } from "@/src/types/types";
+import { Reservation, CreateReservationPayload, UpdateReservationPayload } from "@/src/types/types";
 
 export const reservationService = {
   getUserReservations: async (): Promise<Reservation[]> => {
@@ -131,26 +182,72 @@ export const reservationService = {
     return res.data;
   },
 
-  createReservation: async (apartmentId: number, data: FormData): Promise<Reservation> => {
-    const res = await axiosInstance.post<Reservation>(
-      API_URLS.reservations.create(apartmentId),
-      data,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
-    return res.data;
+  createReservation: async (
+    apartmentId: number,
+    payload: CreateReservationPayload,
+    documentPicture?: { uri: string; type: string; name: string }
+  ): Promise<Reservation> => {
+
+    if (documentPicture) {
+      // Ako postoji slika, saljemo FormData
+      const formData = new FormData();
+
+      formData.append("reservation", JSON.stringify({
+        apartmentId,
+        ...payload
+      }));
+
+      formData.append("picture", {
+        uri: documentPicture.uri,
+        type: documentPicture.type,
+        name: documentPicture.name,
+      } as any);
+
+      const res = await axiosInstance.post<Reservation>(
+        API_URLS.reservations.create(apartmentId),
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return res.data;
+    } else {
+      // Ako nema slike, saljemo obican JSON
+      const res = await axiosInstance.post<Reservation>(
+        API_URLS.reservations.create(apartmentId),
+        { apartmentId, ...payload } // samo JSON
+      );
+      return res.data;
+    }
   },
 
-  updateReservation: async (reservationId: number, data: FormData): Promise<Reservation> => {
+  updateReservation: async (
+    reservationId: number,
+    payload: UpdateReservationPayload,
+    documentPicture?: { uri: string; type: string; name: string }
+  ): Promise<Reservation> => {
+    const formData = new FormData();
+
+    formData.append("reservation", JSON.stringify(payload));
+
+    if (documentPicture) {
+      formData.append("picture", {
+        uri: documentPicture.uri,
+        type: documentPicture.type,
+        name: documentPicture.name,
+      } as any);
+    }
+
     const res = await axiosInstance.put<Reservation>(
       API_URLS.reservations.update(reservationId),
-      data,
+      formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
     return res.data;
   },
 
-  deleteReservation: async (reservationId: number) => {
-    const res = await axiosInstance.delete(
+  deleteReservation: async (reservationId: number): Promise<Reservation> => {
+    const res = await axiosInstance.delete<Reservation>(
       API_URLS.reservations.delete(reservationId)
     );
     return res.data;
