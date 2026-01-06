@@ -15,7 +15,7 @@ export interface RegisterRequest {
     email: string;
     password: string;
     repeatPassword: string;
-    jib: string;
+    jmbg: string;
     address: string;
 }
 

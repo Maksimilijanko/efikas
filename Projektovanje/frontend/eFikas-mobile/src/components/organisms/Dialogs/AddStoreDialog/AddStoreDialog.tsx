@@ -37,7 +37,7 @@ export default function AddStoreDialog({
         },
     });
 
-	const renderStoreField = (labelTranslationString: string, name: Path<StoreValidation.FormValues>, placeholder: string, iconName: LucideIconName, onChangeText: () => void) => {
+	const renderStoreField = (labelTranslationString: string, name: Path<StoreValidation.FormValues>, placeholder: string, iconName: LucideIconName) => {
 		return(
 			<FormField
 				control={control}
@@ -72,11 +72,11 @@ export default function AddStoreDialog({
 
                 <ModalBody style={styles.modalBody}>
 					<VStack style={styles.addStoreContainer}>
-						{renderStoreField('profile.store.labels.name', 'name', 'profile.store.placeholders.name', 'Store', () => {})}
-						{renderStoreField('profile.store.labels.address', 'address', 'profile.store.placeholders.address', 'MapPinHouse', () => {})}
-						{renderStoreField('profile.store.labels.activity', 'activity', 'profile.store.placeholders.activity', 'Briefcase', () => {})}
-						{renderStoreField('profile.store.labels.activityCode', 'activityCode', 'profile.store.placeholders.activityCode', 'Hash', () => {})}
-						{renderStoreField('profile.store.labels.jib', 'jib', 'profile.store.placeholders.jib', 'IdCard', () => {})}
+						{renderStoreField('profile.store.labels.name', 'name', 'profile.store.placeholders.name', 'Store')}
+						{renderStoreField('profile.store.labels.address', 'address', 'profile.store.placeholders.address', 'MapPinHouse')}
+						{renderStoreField('profile.store.labels.activity', 'activity', 'profile.store.placeholders.activity', 'Briefcase')}
+						{renderStoreField('profile.store.labels.activityCode', 'activityCode', 'profile.store.placeholders.activityCode', 'Hash')}
+						{renderStoreField('profile.store.labels.jib', 'jib', 'profile.store.placeholders.jib', 'IdCard')}
 					</VStack>
 				</ModalBody>
 

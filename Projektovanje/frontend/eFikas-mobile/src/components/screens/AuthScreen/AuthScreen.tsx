@@ -1,8 +1,11 @@
 import { VStack } from "@/src/components/ui/vstack";
 import { useAuth } from "@/src/hooks/useAuth";
 import { Colors } from "@/src/styles/style";
-import { LoginRequest, RegisterRequest } from "@/src/types/types";
+import { LoginRequest, LucideIconName, RegisterRequest } from "@/src/types/types";
+import { LoginValidation, RegistrationValidation } from "@/src/util/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { Path, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { TouchableOpacity, View } from "react-native";
 import { GoogleButton } from "../../atoms/GoogleButton";
@@ -14,62 +17,67 @@ import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
 
 
+
 // =================================================================
 // LOGIN
 // =================================================================
 const LoginForm = ({
-    errorsLogin,
-    onLoginDataChange,
-    onErrorsLoginChange,
     onLoginPress,
     onForgotPassword,
     onGoogleLogin,
     isLoading
 }: {
-    errorsLogin: { email: boolean; password: boolean };
-    onLoginDataChange: (field: keyof LoginRequest, value: string) => void;
-    onErrorsLoginChange: (field: keyof typeof errorsLogin, value: boolean) => void;
-    onLoginPress: () => void;
+    onLoginPress: (data: LoginValidation.FormValues) => void;
     onForgotPassword: () => void;
     onGoogleLogin: () => void;
     isLoading?: boolean;
 }) => {
     const { t } = useTranslation();
+	const { control, handleSubmit, reset, formState: { errors } } = useForm<LoginValidation.FormValues>({
+		resolver: zodResolver(LoginValidation.schema),
+		defaultValues: {
+			email: "",
+			password: ""
+		},
+	});
+
+	const renderLoginField = (
+		label: string, 
+		name: Path<LoginValidation.FormValues>, 
+		placeholder: string, 
+		helperText: string,
+		type: 'text' | 'password',
+		iconName: LucideIconName
+	) => {
+		return(
+			<FormField
+				control={control}
+				name={name}
+				label={label}
+				placeholder={t(placeholder)}
+				helperText={helperText}
+				type={type}
+				iconName={iconName}
+				isInvalid={false}
+			/>
+		);
+	}
+
+	const onSubmit = (data: LoginValidation.FormValues) => {
+		onLoginPress(data);
+		reset();
+	}
 
     return (
         <VStack space="xl" className="w-full px-6">
             <VStack space="lg" className="w-full">
-                <FormField
-                    label="Email"
-                    placeholder="markomarkovic@gmail.com"
-                    iconName="Mail"
-                    helperText={t('auth.errors.emailError')}
-                    errorText={t('auth.errors.emailError')}
-                    isInvalid={errorsLogin.email}
-                    onChangeText={(value) => {
-                        onLoginDataChange('email', value);
-                        onErrorsLoginChange('email', false);
-                    }}
-                />
-
-                <FormField
-                    label={t('auth.login.password')}
-                    placeholder="••••••••"
-                    type="password"
-                    iconName="Lock"
-                    helperText={t('auth.errors.passwordLengthError')}
-                    errorText={t('auth.errors.passwordLengthError')}
-                    isInvalid={errorsLogin.password}
-                    onChangeText={(value) => {
-                        onLoginDataChange('password', value);
-                        onErrorsLoginChange('password', false);
-                    }}
-                />
+				{renderLoginField("Email", 'email', 'markomarkovic@gmail.com', t('auth.errors.emailError'), 'text', "Mail")}
+				{renderLoginField(t('auth.login.password'), 'password', '••••••••', t('auth.errors.passwordLengthError'), 'password', "Lock")}
             </VStack>
 
             <LoginButton
                 title={t('auth.login.loginButton')}
-                onPress={onLoginPress}
+                onPress={() => handleSubmit(onSubmit)()}
                 className="mt-2"
                 loadingTitle={t('auth.login.loadingTitle')}
                 isLoading={isLoading}
@@ -94,136 +102,65 @@ const LoginForm = ({
 // REGISTER
 // =================================================================
 const RegisterForm = ({
-    registerData,
-    errorsRegister,
-    onRegisterDataChange,
-    onErrorsRegisterChange,
     onRegisterPress,
     onGoogleLogin,
     isLoading
 }: {
-    registerData: RegisterRequest;
-    errorsRegister: { name: boolean; surname: boolean; email: boolean; password: boolean; repeatPassword: boolean; jib: boolean, address: boolean };
-    onRegisterDataChange: (field: keyof RegisterRequest, value: string) => void;
-    onErrorsRegisterChange: (field: keyof typeof errorsRegister, value: boolean) => void;
-    onRegisterPress: () => void;
+    onRegisterPress: (data: RegistrationValidation.FormValues) => void;
     onGoogleLogin: () => void;
     isLoading?: boolean;
 }) => {
     const { t } = useTranslation();
 
-    const validateRegisterForm = (): boolean => {
-        const newErrors = {
-            name: registerData.name.length < 2,
-            surname: registerData.surname.length < 2,
-            email: registerData.email.length < 6,
-            password: registerData.password.length < 8,
-            repeatPassword: registerData.repeatPassword !== registerData.password,
-            jib: registerData.jib.length !== 13 || !/^\d+$/.test(registerData.jib),
-            address: registerData.address.length < 10,
-        };
+	const { control, handleSubmit, reset, formState: { errors } } = useForm<RegistrationValidation.FormValues>({
+		resolver: zodResolver(RegistrationValidation.schema),
+		defaultValues: {
+			email: "",
+			password: ""
+		},
+	});
 
-        onErrorsRegisterChange('all', newErrors); // handle this in parent
-        return !Object.values(newErrors).some(error => error);
-    };
 
-    const handleRegisterPress = () => {
-        const isValid = validateRegisterForm();
-        if (!isValid) return;
-        onRegisterPress();
-    };
+	const renderRegisterField = (
+		label: string, 
+		name: Path<RegistrationValidation.FormValues>, 
+		placeholder: string, 
+		helperText: string | undefined,
+		type: 'text' | 'password',
+		iconName: LucideIconName
+	) => {
+		return(
+			<FormField
+				control={control}
+				name={name}
+				label={label}
+				placeholder={t(placeholder)}
+				helperText={helperText}
+				type={type}
+				iconName={iconName}
+				isInvalid={false}
+			/>
+		);
+	}
+
+	const onSubmit = (data: RegistrationValidation.FormValues) => {
+		onRegisterPress(data);
+		reset();
+	}
 
     return (
         <VStack space="lg" className="w-full px-6">
-            <FormField
-                label={t('auth.register.firstName')}
-                placeholder="Marko"
-                type="text"
-                iconName="User"
-                isInvalid={errorsRegister.name}
-                onChangeText={(value) => {
-                    onRegisterDataChange('name', value);
-                    onErrorsRegisterChange('name', false);
-                }}
-            />
-            <FormField
-                label={t('auth.register.lastName')}
-                placeholder="Marković"
-                type="text"
-                iconName="User"
-                isInvalid={errorsRegister.surname}
-                onChangeText={(value) => {
-                    onRegisterDataChange('surname', value);
-                    onErrorsRegisterChange('surname', false);
-                }}
-            />
-            <FormField
-                label="Email"
-                placeholder="markomarkovic@gmail.com"
-                iconName="Mail"
-                helperText={t('auth.errors.emailError')}
-                errorText={t('auth.errors.emailError')}
-                isInvalid={errorsRegister.email}
-                onChangeText={(value) => {
-                    onRegisterDataChange('email', value);
-                    onErrorsRegisterChange('email', false);
-                }}
-            />
-            <FormField
-                label={t('auth.register.password')}
-                placeholder="••••••••"
-                type="password"
-                iconName="Lock"
-                helperText={t('auth.errors.passwordLengthError')}
-                errorText={t('auth.errors.passwordLengthError')}
-                isInvalid={errorsRegister.password}
-                onChangeText={(value) => {
-                    onRegisterDataChange('password', value);
-                    onErrorsRegisterChange('password', false);
-                }}
-            />
-            <FormField
-                label={t('auth.register.repeatPassword')}
-                placeholder="••••••••"
-                type="password"
-                iconName="Lock"
-                helperText={t('auth.errors.passwordLengthError')}
-                errorText={t('auth.errors.passwordMismatchError')}
-                isInvalid={errorsRegister.repeatPassword}
-                onChangeText={(value) => {
-                    onRegisterDataChange('repeatPassword', value);
-                    onErrorsRegisterChange('repeatPassword', false);
-                }}
-            />
-            <FormField
-                label="JIB"
-                placeholder="123456789123"
-                iconName="Briefcase"
-                helperText={t('auth.errors.jibLengthError')}
-                errorText={t('auth.errors.jibLengthError')}
-                isInvalid={errorsRegister.jib}
-                onChangeText={(value) => {
-                    // Allow only numbers and limit to 13 characters
-                    const numericValue = value.replace(/[^0-9]/g, '');
-                    onRegisterDataChange('jib', numericValue);
-                    onErrorsRegisterChange('jib', false);
-                }}
-            />
-
-            <FormField
-                label={t('auth.register.address')}
-                placeholder={t('auth.register.addressPlaceholder')}
-                iconName="House"
-                isInvalid={errorsRegister.address}
-                onChangeText={(value) => {
-                    onRegisterDataChange('address', value);
-                    onErrorsRegisterChange('address', false);
-                }}
-            />
+			{renderRegisterField(t('auth.register.firstName'), 'name', 'Marko', undefined, 'text', "User")}
+            {renderRegisterField(t('auth.register.lastName'), 'surname', 'Marković', undefined, 'text', "User")}
+			{renderRegisterField('Email', 'email', 'marko.markovic@gmail.com', undefined, 'text', "Mail")}
+			{renderRegisterField(t('auth.register.password'), 'password', '••••••••', t('auth.errors.passwordLengthError'), 'password', "Lock")}
+			{renderRegisterField(t('auth.register.repeatPassword'), 'repeatPassword', '••••••••', t('auth.errors.passwordLengthError'), 'password', "Lock")}
+			{renderRegisterField("JMBG", 'jmbg', '1234567891234', t('auth.errors.jmbgLengthError'), 'text', "Briefcase")}
+			{renderRegisterField(t('auth.register.address'), 'address', 'Ulica 123', undefined, 'text', "House")}
 
             <LoginButton
                 title={t('auth.register.registerButton')}
-                onPress={handleRegisterPress}
+                onPress={() => handleSubmit(onSubmit)()}
                 className="mt-4"
                 loadingTitle={t('auth.register.loadingTitle')}
                 isLoading={isLoading}
@@ -242,35 +179,6 @@ export default function AuthScreen() {
     const { t } = useTranslation();
     const { login, register, isLoggingIn, isRegistering } = useAuth();
     
-    // TODO: Maybe integrate later with react-hook-form library...
-    const [loginData, setLoginData] = useState<LoginRequest>({
-        email: "",
-        password: ""
-    });
-    const [errorsLogin, setErrorsLogin] = useState({
-        email: false,
-        password: false,
-    });
-
-    const [registerData, setRegisterData] = useState<RegisterRequest>({
-        name: "",
-        surname: "",
-        email: "",
-        password: "",
-        repeatPassword: "",
-        jib: "",
-        address: ""
-    });
-    const [errorsRegister, setErrorsRegister] = useState({
-        name: false,
-        surname: false,
-        email: false,
-        password: false,
-        repeatPassword: false,
-        jib: false,
-        address: false,
-    });
-
     // TODO: wait for backend
     const onForgotPassword = async () => {
         // forgot password logic
@@ -284,47 +192,27 @@ export default function AuthScreen() {
         }
     };
 
+    const handleLoginPress = async (data: LoginValidation.FormValues) => {
+		const request: LoginRequest = {
+			email: data.email,
+			password: data.password
+		}
 
-    // Handler functions
-    const handleLoginDataChange = (field: keyof LoginRequest, value: string) => {
-        setLoginData(prev => ({ ...prev, [field]: value }));
+        login(request);
     };
 
-    const handleErrorsLoginChange = (field: keyof typeof errorsLogin | 'all', value: any) => {
-        if (field === 'all') {
-            setErrorsLogin(value);
-        } else {
-            setErrorsLogin(prev => ({ ...prev, [field]: value }));
-        }
-    };
+    const handleRegisterPress = async (data: RegistrationValidation.FormValues) => {
+		const request: RegisterRequest = {
+			name: data.name,
+			surname: data.surname,
+			email: data.email,
+			password: data.password,
+			repeatPassword: data.repeatPassword,
+			jmbg: data.jmbg,
+			address: data.address
+		}
 
-    const handleRegisterDataChange = (field: keyof RegisterRequest, value: string) => {
-        setRegisterData(prev => ({ ...prev, [field]: value }));
-    };
-
-    const handleErrorsRegisterChange = (field: keyof typeof errorsRegister | 'all', value: any) => {
-        if (field === 'all') {
-            setErrorsRegister(value);
-        } else {
-            setErrorsRegister(prev => ({ ...prev, [field]: value }));
-        }
-    };
-
-    const handleLoginPress = async () => {
-        const emailInvalid = loginData.email.length < 6;
-        const passwordInvalid = loginData.password.length < 2;
-
-        setErrorsLogin({
-            email: emailInvalid,
-            password: passwordInvalid,
-        });
-
-        if (emailInvalid || passwordInvalid) return;
-        login(loginData);
-    };
-
-    const handleRegisterPress = async () => {
-        register(registerData);
+        register(request);
     };
 
 
@@ -334,9 +222,6 @@ export default function AuthScreen() {
             <View className="w-full mt-6">
                 {authMode === 'login' ? (
                     <LoginForm
-                        errorsLogin={errorsLogin}
-                        onLoginDataChange={handleLoginDataChange}
-                        onErrorsLoginChange={handleErrorsLoginChange}
                         onLoginPress={handleLoginPress}
                         onForgotPassword={onForgotPassword}
                         onGoogleLogin={onGoogleLogin}
@@ -344,10 +229,6 @@ export default function AuthScreen() {
                     />
                 ) : (
                     <RegisterForm
-                        registerData={registerData}
-                        errorsRegister={errorsRegister}
-                        onRegisterDataChange={handleRegisterDataChange}
-                        onErrorsRegisterChange={handleErrorsRegisterChange}
                         onRegisterPress={handleRegisterPress}
                         onGoogleLogin={onGoogleLogin}
                         isLoading={isRegistering}
