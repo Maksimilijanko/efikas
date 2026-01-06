@@ -32,7 +32,7 @@ export const getStyles = (Colors: any) => StyleSheet.create({
   submitWrapper: {
     width: "100%",
     alignItems: "center",
-    marginTop: 18,
+    marginTop: 72,
     paddingBottom: 10,
   },
 });
