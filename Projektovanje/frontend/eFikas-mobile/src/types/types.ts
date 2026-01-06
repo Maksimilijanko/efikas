@@ -45,7 +45,6 @@ export interface Apartment {
   inventory: ApartmentInventory; 
 }
 
-
 export type ApartmentInventory = {
     parking: boolean;
     tv: boolean;
@@ -86,30 +85,27 @@ export interface ApartmentCurrentInfo {
 };
 
 export interface GuestBase {
-  id: number;
-  citizenId: string | null;
+  id?: number;
+  citizenId: string;
   isLocal: boolean;
-  personalDocumentURL: string | null;
+  personalDocumentURL?: string | null;
 
   name: string;
   surname: string;
-  gender: "MALE" | "FEMALE";
+  gender: "Male" | "Female";
   phoneNumber: string;
-
   birthDate: string;
   birthPlace: string;
-  birthCountry?: string | null;
-  address?: string | null;
+  birthCountry: string;
+  address: string;
+  accommodationUnitNumber: number;
+  accommodationUnitFloor: number;
 
-  accommodationUnitNumber?: number | null;
-  accommodationUnitFloor?: number | null;
-
-  dateTimeOfArrival?: string;
-  dateTimeOfDeparture?: string;
+  dateTimeOfArrival: string;
+  dateTimeOfDeparture: string;
 
   issuedInvoiceNumber?: string | null;
   remarks?: string | null;
-  createdAt: string;
 }
 
 export interface DomesticGuest extends GuestBase {
@@ -125,21 +121,86 @@ export interface ForeignGuest extends GuestBase {
   visaType?: string | null;
   visaNumber?: string | null;
   permittedResidenceDate?: string | null;
-  entryDate: string;
-  entryPlace: string;
+  entryDate?: string | null;
+  entryPlace?: string | null;
 }
 
 export type Guest = DomesticGuest | ForeignGuest;
+
+export interface CreateDomesticGuestPayload {
+  name: string;
+  surname: string;
+  gender: "Male" | "Female";
+  birthDate: string;
+  birthPlace: string;
+  birthMunicipality: string;
+  birthCountry: string;
+  address: string;
+  jmbg: string;
+
+  accommodationUnitNumber: number;
+  accommodationUnitFloor: number;
+  dateTimeOfArrival: string;
+  dateTimeOfDeparture: string;
+
+  issuedInvoiceNumber?: string | null;
+  remarks?: string | null;
+}
+
+
+export interface CreateForeignGuestPayload {
+  name: string;
+  surname: string;
+  gender: "Male" | "Female";
+  birthDate: string;
+  birthPlace: string;
+  birthCountry: string;
+  address: string;
+
+  citizenship: string;
+  passportNumber: string;
+  passportIssuedDate: string;
+
+  visaType?: string | null;
+  visaNumber?: string | null;
+  permittedResidenceDate?: string | null;
+  entryDate?: string | null;
+  entryPlace?: string | null;
+
+  accommodationUnitNumber: number;
+  accommodationUnitFloor: number;
+  dateTimeOfArrival: string;
+  dateTimeOfDeparture: string;
+
+  issuedInvoiceNumber?: string | null;
+  remarks?: string | null;
+}
 
 export interface Reservation {
   reservationId: number;
   apartment: Apartment;
   guest: Guest;
-
   guestQuantity: number;
   price: number | null;
   note: string | null;
   reservationType: string;
+}
+
+export interface CreateReservationPayload {
+  guestQuantity: number;
+  price?: number | null;
+  note?: string | null;
+  reservationType: string;
+  guest: Omit<Guest, "id">;
+}
+
+export interface UpdateReservationPayload {
+  apartmentId?: number;
+  guestId: number;
+  guestQuantity?: number;
+  price?: number | null;
+  note?: string | null;
+  reservationType?: string;
 }
 
 export interface MenuItemProps {
