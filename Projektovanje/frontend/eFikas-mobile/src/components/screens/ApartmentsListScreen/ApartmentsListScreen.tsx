@@ -4,6 +4,7 @@ import ApartmentCard from "../../organisms/ApartmentCard/ApartmentCard";
 import FloatButton from "../../atoms/FloatButton/FloatButton";
 import { Icon } from "../../atoms/Icon/Icon";
 import { useApartmentsList } from "@/src/hooks/useApartmentsList";
+import { router } from "expo-router";
 
 
 const ApartmentsListScreen: React.FC = () => {
@@ -38,9 +39,7 @@ const ApartmentsListScreen: React.FC = () => {
         <FloatButton
           size="lg"
           icon={() => <Icon name="HousePlus" size={22} color="white" />}
-          onClick={() => {
-            console.log("Floating button pressed");
-          }}
+          onClick={() => router.push('/addApartment')}
         />
       }
     />
