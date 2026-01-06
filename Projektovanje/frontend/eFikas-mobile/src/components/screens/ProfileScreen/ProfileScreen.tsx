@@ -9,7 +9,7 @@ import ProfileTemplate from "@/src/components/templates/ProfileTemplate/ProfileT
 import { useCashRegisters } from "@/src/hooks/useCashRegister";
 import { useProfile } from "@/src/hooks/useProfile";
 import { useTheme } from "@/src/providers/ThemeProvider";
-import { LucideIconName, ProfileData } from "@/src/types/types";
+import { LucideIconName, ProfileData, StoreDTO } from "@/src/types/types";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,12 +23,13 @@ import {
 import FormField from "../../molecules/FormField/FormField";
 import CustomMenu, { CustomMenuItemProp } from "../../organisms/CustomMenu/CustomMenu";
 import AddStoreDialog from "../../organisms/Dialogs/AddStoreDialog/AddStoreDialog";
+import { StoreValidation } from "@/src/util/validationSchemas";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const { Colors } = useTheme();
   const navigation = useNavigation();
-  const { profile, isLoading, isSaving, updateProfile } = useProfile();
+  const { profile, isLoading, isSaving, updateProfile, addStore } = useProfile();
   
 
   const { cashRegisters, isLoadingCashRegisters, isAdding, addCashRegister } =
@@ -42,8 +43,8 @@ export default function ProfileScreen() {
   const [isAddStoreModalVisible, setIsAddStoreModalVisible] = useState(false);
 
   const menuItems: CustomMenuItemProp[] = [
-	{ key: "1", textValue: "Dodaj kasu", iconName: "Computer", onPress: () => setIsAddCashRegisterModalVisible(true) },
-	{ key: "2", textValue: "Dodaj radnju", iconName: "Store", onPress: () => setIsAddStoreModalVisible(true) },
+	{ key: "1", textValue: t('profile.menuItems.addCashRegister'), iconName: "Computer", onPress: () => setIsAddCashRegisterModalVisible(true) },
+	{ key: "2", textValue: t('profile.menuItems.addStore'), iconName: "Store", onPress: () => setIsAddStoreModalVisible(true) },
   ];
 
   const handleStartEdit = () => {
@@ -118,18 +119,6 @@ export default function ProfileScreen() {
     );
   };
 
-  const renderStoreField = (labelTranslationString: string, placeholder: string, iconName: LucideIconName, onChangeText: () => void) => {
-	return(
-		<FormField
-			label={t(labelTranslationString)}
-			placeholder={placeholder}
-			type="text"
-			iconName={iconName}
-			isInvalid={false}
-			onChangeText={onChangeText}
-		/>
-	);
-  }
 
   if (isLoading || !profile) {
     return (
@@ -262,9 +251,18 @@ export default function ProfileScreen() {
 
 		<AddStoreDialog 
 			visible={isAddStoreModalVisible} 
-			title={"Add store"} 
+			title={t('profile.store.addModalTitle')} 
 			onClose={() => setIsAddStoreModalVisible(false)} 
-			onConfirm={() => {}}
+			onConfirm={(data: StoreValidation.FormValues) => { 
+				const dto: StoreDTO = { 
+					name: data.name,
+					address: data.address,
+					activity: data.activity,
+					activityCode: data.activityCode,
+					jib: data.activityCode
+				}
+				addStore(dto);
+			}}
 		>
 			
 		</AddStoreDialog>

@@ -151,6 +151,14 @@ export interface BookPath {
     path: string;
 }
 
+export interface StoreDTO {
+	name: string;
+	address: string;
+	activity: string;
+	activityCode: string;
+	jib: string;
+}
+
 // ================ Notification ===================
 export interface PushNotificationTokenRequest {
     token: string;

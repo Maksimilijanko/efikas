@@ -12,7 +12,6 @@ import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 import AuthSwitcher from "../../molecules/AuthSwitcher/AuthSwitcher";
 import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
-import { register } from "module";
 
 
 // =================================================================

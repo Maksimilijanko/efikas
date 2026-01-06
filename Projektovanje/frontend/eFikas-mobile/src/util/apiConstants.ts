@@ -1,3 +1,5 @@
+import { registerSensor } from "react-native-reanimated/lib/typescript/core";
+
 const scheme = process.env.EXPO_PUBLIC_API_SCHEME;
 const address = process.env.EXPO_PUBLIC_API_ADDRESS;    
 const port = process.env.EXPO_PUBLIC_API_PORT;
@@ -14,6 +16,7 @@ export const API_URLS = {
     profile: {
         get: `${API_BASE_URL}/users/me`,
         update: `${API_BASE_URL}/users/me`,
+		registerStore: `${API_BASE_URL}/users/register/store`,
     },
 
     reservations: {

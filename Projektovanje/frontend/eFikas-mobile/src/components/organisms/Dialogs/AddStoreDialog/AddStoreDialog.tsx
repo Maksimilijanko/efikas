@@ -5,14 +5,17 @@ import { Modal, ModalBackdrop, ModalBody, ModalContent, ModalFooter, ModalHeader
 import { VStack } from "@/src/components/ui/vstack";
 import { Colors } from "@/src/styles/style";
 import { LucideIconName } from "@/src/types/types";
+import { StoreValidation } from "@/src/util/validationSchemas";
+import { Path, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text } from "react-native";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
     visible: boolean;
     title: string;
     onClose: () => void;
-    onConfirm: () => void;
+    onConfirm: (data: StoreValidation.FormValues) => void;
 }
 
 export default function AddStoreDialog({
@@ -23,18 +26,36 @@ export default function AddStoreDialog({
 }: Props) {
 	const { t } = useTranslation();
 
-	const renderStoreField = (labelTranslationString: string, placeholder: string, iconName: LucideIconName, onChangeText: () => void) => {
+	const { control, handleSubmit, reset, formState: { errors } } = useForm<StoreValidation.FormValues>({
+        resolver: zodResolver(StoreValidation.schema),
+        defaultValues: {
+          name: "",
+          address: "",
+          activity: "",
+          activityCode: "",
+          jib: "",
+        },
+    });
+
+	const renderStoreField = (labelTranslationString: string, name: Path<StoreValidation.FormValues>, placeholder: string, iconName: LucideIconName, onChangeText: () => void) => {
 		return(
 			<FormField
+				control={control}
+				name={name}
 				label={t(labelTranslationString)}
-				placeholder={placeholder}
+				placeholder={t(placeholder)}
 				type="text"
 				iconName={iconName}
 				isInvalid={false}
-				onChangeText={onChangeText}
 			/>
 		);
-	  }
+	}
+
+	const onSubmit = (data: StoreValidation.FormValues) => {
+        onConfirm(data);
+        reset();
+        onClose();
+    };
 
 	return (
 		<Modal isOpen={visible} onClose={onClose}>
@@ -51,18 +72,18 @@ export default function AddStoreDialog({
 
                 <ModalBody style={styles.modalBody}>
 					<VStack style={styles.addStoreContainer}>
-						{renderStoreField('profile.store.labels.name', 'Naziv', 'Store', () => {})}
-						{renderStoreField('profile.store.labels.address', 'Adresa', 'MapPinHouse', () => {})}
-						{renderStoreField('profile.store.labels.activity', 'Naziv', 'Briefcase', () => {})}
-						{renderStoreField('profile.store.labels.activityCode', 'nn.nn', 'Hash', () => {})}
-						{renderStoreField('profile.store.labels.jib', '1234567891234', 'IdCard', () => {})}
+						{renderStoreField('profile.store.labels.name', 'name', 'profile.store.placeholders.name', 'Store', () => {})}
+						{renderStoreField('profile.store.labels.address', 'address', 'profile.store.placeholders.address', 'MapPinHouse', () => {})}
+						{renderStoreField('profile.store.labels.activity', 'activity', 'profile.store.placeholders.activity', 'Briefcase', () => {})}
+						{renderStoreField('profile.store.labels.activityCode', 'activityCode', 'profile.store.placeholders.activityCode', 'Hash', () => {})}
+						{renderStoreField('profile.store.labels.jib', 'jib', 'profile.store.placeholders.jib', 'IdCard', () => {})}
 					</VStack>
 				</ModalBody>
 
                 <ModalFooter style={styles.buttonsContainer}>
                     <HStack style={{ justifyContent: "space-between", width: "100%" }}>
                         <DialogButton title="Cancel" onPress={onClose} />
-                        <DialogButton title="Confirm" onPress={() => {onConfirm(); onClose();}} />
+                        <DialogButton title="Confirm" onPress={() => handleSubmit(onSubmit)()} />
                     </HStack>
                 </ModalFooter>
             </ModalContent>
