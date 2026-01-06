@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -74,19 +74,12 @@ export default function ReservationsScreen() {
     { label: t("reservations.segments.upcoming"), value: "upcoming" }
   ], [t]);
 
-  const toggleView = () => {
+  // 1. Move toggleView into useCallback so it doesn't change every render
+  const toggleView = useCallback(() => {
     setViewMode((prev) => (prev === "list" ? "calendar" : "list"));
-  };
+  }, []);
 
   const styles = getStyles(Colors);
-
-  if (reservationsQuery.isLoading) {
-    return (
-      <View style={{ marginTop: 80, alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.tertiary} />
-      </View>
-    );
-  }
 
   useEffect(() => {
     navigation.setOptions({
@@ -101,7 +94,17 @@ export default function ReservationsScreen() {
         </Pressable>
       ),
     });
-  }, [navigation, viewMode, Colors.textPrimary]);
+  }, [navigation, viewMode, Colors.textPrimary, toggleView]);
+
+  if (reservationsQuery.isLoading) {
+    return (
+      <View style={{ marginTop: 80, alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.tertiary} />
+      </View>
+    );
+  }
+
+  
 
   return (
     <View style={styles.container}>

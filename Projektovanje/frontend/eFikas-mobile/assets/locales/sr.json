@@ -350,7 +350,16 @@
             "updateErrorTitle": "Greška pri čuvanju",
             "updateErrorMessage": "Nije moguće sačuvati profil.",
             "genericError": "Došlo je do greške."
-        }
+        },
+		"store": {
+			"labels": {
+				"name": "Naziv radnje",
+				"address": "Adresa radnje",
+				"activity": "Djelatnost",
+				"activityCode": "Šifra djelatnosti",
+				"jib": "JIB"
+			}
+		}
     },
 
 
