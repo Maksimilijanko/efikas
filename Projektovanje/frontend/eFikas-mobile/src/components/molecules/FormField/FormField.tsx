@@ -1,7 +1,7 @@
 import {
-    FormControl,
-    FormControlError, FormControlErrorIcon, FormControlErrorText,
-    FormControlHelper, FormControlHelperText
+	FormControl,
+	FormControlError, FormControlErrorIcon, FormControlErrorText,
+	FormControlHelper, FormControlHelperText
 } from "@/src/components/ui/form-control";
 import { LucideIconName } from "@/src/types/types";
 import { AlertTriangleIcon } from "lucide-react-native";
@@ -9,76 +9,88 @@ import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Icon } from "../../atoms/Icon/Icon";
 import LabeledTextField from "../LabeledTextField/LabeledTextField";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
-
-interface Props {
-  label: string;
-  placeholder: string;
-  iconName: LucideIconName;
-  type?: "text" | "password";
-  helperText?: string;
-  errorText?: string;
-  isInvalid?: boolean;
-  onChangeText?: (text: string) => void;
+interface Props<T extends FieldValues> {
+	name: Path<T>;
+	control: Control<T>;
+	rules?: object; // For validation rules
+	label: string;
+	placeholder: string;
+	iconName: LucideIconName;
+	type?: "text" | "password";
+	helperText?: string;
+	errorText?: string;
+	isInvalid?: boolean;
 }
 
-export default function FormField({
-  label,
-  placeholder,
-  iconName,
-  type = "text",
-  helperText,
-  errorText,
-  isInvalid = false,
-  onChangeText
-}: Props) {
-    const [isPasswordVisible, setPasswordVisible] = useState(false);
+export default function FormField<T extends FieldValues>({
+	name,
+	control,
+	rules,
+	label,
+	placeholder,
+	iconName,
+	type = "text",
+	helperText,
+	errorText,
+	isInvalid = false,
+}: Props<T>) {
+	const [isPasswordVisible, setPasswordVisible] = useState(false);
 
-    const isPasswordField = type === "password";
+	const isPasswordField = type === "password";
 
-    return (
-        <FormControl isInvalid={isInvalid} isRequired size="md">
-            <LabeledTextField
-                label={label}
-                placeholder={placeholder}
-                iconLocation="left"
-                iconName={iconName}
-                type={isPasswordField && !isPasswordVisible ? "password" : "text"}
-                onChangeText={onChangeText}
-                rightElement={
-                    isPasswordField ? (
-                        <TouchableOpacity
-                            onPress={() => setPasswordVisible(v => !v)}
-                            style={{ paddingRight: 8 }}
-                        >
-                        {isPasswordVisible ? (
-                            <Icon name="Eye" size={20} />
-                        ) : (
-                            <Icon name="EyeOff" size={20} />
-                        )}
-                        </TouchableOpacity>
-                    ) : null
-                }
-            />
+	return (
+		<Controller 
+			control={control}
+			name={name}
+			rules={rules}
+			render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+				<FormControl isInvalid={!!error} isRequired size="md">
+					<LabeledTextField
+						label={label}
+						placeholder={placeholder}
+						iconLocation="left"
+						iconName={iconName}
+						value={value}
+						type={isPasswordField && !isPasswordVisible ? "password" : "text"}
+						onChangeText={onChange}
+						rightElement={
+							isPasswordField ? (
+								<TouchableOpacity
+									onPress={() => setPasswordVisible(v => !v)}
+									style={{ paddingRight: 8 }}
+								>
+									{isPasswordVisible ? (
+										<Icon name="Eye" size={20} />
+									) : (
+										<Icon name="EyeOff" size={20} />
+									)}
+								</TouchableOpacity>
+							) : null
+						}
+					/>
 
-            {helperText && (
-                <FormControlHelper>
-                    <FormControlHelperText>{helperText}</FormControlHelperText>
-                </FormControlHelper>
-            )}
+					{helperText && (
+						<FormControlHelper>
+							<FormControlHelperText>{helperText}</FormControlHelperText>
+						</FormControlHelper>
+					)}
 
-            {isInvalid && errorText && (
-                <FormControlError>
-                    <FormControlErrorIcon
-                        as={AlertTriangleIcon}
-                        className="text-red-500"
-                    >
-                    </FormControlErrorIcon>
-                    <FormControlErrorText className="text-red-500">
-                        {errorText}
-                    </FormControlErrorText>
-                </FormControlError>
-            )}
-        </FormControl>
-  );
+					{error  && (
+						<FormControlError>
+							<FormControlErrorIcon
+								as={AlertTriangleIcon}
+								className="text-red-500"
+							>
+							</FormControlErrorIcon>
+							<FormControlErrorText className="text-red-500">
+								{error.message}
+							</FormControlErrorText>
+						</FormControlError>
+					)}
+				</FormControl>
+			)}
+		/>
+	);
 }

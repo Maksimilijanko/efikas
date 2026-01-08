@@ -45,10 +45,13 @@
             }
         },
         "errors": {
-            "emailError": "Email mora biti bar 6 karaktera",
+            "emailError": "Email nije ispravnog formata",
+			"emailLengthError": "Email mora biti bar {{length}} karaktera",
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
-            "jibLengthError": "JIB mora imati 13 cifara",
-            "passwordMismatchError": "Lozinke se ne podudaraju"
+            "jmbgLengthError": "JMBG mora imati 13 cifara",
+			"jmbgFormatError": "JMBG mora sadržavati samo cifre",
+            "passwordMismatchError": "Lozinke se ne podudaraju",
+			"addressLengthError": "Adresa mora biti bar {{length}} karaktera"
         }
     },
 
@@ -333,6 +336,10 @@
 
 
     "profile": {
+		"menuItems": {
+			"addCashRegister": "Dodaj kasu",
+			"addStore": "Dodaj radnju"
+		},
         "sectionTitle": "Informacije o profilu",
         "labels": {
             "firstName": "Ime",
@@ -349,8 +356,39 @@
             "fetchErrorMessage": "Nije moguće učitati podatke o profilu.",
             "updateErrorTitle": "Greška pri čuvanju",
             "updateErrorMessage": "Nije moguće sačuvati profil.",
-            "genericError": "Došlo je do greške."
-        }
+            "genericError": "Došlo je do greške.",
+
+			"addStoreSuccessTitle": "Radnja dodata!",
+			"addStoreSuccessMessage": "Nova radnja je uspješno registrovana.",
+			"addStoreErrorTitle": "Greška pri dodavanju radnje",
+			"addStoreErrorMessage": "Nije moguće dodati radnju.",
+			"addStoreErrorExistsTitle": "Već ste jednom registrovali Vašu radnju!"
+        },
+		"store": {
+			"addModalTitle": "Dodavanje radnje",
+			"placeholders": {
+				"name": "Naziv",
+				"address": "Adresa",
+				"activity": "Naziv",
+				"activityCode": "nn.nn",
+				"jib": "1234567891234"
+			},
+			"labels": {
+				"name": "Naziv radnje",
+				"address": "Adresa radnje",
+				"activity": "Djelatnost",
+				"activityCode": "Šifra djelatnosti",
+				"jib": "JIB"
+			},
+			"validation": {
+				"nameError": "Naziv radnje je prekratak",
+				"addressError": "Adresa je prekratka",
+				"activityError": "Djelatnost je obavezna",
+				"activityCodeError": "Šifra djelatnosti nije korektnog formata",
+				"jibLengthError": "JIB mora imati 13 cifara",
+				"jibFormatError": "JIB mora sadržavati samo cifre"
+			}
+		}
     },
 
 

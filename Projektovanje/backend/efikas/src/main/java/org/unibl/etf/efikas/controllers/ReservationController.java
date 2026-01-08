@@ -37,6 +37,7 @@ public class ReservationController {
 
     @GetMapping(value = "/apartments/{apartmentId}/reservations")
     public ResponseEntity<?> getReservations(@PathVariable Integer apartmentId) {
+        System.out.println("Reservation req made, apartmentid: " + apartmentId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 

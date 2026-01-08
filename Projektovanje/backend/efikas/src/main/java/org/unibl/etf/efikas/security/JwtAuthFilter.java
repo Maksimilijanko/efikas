@@ -39,8 +39,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (path.startsWith("/api/v1/users/login") ||
-                path.startsWith("/api/v1/users/register") ||
+        if (path.equals("/api/v1/users/login") ||
+                path.equals("/api/v1/users/register") ||
                 path.startsWith("/swagger-ui")) {
             System.out.println("Skipping JWT for path: " + path);
             filterChain.doFilter(request, response);

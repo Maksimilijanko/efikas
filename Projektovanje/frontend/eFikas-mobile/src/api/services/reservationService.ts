@@ -57,7 +57,7 @@ const mapReservation = (r: ReservationResponse): Reservation => ({
 export const reservationService = {
   getUserReservations: async (): Promise<Reservation[]> => {
     const res = await axiosInstance.get<ReservationResponse[]>(API_URLS.reservations.listUser());
-    console.log(res.data)
+    console.log("Rezervacija: ", res.data)
     return res.data.map(mapReservation);
   },
 

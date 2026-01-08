@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { profileService } from "@/src/api/services/profileService";
-import { ProfileData } from "@/src/types/types";
+import { ProfileData, StoreDTO } from "@/src/types/types";
 import { toastService } from '../services/toastService';
 import { useTranslation } from "react-i18next";
+import { AxiosError } from 'axios';
 
 export const useProfile = () => {
     const { t } = useTranslation();
@@ -55,6 +56,44 @@ export const useProfile = () => {
         },
     });
 
+	// -------- ADD STORE --------
+	const {
+		mutateAsync: addStore,
+		isPending: isAddingStore,
+	} = useMutation({
+		mutationFn: async (data: StoreDTO) => {
+			try {
+				await profileService.registerStore(data);
+			} catch (err: any) {
+				if(err instanceof AxiosError) {
+					const status = err.response?.status;
+					if(status === 409) {
+						toastService.error(
+							t("profile.toastMessages.addStoreErrorExistsTitle")
+						);
+					}
+					else {
+						toastService.error(
+							t("profile.toastMessages.addStoreErrorTitle"),
+							t("profile.toastMessages.addStoreErrorMessage")
+						);
+					}
+				}
+
+				console.log(err.message);
+			}
+		},
+		onSuccess: async () => {
+			// safest option: refetch profile
+			await queryClient.invalidateQueries({ queryKey: ["profile"] });
+
+			toastService.success(
+				t("profile.toastMessages.addStoreSuccessTitle"),
+				t("profile.toastMessages.addStoreSuccessMessage")
+			);
+		},
+	});
+
     return {
         profile,
         isLoading,
@@ -63,5 +102,7 @@ export const useProfile = () => {
         error: (error as Error)?.message ?? null,
         fetchProfile,
         updateProfile,
+		addStore,
+		isAddingStore
     };
 };

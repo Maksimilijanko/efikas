@@ -15,7 +15,7 @@ export interface RegisterRequest {
     email: string;
     password: string;
     repeatPassword: string;
-    jib: string;
+    jmbg: string;
     address: string;
 }
 
@@ -149,6 +149,14 @@ export interface GuestsBookRequest {
 export interface BookPath {
     displayName: string;
     path: string;
+}
+
+export interface StoreDTO {
+	name: string;
+	address: string;
+	activity: string;
+	activityCode: string;
+	jib: string;
 }
 
 // ================ Notification ===================
