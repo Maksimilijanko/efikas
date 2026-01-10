@@ -163,7 +163,6 @@ const getStyles = (Colors: any) =>
       flex: 1,
     },
     listContent: {
-      paddingHorizontal: 16,
       paddingTop: 16,
       paddingBottom: 120,
     },
