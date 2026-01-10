@@ -1,5 +1,3 @@
-import { registerSensor } from "react-native-reanimated/lib/typescript/core";
-
 const scheme = process.env.EXPO_PUBLIC_API_SCHEME;
 const address = process.env.EXPO_PUBLIC_API_ADDRESS;    
 const port = process.env.EXPO_PUBLIC_API_PORT;
@@ -11,6 +9,9 @@ export const API_URLS = {
         googleLogin: `${API_BASE_URL}/users/google/login`,
         login: `${API_BASE_URL}/users/login`,
         register: `${API_BASE_URL}/users/register`,
+		requestOtp: `${API_BASE_URL}/users/otp/request-otp`,
+		validateOtp: `${API_BASE_URL}/users/otp/validate`,
+		resetPassword: `${API_BASE_URL}/users/reset-password`,
     },
     
     profile: {

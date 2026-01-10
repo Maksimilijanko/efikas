@@ -11,13 +11,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unibl.etf.efikas.models.dto.ChangePasswordDTO;
 import org.unibl.etf.efikas.models.dto.UserDTO;
 import org.unibl.etf.efikas.models.dto.books.StoreDTO;
+import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.requests.CreateStoreRequest;
+import org.unibl.etf.efikas.models.requests.OtpSendRequest;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
 import org.unibl.etf.efikas.models.responses.AuthenticationResponse;
 import org.unibl.etf.efikas.security.JwtUtil;
 import org.unibl.etf.efikas.services.AppUserService;
 import org.unibl.etf.efikas.services.StoreService;
 import org.unibl.etf.efikas.services.interfaces.OAuthService;
+import org.unibl.etf.efikas.services.interfaces.OtpService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,6 +35,7 @@ public class AppUserController {
     private final AppUserService appUserService;
     private final StoreService storeService;
     private final OAuthService oAuthService;
+    private final OtpService otpService;
     private final JwtUtil jwtUtil;
 
 
@@ -75,6 +79,18 @@ public class AppUserController {
                 "email", email,
                 "token", token
         ));
+    }
+
+    @PostMapping("/otp/request")
+    public ResponseEntity<?> requestOtp(@RequestBody OtpSendRequest otpSendRequest) {
+        AppUser appUser = appUserService.getUserByEmail(otpSendRequest.getEmail());
+        String phoneNumber = appUser.getPhoneNumber();
+        System.out.println("phone number: " + phoneNumber);
+        String smsMessage = "sms";
+        String response = otpService.sendOtp(phoneNumber, smsMessage);
+        //String response = "Sent";
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/google/login")

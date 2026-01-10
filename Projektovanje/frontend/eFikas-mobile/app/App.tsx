@@ -35,14 +35,14 @@ export default function App() {
         <GluestackUIProvider mode={theme}>
             <OverlayProvider>
                 <QueryClientProvider client={queryClient}>
-                    <Stack >
+                    <Stack screenOptions={{ headerShown: false }}>
                         {/* Not logged in -> show auth flow (komentarisano za sada za lak pristup meniju, inače radi :D ) */}
-                        {/* <Stack.Screen
+                        <Stack.Screen
                             name="(auth)"
                             options={{
                                 headerShown: false,
                             }}
-                        /> */}
+                        />
 
                         {/* Authenticated users go to (tabs) */}
                         <Stack.Screen

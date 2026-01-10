@@ -87,7 +87,7 @@ export const useAuth = () => {
                 t('auth.logout.toastMessages.successTitle'),
                 t('auth.logout.toastMessages.successMsg')
             );
-            router.replace('/auth');
+            router.replace('/(auth)');
             
         } catch (error) {
             console.error("Greška prilikom odjave:", error);

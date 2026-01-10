@@ -15,6 +15,7 @@ import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 import AuthSwitcher from "../../molecules/AuthSwitcher/AuthSwitcher";
 import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
+import { router } from "expo-router";
 
 
 
@@ -181,7 +182,7 @@ export default function AuthScreen() {
     
     // TODO: wait for backend
     const onForgotPassword = async () => {
-        // forgot password logic
+        router.push('/(auth)/forgotPassword');
     };
 
     const onGoogleLogin = async () => {

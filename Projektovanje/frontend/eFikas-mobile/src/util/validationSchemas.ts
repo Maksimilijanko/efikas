@@ -40,3 +40,17 @@ export namespace RegistrationValidation {
     export type FormValues = z.infer<typeof schema>;
 }
 
+export namespace ResetPasswordValidation {
+    export const schema = z.object({
+		email: z.email(t('auth.errors.emailError')).min(10, t('auth.errors.emailError', { length: 10 })),
+		password: z.string().min(8, t('auth.errors.passwordLengthError')),
+		repeatPassword: z.string().min(8, t('auth.errors.passwordLengthError')),
+    })
+	.refine((data) => data.password === data.repeatPassword, {
+		message: t('auth.errors.passwordMismatchError'),
+		path: ['repeatPassword'], // show error under repeatPassword
+	});
+
+    export type FormValues = z.infer<typeof schema>;
+}
+
