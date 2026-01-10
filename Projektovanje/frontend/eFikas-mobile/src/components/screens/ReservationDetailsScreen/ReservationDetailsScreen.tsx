@@ -65,6 +65,19 @@ const ReservationDetailsScreen = ({ reservation }) => {
     }
   };
 
+  const handleEdit = () => {
+    toggleDialog("editDelete", false);
+    
+    router.replace({
+      pathname: "/(home)/reservations/addReservation",
+      params: {
+        mode: "edit",
+        reservationId: reservation.reservationId,
+        reservationData: JSON.stringify(reservation),
+      },
+    });
+  };
+
   const handleFiscalizationConfirm = () => {
     // Logika za fikalizaciju... TODO
     console.log("Fiskalizacija potvrđena");
@@ -163,10 +176,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
       editDelete: {
         visible: dialogs.editDelete,
         onClose: () => toggleDialog("editDelete", false),
-        onEdit: () => {
-          toggleDialog("editDelete", false);
-          // router.push("/(tabs)/reservations")   // TODO: otvaranje sceen-a za dodavanje rezervacije
-        },
+        onEdit: handleEdit,
         onDelete: () => {
           toggleDialog("editDelete", false);
           toggleDialog("deleteConfirm", true);
@@ -240,6 +250,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
       reservation.price,
       t,
       handleDelete,
+      handleEdit,
       handleFiscalizationConfirm,
     ]
   );
