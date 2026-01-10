@@ -377,6 +377,14 @@
         }
     },
 
+    "datePicker": {
+        "title": "Izaberite datum i vrijeme",
+        "titleDateOnly": "Izaberite datum",
+        "common": {
+            "confirm": "Potvrdi",
+            "cancel": "Otkaži"
+        }
+    },
 
     "reservations": {
         "navigation": {
@@ -433,6 +441,14 @@
         }
     },
 
+
+    "apartments":{
+        "toastMessages": {
+            "genericError": "Došlo je do greške.",
+            "fetchErrorTitle": "Greška pri učitavanju apartmana",
+            "fetchErrorMessage": "Nije moguće učitati apartmane. Molimo pokušajte ponovo."
+        }
+    },
 
     "apartment": {
         "card": {

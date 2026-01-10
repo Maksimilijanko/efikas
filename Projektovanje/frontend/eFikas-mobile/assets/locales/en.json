@@ -345,6 +345,15 @@
             "createError": "Failed to create cash register"
         }
     },
+
+    "datePicker": {
+        "title": "Select date and time",
+        "titleDateOnly": "Select date",
+        "common": {
+            "confirm": "Confirm",
+            "cancel": "Cancel"
+        }
+    },
     "reservations": {
         "navigation": {
             "reservationDetailsTitle": "Reservation Details",
@@ -399,6 +408,16 @@
             }
         }
     },
+
+
+    "apartments":{
+        "toastMessages": {
+            "genericError": "An error occurred.",
+            "fetchErrorTitle": "Failed to Load Apartments",
+            "fetchErrorMessage": "Could not load apartments. Please try again."
+        }
+    },
+
     "apartment": {
         "card": {
             "status": {
