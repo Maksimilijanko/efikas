@@ -5,7 +5,6 @@ export const styles = StyleSheet.create({
 		flex: 1,
 		padding: 10,
 		justifyContent: "center",
-		backgroundColor: "#fff",
 	},
 
 	emailFormContainer: {

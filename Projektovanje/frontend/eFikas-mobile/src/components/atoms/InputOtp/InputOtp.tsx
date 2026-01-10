@@ -10,6 +10,7 @@ import Animated, {
 	withSequence,
 	useSharedValue,
 } from 'react-native-reanimated';
+import { useTheme } from '@/src/providers/ThemeProvider';
 import { Colors } from '@/src/styles/style';
 
 
@@ -21,8 +22,10 @@ interface Props {
 export default function InputOtp({ maxLength = 6, onCompleteOtp }: Props) {
 	const ref = useRef<OTPInputRef>(null);
 	const onComplete = (code: string) => {
-		Alert.alert('Completed with code:', code);
-		ref.current?.clear();
+		//Alert.alert('Completed with code:', code);
+		//ref.current?.clear();
+
+		onCompleteOtp?.(code);
 	};
 
 
