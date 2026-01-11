@@ -274,14 +274,12 @@
             "title": "Downloaded books",
             "noBooks": "You currently have no downloaded books"
         },
-
         "documents": {
             "incomeBookDownloadTitle": "IncomeBook",
             "domesticGuestsBookDownloadTitle": "DomesticGuestsBook",
             "foreignGuestsBookDownloadTitle": "ForeignGuestsBook",
             "yearFrom": "Date from",
             "yearTo": "Date to",
-
             "downloadErrorTitle": "Download Error",
             "downloadErrorMessage": "Download failed",
             "downloadSuccessMessage": "Download successful",
@@ -439,10 +437,18 @@
         "card": {
             "status": {
                 "current": "Currently: ",
-                "occupied": "Busy",
-                "available": "Free",
+                "occupied": "Occupied",
+                "available": "Available",
                 "until": " until ",
                 "nextGuests": "Next guests: "
+            }
+        },
+        "dialogs": {
+            "deleteConfirm": {
+                "title": "Delete apartment",
+                "description": "Are you sure you want to delete this apartment? This action cannot be undone.",
+                "confirm": "Delete",
+                "cancel": "Cancel"
             }
         }
     },

@@ -21,6 +21,7 @@ interface ApartmentCardProps {
   statusUntil?: string;
   nextGuestsDate?: string;
   onPress: () => void;
+  onLongPress?: (event: any) => void; // IZMENJENO - prima event
   style?: StyleProp<ViewStyle>;
   showArrow?: boolean;
 }
@@ -33,6 +34,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
   statusUntil,
   nextGuestsDate,
   onPress,
+  onLongPress, // DODATO
   style,
   showArrow = true,
 }) => {
@@ -42,12 +44,19 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
   const { Colors } = useTheme();
   const { t } = useTranslation();
 
-  const statusText = status
-    ? t("apartment.card.status.occupied") // "Zauzeto"
-    : t("apartment.card.status.available"); // "Slobodno"
-  const statusColor = status ? Colors.statusOccupied : Colors.statusAvailable;
-  const showStatus = status;
+  const statusText =
+    status === undefined
+      ? t("common.loading")
+      : status
+        ? t("apartment.card.status.occupied")
+        : t("apartment.card.status.available");
+
+  const statusColor =
+    status === true ? Colors.statusOccupied : Colors.statusAvailable;
+
+  const showStatus = true; // ✅ uvijek prikazuj status (slobodno ili zauzeto)
   const showNextGuests = !!nextGuestsDate;
+
 
   return (
     <TouchableOpacity
@@ -61,6 +70,8 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
         },
       ]}
       onPress={onPress}
+      onLongPress={(event) => onLongPress?.(event)} // IZMENJENO - prosleđuje event
+      delayLongPress={500} // DODATO - 500ms za aktivaciju long press-a
       activeOpacity={0.7}
     >
       <View style={styles.mainContentWrapper}>

@@ -1,46 +1,85 @@
-import { Reservation } from "@/src/types/types";
+import { reservationService } from "@/src/api/services/reservationService";
+import type { ApartmentResponse, Reservation } from "@/src/types/types";
+import type { QueryClient } from "@tanstack/react-query";
 
-const MOCK_APARTMENT_DETAILS = {
-  id: 1,
-  title: "Modern Loft – Banja Luka",
-  address: "Ulica kralja Petra I Karađorđevića 73",
-  heroImageUrl: "https://picsum.photos/id/1018/900/600",
+type ServiceItem = { name: string };
 
-  bedrooms: 4,
-  squareMeters: 150,
-  maxGuests: 8,
+export type ApartmentDetailsVM = {
+  id: number;
+  title: string;
+  address: string;
+  heroImageUrl: string;
 
-  tags: ["WiFi", "Parking", "Klima", "TV"],
+  bedrooms: number;      // = numberOfBeds
+  squareMeters: number;  // = numberOfRooms (za sada, treba uskladiti)
+  maxGuests: number;     // = capacity 
 
-  services: [
-  { name: "WiFi" },
-  { name: "Parking" },
-  { name: "AC" },
-  { name: "TV" },
-  { name: "Kitchen" },
-  { name: "Washing Machine" },
-  { name: "Hair Dryer" },
-  { name: "Balcony" },
-],
+  tags: string[];
+  services: ServiceItem[];
 
-  galleryImages: [
-    "https://picsum.photos/id/1068/800/600",
-    "https://picsum.photos/id/1070/800/600",
-    "https://picsum.photos/id/1084/800/600",
-    "https://picsum.photos/id/1080/800/600",
-    "https://picsum.photos/id/1074/800/600",
-    "https://picsum.photos/id/1062/800/600"
-  ],
-
-  availability: [] as Reservation[]
+  galleryImages: string[];
+  availability: Reservation[];
 };
+
+function traitsToServices(traits?: Record<string, boolean>): ServiceItem[] {
+  if (!traits) return [];
+
+  const map: Record<string, string> = {
+    wifi: "WiFi",
+    parking: "Parking",
+    klima: "AC",
+    tv: "TV",
+    kafa: "Kitchen",
+    vesMasina: "Washing Machine",
+    fen: "Hair Dryer",
+    balkon: "Balcony",
+  };
+
+  return Object.entries(traits)
+    .filter(([_, enabled]) => enabled)
+    .map(([key]) => ({ name: map[key] ?? key }));
+}
+
+function traitsToTags(traits?: Record<string, boolean>): string[] {
+  return traitsToServices(traits).map((s) => s.name);
+}
 
 
 export const apartmentDetailsService = {
-  getApartmentDetails: async (id: number) => {
+  getApartmentDetailsFromCacheAndReservations: async (
+    queryClient: QueryClient,
+    apartmentId: number
+  ): Promise<ApartmentDetailsVM> => {
+    const apartments = queryClient.getQueryData<ApartmentResponse[]>(["apartments"]) ?? [];
+
+    const apartment = apartments.find((a) => a.apartmentId === apartmentId);
+    if (!apartment) {
+      throw new Error("Apartment not found in cache. Please go back to list and try again.");
+    }
+
+    const availability = await reservationService.getReservations(apartmentId);
+
+    const galleryImages = apartment.pictures ?? [];
+    const heroImageUrl = galleryImages[0] ?? "https://picsum.photos/900/600";
+
+    const services = traitsToServices(apartment.traits);
+    const tags = traitsToTags(apartment.traits);
+
     return {
-      ...MOCK_APARTMENT_DETAILS,
-      id 
+      id: apartment.apartmentId,
+      title: apartment.name,
+      address: apartment.address,
+      heroImageUrl,
+
+      bedrooms: apartment.numberOfBeds ?? 0,
+      squareMeters: apartment.numberOfRooms ?? 0,
+      maxGuests: apartment.capacity ?? 0,
+
+      tags,
+      services,
+
+      galleryImages,
+      availability,
     };
-  }
+  },
 };

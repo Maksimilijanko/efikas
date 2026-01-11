@@ -1,10 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addApartmentService } from "@/src/api/services/addApartmentService";
-import { CreateApartmentPayload, ApartmentResponse } from "@/src/types/types";
+import { CreateApartmentPayload, AddingApartmentResponse } from "@/src/types/types";
 
 export function useAddApartment() {
-  return useMutation<ApartmentResponse, Error, CreateApartmentPayload>({
-    mutationFn: (payload) =>
-      addApartmentService.createApartment(payload),
+  const queryClient = useQueryClient();
+
+  return useMutation<AddingApartmentResponse, Error, CreateApartmentPayload>({
+    mutationFn: (payload) => addApartmentService.createApartment(payload),
+    
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['apartments'] });
+    },
   });
 }

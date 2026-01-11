@@ -67,21 +67,35 @@ export type CreateApartmentPayload = {
     pricePerDay: number;
     traits: Record<string, boolean>;
   };
-  pictures?: {
+  pictures: {
     uri: string;
-    fileName?: string;
-    type?: string;
+    name: string;   
+    type: string;   
   }[];
 };
 
-export type ApartmentResponse = {
+export interface ApartmentResponse {
+  apartmentId: number;
+  name: string;
+  address: string;
+  numberOfBeds: number;
+  numberOfRooms: number;
+  capacity: number;
+  pricePerDay: number;
+  pricePerNight: number;
+  pictures: string[];
+  traits?: Record<string, boolean>;
+}
+
+export type AddingApartmentResponse = {
   success: boolean;
   message?: string;
   apartmentId?: number;
   data?: any;
 };
+
 export interface ApartmentCurrentInfo {
-  id: number;
+  apartmentId: number;
   name: string;
   address: string;
   imageUrl: string;
