@@ -71,6 +71,13 @@ export const useCreateReservation = (apartmentId: number) => {
         );
       } catch (err: any) {
         console.log("=== HOOK ERROR ===", err);
+		
+		console.log("message:", err.message);
+		console.log("status:", err.response?.status);
+		console.log("data:", err.response?.data);
+		console.log("headers:", err.response?.headers);
+
+
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");
         toastService.error(

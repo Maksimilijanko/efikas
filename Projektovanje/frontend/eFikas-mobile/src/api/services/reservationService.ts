@@ -254,9 +254,9 @@
 //   },
 // };
 
-import axiosInstance from "../axiosInstance";
+import { CreateReservationPayload, Reservation, UpdateReservationPayload } from "@/src/types/types";
 import { API_URLS } from "@/src/util/apiConstants";
-import { Reservation, CreateReservationPayload, UpdateReservationPayload } from "@/src/types/types";
+import axiosInstance from "../axiosInstance";
 
 export const reservationService = {
   getUserReservations: async (): Promise<Reservation[]> => {
@@ -289,35 +289,44 @@ export const reservationService = {
     const formData = new FormData();
 
     // Add reservation as JSON string
-    formData.append("reservation", JSON.stringify({
-      apartmentId,
-      ...payload
-    }));
+    // formData.append("reservation", JSON.stringify({
+    //   apartmentId,
+    //   ...payload
+    // }));
+	formData.append(
+	"reservation",
+	{
+		string: JSON.stringify({
+		apartmentId,
+		...payload,
+		}),
+		type: "application/json",
+	} as any
+	);
 
     // Add picture (backend requires this part)
-    if (documentPicture) {
-      formData.append("picture", {
-        uri: documentPicture.uri,
-        type: documentPicture.type,
-        name: documentPicture.name,
-      } as any);
-    } else {
-      // If no picture, send an empty blob or handle on backend
-      // Backend needs to be updated to make picture optional
-      // For now, you must provide a picture or backend needs modification
-      formData.append("picture", {
-        uri: '',
-        type: 'image/jpeg',
-        name: 'empty.jpg',
-      } as any);
-    }
+	console.log("IN SERVICE - documentPicture:", documentPicture);
+    // if (documentPicture) {
+    //   formData.append("picture", {
+    //     uri: documentPicture.uri,
+    //     type: documentPicture.type,
+    //     name: documentPicture.name,
+    //   } as any);
+    // } else {
+    //   // If no picture, send an empty blob or handle on backend
+    //   // Backend needs to be updated to make picture optional
+    //   // For now, you must provide a picture or backend needs modification
+    //   formData.append("picture", {
+    //     uri: '',
+    //     type: 'image/jpeg',
+    //     name: 'empty.jpg',
+    //   } as any);
+    // }
 
     const res = await axiosInstance.post<Reservation>(
       API_URLS.reservations.create(apartmentId),
       formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
+      // Ivan: Ovo sam obrisao Content-Type, dobijao sam NetworkError za Axios i nije se pravio poziv...
     );
     return res.data;
   },
@@ -329,27 +338,34 @@ export const reservationService = {
   ): Promise<Reservation> => {
     const formData = new FormData();
 
-    formData.append("reservation", JSON.stringify(payload));
+    //formData.append("reservation", JSON.stringify(payload));
 
-    if (documentPicture) {
-      formData.append("picture", {
-        uri: documentPicture.uri,
-        type: documentPicture.type,
-        name: documentPicture.name,
-      } as any);
-    } else {
-      // Same issue with update - picture is required
-      formData.append("picture", {
-        uri: '',
-        type: 'image/jpeg',
-        name: 'empty.jpg',
-      } as any);
-    }
+	formData.append(
+	"reservation",
+	{
+		string: JSON.stringify(payload),
+		type: "application/json",
+	} as any
+	);
+
+    // if (documentPicture) {
+    //   formData.append("picture", {
+    //     uri: documentPicture.uri,
+    //     type: documentPicture.type,
+    //     name: documentPicture.name,
+    //   } as any);
+    // } else {
+    //   // Same issue with update - picture is required
+    //   formData.append("picture", {
+    //     uri: '',
+    //     type: 'image/jpeg',
+    //     name: 'empty.jpg',
+    //   } as any);
+    // }
 
     const res = await axiosInstance.put<Reservation>(
       API_URLS.reservations.update(reservationId),
       formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
     );
     return res.data;
   },
