@@ -41,7 +41,7 @@ export const notificationsApiService = {
 
 			return response.data;
 		} catch(err) {
-			console.log("Token already exists");
+			console.log("Push Token already exists");
 		}
         
     },

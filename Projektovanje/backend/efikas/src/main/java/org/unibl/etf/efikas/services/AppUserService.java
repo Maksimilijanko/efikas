@@ -7,13 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.models.dto.ChangePasswordDTO;
 import org.unibl.etf.efikas.models.dto.UserDTO;
-import org.unibl.etf.efikas.models.dto.books.TaxpayerDTO;
 import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
@@ -43,7 +41,7 @@ public class AppUserService {
         String password = user.get("password");
         String name = user.get("name");
         String surname = user.get("surname");
-        String jib = user.get("jib");
+        String jmbg = user.get("jmbg");
         String address = user.get("address");
 
         if (appUserRepository.existsByEmail(email)) {
@@ -54,7 +52,7 @@ public class AppUserService {
         newUser.setEmail(email);
         newUser.setName(name);
         newUser.setSurname(surname);
-        newUser.setJib(jib);
+        newUser.setJmbg(jmbg);
         newUser.setAddress(address);
         // hashing the password
         newUser.setPasswordHash(passwordEncoder.encode(password));
@@ -93,7 +91,7 @@ public class AppUserService {
 
         user.setName(userDto.getName());
         user.setSurname(userDto.getSurname());
-        user.setJib(userDto.getJib());
+        user.setJmbg(userDto.getJmbg());
         user.setEmail(userDto.getEmail());
         user.setAddress(userDto.getAddress());
 

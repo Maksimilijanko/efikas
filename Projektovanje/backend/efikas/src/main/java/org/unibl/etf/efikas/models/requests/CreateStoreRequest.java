@@ -1,15 +1,14 @@
-package org.unibl.etf.efikas.models.dto.books;
+package org.unibl.etf.efikas.models.requests;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreDTO {
+public class CreateStoreRequest {
     private String name;
     private String address;
     private String activity;

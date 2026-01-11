@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -74,14 +74,6 @@ export default function ReservationsScreen() {
 
   const styles = getStyles(Colors);
 
-  if (reservationsQuery.isLoading) {
-    return (
-      <View style={{ marginTop: 80, alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.tertiary} />
-      </View>
-    );
-  }
-
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -95,7 +87,17 @@ export default function ReservationsScreen() {
         </Pressable>
       ),
     });
-  }, [navigation, viewMode, Colors.textPrimary]);
+  }, [navigation, viewMode, Colors.textPrimary, toggleView]);
+
+  if (reservationsQuery.isLoading) {
+    return (
+      <View style={{ marginTop: 80, alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.tertiary} />
+      </View>
+    );
+  }
+
+  
 
   return (
     <View style={styles.container}>

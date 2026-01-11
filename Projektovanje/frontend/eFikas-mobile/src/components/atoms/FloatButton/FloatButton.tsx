@@ -34,11 +34,12 @@ function FloatButton({
     placement = "bottom right",
     label,
     icon = () => <Icon size={20} name="Plus" color="white" />,
-    onClick
+    onClick,
+	...otherProps
 }: Props) {
 
     return(
-        <Fab size={size} placement={placement} onPress={onClick} >
+        <Fab size={size} placement={placement} onPress={onClick} {...otherProps} >
             <Icon name="Plus" strokeWidth={2.2} size={28} color="white" />
             {label && <FabLabel>{label}</FabLabel>}
         </Fab>

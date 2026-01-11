@@ -53,8 +53,7 @@ public class FinancialTableStrategy implements TableStrategy {
                 table.addHeaderCell(createHeaderCell(header)));
 
         // Add column indices
-        for(int i = 1; i <= columnWidths.length+1; i++){
-            if(i == 2) continue;
+        for(int i = 1; i <= columnWidths.length; i++){
             Cell cell = createCell(i + "", 1, 1);
             cell.setTextAlignment(TextAlignment.CENTER);
             table.addCell(cell);

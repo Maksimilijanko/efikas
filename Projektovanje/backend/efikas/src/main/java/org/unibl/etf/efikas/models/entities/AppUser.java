@@ -25,8 +25,8 @@ public class AppUser {
     private String surname;
 
     @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(name = "\"JIB\"", nullable = false, length = 13)
-    private String jib;
+    @Column(name = "\"JMBG\"", nullable = false, length = 13)
+    private String jmbg;
 
     @Column(name = "\"PasswordHash\"", nullable = false, length = 512)
     private String passwordHash;

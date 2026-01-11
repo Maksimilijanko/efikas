@@ -1,31 +1,36 @@
-import React, { useState, useCallback, useEffect } from "react";
-import {
-  View,
-  Pressable,
-  StyleSheet,
-  ActivityIndicator,
-  ScrollView,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import ProfileTemplate from "@/src/components/templates/ProfileTemplate/ProfileTemplate";
-import LabeledTextField from "@/src/components/molecules/LabeledTextField/LabeledTextField";
 import { DialogButton } from "@/src/components/atoms/DialogButton/DialogButton";
-import { EditDeleteDialog } from "@/src/components/organisms/Dialogs/EditDeleteDialog/EditDeleteDialog";
-import { Icon } from "@/src/components/atoms/Icon/Icon";
 import FloatButton from "@/src/components/atoms/FloatButton/FloatButton";
-import AddCashRegisterDialog from "@/src/components/organisms/Dialogs/AddCashRegisterDialog/AddCashRegisterDialog";
-import { useCashRegisters } from "@/src/hooks/useCashRegister";
+import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Label } from "@/src/components/atoms/Label/Label";
+import LabeledTextField from "@/src/components/molecules/LabeledTextField/LabeledTextField";
+import AddCashRegisterDialog from "@/src/components/organisms/Dialogs/AddCashRegisterDialog/AddCashRegisterDialog";
+import { EditDeleteDialog } from "@/src/components/organisms/Dialogs/EditDeleteDialog/EditDeleteDialog";
+import ProfileTemplate from "@/src/components/templates/ProfileTemplate/ProfileTemplate";
+import { useCashRegisters } from "@/src/hooks/useCashRegister";
 import { useProfile } from "@/src/hooks/useProfile";
-import { ProfileData } from "@/src/types/types";
-import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { LucideIconName, ProfileData, StoreDTO } from "@/src/types/types";
+import { useNavigation } from "@react-navigation/native";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+	ActivityIndicator,
+	Pressable,
+	ScrollView,
+	StyleSheet,
+	View,
+} from "react-native";
+import FormField from "../../molecules/FormField/FormField";
+import CustomMenu, { CustomMenuItemProp } from "../../organisms/CustomMenu/CustomMenu";
+import AddStoreDialog from "../../organisms/Dialogs/AddStoreDialog/AddStoreDialog";
+import { StoreValidation } from "@/src/util/validationSchemas";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const { Colors } = useTheme();
   const navigation = useNavigation();
-  const { profile, isLoading, isSaving, updateProfile } = useProfile();
+  const { profile, isLoading, isSaving, updateProfile, addStore } = useProfile();
+  
 
   const { cashRegisters, isLoadingCashRegisters, isAdding, addCashRegister } =
     useCashRegisters();
@@ -34,7 +39,13 @@ export default function ProfileScreen() {
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   const [tempProfile, setTempProfile] = useState<ProfileData | null>(null);
 
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isAddCashRegisterModalVisible, setIsAddCashRegisterModalVisible] = useState(false);
+  const [isAddStoreModalVisible, setIsAddStoreModalVisible] = useState(false);
+
+  const menuItems: CustomMenuItemProp[] = [
+	{ key: "1", textValue: t('profile.menuItems.addCashRegister'), iconName: "Computer", onPress: () => setIsAddCashRegisterModalVisible(true) },
+	{ key: "2", textValue: t('profile.menuItems.addStore'), iconName: "Store", onPress: () => setIsAddStoreModalVisible(true) },
+  ];
 
   const handleStartEdit = () => {
     if (profile) {
@@ -107,6 +118,7 @@ export default function ProfileScreen() {
       />
     );
   };
+
 
   if (isLoading || !profile) {
     return (
@@ -212,22 +224,48 @@ export default function ProfileScreen() {
       /> */}
       {!isEditMode && (
         <View style={styles.floatButtonContainer}>
-          <FloatButton
-            size="lg"
-            placement="bottom right"
-            onClick={() => setIsAddModalVisible(true)}
-          />
+          	<CustomMenu
+				offset={10}
+				crossOffset={10}
+				items={menuItems}
+				renderTrigger={(triggerProps) => (
+					<FloatButton
+						size="lg"
+						placement="bottom right"
+						{...triggerProps}
+					/> 
+				)}	
+			/>
         </View>
+		
       )}
 
       <AddCashRegisterDialog
-        visible={isAddModalVisible}
-        onClose={() => setIsAddModalVisible(false)}
+        visible={isAddCashRegisterModalVisible}
+        onClose={() => setIsAddCashRegisterModalVisible(false)}
         isAdding={isAdding}
         onAdd={async (dto) => {
           await addCashRegister(dto);
         }}
       />
+
+		<AddStoreDialog 
+			visible={isAddStoreModalVisible} 
+			title={t('profile.store.addModalTitle')} 
+			onClose={() => setIsAddStoreModalVisible(false)} 
+			onConfirm={(data: StoreValidation.FormValues) => { 
+				const dto: StoreDTO = { 
+					name: data.name,
+					address: data.address,
+					activity: data.activity,
+					activityCode: data.activityCode,
+					jib: data.activityCode
+				}
+				addStore(dto);
+			}}
+		>
+			
+		</AddStoreDialog>
     </>
   );
 }
@@ -249,8 +287,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   floatButtonContainer: {
-    position: "absolute",
-    bottom: 20,
+	position: "absolute",
+    bottom: 30,
     right: 20,
     zIndex: 10,
   },

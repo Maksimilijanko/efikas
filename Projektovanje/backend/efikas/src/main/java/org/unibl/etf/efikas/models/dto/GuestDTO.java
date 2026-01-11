@@ -1,5 +1,6 @@
 package org.unibl.etf.efikas.models.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
@@ -44,6 +45,8 @@ public class GuestDTO {
     private Integer accommodationUnitFloor;
     private Instant dateTimeOfArrival;
     private Instant dateTimeOfDeparture;
+
+    @JsonProperty(required = false)
     private String issuedInvoiceNumber;
     private String remarks;
     private Instant createdAt;
