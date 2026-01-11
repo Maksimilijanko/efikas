@@ -67,6 +67,7 @@ export default function ForgotPasswordScreen() {
 
 		// Call backend verification here...
 		console.log("Verifying OTP:", otpCode);
+		toastService.success("OTP verifikovan");
 
 		setActiveStep(2);
 	}
