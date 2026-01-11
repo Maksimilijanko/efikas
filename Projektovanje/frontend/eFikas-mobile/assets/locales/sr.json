@@ -378,7 +378,7 @@
     },
 
     "datePicker": {
-        "title": "Izaberite datum i vrijeme",
+        "titleDateTime": "Izaberite datum i vrijeme",
         "titleDateOnly": "Izaberite datum",
         "common": {
             "confirm": "Potvrdi",
@@ -437,6 +437,91 @@
                     "confirmButton": "Potvrdi",
                     "cancelButton": "Odustani"
                 }
+            }
+        },
+        "load": {
+            "message": "Učitavanje apartmana..."
+        },
+        "navigationTitle": {
+            "addTitle": "Dodavanje rezervacije",
+            "editTitle": "Izmjena rezervacije"
+        },
+        "form": {
+            "dailyStay": "Dnevni boravak",
+            "arrivalDateTime": "Datum i vrijeme dolaska",
+            "departureDateTime": "Datum i vrijeme odlaska",
+            "guestType": {
+                "domestic": "Domaći gost",
+                "foreign": "Strani gost"
+            },
+            "gender": {
+                "label": "Pol",
+                "male": "Muški",
+                "female": "Ženski"
+            },
+            "fields": {
+                "firstName": "Ime",
+                "lastName": "Prezime",
+                "phone": "Broj telefona",
+                "birthDate": "Datum rođenja",
+                "birthPlace": "Mjesto rođenja",
+                "citizenId": "JMBG",
+                "birthMunicipality": "Opština rođenja",
+                "birthCountry": "Država rođenja",
+                "citizenship": "Državljanstvo",
+                "passportNumber": "Broj pasoša",
+                "passportIssuedDate": "Datum izdavanja pasoša",
+                "entryDate": "Datum ulaska",
+                "entryPlace": "Mjesto ulaska",
+                "visaType": "Vrsta vize",
+                "visaNumber": "Broj vize",
+                "permittedResidenceUntil": "Boravak dozvoljen do",
+                "address": "Adresa",
+                "unitNumber": "Broj smještajne jedinice",
+                "unitFloor": "Sprat smještajne jedinice",
+                "guestsCount": "Broj gostiju",
+                "price": "Cijena",
+                "invoiceNumber": "Broj računa",
+                "note": "Napomena",
+                "document": "Dokument gosta"
+            },
+            "buttons": {
+                "save": "Sačuvaj rezervaciju",
+                "update": "Ažuriraj rezervaciju",
+                "saving": "Čuvanje..."
+            }
+        },
+        "validation": {
+            "required": "Obavezno polje",
+            "id": "JMBG mora imati 13 cifara",
+            "selectArrival": "Izaberite datum i vrijeme dolaska",
+            "selectDeparture": "Izaberite datum i vrijeme odlaska",
+            "departureAfterArrival": "Vrijeme odlaska mora biti nakon dolaska"
+        },
+        "alerts": {
+            "selectApartment": {
+                "title": "Greška",
+                "message": "Morate izabrati apartman"
+            },
+            "invalidApartment": {
+                "title": "Greška",
+                "message": "Nevažeći ID apartmana"
+            },
+            "noApartments": {
+                "title": "Greška",
+                "message": "Nema dostupnih apartmana"
+            },
+            "pickDocument": {
+                "title": "Izaberite dokument",
+                "message": "Izaberite način dodavanja dokumenta gosta",
+                "camera": "Kamera",
+                "gallery": "Galerija",
+                "cancel": "Otkaži"
+            },
+            "permissionDenied": {
+                "title": "Dozvola odbijena",
+                "camera": "Potrebna je dozvola za korišćenje kamere",
+                "gallery": "Potrebna je dozvola za pristup galeriji"
             }
         }
     },

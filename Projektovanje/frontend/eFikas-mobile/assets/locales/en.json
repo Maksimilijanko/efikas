@@ -347,7 +347,7 @@
     },
 
     "datePicker": {
-        "title": "Select date and time",
+        "titleDateTime": "Select date and time",
         "titleDateOnly": "Select date",
         "common": {
             "confirm": "Confirm",
@@ -406,9 +406,93 @@
                     "cancelButton": "Cancel"
                 }
             }
+        },
+        "load": {
+            "message": "Loading apartments..."
+        },
+        "navigationTitle": {
+            "addTitle": "Add reservation",
+            "editTitle": "Edit reservation"
+        },
+        "form": {
+            "dailyStay": "Daily stay",
+            "arrivalDateTime": "Arrival date and time",
+            "departureDateTime": "Departure date and time",
+            "guestType": {
+                "domestic": "Domestic guest",
+                "foreign": "Foreign guest"
+            },
+            "gender": {
+                "label": "Gender",
+                "male": "Male",
+                "female": "Female"
+            },
+            "fields": {
+                "firstName": "First name",
+                "lastName": "Last name",
+                "phone": "Phone number",
+                "birthDate": "Date of birth",
+                "birthPlace": "Place of birth",
+                "citizenId": "Personal ID number",
+                "birthMunicipality": "Municipality of birth",
+                "birthCountry": "Country of birth",
+                "citizenship": "Citizenship",
+                "passportNumber": "Passport number",
+                "passportIssuedDate": "Passport issue date",
+                "entryDate": "Entry date",
+                "entryPlace": "Entry place",
+                "visaType": "Visa type",
+                "visaNumber": "Visa number",
+                "permittedResidenceUntil": "Residence permitted until",
+                "address": "Address",
+                "unitNumber": "Accommodation unit number",
+                "unitFloor": "Accommodation unit floor",
+                "guestsCount": "Number of guests",
+                "price": "Price",
+                "invoiceNumber": "Invoice number",
+                "note": "Note",
+                "document": "Guest document"
+            },
+            "buttons": {
+                "save": "Save reservation",
+                "update": "Update reservation",
+                "saving": "Saving..."
+            }
+        },
+        "validation": {
+            "required": "Required field",
+            "id": "Personal ID number has to be exactly 13 digits long",
+            "selectArrival": "Select arrival date and time",
+            "selectDeparture": "Select departure date and time",
+            "departureAfterArrival": "Departure must be after arrival"
+        },
+        "alerts": {
+            "selectApartment": {
+                "title": "Error",
+                "message": "You must select an apartment"
+            },
+            "invalidApartment": {
+                "title": "Error",
+                "message": "Invalid apartment ID"
+            },
+            "noApartments": {
+                "title": "Error",
+                "message": "No apartments available"
+            },
+            "pickDocument": {
+                "title": "Select document",
+                "message": "Choose how to add the guest document",
+                "camera": "Camera",
+                "gallery": "Gallery",
+                "cancel": "Cancel"
+            },
+            "permissionDenied": {
+                "title": "Permission denied",
+                "camera": "Camera permission is required",
+                "gallery": "Gallery permission is required"
+            }
         }
     },
-
 
     "apartments":{
         "toastMessages": {

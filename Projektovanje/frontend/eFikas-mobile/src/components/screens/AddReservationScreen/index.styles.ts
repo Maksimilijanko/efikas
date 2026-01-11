@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "@/src/styles/style";
+// import { Colors } from "@/src/styles/style";
 
-const styles = StyleSheet.create({
+export const createStyles = (Colors: any) => StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: Colors.background,
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
   },
 
   radioOuter: {
-    width: 22,
-    height: 22,
+    width: 18,
+    height: 18,
     borderRadius: 999,
     borderWidth: 2,
     borderColor: Colors.borderColor,
@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
   },
 
   radioInner: {
-    width: 10,
-    height: 10,
+    width: 9,
+    height: 9,
     borderRadius: 999,
     backgroundColor: Colors.primary,
   },
@@ -73,9 +73,9 @@ const styles = StyleSheet.create({
   },
 
   counterBtn: {
-    width: 44,
+    width: 48,
     height: 40,
-    borderRadius: 12,
+    borderRadius: 6,
     backgroundColor: Colors.background,
     borderWidth: 1,
     borderColor: Colors.borderColor,
@@ -84,9 +84,9 @@ const styles = StyleSheet.create({
   },
 
   counterMid: {
-    width: 60,
+    width: 72,
     height: 40,
-    borderRadius: 12,
+    borderRadius: 6,
     backgroundColor: Colors.background,
     borderWidth: 1,
     borderColor: Colors.borderColor,
@@ -96,13 +96,13 @@ const styles = StyleSheet.create({
 
   counterValue: {
     fontSize: 16,
-    fontWeight: "800",
+    fontWeight: "700",
     color: Colors.textPrimary,
   },
 
   counterSymbol: {
-    fontSize: 20,
-    fontWeight: "900",
+    fontSize: 24,
+    fontWeight: "600",
     color: Colors.primary,
     marginTop: -1,
   },
@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
     right: 12,
     top: "50%",
     transform: [{ translateY: -9 }],
-    fontSize: 14,
-    fontWeight: "800",
+    fontSize: 15,
+    fontWeight: "700",
     color: Colors.textSecondary,
   },
 
@@ -211,19 +211,17 @@ const styles = StyleSheet.create({
 
   radioText: {
     fontSize: 15,
-    fontWeight: "800",
+    fontWeight: "700",
     color: Colors.textPrimary,
   },
 
   submitBtnText: {
     color: Colors.textLight,
-    fontSize: 15,
-    fontWeight: "900",
+    fontSize: 16,
+    fontWeight: "600",
   },
 
   pressed: {
     opacity: 0.85,
   },
 });
-
-export default styles;
