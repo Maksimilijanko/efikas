@@ -17,6 +17,7 @@ export interface RegisterRequest {
     repeatPassword: string;
     jmbg: string;
     address: string;
+	phoneNumber: string;
 }
 
 export interface AuthenticationResponse {

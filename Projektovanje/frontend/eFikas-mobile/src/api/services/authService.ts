@@ -35,7 +35,7 @@ export const authService = {
   },
 
   resetPassword: async (request: ResetPasswordRequest): Promise<AxiosResponse> => {
-	const response = await axiosInstance.post<void>(API_URLS.auth.resetPassword, request);
+	const response = await axiosInstance.put<void>(API_URLS.profile.resetPassword, request);
 	return response;
   }
 }; 

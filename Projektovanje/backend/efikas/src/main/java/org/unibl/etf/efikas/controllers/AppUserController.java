@@ -14,6 +14,7 @@ import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.requests.CreateStoreRequest;
 import org.unibl.etf.efikas.models.requests.OtpSendRequest;
+import org.unibl.etf.efikas.models.requests.RegistrationRequest;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
 import org.unibl.etf.efikas.models.responses.AuthenticationResponse;
 import org.unibl.etf.efikas.security.JwtUtil;
@@ -40,7 +41,7 @@ public class AppUserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> user) {
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest user) {
         return appUserService.register(user)
                 .map(error -> ResponseEntity.badRequest().body(error))
                 .orElseGet(() -> ResponseEntity.ok("User registered successfully."));
@@ -87,10 +88,10 @@ public class AppUserController {
         String phoneNumber = appUser.getPhoneNumber();
         System.out.println("phone number: " + phoneNumber);
         String smsMessage = "sms";
-        String response = otpService.sendOtp(phoneNumber, smsMessage);
+        //String response = otpService.sendOtp(phoneNumber, smsMessage);
         //String response = "Sent";
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("sent");
     }
 
     @PostMapping("/google/login")
@@ -132,13 +133,13 @@ public class AppUserController {
         ));
     }
 
-    @PutMapping("/me/password")
+    @PutMapping("/me/reset-password")
     public ResponseEntity<?> updatePassword(@RequestBody ChangePasswordDTO passwordChangeRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         appUserService.changeUserPassword(passwordChangeRequest, authentication);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me")

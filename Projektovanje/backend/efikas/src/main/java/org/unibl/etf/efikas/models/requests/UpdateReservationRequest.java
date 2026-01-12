@@ -12,7 +12,7 @@ import org.unibl.etf.efikas.models.dto.GuestDTO;
 @AllArgsConstructor
 public class UpdateReservationRequest {
     private Integer apartmentId;
-    private Integer guestId;
+    private GuestDTO guest;
     private Integer guestQuantity;
     private Double price;
     private String note;

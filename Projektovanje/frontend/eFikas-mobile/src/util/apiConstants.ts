@@ -11,13 +11,13 @@ export const API_URLS = {
         register: `${API_BASE_URL}/users/register`,
 		requestOtp: `${API_BASE_URL}/users/otp/request-otp`,
 		validateOtp: `${API_BASE_URL}/users/otp/validate`,
-		resetPassword: `${API_BASE_URL}/users/reset-password`,
     },
     
     profile: {
         get: `${API_BASE_URL}/users/me`,
         update: `${API_BASE_URL}/users/me`,
 		registerStore: `${API_BASE_URL}/users/register/store`,
+		resetPassword: `${API_BASE_URL}/users/me/reset-password`,
     },
 
     reservations: {

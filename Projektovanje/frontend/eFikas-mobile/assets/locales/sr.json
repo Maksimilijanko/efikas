@@ -28,6 +28,7 @@
             "registerButton": "Registrujte se",
             "address": "Adresa",
             "addressPlaceholder": "Ulica 123",
+			"phoneNumber": "Broj telefona",
             "toastMessages": {
                 "successTitle": "Uspješno ste se registrovali!",
                 "successMsg": "Pokušajte se prijaviti sa novim nalogom.",
@@ -44,14 +45,53 @@
                 "errorMsg": "Neuspela odjava. Proverite vezu ili pokušajte ponovo."
             }
         },
+		"forgotPassword": {
+			"headerTitle": "Zaboravljena lozinka",
+
+			"step1": {
+				"label": "Slanje OTP",
+				"title": "Unesite Vaš email kako biste resetovali lozinku.",
+				"subtitle": "Nakon unosa, dobićete jednokratni OTP kôd putem SMS-a.",
+				"sendOtpButton": "Pošalji OTP"
+			},
+			"step2": {
+				"label": "Verifikacija OTP",
+				"title": "Unesite OTP kôd koji ste dobili",
+				"verifyOtpButton": "Verifikuj OTP",
+				"didntReceiveOtp": "Niste još dobili OTP kôd?",
+				"resendOtp": "Pošalji ponovo"
+			},
+			"step3": {
+				"label": "Reset lozinke",
+				"title": "Postavite novu lozinku",
+				"newPasswordLabel": "Nova lozinka",
+				"confirmPasswordLabel": "Ponovite lozinku",
+				"resetPasswordButton": "Resetuj lozinku"
+			},
+			"toastMessages": {
+				"successTitle": "Uspjeh!",
+				"successMsg": "Vaša lozinka je uspješno resetovana.",
+				"errorTitle": "Greška!",
+				"errorMsg": "Došlo je do greške. Molimo Vas da pokušate ponovo."
+			},
+
+			"otpVerified": "OTP uspješno verifikovan.",
+			"otpSentAgain": "OTP kôd poslat ponovo.",
+			"loadingTitle": "Resetovanje u toku"
+		},
         "errors": {
+			"requiredFieldError": "Ovo polje je obavezno",
             "emailError": "Email nije ispravnog formata",
 			"emailLengthError": "Email mora biti bar {{length}} karaktera",
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
             "jmbgLengthError": "JMBG mora imati 13 cifara",
 			"jmbgFormatError": "JMBG mora sadržavati samo cifre",
             "passwordMismatchError": "Lozinke se ne podudaraju",
-			"addressLengthError": "Adresa mora biti bar {{length}} karaktera"
+			"addressLengthError": "Adresa mora biti bar {{length}} karaktera",
+			"phoneNumberLengthError": "Broj telefona mora biti bar {{length}} karaktera",
+			"phoneNumberFormatError": "Neispravan format. Očekivano: 06X/123-456",
+			"sendOtpEmailError": "Morate unijeti email za slanje OTP-a.",
+			"enterValidOtpError": "Unesite ispravan OTP kôd"
         }
     },
 

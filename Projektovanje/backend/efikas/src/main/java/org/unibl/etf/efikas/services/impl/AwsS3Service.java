@@ -70,7 +70,7 @@ public class AwsS3Service implements S3Service {
                 .build();
 
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(10)) // URL valid for 10 mins
+                .signatureDuration(Duration.ofHours(24)) // URL valid for 24 hrs
                 .getObjectRequest(getObjectRequest)
                 .build();
 

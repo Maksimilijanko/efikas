@@ -20,8 +20,6 @@ CREATE TABLE efikas."app_user" (
 CREATE INDEX idx_app_user_jmbg ON efikas."app_user"("JMBG");
 CREATE INDEX idx_app_user_email ON efikas."app_user"("Email");
 
-ALTER TABLE efikas."app_user" ADD COLUMN "PhoneNumber" varchar(30) UNIQUE;
-
 
 CREATE TABLE efikas."notification_push_token" (
 	"TokenId" SERIAL PRIMARY KEY,

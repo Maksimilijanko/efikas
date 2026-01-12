@@ -15,11 +15,15 @@ import { VStack } from "../../ui/vstack";
 import { styles } from "./index.styles";
 import { useEffect, useState } from "react";
 import { toastService } from "@/src/services/toastService";
+import { useAuth } from "@/src/hooks/useAuth";
+import { ResetPasswordRequest } from "@/src/types/types";
+import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 
 export default function ForgotPasswordScreen() {
 	const RESEND_OTP_SECONDS = 30;
 	const { t } = useTranslation();
-	const { control, handleSubmit, reset, formState: { errors } } = useForm<ResetPasswordValidation.FormValues>({
+	const { resetPassword, isResettingPassword, resetPasswordError } = useAuth();
+	const { control, handleSubmit, trigger, reset, formState: { errors } } = useForm<ResetPasswordValidation.FormValues>({
 		resolver: zodResolver(ResetPasswordValidation.schema),
 		defaultValues: {
 			email: "",
@@ -54,26 +58,33 @@ export default function ForgotPasswordScreen() {
 		setResendTimer(RESEND_OTP_SECONDS);
 	}
 
-	const onSendOtp = () => {
+	const onSendOtp = async () => {
+		const isEmailValid = await trigger("email");
+
+		if(!isEmailValid) {
+			toastService.error(t('auth.errors.sendOtpEmailError'));
+			return;
+		}
+
 		setActiveStep(1);
 		//activateOtpTimeout();
 	}
 
 	const onVerifyOtp = () => {
 		if (otpCode.length !== 6) {
-			toastService.error("Unesite ispravan OTP kôd");
+			toastService.error(t('auth.errors.enterValidOtpError'));
 			return;
 		}
 
 		// Call backend verification here...
 		console.log("Verifying OTP:", otpCode);
-		toastService.success("OTP verifikovan");
+		toastService.success(t('auth.forgotPassword.otpVerified'));
 
 		setActiveStep(2);
 	}
 
 	const sendOtpAgain = () => {
-		toastService.info("OTP poslat ponovo");
+		toastService.info(t('auth.forgotPassword.otpSentAgain'));
 
 		// Calling backend resend OTP here...
 
@@ -81,7 +92,15 @@ export default function ForgotPasswordScreen() {
 	}
 
 	const onSubmit = (data: ResetPasswordValidation.FormValues) => {
-		console.log(`Reset password data: ${data}`);
+		console.log(`Reset password data: ${JSON.stringify(data)}`);
+		const request: ResetPasswordRequest = {
+			email: data.email,
+			newPassword: data.password,
+			confirmPassword: data.repeatPassword
+		}
+
+		resetPassword(request);
+
 		reset();
 	}
 
@@ -96,13 +115,13 @@ export default function ForgotPasswordScreen() {
 	const sendOtpForm = (
 		<VStack style={styles.root}>
 			<VStack>
-				<Label text="Unesite Vaš email kako biste resetovali lozinku." />
-				<Label text="Nakon unosa, dobićete jednokratni OTP kôd putem SMS-a." size="sm" color={Colors.tertiary} />
+				<Label text={t('auth.forgotPassword.step1.title')} />
+				<Label text={t('auth.forgotPassword.step1.subtitle')} size="sm" color={Colors.tertiary} />
 			</VStack>
 			
 			<VStack style={styles.emailFormContainer}>
 				<FormField control={control} name={"email"} label="Email" placeholder="marko.markovic@gmail.com" iconName="Mail" />
-				<BasicButton title="Pošalji OTP" onPress={onSendOtp} className="rounded-[10px] w-[100%]"  />
+				<BasicButton title={t('auth.forgotPassword.step1.sendOtpButton')} onPress={onSendOtp} className="rounded-[10px] w-[100%]"  />
 			</VStack>
 		</VStack>
 	);
@@ -110,17 +129,17 @@ export default function ForgotPasswordScreen() {
 	const verifyOtpForm = (
 		<VStack style={styles.root}>
 			<VStack>
-				<Label text="Unesite OTP kôd koji ste dobili" />
+				<Label text={t('auth.forgotPassword.step2.title')} />
 				
 			</VStack>
 
 			<VStack style={styles.emailFormContainer}>
 				<InputOtp onCompleteOtp={setOtpCode} />
-				<BasicButton title="Verifikuj OTP" onPress={onVerifyOtp} className="rounded-[10px] w-[100%]" disabled={otpCode.length !== 6} />
+				<BasicButton title={t('auth.forgotPassword.step2.verifyOtpButton')} onPress={onVerifyOtp} className="rounded-[10px] w-[100%]" disabled={otpCode.length !== 6} />
 			</VStack>
 
 			<HStack style={styles.sendOtpAgainContainer}>
-				<Label text="Niste još dobili OTP kôd?" size="sm" color={Colors.tertiary} />
+				<Label text={t('auth.forgotPassword.step2.didntReceiveOtp')} size="sm" color={Colors.tertiary} />
 				<TouchableOpacity
 					onPress={sendOtpAgain}
 					activeOpacity={0.4}
@@ -130,8 +149,8 @@ export default function ForgotPasswordScreen() {
 						size="sm"
 						text={
 							isResendDisabled
-								? `Pošalji ponovo (${resendTimer}s)`
-								: "Pošalji ponovo"
+								? `${t('auth.forgotPassword.step2.resendOtp')} (${resendTimer}s)`
+								: `${t('auth.forgotPassword.step2.resendOtp')}`
 						}
 						color={isResendDisabled ? Colors.tertiary : Colors.primary}
 						className={isResendDisabled ? "" : "underline"}
@@ -144,25 +163,32 @@ export default function ForgotPasswordScreen() {
 	const resetPasswordForm = (
 		<VStack style={styles.root}>
 			<VStack>
-				<Label text="Postavite novu lozinku" />
+				<Label text={t('auth.forgotPassword.step3.title')} />
 			</VStack>
 			
 			<VStack style={styles.emailFormContainer}>
-				<FormField control={control} name={"password"} type="password" label="Nova lozinka" placeholder="••••••••" iconName="Lock" />
-				<FormField control={control} name={"repeatPassword"} type="password" label="Ponovite lozinku" placeholder="••••••••" iconName="Lock" />
-				<BasicButton title="Resetuj lozinku" onPress={onResetPassword} className="rounded-[10px] w-[100%]" />
+				<FormField control={control} name={"password"} type="password" label={t('auth.forgotPassword.step3.newPasswordLabel')} placeholder="••••••••" iconName="Lock" />
+				<FormField control={control} name={"repeatPassword"} type="password" label={t('auth.forgotPassword.step3.confirmPasswordLabel')} placeholder="••••••••" iconName="Lock" />
+				
+				<LoginButton
+					title={t('auth.forgotPassword.step3.resetPasswordButton')}
+					onPress={onResetPassword}
+					className="mt-2"
+					loadingTitle={t('auth.forgotPassword.loadingTitle')}
+					isLoading={isResettingPassword}
+				/>
 			</VStack>
 		</VStack>
 	);
 	//#endregion
 
 	const STEPPER_CONFIG: CustomProgressStepProps[] = [
-		{ label: "Slanje OTP", buttonNextText: "Sljedeće", buttonPreviousText: "Nazad", componentToRender: sendOtpForm, onPreviousStep: () => setActiveStep(0), onNextStep: () => setActiveStep(1) },
-		{ label: "Verifikacija OTP", buttonNextText: "Sljedeće", buttonPreviousText: "Nazad", componentToRender: verifyOtpForm, onPreviousStep: () => setActiveStep(0), onNextStep: () => setActiveStep(2) },
-		{ label: "Reset lozinke", buttonNextText: "Sljedeće", buttonPreviousText: "Nazad", componentToRender: resetPasswordForm, onPreviousStep: () => setActiveStep(1), onNextStep: () => setActiveStep(2) }
+		{ label: t('auth.forgotPassword.step1.label'), buttonNextText: "Sljedeće", buttonPreviousText: "Nazad", componentToRender: sendOtpForm, onPreviousStep: () => setActiveStep(0), onNextStep: () => setActiveStep(1) },
+		{ label: t('auth.forgotPassword.step2.label'), buttonNextText: "Sljedeće", buttonPreviousText: "Nazad", componentToRender: verifyOtpForm, onPreviousStep: () => setActiveStep(0), onNextStep: () => setActiveStep(2) },
+		{ label: t('auth.forgotPassword.step3.label'), buttonNextText: "Sljedeće", buttonPreviousText: "Nazad", componentToRender: resetPasswordForm, onPreviousStep: () => setActiveStep(1), onNextStep: () => setActiveStep(2) }
 	];
 
-	const test = (
+	const dynamicForm = (
 		<View style={{flex: 1, }}>
 			<Stepper progressSteps={STEPPER_CONFIG} activeStep={activeStep} />
 		</View>
@@ -170,6 +196,6 @@ export default function ForgotPasswordScreen() {
 	);
 
 	return (
-		<AuthScreenTemplate authForm={test} />
+		<AuthScreenTemplate authForm={dynamicForm} />
 	);
 }

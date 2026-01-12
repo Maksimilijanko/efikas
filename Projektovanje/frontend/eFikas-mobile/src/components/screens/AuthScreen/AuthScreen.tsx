@@ -1,6 +1,6 @@
 import { VStack } from "@/src/components/ui/vstack";
 import { useAuth } from "@/src/hooks/useAuth";
-import { Colors } from "@/src/styles/style";
+//import { Colors } from "@/src/styles/style";
 import { LoginRequest, LucideIconName, RegisterRequest } from "@/src/types/types";
 import { LoginValidation, RegistrationValidation } from "@/src/util/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,14 +8,13 @@ import { useState } from "react";
 import { Path, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { TouchableOpacity, View } from "react-native";
-import { GoogleButton } from "../../atoms/GoogleButton";
 import { Label } from "../../atoms/Label/Label";
-import LabelSeparator from "../../atoms/LabelSeparator/LabelSeparator";
 import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 import AuthSwitcher from "../../molecules/AuthSwitcher/AuthSwitcher";
 import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
 import { router } from "expo-router";
+import { useTheme } from "@/src/providers/ThemeProvider";
 
 
 
@@ -33,6 +32,7 @@ const LoginForm = ({
     onGoogleLogin: () => void;
     isLoading?: boolean;
 }) => {
+	const { Colors } = useTheme();
     const { t } = useTranslation();
 	const { control, handleSubmit, reset, formState: { errors } } = useForm<LoginValidation.FormValues>({
 		resolver: zodResolver(LoginValidation.schema),
@@ -92,8 +92,8 @@ const LoginForm = ({
                 <Label text={t('auth.login.forgotPassword')} color={Colors.primary} className="font-semibold text-center text-sm" />
             </TouchableOpacity>
 
-            <LabelSeparator label={t('auth.orSeparator')} />
-            <GoogleButton onPress={onGoogleLogin} />
+            {/* <LabelSeparator label={t('auth.orSeparator')} /> */}
+            {/* <GoogleButton onPress={onGoogleLogin} /> */}
         </VStack>
     );
 };
@@ -111,6 +111,7 @@ const RegisterForm = ({
     onGoogleLogin: () => void;
     isLoading?: boolean;
 }) => {
+	const { Colors } = useTheme();
     const { t } = useTranslation();
 
 	const { control, handleSubmit, reset, formState: { errors } } = useForm<RegistrationValidation.FormValues>({
@@ -150,26 +151,23 @@ const RegisterForm = ({
 	}
 
     return (
-        <VStack space="lg" className="w-full px-6">
+        <VStack space="lg" className="w-full px-6" style={{ marginBottom: 100 }}>
 			{renderRegisterField(t('auth.register.firstName'), 'name', 'Marko', undefined, 'text', "User")}
-            {renderRegisterField(t('auth.register.lastName'), 'surname', 'Marković', undefined, 'text', "User")}
+			{renderRegisterField(t('auth.register.lastName'), 'surname', 'Marković', undefined, 'text', "User")}
 			{renderRegisterField('Email', 'email', 'marko.markovic@gmail.com', undefined, 'text', "Mail")}
 			{renderRegisterField(t('auth.register.password'), 'password', '••••••••', t('auth.errors.passwordLengthError'), 'password', "Lock")}
 			{renderRegisterField(t('auth.register.repeatPassword'), 'repeatPassword', '••••••••', t('auth.errors.passwordLengthError'), 'password', "Lock")}
 			{renderRegisterField("JMBG", 'jmbg', '1234567891234', t('auth.errors.jmbgLengthError'), 'text', "Briefcase")}
 			{renderRegisterField(t('auth.register.address'), 'address', 'Ulica 123', undefined, 'text', "House")}
+			{renderRegisterField(t('auth.register.phoneNumber'), 'phoneNumber', '065/123-456', undefined, 'text', "Phone")}
 
-            <LoginButton
-                title={t('auth.register.registerButton')}
-                onPress={() => handleSubmit(onSubmit)()}
-                className="mt-4"
-                loadingTitle={t('auth.register.loadingTitle')}
-                isLoading={isLoading}
-            />
-
-            <LabelSeparator label={t('auth.orSeparator')} />
-
-            <GoogleButton onPress={onGoogleLogin} />
+			<LoginButton
+				title={t('auth.register.registerButton')}
+				onPress={() => handleSubmit(onSubmit)()}
+				className="mt-4"
+				loadingTitle={t('auth.register.loadingTitle')}
+				isLoading={isLoading}
+			/>
         </VStack>
     );
 };
@@ -210,7 +208,8 @@ export default function AuthScreen() {
 			password: data.password,
 			repeatPassword: data.repeatPassword,
 			jmbg: data.jmbg,
-			address: data.address
+			address: data.address,
+			phoneNumber: data.phoneNumber
 		}
 
         register(request);
@@ -218,7 +217,7 @@ export default function AuthScreen() {
 
 
     const authForm = (
-        <VStack space="lg" className="w-full pt-8 items-center">
+        <VStack space="lg" className="w-full pt-3 items-center">
             <AuthSwitcher onModeChange={setAuthMode} initialMode="login" />
             <View className="w-full mt-6">
                 {authMode === 'login' ? (
