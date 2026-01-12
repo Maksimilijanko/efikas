@@ -4,8 +4,6 @@
         "home": "Početna",
         "menu": "Meni"
     },
-
-    
     "auth": {
         "orSeparator": "ili",
         "login": {
@@ -94,8 +92,6 @@
 			"enterValidOtpError": "Unesite ispravan OTP kôd"
         }
     },
-
-
     "dialogs": {
         "logout": {
             "message": "Da li ste sigurni da želite da se odjavite sa ovog naloga?",
@@ -143,8 +139,6 @@
             }
         }
     },
-
-
     "chart": {
         "months": [
             "Jan",
@@ -161,13 +155,9 @@
             "Dec"
         ]
     },
-
-
     "welcome": {
         "loginButton": "Prijavi se"
     },
-
-
     "dashboard": {
         "navigation": {
             "apartmentsTitle": "Stanovi",
@@ -193,13 +183,12 @@
             "statsErrorMessage": "Nije moguće učitati podatke. Molimo pokušajte ponovo."
         }
     },
-
-
     "menu": {
         "stackNavigation": {
             "profile": "Profil",
             "notifications": "Obavještenja",
             "myApartments": "Moji stanovi",
+            "addApartment": "Dodaj stan",
             "expenses": "Troškovi",
             "statistics": "Statistika",
             "incomeBook": "Knjiga prihoda",
@@ -244,8 +233,6 @@
             }
         }
     },
-
-
     "calendar": {
         "months": [
             "Januar",
@@ -295,8 +282,6 @@
         ],
         "today": "Danas"
     },
-
-
     "reservationsCalendar": {
         "modalTitle": "Informacije o boravku",
         "guestCount": "Broj gostiju:",
@@ -308,8 +293,6 @@
         "okButton": "U redu",
         "detailsButton": "Detalji"
     },
-
-
     "aboutApp": {
         "title": "O aplikaciji",
         "systemName": "eFikas",
@@ -330,21 +313,17 @@
             "content_releaseDate": "Datum izdavanja: 01.01.2026."
         }
     },
-
-
     "books": {
         "downloadedList": {
             "title": "Preuzete knjige",
             "noBooks": "Trenutno nemate preuzetih knjiga"
         },
-
         "documents": {
             "incomeBookDownloadTitle": "KnjigaPrihoda",
             "domesticGuestsBookDownloadTitle": "KnjigaDomacihGostiju",
             "foreignGuestsBookDownloadTitle": "KnjigaStranihGostiju",
             "yearFrom": "Datum od",
             "yearTo": "Datum do",
-
             "downloadErrorTitle": "Greška preuzimanja",
             "downloadErrorMessage": "Neuspješno preuzimanje",
             "downloadSuccessMessage": "Uspješno preuzimanje",
@@ -362,8 +341,6 @@
             "ForeignGuestsBook": "Knjiga stranih gostiju"
         }
     },
-
-
     "notifications": {
         "title": "Obavještenja",
         "description": "Dobijate podsjetnike o važnim događajima - dolascima gostiju, plaćanjima, zadacima i održavanju smještaja",
@@ -373,8 +350,6 @@
 		"notificationToggleErrorMessage": "Molimo Vas da pokušate ponovo."
 		
     },
-
-
     "profile": {
 		"menuItems": {
 			"addCashRegister": "Dodaj kasu",
@@ -430,13 +405,9 @@
 			}
 		}
     },
-
-
     "actions": {
         "finish": "Završi"
     },
-
-
     "cashRegisters": {
         "sectionTitle": "Informacije o kasi",
         "fields": {
@@ -454,8 +425,6 @@
             "createError": "Nije moguće sačuvati podatke o kasi."
         }
     },
-
-
     "reservations": {
         "navigation": {
             "reservationDetailsTitle": "Detalji rezervacije",
@@ -510,8 +479,6 @@
             }
         }
     },
-
-
     "apartment": {
         "card": {
             "status": {
@@ -521,10 +488,16 @@
                 "until": " do ",
                 "nextGuests": "Sljedeći gosti: "
             }
+        },
+        "dialogs": {
+            "deleteConfirm": {
+                "title": "Da li ste sigurni da želite ukloniti stan sa liste?",
+                "description": "Svi podaci će biti obrisani.",
+                "confirm": "Potvrdi",
+                "cancel": "Odustani"
+            }
         }
     },
-
-
     "addApartment": {
         "fields": {
             "name": "Naziv",
@@ -558,8 +531,6 @@
             "saving": "Čuvanje..."
         }
     },
-
-
     "inventoryModal": {
         "features": {
             "parking": "Parking",
@@ -575,8 +546,6 @@
             "save": "Sačuvaj"
         }
     },
-
-
     "apartmentDetails": {
         "loading": {
             "error": "Doslo je do greske pri ucitavanju stana.",
@@ -586,8 +555,6 @@
             "availability": "Dostupnost"
         }
     },
-
-
     "landingApartmentInfo": {
         "services": {
             "title": "Usluge",

@@ -1,7 +1,7 @@
-import React from "react";
 import { View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { Stack, useLocalSearchParams } from "expo-router";
 import LandingApartmentInfo from "@/src/components/organisms/LandingApartmentInfo/LandingApartmentInfo";
 import ApartmentDetailsTemplate from "../../templates/ApartmentDetailsTemplate/ApartmentDetailsTemplate";
 import { apartmentDetailsService } from "@/src/api/services/apartmentDetailsService";
@@ -10,9 +10,13 @@ import { ReservationsCalendar } from "../../atoms/ReservationsCalendar/Reservati
 import { Label } from "../../atoms/Label/Label";
 import { useTheme } from "@/src/providers/ThemeProvider";
 
-export default function ApartmentScreen() {
+export default function ApartmentDetailsScreen() {
   const { Colors } = useTheme();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  const params = useLocalSearchParams<{ apartmentId?: string }>();
+  const apartmentId = params.apartmentId ? Number(params.apartmentId) : NaN;
 
   const {
     data: apartment,
@@ -20,10 +24,23 @@ export default function ApartmentScreen() {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["apartment-details", 1],
-    queryFn: () => apartmentDetailsService.getApartmentDetails(1),
+    queryKey: ["apartment-details", apartmentId],
+    enabled: Number.isFinite(apartmentId),
+    queryFn: () =>
+      apartmentDetailsService.getApartmentDetailsFromCacheAndReservations(
+        queryClient,
+        apartmentId
+      ),
     staleTime: 1000 * 60 * 10,
   });
+
+  if (!Number.isFinite(apartmentId)) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Label text="Invalid apartmentId" color={Colors.textPrimary} />
+      </View>
+    );
+  }
 
   if (isLoading && !apartment) {
     return (
@@ -36,10 +53,7 @@ export default function ApartmentScreen() {
   if (isError) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 12 }}>
-        <Label
-          text={t('apartmentDetails.loading.error')}
-          color={Colors.textPrimary}
-        />
+        <Label text={t("apartmentDetails.loading.error")} color={Colors.textPrimary} />
         <TouchableOpacity
           onPress={() => refetch()}
           style={{
@@ -50,16 +64,14 @@ export default function ApartmentScreen() {
           }}
         >
           <Text style={{ color: Colors.textSecondary, fontWeight: "600" }}>
-            {t('apartmentDetails.loading.retry')}
+            {t("apartmentDetails.loading.retry")}
           </Text>
         </TouchableOpacity>
       </View>
     );
   }
 
-  if (!apartment) {
-    return null;
-  }
+  if (!apartment) return null;
 
   const servicesProps = {
     wifi: apartment.services.some((s) => s.name === "WiFi"),
@@ -73,33 +85,31 @@ export default function ApartmentScreen() {
   };
 
   return (
-    <ApartmentDetailsTemplate
-      basicInfo={
-        <LandingApartmentInfo
-          imageUrl={{ uri: apartment.heroImageUrl }}
-          bedrooms={apartment.bedrooms}
-          squareMeters={apartment.squareMeters}
-          maxGuests={apartment.maxGuests}
-          {...servicesProps}
-        />
-      }
-      gallery={
-        <Gallery
-          style={[{ width: "100%" }]}
-          images={apartment.galleryImages}
-        />
-      }
-      calendar={
-        <View>
-          <Label
-            text={t('apartmentDetails.calendar.availability')}
-            color={Colors.textPrimary}
-            size="xl"
-            className="font-bold mb-4"
+    <>
+      <Stack.Screen options={{ title: apartment.title }} />
+      <ApartmentDetailsTemplate
+        basicInfo={
+          <LandingApartmentInfo
+            imageUrl={{ uri: apartment.heroImageUrl }}
+            bedrooms={apartment.bedrooms}
+            squareMeters={apartment.squareMeters}
+            maxGuests={apartment.maxGuests}
+            {...servicesProps}
           />
-          <ReservationsCalendar reservations={apartment.availability} />
-        </View>
-      }
-    />
+        }
+        gallery={<Gallery style={[{ width: "100%" }]} images={apartment.galleryImages} />}
+        calendar={
+          <View>
+            <Label
+              text={t("apartmentDetails.calendar.availability")}
+              color={Colors.textPrimary}
+              size="xl"
+              className="font-bold mb-4"
+            />
+            <ReservationsCalendar reservations={apartment.availability} />
+          </View>
+        }
+      />
+    </>
   );
 }

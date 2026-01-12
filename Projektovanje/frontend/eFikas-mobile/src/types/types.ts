@@ -2,11 +2,11 @@ import * as LucideIcons from "lucide-react-native";
 
 export type LucideIconName = keyof typeof LucideIcons;
 
-export type BookkeepingMode = 'yearly' | 'custom';
+export type BookkeepingMode = "yearly" | "custom";
 
 export interface LoginRequest {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export interface RegisterRequest {
@@ -21,8 +21,8 @@ export interface RegisterRequest {
 }
 
 export interface AuthenticationResponse {
-    email: string;
-    token: string;
+  email: string;
+  token: string;
 }
 
 export interface ResetPasswordRequest {
@@ -51,52 +51,71 @@ export interface Apartment {
   pricePerDay: number;
   pricePerNight: number;
   pictures: string[];
-  inventory: ApartmentInventory; 
+  inventory: ApartmentInventory;
 }
 
-
 export type ApartmentInventory = {
-    parking: boolean;
-    tv: boolean;
-    wifi: boolean;
-    fen: boolean;
-    klima: boolean;
-    vesMasina: boolean;
-    kafa: boolean;
-    balkon: boolean;
+  parking: boolean;
+  tv: boolean;
+  wifi: boolean;
+  fen: boolean;
+  klima: boolean;
+  vesMasina: boolean;
+  kafa: boolean;
+  balkon: boolean;
 };
 
 export type CreateApartmentPayload = {
+  apartment: {
     name: string;
     address: string;
-    noBeds: number;           
-    noBedrooms: number;       
-    capacity: number;        
-    overnightPrice: number;   
-    dayPrice: number;        
-    images: string[];
-    inventory: ApartmentInventory;
+    numberOfBeds: number;
+    numberOfRooms: number;
+    capacity: number;
+    pricePerNight: number;
+    pricePerDay: number;
+    traits: Record<string, boolean>;
+  };
+  pictures: {
+    uri: string;
+    name: string;   
+    type: string;   
+  }[];
 };
 
-export type ApartmentResponse = {
-    success: boolean;
-    message?: string;
-    apartmentId?: number;
-    data?: any;
+export interface ApartmentResponse {
+  apartmentId: number;
+  name: string;
+  address: string;
+  numberOfBeds: number;
+  numberOfRooms: number;
+  capacity: number;
+  pricePerDay: number;
+  pricePerNight: number;
+  pictures: string[];
+  traits?: Record<string, boolean>;
+}
+
+export type AddingApartmentResponse = {
+  success: boolean;
+  message?: string;
+  apartmentId?: number;
+  data?: any;
 };
+
 export interface ApartmentCurrentInfo {
-    id: number;
-    name: string;
-    address: string;
-    imageUrl: string;
-    status: boolean;
-    statusUntil: string | null;
-    nextGuestsDate: string | null;
-};
+  apartmentId: number;
+  name: string;
+  address: string;
+  imageUrl: string;
+  status: boolean;
+  statusUntil: string | null;
+  nextGuestsDate: string | null;
+}
 
 export interface Reservation {
   reservationId: number;
-  apartment: Apartment; 
+  apartment: Apartment;
   guestFullName: string;
   guestPhoneNumber: string;
   dateTimeOfArrival: string;
@@ -107,25 +126,25 @@ export interface Reservation {
   personalDocumentURL: string | null;
   reservationType: string;
   reservationTypeId?: number;
-};
+}
 
 export interface MenuItemProps {
   id: string;
-  icon: LucideIconName; 
+  icon: LucideIconName;
   text: string;
   onPressMenuItem: () => void;
-};
+}
 
 export interface MenuSectionProps {
   title: string;
   items: MenuItemProps[];
-};
+}
 
 export interface ProfileData {
-    name: string;
-    surname: string;
-    jib: string;
-    email: string;
+  name: string;
+  surname: string;
+  jib: string;
+  email: string;
 }
 
 export interface CashRegister {
@@ -145,7 +164,7 @@ export interface DateRangeDTO {
 }
 
 export interface DownloadIncomeBookRequest {
-  taxpayerId: number; 
+  taxpayerId: number;
   storeId: number;
   period: DateRangeDTO;
 }
