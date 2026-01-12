@@ -18,6 +18,7 @@ export const getStyles = (Colors: any) =>
     inner: {
       width: '92%',
       alignItems: 'center',
+      paddingBottom: 30
     },
     fullWidthRow: {
       width: '100%',
