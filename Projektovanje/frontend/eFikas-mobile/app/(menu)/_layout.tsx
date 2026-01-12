@@ -19,6 +19,7 @@ export default function MenuRootLayout() {
             <Stack.Screen name="(profile)/notifications" options={{ title: t('menu.stackNavigation.notifications') }} />
             <Stack.Screen name="(profile)/myApartments" options={{ title: t('menu.stackNavigation.myApartments') }} />
             <Stack.Screen name="(profile)/addApartment" options={{ title: t('menu.stackNavigation.addApartment') }} />
+            <Stack.Screen name="(profile)/editApartment" options={{ title: t('menu.stackNavigation.editApartment') }} />
             <Stack.Screen name="(profile)/chosenApartment" />
 
             {/* ========================================== SEKCIJA RACUNOVODSTVO ========================================== */}
