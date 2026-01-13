@@ -1,5 +1,3 @@
-import { registerSensor } from "react-native-reanimated/lib/typescript/core";
-
 const scheme = process.env.EXPO_PUBLIC_API_SCHEME;
 const address = process.env.EXPO_PUBLIC_API_ADDRESS;
 const port = process.env.EXPO_PUBLIC_API_PORT;
@@ -7,17 +5,22 @@ const version = "v1";
 export const API_BASE_URL = `${scheme}://${address}:${port}/api/${version}`;
 
 export const API_URLS = {
-  auth: {
-    googleLogin: `${API_BASE_URL}/users/google/login`,
-    login: `${API_BASE_URL}/users/login`,
-    register: `${API_BASE_URL}/users/register`,
-  },
+    auth: {
+        googleLogin: `${API_BASE_URL}/users/google/login`,
+        login: `${API_BASE_URL}/users/login`,
+        register: `${API_BASE_URL}/users/register`,
+		requestOtp: `${API_BASE_URL}/users/otp/request-otp`,
+		validateOtp: `${API_BASE_URL}/users/otp/validate`,
+    },
+    
+    profile: {
+        get: `${API_BASE_URL}/users/me`,
+        update: `${API_BASE_URL}/users/me`,
+		registerStore: `${API_BASE_URL}/users/register/store`,
+		resetPassword: `${API_BASE_URL}/users/me/reset-password`,
+    },
 
-  profile: {
-    get: `${API_BASE_URL}/users/me`,
-    update: `${API_BASE_URL}/users/me`,
-    registerStore: `${API_BASE_URL}/users/register/store`,
-  },
+
 
   reservations: {
     listUser: () => `${API_BASE_URL}/reservations`,

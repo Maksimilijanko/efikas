@@ -1,4 +1,4 @@
-import { AuthenticationResponse, LoginRequest, RegisterRequest } from "@/src/types/types";
+import { AuthenticationResponse, LoginRequest, RegisterRequest, ResetPasswordRequest } from "@/src/types/types";
 import axiosInstance from "../axiosInstance";
 import { API_URLS } from "@/src/util/apiConstants";
 import { AxiosResponse } from "axios";
@@ -23,4 +23,19 @@ export const authService = {
     const response = await axiosInstance.post<string>(API_URLS.auth.register, registerRequest);
     return response;
   },
+
+  requestOtp: async (email: string): Promise<AxiosResponse> => {
+	const response = await axiosInstance.post<void>(API_URLS.auth.requestOtp, { email });
+	return response;
+  },
+
+  validateOtp: async (otp: string): Promise<AxiosResponse> => {
+	const response = await axiosInstance.post<void>(API_URLS.auth.validateOtp, { otp });
+	return response;
+  },
+
+  resetPassword: async (request: ResetPasswordRequest): Promise<AxiosResponse> => {
+	const response = await axiosInstance.put<void>(API_URLS.profile.resetPassword, request);
+	return response;
+  }
 }; 

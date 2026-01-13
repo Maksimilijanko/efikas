@@ -17,12 +17,21 @@ export interface RegisterRequest {
     repeatPassword: string;
     jmbg: string;
     address: string;
+	phoneNumber: string;
 }
 
 export interface AuthenticationResponse {
   email: string;
   token: string;
 }
+
+export interface ResetPasswordRequest {
+	email: string;
+	newPassword: string;
+	confirmPassword: string;
+}
+
+
 export interface StatisticsDataPoint {
   label: string;
   value: number;
