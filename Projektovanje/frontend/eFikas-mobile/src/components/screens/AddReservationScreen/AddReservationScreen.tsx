@@ -285,6 +285,8 @@ const AddReservationScreen = () => {
   };
 
   const confirmDateDialog = (value: Date) => {
+	console.log("RESERVATION DATE DIALOG VALUE: ", value)
+
     switch (activeDateField) {
       case "ARRIVAL":
         setArrivalAt(value);
@@ -478,7 +480,7 @@ const AddReservationScreen = () => {
   const buildUpdatePayload = (): UpdateReservationPayload => {
     return {
       apartmentId: selectedApartmentIdNum,
-      guestId: existingReservation?.guest.id || 0,
+	  guest: existingReservation?.guest,
       guestQuantity: guestsCount,
       price: price.trim() ? Number(price.trim()) : null,
       note: note.trim() || null,

@@ -196,7 +196,7 @@ export interface CreateReservationPayload {
 
 export interface UpdateReservationPayload {
   apartmentId?: number;
-  guestId: number;
+  guest: Guest;
   guestQuantity?: number;
   price?: number | null;
   note?: string | null;

@@ -23,9 +23,11 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping(value = "/apartments/{apartmentId}/reservations", consumes = "multipart/form-data")//
-    public ResponseEntity<?> createReservation(@PathVariable Integer apartmentId, @RequestPart("reservation") ReservationDTO reservationDTO, @RequestPart("picture") MultipartFile documentPicture) {
+    public ResponseEntity<?> createReservation(@PathVariable Integer apartmentId, @RequestPart("reservation") ReservationDTO reservationDTO, @RequestPart(name = "picture", required = false) MultipartFile documentPicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+
+        System.out.println("Email: " + email);
 
         // For POST, we are extracting apartmentId from the endpoint URL itself.
         // We are not relying on the value found in DTO.
@@ -37,7 +39,6 @@ public class ReservationController {
 
     @GetMapping(value = "/apartments/{apartmentId}/reservations")
     public ResponseEntity<?> getReservations(@PathVariable Integer apartmentId) {
-        System.out.println("Reservation req made, apartmentid: " + apartmentId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
@@ -58,7 +59,7 @@ public class ReservationController {
     @PutMapping(value = "/reservations/{reservationId}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateReservation(@PathVariable Integer reservationId,
                                                @RequestPart("reservation") UpdateReservationRequest updateReservationRequest,
-                                               @RequestPart("picture") MultipartFile documentPicture) {
+                                               @RequestPart(name = "picture", required = false) MultipartFile documentPicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         ReservationResponse response = reservationService
