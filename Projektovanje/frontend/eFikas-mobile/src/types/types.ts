@@ -25,6 +25,15 @@ export interface AuthenticationResponse {
   token: string;
 }
 
+export interface OtpSendRequest {
+	email: string;
+}
+
+export interface OtpVerifyRequest {
+	email: string;
+	otp: string;
+}
+
 export interface ResetPasswordRequest {
 	email: string;
 	newPassword: string;

@@ -53,7 +53,7 @@
 			"step1": {
 				"label": "Send OTP",
 				"title": "Enter your email to reset your password.",
-				"subtitle": "We will send you an OTP code to your phone number that's linked to your email.",
+				"subtitle": "We will send you an OTP code to your email that you used for creating your account",
 				"sendOtpButton": "Send OTP",
 				"toastMessages": {
 					"otpSentTitle": "OTP Sent",
@@ -98,6 +98,7 @@
 			"phoneNumberFormatError": "Invalid format. Expected: 06X/123-456",
 
 			"sendOtpEmailError": "You must enter an email to send the OTP.",
+			"otpNotVerified": "This OTP code is not valid.",
 			"enterValidOtpError": "Please enter a valid OTP code."
 		}
     },
