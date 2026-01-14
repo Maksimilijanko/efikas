@@ -57,7 +57,7 @@ const TaskDamageCostCard: React.FC<TaskDamageCostCardProps> = (props) => {
         <View style={dynamicStyles.rightActionContainer}>
             <FinishButton
                 onPress={handleFinish}
-                text={t("Finish")}
+                text={t("common.finish")}
             />
         </View>
     );

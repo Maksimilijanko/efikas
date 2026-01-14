@@ -575,5 +575,44 @@
         "buttons": {
             "ok": "OK"
         }
+    },
+    "expenses": {
+        "messages": {
+            "successTitle": "Success",
+            "successMessage": "Expense added successfully!",
+            "errorTitle": "Error adding expense",
+            "errorMessage": "Unable to add the requested expense",
+            "statusSuccessTitle": "Success",
+            "statusSuccessMessage": "Expense has been resolved!"
+        },
+        "categories": {
+        "Režije": "Utilities",
+        "Čišćenje": "Maintenance",
+        "Namirnice": "Groceries"
+  }
+    },
+    "tasks": {
+    "messages": {
+        "successTitle": "Success",
+        "successMessage": "Task added successfully!",
+        "errorTitle": "Error",
+        "errorMessage": "Unable to save task.",
+        "statusSuccessTitle": "Success",
+        "statusSuccessMessage": "Task has been completed!"
     }
+},
+"damages": {
+    "messages": {
+        "successTitle": "Success",
+        "successMessage": "Damage saved successfully!",
+        "errorTitle": "Error",
+        "errorMessage": "Unable to save damage.",
+        "statusSuccessTitle": "Success",
+        "statusSuccessMessage": "Damage has been resolved!"
+    }
+},
+"common": {
+    "finish": "Finish",
+    "selectApartment": "Select apartment"
+}
 }
