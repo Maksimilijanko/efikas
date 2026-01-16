@@ -87,8 +87,15 @@ export const useCreateReservation = (apartmentId: number) => {
         throw new Error(errorMessage);
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["reservations", apartmentId],
+      });
+    
+      await queryClient.invalidateQueries({
+        queryKey: ["userReservations"],
+      });
+    
       toastService.success(
         t("reservations.toastMessages.createSuccessTitle"),
         t("reservations.toastMessages.createSuccessMessage")
@@ -129,6 +136,7 @@ export const useUpdateReservation = (reservationId: number, apartmentId: number)
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reservation", reservationId] });
       queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
+      queryClient.invalidateQueries({ queryKey: ["userReservations"] });
       toastService.success(
         t("reservations.toastMessages.updateSuccessTitle"),
         t("reservations.toastMessages.updateSuccessMessage")
@@ -159,6 +167,7 @@ export const useDeleteReservation = (reservationId: number, apartmentId: number)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
+      queryClient.invalidateQueries({ queryKey: ["userReservations"] });
       toastService.success(
         t("reservations.toastMessages.deleteSuccessTitle"),
         t("reservations.toastMessages.deleteSuccessMessage")

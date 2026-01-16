@@ -36,6 +36,9 @@ import {
   CreateReservationPayload,
   UpdateReservationPayload,
   Reservation,
+  Guest,
+  DomesticGuest,
+  ForeignGuest,
 } from "@/src/types/types";
 
 type GuestType = "DOMESTIC" | "FOREIGN";
@@ -411,68 +414,63 @@ const AddReservationScreen = () => {
     setPreviewVisible(false);
   };
 
-  const buildReservationPayload = (): CreateReservationPayload => {
-    const formatLocalDate = (date: Date | null): string | null => {
-      if (!date) return null;
-      return dayjs(date).format("YYYY-MM-DD");
-    };
+  const formatLocalDate = (date: Date | null): string | null =>
+    date ? dayjs(date).format("YYYY-MM-DD") : null;
 
-    // zajednicka polja za gosta
+  const buildGuestPayload = (): Guest => {
     const commonGuestFields = {
       name: guestName.trim(),
       surname: guestSurname.trim(),
-      gender: gender,
+      gender,
       phoneNumber: phone.trim(),
-      birthDate: formatLocalDate(birthDate) || "",
+      birthDate: formatLocalDate(birthDate),
       birthPlace: birthPlace.trim(),
-      birthCountry: guestType === "DOMESTIC" ? "" : birthCountry.trim(),
-      address: address.trim() || "",
-      accommodationUnitNumber: accommodationUnitNumber.trim()
-        ? Number(accommodationUnitNumber.trim())
-        : 0,
-      accommodationUnitFloor: accommodationUnitFloor.trim()
-        ? Number(accommodationUnitFloor.trim())
-        : 0,
-      dateTimeOfArrival: arrivalAt ? arrivalAt.toISOString() : "",
+      birthCountry: birthCountry.trim(),
+      address: address.trim(),
+      accommodationUnitNumber: accommodationUnitNumber
+        ? Number(accommodationUnitNumber)
+        : null,
+      accommodationUnitFloor: accommodationUnitFloor
+        ? Number(accommodationUnitFloor)
+        : null,
+      dateTimeOfArrival: arrivalAt?.toISOString() ?? "",
       dateTimeOfDeparture:
-        dailyStay || !departureAt ? "" : departureAt.toISOString(),
-      issuedInvoiceNumber: invoiceNumber.trim() || null,
-      remarks: note.trim() || null,
+        dailyStay || !departureAt ? null : departureAt.toISOString(),
+      issuedInvoiceNumber: invoiceNumber || null,
+      personalDocumentURL:
+        documentUri?.startsWith("http") ? documentUri : null,
     };
 
-    let guest: any;
-
     if (guestType === "DOMESTIC") {
-      guest = {
+      return {
         ...commonGuestFields,
         isLocal: true,
         citizenId: citizenId.trim(),
         birthMunicipality: birthMunicipality.trim(),
       };
-    } else {
-      guest = {
-        ...commonGuestFields,
-        isLocal: false,
-        citizenId: citizenId.trim() || "",
-        citizenship: citizenship.trim(),
-        passportNumber: passportNumber.trim(),
-        passportIssuedDate: formatLocalDate(passportIssuedDate) || "",
-        entryDate: formatLocalDate(entryDate) || null,
-        entryPlace: entryPlace.trim() || null,
-        visaType: visaType.trim() || null,
-        visaNumber: visaNumber.trim() || null,
-        permittedResidenceDate:
-          permittedResidenceDate != null
-            ? formatLocalDate(permittedResidenceDate)
-            : null,
-      };
     }
 
     return {
-      guest,
+      ...commonGuestFields,
+      isLocal: false,
+      citizenId: citizenId.trim(),
+      citizenship: citizenship.trim(),
+      passportNumber: passportNumber.trim(),
+      passportIssuedDate: formatLocalDate(passportIssuedDate),
+      entryDate: formatLocalDate(entryDate),
+      entryPlace: entryPlace.trim(),
+      visaType: visaType || null,
+      visaNumber: visaNumber || null,
+      permittedResidenceDate: formatLocalDate(permittedResidenceDate),
+    };
+  };
+
+  const buildReservationPayload = (): CreateReservationPayload => {
+    return {
+      guest: buildGuestPayload(),
       guestQuantity: guestsCount,
-      price: price.trim() ? Number(price.trim()) : null,
-      note: note.trim() || null,
+      price: price ? Number(price) : null,
+      note: note || null,
       reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
     };
   };
@@ -480,10 +478,10 @@ const AddReservationScreen = () => {
   const buildUpdatePayload = (): UpdateReservationPayload => {
     return {
       apartmentId: selectedApartmentIdNum,
-	  guest: existingReservation?.guest,
+      guest: buildGuestPayload(),
       guestQuantity: guestsCount,
-      price: price.trim() ? Number(price.trim()) : null,
-      note: note.trim() || null,
+      price: price ? Number(price) : null,
+      note: note || null,
       reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
     };
   };
@@ -835,9 +833,6 @@ const AddReservationScreen = () => {
               labelSize="lg"
               onChangeText={setGuestName}
               errorText={errors.guestName}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           guestSurnameField={
@@ -848,9 +843,6 @@ const AddReservationScreen = () => {
               labelSize="lg"
               onChangeText={setGuestSurname}
               errorText={errors.guestSurname}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           genderField={
@@ -861,18 +853,16 @@ const AddReservationScreen = () => {
                   key={g}
                   style={styles.radioOption}
                   onPress={() => setGender(g)}
-                  disabled={isEditMode}
                 >
                   <View
                     style={[
                       styles.radioOuter,
                       gender === g && styles.radioOuterActive,
-                      isEditMode && { opacity: 0.5 },
                     ]}
                   >
                     {gender === g && <View style={styles.radioInner} />}
                   </View>
-                  <Text style={[styles.radioText, isEditMode && { opacity: 0.5 }]}>
+                  <Text style={[styles.radioText]}>
                     {t(
                       g === "Male"
                         ? "reservations.form.gender.male"
@@ -891,15 +881,11 @@ const AddReservationScreen = () => {
               labelSize="lg"
               onChangeText={setPhone}
               errorText={errors.phone}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           birthDateField={
             <Pressable
               onPress={() => openDateDialog("BIRTH_DATE")}
-              disabled={isEditMode}
             >
               <View pointerEvents="none">
                 <LabeledTextField
@@ -909,9 +895,6 @@ const AddReservationScreen = () => {
                   labelSize="lg"
                   rightElement={<Icon name="CalendarPlus" color="gray" />}
                   errorText={errors.birthDate}
-                  inputProps={{
-                    editable: !isEditMode,
-                  }}
                 />
               </View>
             </Pressable>
@@ -924,9 +907,6 @@ const AddReservationScreen = () => {
               labelSize="lg"
               onChangeText={setBirthPlace}
               errorText={errors.birthPlace}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           domesticFields={
@@ -940,9 +920,6 @@ const AddReservationScreen = () => {
                       labelSize="lg"
                       onChangeText={setCitizenId}
                       errorText={errors.citizenId}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                   birthMunicipalityField: (
@@ -953,9 +930,6 @@ const AddReservationScreen = () => {
                       labelSize="lg"
                       onChangeText={setBirthMunicipality}
                       errorText={errors.birthMunicipality}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                 }
@@ -972,9 +946,6 @@ const AddReservationScreen = () => {
                       labelSize="lg"
                       onChangeText={setBirthCountry}
                       errorText={errors.birthCountry}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                   citizenshipField: (
@@ -985,9 +956,6 @@ const AddReservationScreen = () => {
                       labelSize="lg"
                       onChangeText={setCitizenship}
                       errorText={errors.citizenship}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                   passportNumberField: (
@@ -998,15 +966,11 @@ const AddReservationScreen = () => {
                       labelSize="lg"
                       onChangeText={setPassportNumber}
                       errorText={errors.passportNumber}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                   passportIssuedDateField: (
                     <Pressable
                       onPress={() => openDateDialog("PASSPORT_ISSUED")}
-                      disabled={isEditMode}
                     >
                       <View pointerEvents="none">
                         <LabeledTextField
@@ -1022,9 +986,6 @@ const AddReservationScreen = () => {
                             <Icon name="CalendarPlus" color="gray" />
                           }
                           errorText={errors.passportIssuedDate}
-                          inputProps={{
-                            editable: !isEditMode,
-                          }}
                         />
                       </View>
                     </Pressable>
@@ -1032,7 +993,6 @@ const AddReservationScreen = () => {
                   entryDateField: (
                     <Pressable
                       onPress={() => openDateDialog("ENTRY_DATE")}
-                      disabled={isEditMode}
                     >
                       <View pointerEvents="none">
                         <LabeledTextField
@@ -1044,9 +1004,6 @@ const AddReservationScreen = () => {
                             <Icon name="CalendarPlus" color="gray" />
                           }
                           errorText={errors.entryDate}
-                          inputProps={{
-                            editable: !isEditMode,
-                          }}
                         />
                       </View>
                     </Pressable>
@@ -1059,9 +1016,6 @@ const AddReservationScreen = () => {
                       labelSize="lg"
                       onChangeText={setEntryPlace}
                       errorText={errors.entryPlace}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                   visaTypeField: (
@@ -1071,9 +1025,6 @@ const AddReservationScreen = () => {
                       size="xl"
                       labelSize="lg"
                       onChangeText={setVisaType}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                   visaNumberField: (
@@ -1083,15 +1034,11 @@ const AddReservationScreen = () => {
                       size="xl"
                       labelSize="lg"
                       onChangeText={setVisaNumber}
-                      inputProps={{
-                        editable: !isEditMode,
-                      }}
                     />
                   ),
                   permittedResidenceDateField: (
                     <Pressable
                       onPress={() => openDateDialog("PERMITTED_RESIDENCE")}
-                      disabled={isEditMode}
                     >
                       <View pointerEvents="none">
                         <LabeledTextField
@@ -1106,9 +1053,6 @@ const AddReservationScreen = () => {
                           rightElement={
                             <Icon name="CalendarPlus" color="gray" />
                           }
-                          inputProps={{
-                            editable: !isEditMode,
-                          }}
                         />
                       </View>
                     </Pressable>
@@ -1123,9 +1067,6 @@ const AddReservationScreen = () => {
               size="xl"
               labelSize="lg"
               onChangeText={setAddress}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           accommodationUnitNumberField={
@@ -1135,9 +1076,6 @@ const AddReservationScreen = () => {
               size="xl"
               labelSize="lg"
               onChangeText={setAccommodationUnitNumber}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           accommodationUnitFloorField={
@@ -1147,9 +1085,6 @@ const AddReservationScreen = () => {
               size="xl"
               labelSize="lg"
               onChangeText={setAccommodationUnitFloor}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           guestsCounterRow={
@@ -1197,9 +1132,6 @@ const AddReservationScreen = () => {
               size="xl"
               labelSize="lg"
               onChangeText={setInvoiceNumber}
-              inputProps={{
-                editable: !isEditMode,
-              }}
             />
           }
           noteField={
