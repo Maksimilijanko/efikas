@@ -572,5 +572,46 @@
         "buttons": {
             "ok": "U redu"
         }
+    },
+    "expenses": {
+        "messages": {
+            "successTitle": "Uspjeh",
+            "successMessage": "Trošak je uspješno dodan!",
+            "errorTitle": "Greška pri dodavanju",
+            "errorMessage": "Nije moguće dodati traženi trošak",
+            "statusSuccessTitle": "Uspjeh",
+            "statusSuccessMessage": "Trošak je uspješno riješen!"
+        },
+      
+         "categories": {
+        "Režije": "Režije",
+        "Čišćenje": "Čišćenje",
+        "Namirnice": "Namirnice"
+  }
+
+    },
+    "tasks": {
+    "messages": {
+        "successTitle": "Uspjeh",
+        "successMessage": "Zadatak je uspješno dodan!",
+        "errorTitle": "Greška",
+        "errorMessage": "Nije moguće sačuvati zadatak.",
+        "statusSuccessTitle": "Uspjeh",
+        "statusSuccessMessage": "Zadatak je završen!"
     }
+},
+"damages": {
+    "messages": {
+        "successTitle": "Uspjeh",
+        "successMessage": "Šteta je uspješno sačuvana!",
+        "errorTitle": "Greška",
+        "errorMessage": "Nije moguće sačuvati štetu.",
+        "statusSuccessTitle": "Uspjeh",
+        "statusSuccessMessage": "Šteta je uspješno sanirana!"
+    }
+},
+"common": {
+    "finish": "Završi",
+    "selectApartment": "Izaberite stan"
+}
 }

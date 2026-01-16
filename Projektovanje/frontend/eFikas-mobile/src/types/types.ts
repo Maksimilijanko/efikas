@@ -207,3 +207,38 @@ export interface ToggleNotificationRequest {
     pushToken: string;
 	enabled: boolean;
 }
+
+export interface ApartmentDamageDTO {
+    name: string;        
+    damagePrice: number; 
+    note: string;       
+    status: boolean;     
+}
+
+
+export interface ApartmentTaskDTO {
+    name: string;
+    note: string;
+    status: boolean;
+    dateTime: string; 
+}
+
+export interface ApartmentTaskResponse {
+    apartmentId: number;
+    name: string;
+    note: string;
+    status: boolean;
+    dateTime: string;
+}
+
+export interface ApartmentExpenseDTO {
+    name: string;      
+    amount: number;    
+    note: string;     
+    status: boolean;  
+    expenseType: string; 
+}
+
+export interface ApartmentExpenseResponse extends ApartmentExpenseDTO {
+    apartmentId: number;
+}
