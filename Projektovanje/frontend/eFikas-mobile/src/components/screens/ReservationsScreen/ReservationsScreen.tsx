@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { Pressable } from "react-native";
 import { Reservation } from "@/src/types/types";
 import ReservationsSwitcher from "../../molecules/ReservationsSwitcher/ReservationsSwitcher";
+import { BlurView } from "expo-blur";
 
 type SegmentOption = "finished" | "active" | "upcoming";
 type ViewMode = "list" | "calendar";
@@ -130,13 +131,25 @@ export default function ReservationsScreen() {
           />
         )}
 
-        {/* ---- SEGMENTED CONTROL ---- */}
+        {/* ---- SEGMENTED CONTROL ---- */}   
         <View style={styles.segmentedWrapper}>
+          <BlurView
+            intensity={15}
+            tint="default"
+            style={styles.segmentedBlur}
+          />
           <ReservationsSwitcher
             segment={segment}
             onSegmentChange={setSegment}
           />
         </View>
+
+        {/* ---- FLOAT BUTTON BLUR ---- */}
+        <BlurView
+          intensity={5}
+          tint="default"
+          style={styles.floatButtonBlur}
+        />
 
         {/* ---- FLOAT BUTTON ---- */}
         <View style={styles.floatButtonContainer}>
@@ -165,7 +178,7 @@ const getStyles = (Colors: any) =>
       flex: 1,
     },
     listContent: {
-      paddingTop: 16,
+      paddingTop: 12,
       paddingBottom: 120,
     },
     segmentedWrapper: {
@@ -173,10 +186,26 @@ const getStyles = (Colors: any) =>
       bottom: 24,
       alignSelf: "center",
     },
+    segmentedBlur: {
+      position: "absolute",
+      top: -24,
+      bottom: -24,
+      left: -16,
+      right: -16,
+    },
     floatButtonContainer: {
       position: "absolute",
       bottom: 60,
       right: 0,
       zIndex: 20,
+    },
+    floatButtonBlur: {
+      position: "absolute",
+      bottom: 66,
+      right: 6,
+      width: 72,
+      height: 72,
+      borderRadius: 35,
+      overflow: "hidden",
     },
   });
