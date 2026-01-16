@@ -16,14 +16,15 @@ import { styles } from "./index.styles";
 import { useEffect, useState } from "react";
 import { toastService } from "@/src/services/toastService";
 import { useAuth } from "@/src/hooks/useAuth";
-import { ResetPasswordRequest } from "@/src/types/types";
+import { OtpSendRequest, OtpVerifyRequest, ResetPasswordRequest } from "@/src/types/types";
 import { LoginButton } from "../../atoms/LoginButton/LoginButton";
+import { authService } from "@/src/api/services/authService";
 
 export default function ForgotPasswordScreen() {
 	const RESEND_OTP_SECONDS = 30;
 	const { t } = useTranslation();
 	const { resetPassword, isResettingPassword, resetPasswordError } = useAuth();
-	const { control, handleSubmit, trigger, reset, formState: { errors } } = useForm<ResetPasswordValidation.FormValues>({
+	const { control, handleSubmit, getValues, trigger, reset, formState: { errors } } = useForm<ResetPasswordValidation.FormValues>({
 		resolver: zodResolver(ResetPasswordValidation.schema),
 		defaultValues: {
 			email: "",
@@ -58,6 +59,21 @@ export default function ForgotPasswordScreen() {
 		setResendTimer(RESEND_OTP_SECONDS);
 	}
 
+	const sendOtpBase = async (onSuccess: () => void) => {
+		const req: OtpSendRequest = { email: getValues("email") };
+		try {
+			const response = await authService.requestOtp(req);
+			if(response.status !== 200) {
+				throw new Error("Error sending OTP");
+			}
+
+			onSuccess();
+		} catch(err) {
+			console.log(`OTP: ${err?.message}`)
+			toastService.error(t('auth.errors.sendOtpEmailError'));
+		}
+	}
+
 	const onSendOtp = async () => {
 		const isEmailValid = await trigger("email");
 
@@ -66,27 +82,41 @@ export default function ForgotPasswordScreen() {
 			return;
 		}
 
-		setActiveStep(1);
+		sendOtpBase(() => setActiveStep(1));
+
+		// Opcionalno ako odmah želimo timeout
 		//activateOtpTimeout();
 	}
 
-	const onVerifyOtp = () => {
+	const onVerifyOtp = async () => {
 		if (otpCode.length !== 6) {
 			toastService.error(t('auth.errors.enterValidOtpError'));
 			return;
 		}
 
 		// Call backend verification here...
-		console.log("Verifying OTP:", otpCode);
-		toastService.success(t('auth.forgotPassword.otpVerified'));
+		console.log("Verifying OTP: ", otpCode);
 
-		setActiveStep(2);
+		const req: OtpVerifyRequest = { email: getValues("email"), otp: otpCode };
+		try {
+			const response = await authService.verifyOtp(req);
+			if(response.status !== 200) {
+				throw new Error("Error verifying OTP");
+			}
+
+			toastService.success(t('auth.forgotPassword.otpVerified'));
+			setActiveStep(2);
+		} catch(err) {
+			console.log(`OTP: ${err?.message}`);
+			toastService.error(t('auth.errors.otpNotVerified'));
+		}
 	}
 
 	const sendOtpAgain = () => {
 		toastService.info(t('auth.forgotPassword.otpSentAgain'));
 
 		// Calling backend resend OTP here...
+		sendOtpBase(() => setActiveStep(1));
 
 		activateOtpTimeout();
 	}

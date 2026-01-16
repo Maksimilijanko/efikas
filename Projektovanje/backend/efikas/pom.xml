@@ -76,6 +76,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
         <!-- =================================== SPRING BOOT DEPENDENCIES =================================== -->
 
 
@@ -132,6 +137,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/software.amazon.awssdk/ses -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ses</artifactId>
+            <version>2.41.6</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Google client (OAuth) -->
         <!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
@@ -148,12 +160,13 @@
             <version>9.7.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.twilio.sdk/twilio -->
-        <dependency>
-            <groupId>com.twilio.sdk</groupId>
-            <artifactId>twilio</artifactId>
-            <version>11.3.1</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.twilio.sdk/twilio &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.twilio.sdk</groupId>-->
+<!--            <artifactId>twilio</artifactId>-->
+<!--            <version>11.3.1</version>-->
+<!--        </dependency>-->
+
         <!-- =================================== CLOUD DEPENDENCIES =================================== -->
 
 
@@ -184,6 +197,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.2.3</version>
+            <scope>compile</scope>
         </dependency>
         <!-- =================================== OTHER/HELPER DEPENDENCIES =================================== -->
 <!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.awspring.cloud/spring-cloud-aws-starter-secrets-manager &ndash;&gt;-->

@@ -37,7 +37,7 @@
         },
         "logout": {
             "toastMessages": {
-                "successTitle": "Odjava uspela!",
+                "successTitle": "Odjava uspjela!",
                 "successMsg": "Uspešno ste se odjavili.",
                 "errorTitle": "Greška prilikom odjave",
                 "errorMsg": "Neuspela odjava. Proverite vezu ili pokušajte ponovo."
@@ -49,7 +49,7 @@
 			"step1": {
 				"label": "Slanje OTP",
 				"title": "Unesite Vaš email kako biste resetovali lozinku.",
-				"subtitle": "Nakon unosa, dobićete jednokratni OTP kôd putem SMS-a.",
+				"subtitle": "Nakon unosa, dobićete jednokratni OTP kôd putem mejla.",
 				"sendOtpButton": "Pošalji OTP"
 			},
 			"step2": {
@@ -89,6 +89,7 @@
 			"phoneNumberLengthError": "Broj telefona mora biti bar {{length}} karaktera",
 			"phoneNumberFormatError": "Neispravan format. Očekivano: 06X/123-456",
 			"sendOtpEmailError": "Morate unijeti email za slanje OTP-a.",
+			"otpNotVerified": "Ovaj OTP kôd nije važeći.",
 			"enterValidOtpError": "Unesite ispravan OTP kôd"
         }
     },

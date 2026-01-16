@@ -9,8 +9,8 @@ export const API_URLS = {
         googleLogin: `${API_BASE_URL}/users/google/login`,
         login: `${API_BASE_URL}/users/login`,
         register: `${API_BASE_URL}/users/register`,
-		requestOtp: `${API_BASE_URL}/users/otp/request-otp`,
-		validateOtp: `${API_BASE_URL}/users/otp/validate`,
+		requestOtp: `${API_BASE_URL}/users/otp/request`,
+		verifyOtp: `${API_BASE_URL}/users/otp/verify`,
     },
     
     profile: {

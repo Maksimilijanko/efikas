@@ -14,12 +14,14 @@ import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.requests.CreateStoreRequest;
 import org.unibl.etf.efikas.models.requests.OtpSendRequest;
+import org.unibl.etf.efikas.models.requests.OtpVerifyRequest;
 import org.unibl.etf.efikas.models.requests.RegistrationRequest;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
 import org.unibl.etf.efikas.models.responses.AuthenticationResponse;
 import org.unibl.etf.efikas.security.JwtUtil;
 import org.unibl.etf.efikas.services.AppUserService;
 import org.unibl.etf.efikas.services.StoreService;
+import org.unibl.etf.efikas.services.impl.EmailOtpService;
 import org.unibl.etf.efikas.services.interfaces.OAuthService;
 import org.unibl.etf.efikas.services.interfaces.OtpService;
 
@@ -85,14 +87,27 @@ public class AppUserController {
     @PostMapping("/otp/request")
     public ResponseEntity<?> requestOtp(@RequestBody OtpSendRequest otpSendRequest) {
         AppUser appUser = appUserService.getUserByEmail(otpSendRequest.getEmail());
-        String phoneNumber = appUser.getPhoneNumber();
-        System.out.println("phone number: " + phoneNumber);
-        String smsMessage = "sms";
-        //String response = otpService.sendOtp(phoneNumber, smsMessage);
-        //String response = "Sent";
+        if(appUser == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return ResponseEntity.ok("sent");
+        String response = otpService.sendOtp(otpSendRequest.getEmail());
+
+        return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/otp/verify")
+    public ResponseEntity<?> verifyOtp(@RequestBody OtpVerifyRequest otpVerifyRequest) {
+        AppUser appUser = appUserService.getUserByEmail(otpVerifyRequest.getEmail());
+        if(appUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        boolean verified = otpService.verifyOtp(otpVerifyRequest.getEmail(), otpVerifyRequest.getOtp());
+
+        return verified ? ResponseEntity.ok("OTP verified") : ResponseEntity.status(HttpStatus.NOT_FOUND).body("OTP not valid");
+    }
+
 
     @PostMapping("/google/login")
     public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> body) {
