@@ -29,7 +29,7 @@ export interface ApartmentResponse {
 export const apartmentService = {
   getApartments: async (): Promise<ApartmentResponse[]> => {
     const res = await axiosInstance.get<ApartmentResponse[]>(
-      API_URLS.apartments.list()
+      API_URLS.apartments.list
     );
     return res.data;
   },

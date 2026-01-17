@@ -39,4 +39,8 @@ public class AppUser {
     @Column(name = "\"Address\"", nullable = false, length = 50)
     private String address;
 
+    @Size(max = 30)
+    @Column(name = "\"PhoneNumber\"", length = 30)
+    private String phoneNumber;
+
 }

@@ -21,8 +21,8 @@ import { Colors } from '@/src/styles/style'
 type TSelectedItem = any
 
 const EXPENSE_CATEGORIES: TSelectedItem[] = [
-  { id: 'Rezije', name: 'Režije' },
-  { id: 'Ciscenje', name: 'Čišćenje' },
+  { id: 'Režije', name: 'Režije' },    // ID mora imati kvačicu ako je ima u bazi
+  { id: 'Čišćenje', name: 'Čišćenje' }, // ID mora imati kvačicu!
   { id: 'Namirnice', name: 'Namirnice' },
 ]
 

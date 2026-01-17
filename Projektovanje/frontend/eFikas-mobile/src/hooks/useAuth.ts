@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { authService } from '../api/services/authService';
 import { secureStoreService } from '../services/secureStoreService';
 import { toastService } from '../services/toastService';
-import { LoginRequest, RegisterRequest } from '../types/types';
+import { LoginRequest, RegisterRequest, ResetPasswordRequest } from '../types/types';
 import { SECURE_STORE_KEYS } from '../util/secureStoreKeys';
 import { notificationsService } from '../services/notificationsService';
 import { notificationsApiService } from '../api/services/notificationsApiService';
@@ -78,6 +78,41 @@ export const useAuth = () => {
         },
     });
 
+	const resetPasswordMutation = useMutation({
+		mutationFn: (request: ResetPasswordRequest) =>
+			authService.resetPassword(request),
+
+		onSuccess: (response) => {
+			if (response.status === 200) {
+				toastService.success(
+					t('auth.forgotPassword.toastMessages.successTitle'),
+					t('auth.forgotPassword.toastMessages.successMsg')
+				);
+
+				// Optional, redirect to login
+				router.replace('/(auth)');
+			} else {
+				throw new Error(`Reset password failed`);
+			}
+		},
+
+		onError: (error: any) => {
+			toastService.error(
+				t('auth.forgotPassword.toastMessages.errorTitle'),
+				error?.response?.data?.message ??
+					t('auth.forgotPassword.toastMessages.errorMsg')
+			);
+
+			// Optional debug
+			if (error?.isAxiosError) {
+				console.log("Reset password error:", {
+					status: error.response?.status,
+					data: error.response?.data,
+				});
+			}
+		},
+	});
+
     const logout = async () => {
         try {
             await secureStoreService.deleteItemAsync(
@@ -87,7 +122,7 @@ export const useAuth = () => {
                 t('auth.logout.toastMessages.successTitle'),
                 t('auth.logout.toastMessages.successMsg')
             );
-            router.replace('/auth');
+            router.replace('/(auth)');
             
         } catch (error) {
             console.error("Greška prilikom odjave:", error);
@@ -101,10 +136,13 @@ export const useAuth = () => {
     return {
         login: loginMutation.mutate,
         register: registerMutation.mutate,
+		resetPassword: resetPasswordMutation.mutate,
         logout,
         isLoggingIn: loginMutation.isPending,
         isRegistering: registerMutation.isPending,
+		isResettingPassword: resetPasswordMutation.isPending,
         loginError: loginMutation.error,
         registerError: registerMutation.error,
+		resetPasswordError: resetPasswordMutation.error,
     };
 }

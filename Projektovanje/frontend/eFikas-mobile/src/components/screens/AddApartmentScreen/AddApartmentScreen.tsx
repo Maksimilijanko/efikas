@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import AddApartmentTemplate from '../../templates/AddApartmentTemplate/AddApartmentTemplate';
 import LabeledTextField from '../../molecules/LabeledTextField/LabeledTextField';
 import ImagePicker from '../../organisms/ImagePicker/ImagePicker';
@@ -12,6 +12,7 @@ import { ApartmentInventory, CreateApartmentPayload } from '@/src/types/types';
 import { useAddApartment } from '@/src/hooks/useAddApartment';
 import { toastService } from '@/src/services/toastService';
 import { useTranslation } from 'react-i18next';
+import { router } from 'expo-router';
 
 interface FormState {
   apartmentName: string;
@@ -94,26 +95,42 @@ export default function AddApartmentScreen() {
   const handleSaveApartment = () => {
     if (!validateForm()) return;
 
+    if (!selectedImages.length) {
+      toastService.error(t('addApartment.validation.errorTitle'), "Dodaj bar jednu sliku.");
+      return;
+    }
+
     const payload: CreateApartmentPayload = {
-      name: form.apartmentName,
-      address: form.address,
-      noBeds: Number(form.noBeds),
-      noBedrooms: Number(form.noBedrooms),
-      capacity: Number(form.capacity),
-      overnightPrice: Number(form.overnightPrice),
-      dayPrice: Number(form.dayPrice),
-      images: selectedImages,
-      inventory: inventoryData,
+      apartment: {
+        name: form.apartmentName.trim(),
+        address: form.address.trim(),
+        numberOfBeds: Number(form.noBeds),
+        numberOfRooms: Number(form.noBedrooms),
+        capacity: Number(form.capacity),
+        pricePerNight: Number(form.overnightPrice),
+        pricePerDay: Number(form.dayPrice),
+        traits: inventoryData,
+      },
+      pictures: selectedImages.map((uri, index) => ({
+        uri,
+        name: `image_${index}.jpg`,
+        type: "image/jpeg",
+      })),
     };
+
+    //console.log("Submitting apartment...");
 
     mutation.mutate(payload, {
       onSuccess: (response) => {
-        toastService.success(t('addApartment.messages.successTitle'), response.message || t('addApartment.messages.successMessage'));
-        resetForm();
+        toastService.success(
+          t('addApartment.messages.successTitle'),
+          response.message || t('addApartment.messages.successMessage')
+        );
+        router.back();
       },
       onError: () => {
         toastService.error(t('addApartment.messages.errorTitle'), t('addApartment.messages.errorMessage'));
-      },
+      }
     });
   };
 

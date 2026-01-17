@@ -1,6 +1,7 @@
 package org.unibl.etf.efikas.services;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.exceptions.S3UploadException;
+import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.ReservationDTO;
 import org.unibl.etf.efikas.models.entities.Apartment;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
@@ -59,6 +61,7 @@ public class ReservationService {
         reservation.setApartment(apartment);
 
 
+
         if(documentPicture != null && !documentPicture.isEmpty()) {
             FileUploadResponse fileUploadResponse = null;
             try {
@@ -70,10 +73,8 @@ public class ReservationService {
             reservation.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
         }
 
-
         Reservation saved = reservationRepository.save(reservation);
-        String url = documentPicture != null ? s3Service.getPresignedUrl(saved.getGuest().getPersonalDocumentURL()) : null;
-        saved.getGuest().setPersonalDocumentURL(url);  // User gets the downloadable URL
+        saved.getGuest().setPersonalDocumentURL(s3Service.getPresignedUrl(saved.getGuest().getPersonalDocumentURL()));  // User gets the downloadable URL
 
         return modelMapper.map(saved, ReservationResponse.class);
     }
@@ -86,10 +87,10 @@ public class ReservationService {
                 .map((element) -> modelMapper.map(element, ReservationResponse.class)).collect(Collectors.toList());
     }
 
-    //@PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
+    @PreAuthorize("@userSecurity.isReservationOwner(authentication, #reservationId)")
     public ReservationResponse getReservation(Integer reservationId, Authentication authentication) {
-        Reservation reservation = reservationRepository.findReservationByReservationId(reservationId)
-                .orElseThrow(() -> new EntityNotFoundException("Reservation not found!"));
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
         return modelMapper.map(reservation, ReservationResponse.class);
     }
@@ -118,9 +119,6 @@ public class ReservationService {
         reservation.setGuestQuantity(updateReservationRequest.getGuestQuantity());
         reservation.setGuest(getGuestFromReservationDTO(updateReservationRequest));
 
-
-
-        // Upload the new picture to S3 bucket
         if(documentPicture != null && !documentPicture.isEmpty()) {
             // Delete old picture from S3 bucket
             s3Service.deleteFile(reservation.getGuest().getPersonalDocumentURL());
