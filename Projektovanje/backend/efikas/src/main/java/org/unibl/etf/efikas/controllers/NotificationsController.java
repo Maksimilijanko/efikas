@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.unibl.etf.efikas.models.dto.NotificationMessageDTO;
 import org.unibl.etf.efikas.models.requests.PushNotificationTokenRequest;
 import org.unibl.etf.efikas.models.requests.ToggleNotificationRequest;
 import org.unibl.etf.efikas.services.interfaces.NotificationService;
@@ -20,6 +21,15 @@ public class NotificationsController {
         String resp = notificationService.addPushToken(pushNotificationTokenRequest);
 
         return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<?> sendPushToken(@RequestBody NotificationMessageDTO notificationMessageDTO) {
+        System.out.println("Push token request: " + notificationMessageDTO);
+
+        notificationService.sendNotificationByToken(notificationMessageDTO);
+
+        return ResponseEntity.ok("Notification sent successfully");
     }
 
     @PutMapping("/toggle")

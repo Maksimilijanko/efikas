@@ -1,5 +1,5 @@
-const scheme = "https";
-const address = "efikas-team.com";
+const scheme = "http";
+const address = "localhost:8080";
 const version = "v1";
 
 export const API_BASE_URL = `${scheme}://${address}/api/${version}`;

@@ -154,7 +154,7 @@ public class AppUserController {
 
         appUserService.changeUserPassword(passwordChangeRequest, authentication);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Updated password successfully");
     }
 
     @DeleteMapping("/me")
