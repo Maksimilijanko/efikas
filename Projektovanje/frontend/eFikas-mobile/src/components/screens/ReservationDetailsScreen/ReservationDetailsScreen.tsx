@@ -19,6 +19,10 @@ import { useTheme } from "@/src/providers/ThemeProvider";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { Alert, ActivityIndicator } from "react-native";
+import { FiscalService } from "@/src/api/services/FiscalService";
+import { CR_API_BASE_URL, crApiKey } from "@/src/util/apiConstants";
+import { FiscalConfig, FiscalItem, PaymentAmounts } from "@/src/types/types";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -41,6 +45,9 @@ const ReservationDetailsScreen = ({ reservation }) => {
   const { Colors } = useTheme();
   const navigation = useNavigation();
   const router = useRouter();
+
+  // -------------------- Stanje za loading tokom fiskalizacije --------------------
+  const [isFiscalizing, setIsFiscalizing] = useState(false);
 
   // -------------------- Dialog state --------------------
   const [dialogs, setDialogs] = useState({
@@ -70,11 +77,87 @@ const ReservationDetailsScreen = ({ reservation }) => {
     }
   };
 
-  const handleFiscalizationConfirm = () => {
-    // Logika za fikalizaciju... TODO
-    console.log("Fiskalizacija potvrđena");
-    toggleDialog("fiscalization", false);
+  // const handleFiscalizationConfirm = () => {
+  //   // Logika za fikalizaciju... TODO
+  //   console.log("Fiskalizacija potvrđena");
+  //   toggleDialog("fiscalization", false);
+  // };
+
+  // ==========================  Logika za fikalizaciju ===============================
+  const handleFiscalizationConfirm = async () => {
+    // 1. Validacija cijene
+    if (!reservation.price || reservation.price <= 0) {
+      Alert.alert(t("error"), t("reservations.details.fiscalization.invalidPrice"));
+      return;
+    }
+
+    setIsFiscalizing(true);
+
+    try {
+      // 2. Konfiguracija servisa
+      // U praksi, cashierName vjerovatno dolazi iz ulogovanog korisnika (Context/Store)
+      const config: FiscalConfig = {
+        ipAddress: CR_API_BASE_URL, 
+        apiKey: crApiKey, // Pazi da je ovo setovano u konstantama
+        cashierName: "eFikas" // Ili ime trenutnog korisnika
+      };
+
+      const fiscalService = new FiscalService(config);
+
+      // 3. Priprema stavki računa (Mapiranje rezervacije na artikal)
+      const nights = calculateNights(reservation.dateTimeOfArrival, reservation.dateTimeOfDeparture);
+      
+      // Izračun cijene po noćenju (ako je ukupna cijena data)
+      // Ili možemo staviti količinu 1, a cijenu ukupnu. Ovdje stavljam po noćenju:
+      const pricePerNight = reservation.price / nights;
+
+      const items: FiscalItem[] = [
+        {
+          name: reservation.reservationType, // Naziv artikla
+          gtin: reservation.apartment.apartmentId.toString(), // Šifra artikla
+          taxLabel: "E", // Poreska stopa (PROVJERI OVO ZA SVOJU DRŽAVU, npr. E za oslobođeno ili A/J za standardno)
+          unitPrice: pricePerNight,
+          quantity: nights,
+          totalAmount: reservation.price
+        }
+      ];
+
+      // 4. Priprema plaćanja (Pretpostavka: Gotovina, ili dodaj izbor u dialog)
+      const payments: PaymentAmounts = {
+        cash: reservation.price
+      };
+
+      // 5. Slanje zahtjeva na kasu
+      const result = await fiscalService.sendSaleInvoice(
+        items, 
+        payments, 
+        reservation.guestFullName // Buyer ID (opciono)
+      );
+
+      if (result) {
+        console.log("Račun kreiran:", result.invoiceNumber);
+        
+        // TODO: Ovdje pozovi API da sačuvaš 'result.invoiceNumber' u svoju bazu (Backend)
+        // await saveInvoiceToBackend(reservation.reservationId, result);
+
+        Alert.alert(
+          t("success"), 
+          `${t("reservations.details.fiscalization.successMessage")}\nBroj računa: ${result.invoiceNumber}`,
+          [{ text: "OK", onPress: () => toggleDialog("fiscalization", false) }]
+        );
+      }
+
+    } catch (error: any) {
+      console.error("Greška fiskalizacije:", error);
+      Alert.alert(
+        t("error"), 
+        t("reservations.details.fiscalization.errorMessage") + "\n" + error.message
+      );
+    } finally {
+      setIsFiscalizing(false);
+    }
   };
+  // =========================================================
 
   // header - tri tackice
   useEffect(() => {
@@ -190,7 +273,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
       },
       fiscalization: {
         visible: dialogs.fiscalization,
-        onClose: () => toggleDialog("fiscalization", false),
+        onClose: () => !isFiscalizing && toggleDialog("fiscalization", false),
         title: t("reservations.details.fiscalization.title"),
         items: [
           {
@@ -224,12 +307,18 @@ const ReservationDetailsScreen = ({ reservation }) => {
         ],
         buttons: [
           {
-            title: t("reservations.details.fiscalization.button.confirmButton"),
+            // title: t("reservations.details.fiscalization.button.confirmButton"),
+            // onPress: handleFiscalizationConfirm,
+            title: isFiscalizing 
+                ? "Učitavanje..."
+                : t("reservations.details.fiscalization.button.confirmButton"),
             onPress: handleFiscalizationConfirm,
+            disabled: isFiscalizing,
           },
           {
             title: t("reservations.details.fiscalization.button.cancelButton"),
             onPress: () => toggleDialog("fiscalization", false),
+            disabled: isFiscalizing,
           },
         ],
       },
@@ -245,6 +334,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
       t,
       handleDelete,
       handleFiscalizationConfirm,
+      isFiscalizing,
     ]
   );
 

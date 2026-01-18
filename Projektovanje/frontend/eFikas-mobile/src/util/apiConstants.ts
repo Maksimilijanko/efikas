@@ -2,7 +2,12 @@ const scheme = "https";
 const address = "efikas-team.com";
 const version = "v1";
 
+const crScheme = "http";
+const crAddress = "192.168.1.200";          // this needs to be changed when connecting to cash register
+const crApiKey = "";                        // this needs to be set
+
 export const API_BASE_URL = `${scheme}://${address}/api/${version}`;
+export const CR_API_BASE_URL = `${crScheme}://${crAddress}`;
 
 export const API_URLS = {
     auth: {
@@ -20,7 +25,9 @@ export const API_URLS = {
 		resetPassword: `${API_BASE_URL}/users/me/reset-password`,
     },
 
+    cashRegister: {
 
+    },
 
   reservations: {
     listUser: () => `${API_BASE_URL}/reservations`,

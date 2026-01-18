@@ -242,3 +242,38 @@ export interface ApartmentExpenseDTO {
 export interface ApartmentExpenseResponse extends ApartmentExpenseDTO {
     apartmentId: number;
 }
+
+export interface FiscalConfig {
+  ipAddress: string;
+  apiKey: string;
+  cashierName: string;
+}
+
+export interface FiscalItem {
+  name: string;
+  gtin: string;
+  taxLabel: string;
+  unitPrice: number;
+  quantity: number;
+  totalAmount: number;
+}
+
+export interface PaymentAmounts {
+  cash?: number;
+  card?: number;
+  check?: number;
+  wireTransfer?: number;
+}
+
+export interface PaymentMethodApi {
+  amount: string;
+  paymentType: "Cash" | "Card" | "Check" | "WireTransfer";
+}
+
+export interface FiscalResponse {
+  invoiceNumber: string;
+  sdcDateTime: string;
+  tin: string;
+  invoiceCounter?: string;
+  mrc?: string;
+}
