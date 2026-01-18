@@ -153,6 +153,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   const current = selectedReservations[currentIndex] ?? null;
 
+  
+
   const formatDateTime = (iso: string) => {
     if (!iso) return "";
     const local = dayjs.utc(iso).tz("Europe/Sarajevo");

@@ -28,8 +28,8 @@ export const API_URLS = {
     listByApartment: (apartmentId: number) =>
       `${API_BASE_URL}/apartments/${apartmentId}/reservations`,
 
-    getById: (reservationId: number) =>
-      `${API_BASE_URL}/reservations/${reservationId}`,
+    getById: (reservationId: number, apartmentId: number) =>
+      `${API_BASE_URL}/reservations/${reservationId}?apartmentId=${apartmentId}`,
 
     create: (apartmentId: number) =>
       `${API_BASE_URL}/apartments/${apartmentId}/reservations`,

@@ -105,6 +105,7 @@ const AddReservationScreen = () => {
   const [departureAt, setDepartureAt] = useState<Date | null>(null);
 
   // Guest fields
+  const [guestId, setGuestId] = useState(0);
   const [guestName, setGuestName] = useState("");
   const [guestSurname, setGuestSurname] = useState("");
   const [gender, setGender] = useState<Gender>("Male");
@@ -185,6 +186,7 @@ const AddReservationScreen = () => {
       }
 
       // podesavanje zajednickih polja za sve tipove gostiju
+	  setGuestId(guest.id || 0);
       setGuestName(guest.name || "");
       setGuestSurname(guest.surname || "");
       setGender(guest.gender || "Male");
@@ -419,6 +421,7 @@ const AddReservationScreen = () => {
 
   const buildGuestPayload = (): Guest => {
     const commonGuestFields = {
+	  id: guestId,
       name: guestName.trim(),
       surname: guestSurname.trim(),
       gender,

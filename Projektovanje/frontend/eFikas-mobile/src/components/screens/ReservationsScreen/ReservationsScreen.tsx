@@ -117,7 +117,13 @@ export default function ReservationsScreen() {
                 dateFrom={formatDate(item.guest.dateTimeOfArrival)}
                 dateTo={formatDate(item.guest.dateTimeOfDeparture)}
                 onIconPress={() =>
-                  router.push(`/(home)/reservations/${item.reservationId}`)
+                  	router.push({
+						pathname: '/(home)/reservations/[id]',
+						params: {
+							id: item.reservationId,        // dynamic route param
+							apartmentId: item.apartment.apartmentId // search param
+						},
+					})
                 }
               />
             )}
@@ -126,8 +132,14 @@ export default function ReservationsScreen() {
           <ReservationsCalendar
             reservations={filteredReservations}
             onOpenDetails={(reservation) =>
-              router.push(`/(home)/reservations/${reservation.reservationId}`)
-            }
+				router.push({
+					pathname: '/(home)/reservations/[id]',
+					params: {
+						id: reservation.reservationId,        // dynamic route param
+						apartmentId: reservation.apartment.apartmentId // search param
+					},
+				})
+			}
           />
         )}
 

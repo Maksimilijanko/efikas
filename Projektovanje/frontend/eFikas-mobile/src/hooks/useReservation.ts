@@ -28,14 +28,14 @@ export const useReservations = (apartmentId: number) => {
 };
 
 // ------------------- FETCH JEDNE REZERVACIJE -------------------
-export const useReservation = (reservationId: number) => {
+export const useReservation = (reservationId: number, apartmentId: number) => {
   const { t } = useTranslation();
 
   return useQuery<Reservation, Error>({
     queryKey: ["reservation", reservationId],
     queryFn: async () => {
       try {
-        return await reservationService.getReservation(reservationId);
+        return await reservationService.getReservation(reservationId, apartmentId);
       } catch (err: any) {
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");
