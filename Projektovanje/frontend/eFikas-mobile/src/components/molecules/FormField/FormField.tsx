@@ -37,6 +37,7 @@ interface Props<T extends FieldValues> {
 	| "6xl";
 	disabled?: boolean;
 	formatValue?: (value: any) => string;
+	inputProps?: any;
 }
 
 export default function FormField<T extends FieldValues>({
@@ -54,6 +55,7 @@ export default function FormField<T extends FieldValues>({
 	size = "md",
 	labelSize = "md",
 	disabled = false,
+	inputProps,
 
 	formatValue,
 }: Props<T>) {
@@ -96,6 +98,7 @@ export default function FormField<T extends FieldValues>({
 								) : rightElement
 							}
 							disabled={disabled}
+							inputProps={inputProps}
 						/>
 
 						{helperText && (

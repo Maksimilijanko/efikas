@@ -14,10 +14,8 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import AddReservationTemplate from "@/src/components/templates/AddReservationTemplate/AddReservationTemplate";
-import LabeledTextField from "@/src/components/molecules/LabeledTextField/LabeledTextField";
 import ToggleItem from "@/src/components/molecules/ToggleItem/ToggleItem";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
-import TextField from "@/src/components/atoms/TextField/TextField";
 import { HStack } from "@/src/components/ui/hstack";
 import ApartmentSelectDropdown from "../../organisms/ApartmentSelectDropdown/ApartmentSelectDropdown";
 import DateTimePicker from "@/src/components/organisms/DateTimePicker/DateTimePicker";
@@ -45,6 +43,7 @@ import { Path, useForm } from "react-hook-form";
 import { GuestValidation } from "@/src/util/validationSchemas";
 import FormField from "../../molecules/FormField/FormField";
 import { IconButton } from "../../atoms/IconButton/IconButton";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 
 
@@ -64,12 +63,12 @@ const dayjs: any = require("dayjs");
 
 const formatDateTimeLabel = (date: Date | null) => {
 	if (!date) return "";
-	return dayjs(date).format("DD.MM.YYYY. HH:mm");
+	return dayjs(date).format("DD. MM. YYYY. HH:mm");
 };
 
 const formatDateLabel = (date: Date | null) => {
 	if (!date) return "";
-	return dayjs(date).format("DD.MM.YYYY.");
+	return dayjs(date).format("DD. MM. YYYY.");
 };
 
 const clampGuests = (n: number) => Math.max(1, Math.min(20, n));
@@ -108,16 +107,24 @@ function AddReservationScreen() {
 	const [selectedApartment, setSelectedApartment] = useState<ApartmentOption | null>(null);
 	const [guestType, setGuestType] = useState<GuestType>("DOMESTIC");
 	const [dailyStay, setDailyStay] = useState(false);
-	const [arrivalAt, setArrivalAt] = useState<Date | null>(null);
-	const [departureAt, setDepartureAt] = useState<Date | null>(null);
 
 	
 	// Guest form
-	const { control, handleSubmit: handleSubmit1, watch, getValues, setValue, reset, formState: { errors: errors1, isSubmitting: isSubmitting1 }} = useForm<GuestValidation.FormValues>({
+	const { control, 
+		handleSubmit: handleSubmit1, 
+		watch, 
+		getValues, 
+		setValue, 
+		reset, 
+		formState: { errors: errors1, isSubmitting: isSubmitting1 }} = useForm<GuestValidation.FormValues>({
+		resolver: zodResolver(GuestValidation.schema),
 		mode: "onBlur",
 		defaultValues: {
 			//guestType: "DOMESTIC",
+			price: 0,
 			gender: "Male",
+			dateTimeOfArrival: null,
+    		dateTimeOfDeparture: null,
 			//guestsCount: 1,
 			//dailyStay: false,
 		},
@@ -154,95 +161,42 @@ function AddReservationScreen() {
 	);
 
 	// popunjavanje polja u edit modu
-	// useEffect(() => {
-	// 	if (isEditMode && existingReservation) {
-	// 		const guest = existingReservation.guest;
+	useEffect(() => {
+		if (isEditMode && existingReservation) {
+			const guest = existingReservation.guest;
 
-	// 		// podesavanje apartmana
-	// 		const aptOption = apartments.find(
-	// 			(apt) => apt.id === String(existingReservation.apartment.apartmentId)
-	// 		);
-	// 		if (aptOption) setSelectedApartment(aptOption);
+			// podesavanje apartmana
+			const aptOption = apartments.find(
+				(apt) => apt.id === String(existingReservation.apartment.apartmentId)
+			);
+			if (aptOption) setSelectedApartment(aptOption);
 
-	// 		// podesavanje tipa rezervacije
-	// 		setDailyStay(existingReservation.reservationType === "Dnevni boravak");
+			// podesavanje tipa rezervacije
+			setDailyStay(existingReservation.reservationType === "Dnevni boravak");
 
-	// 		// podesavanje tipa gosta
-	// 		setGuestType(guest.isLocal ? "DOMESTIC" : "FOREIGN");
+			// podesavanje tipa gosta
+			setGuestType(guest.isLocal ? "DOMESTIC" : "FOREIGN");
 
-	// 		// podesavanje datuma
-	// 		if (guest.dateTimeOfArrival) {
-	// 			setArrivalAt(new Date(guest.dateTimeOfArrival));
-	// 		}
-	// 		if (guest.dateTimeOfDeparture) {
-	// 			setDepartureAt(new Date(guest.dateTimeOfDeparture));
-	// 		}
+			// podesavanje datuma
 
-	// 		// podesavanje zajednickih polja za sve tipove gostiju
-	// 		setGuestId(guest.id || 0);
-	// 		setGuestName(guest.name || "");
-	// 		setGuestSurname(guest.surname || "");
-	// 		setGender(guest.gender || "Male");
-	// 		setPhone(guest.phoneNumber || "");
-	// 		if (guest.birthDate) {
-	// 			setBirthDate(new Date(guest.birthDate));
-	// 		}
-	// 		setBirthPlace(guest.birthPlace || "");
-	// 		setAddress(guest.address || "");
-	// 		setAccommodationUnitNumber(
-	// 			guest.accommodationUnitNumber
-	// 				? String(guest.accommodationUnitNumber)
-	// 				: ""
-	// 		);
-	// 		setAccommodationUnitFloor(
-	// 			guest.accommodationUnitFloor ? String(guest.accommodationUnitFloor) : ""
-	// 		);
 
-	// 		// podesavanje polja za rezervaciju
-	// 		setGuestsCount(existingReservation.guestQuantity || 1);
-	// 		setPrice(
-	// 			existingReservation.price ? String(existingReservation.price) : ""
-	// 		);
-	// 		setInvoiceNumber(guest.issuedInvoiceNumber || "");
-	// 		setNote(existingReservation.note || "");
-	// 		setDocumentUri(guest.personalDocumentURL || null);
+			// podesavanje zajednickih polja za sve tipove gostiju	
+			setGuestId(guest.id);
+			setNote(existingReservation.note || "");
+			setDocumentUri(guest.personalDocumentURL || null);
 
-	// 		// podesavanje polja za specifican tip gostiju
-	// 		if (guest.isLocal) {
-	// 			// domaci gost
-	// 			setCitizenId(guest.citizenId || "");
-	// 			setBirthMunicipality((guest as any).birthMunicipality || "");
-	// 		} else {
-	// 			// strani gost
-	// 			const foreignGuest = guest as any;
-	// 			setCitizenId(guest.citizenId || "");
-	// 			setBirthCountry(guest.birthCountry || "");
-	// 			setCitizenship(foreignGuest.citizenship || "");
-	// 			setPassportNumber(foreignGuest.passportNumber || "");
-	// 			if (foreignGuest.passportIssuedDate) {
-	// 				setPassportIssuedDate(new Date(foreignGuest.passportIssuedDate));
-	// 			}
-	// 			if (foreignGuest.entryDate) {
-	// 				setEntryDate(new Date(foreignGuest.entryDate));
-	// 			}
-	// 			setEntryPlace(foreignGuest.entryPlace || "");
-	// 			setVisaType(foreignGuest.visaType || "");
-	// 			setVisaNumber(foreignGuest.visaNumber || "");
-	// 			if (foreignGuest.permittedResidenceDate) {
-	// 				setPermittedResidenceDate(
-	// 					new Date(foreignGuest.permittedResidenceDate)
-	// 				);
-	// 			}
-	// 		}
-	// 	}
-	// }, [isEditMode, existingReservation, apartments]);
+			
+		}
+	}, [isEditMode, existingReservation, apartments]);
 
 
 
 	useEffect(() => {
 		if (!isEditMode || !existingReservation) return;
 
-		const guest = existingReservation.guest;
+		const guest: Guest = existingReservation.guest;
+
+		console.log("RESERVATION GUEST: ", guest);
 
 		// 1 Apartment
 		const aptOption = apartments.find(
@@ -253,16 +207,9 @@ function AddReservationScreen() {
 		// 2 Reservation-level state (still useState)
 		setDailyStay(existingReservation.reservationType === "Dnevni boravak");
 
-		if (guest.dateTimeOfArrival) {
-			setArrivalAt(new Date(guest.dateTimeOfArrival));
-		}
-
-		if (guest.dateTimeOfDeparture) {
-			setDepartureAt(new Date(guest.dateTimeOfDeparture));
-		}
 
 		setGuestsCount(existingReservation.guestQuantity || 1);
-		setPrice(existingReservation.price ? String(existingReservation.price) : "");
+		setPrice((pricePrev) => existingReservation.price ? String(existingReservation.price) : "");
 		setNote(existingReservation.note || "");
 		setDocumentUri(guest.personalDocumentURL || null);
 
@@ -276,35 +223,39 @@ function AddReservationScreen() {
 			birthDate: guest.birthDate ? new Date(guest.birthDate) : null,
 			birthPlace: guest.birthPlace ?? "",
 			address: guest.address ?? "",
+			dateTimeOfArrival: guest.dateTimeOfArrival ? new Date(guest.dateTimeOfArrival) : null,
+			dateTimeOfDeparture: guest.dateTimeOfDeparture ? new Date(guest.dateTimeOfDeparture) : null,
 			accommodationUnitNumber: guest.accommodationUnitNumber ?? null,
 			accommodationUnitFloor: guest.accommodationUnitFloor ?? null,
+
+			price: existingReservation.price ?? 0,
 
 			// Domestic
 			jmbg: guest.citizenId ?? "",
 			birthMunicipality: guest.isLocal
-				? (guest as any).birthMunicipality ?? ""
+				? (guest as DomesticGuest).birthMunicipality ?? ""
 				: undefined,
 
 			// Foreign
 			birthCountry: !guest.isLocal ? guest.birthCountry ?? "" : undefined,
-			citizenship: !guest.isLocal ? (guest as any).citizenship ?? "" : undefined,
+			citizenship: !guest.isLocal ? (guest as ForeignGuest).citizenship ?? "" : undefined,
 			passportNumber: !guest.isLocal
-				? (guest as any).passportNumber ?? ""
+				? (guest as ForeignGuest).passportNumber ?? ""
 				: undefined,
 			passportIssuedDate:
-				!guest.isLocal && (guest as any).passportIssuedDate
-					? new Date((guest as any).passportIssuedDate)
+				!guest.isLocal && (guest as ForeignGuest).passportIssuedDate
+					? (guest as ForeignGuest).passportIssuedDate
 					: null,
 			entryDate:
-				!guest.isLocal && (guest as any).entryDate
-					? new Date((guest as any).entryDate)
+				!guest.isLocal && (guest as ForeignGuest).entryDate
+					? (guest as ForeignGuest).entryDate
 					: null,
-			entryPlace: !guest.isLocal ? (guest as any).entryPlace ?? "" : undefined,
-			visaType: !guest.isLocal ? (guest as any).visaType ?? "" : undefined,
-			visaNumber: !guest.isLocal ? (guest as any).visaNumber ?? "" : undefined,
+			entryPlace: !guest.isLocal ? (guest as ForeignGuest).entryPlace ?? "" : undefined,
+			visaType: !guest.isLocal ? (guest as ForeignGuest).visaType ?? "" : undefined,
+			visaNumber: !guest.isLocal ? (guest as ForeignGuest).visaNumber ?? "" : undefined,
 			permittedResidenceDate:
-				!guest.isLocal && (guest as any).permittedResidenceDate
-					? new Date((guest as any).permittedResidenceDate)
+				!guest.isLocal && (guest as ForeignGuest).permittedResidenceDate
+					? new Date((guest as ForeignGuest).permittedResidenceDate)
 					: null,
 		});
 	}, [isEditMode, existingReservation, apartments, reset]);
@@ -384,7 +335,7 @@ function AddReservationScreen() {
 
 	const handleDailyStayToggle = (value: boolean) => {
 		setDailyStay(value);
-		if (value) setDepartureAt(null);
+		if (value) setValue("dateTimeOfDeparture", null);
 	};
 
 	const openImagePicker = () => {
@@ -453,10 +404,18 @@ function AddReservationScreen() {
 		reset();
 	};
 
+
+
 	const formatLocalDate = (date: Date | null): string | null =>
 		date ? dayjs(date).format("YYYY-MM-DD") : null;
 
+
+	function isForeignGuest(data: GuestValidation.FormValues): data is Extract<GuestValidation.FormValues, { isLocal: false }> {
+		return data.isLocal === false;
+	}
+
 	const buildGuestPayload = (data: GuestValidation.FormValues): Guest => {
+
 		const common = {
 			id: guestId,
 			name: data.name.trim(),
@@ -468,38 +427,42 @@ function AddReservationScreen() {
 			address: data.address,
 			accommodationUnitNumber: data.accommodationUnitNumber,
 			accommodationUnitFloor: data.accommodationUnitFloor,
-			dateTimeOfArrival: arrivalAt,
-			dateTimeOfDeparture: dailyStay ? null : departureAt,
+			dateTimeOfArrival: data.dateTimeOfArrival,
+			dateTimeOfDeparture: dailyStay ? null : data.dateTimeOfDeparture,
 			personalDocumentURL: documentUri,
 		};
 
-		return data.isLocal
-			? {
-					...common,
-					isLocal: true,
-					citizenId: data.jmbg!,
-					birthMunicipality: data.birthMunicipality!,
-					birthCountry: data.birthCountry
-			}
-			: {
-					...common,
-					isLocal: false,
-					citizenId: data.passportNumber!,
-					citizenship: data.citizenship!,
-					passportNumber: data.passportNumber!,
-					passportIssuedDate: data.passportIssuedDate,
-					entryDate: data.entryDate,
-					entryPlace: data.entryPlace,
-					visaType: data.visaType,
-					visaNumber: data.visaNumber,
-					permittedResidenceDate: data.permittedResidenceDate,
-					birthCountry: data.birthCountry
+		if (data.isLocal) {
+			return {
+				...common,
+				isLocal: true,
+				citizenId: data.jmbg,
+				birthMunicipality: data.birthMunicipality,
+				birthCountry: data.birthCountry,
 			};
+		} 
+		else if (isForeignGuest(data)) {
+			
+			return {
+				...common,
+				isLocal: false,
+				citizenId: data.passportNumber,
+				citizenship: data.citizenship,
+				passportNumber: data.passportNumber,
+				passportIssuedDate: data.passportIssuedDate,
+				entryDate: data.entryDate,
+				entryPlace: data.entryPlace,
+				visaType: data.visaType,
+				visaNumber: data.visaNumber,
+				permittedResidenceDate: data.permittedResidenceDate,
+				birthCountry: data.birthCountry,
+			};
+		}
 	};
 
-	const buildReservationPayload = (): CreateReservationPayload => {
+	const buildReservationPayload = (data: GuestValidation.FormValues): CreateReservationPayload => {
 		return {
-			guest: buildGuestPayload(getValues()),
+			guest: buildGuestPayload(data),
 			guestQuantity: guestsCount,
 			price: price ? Number(price) : null,
 			note: note || null,
@@ -507,10 +470,10 @@ function AddReservationScreen() {
 		};
 	};
 
-	const buildUpdatePayload = (): UpdateReservationPayload => {
+	const buildUpdatePayload = (data: GuestValidation.FormValues): UpdateReservationPayload => {
 		return {
 			apartmentId: selectedApartmentIdNum,
-			guest: buildGuestPayload(getValues()),
+			guest: buildGuestPayload(data),
 			guestQuantity: guestsCount,
 			price: price ? Number(price) : null,
 			note: note || null,
@@ -646,17 +609,19 @@ function AddReservationScreen() {
 	// 	}
 	// };
 
-	const handleSubmit = () => {
-		if (!arrivalAt) {
+	const onSubmit = (data: GuestValidation.FormValues) => {
+		if (!selectedApartment || !selectedApartment.id) {
 			Alert.alert(t("reservations.alerts.selectApartment.title"), t("reservations.alerts.selectApartment.message"));
 			return;
 		}
 
 		if(isEditMode) {
 			
-			const payload = buildUpdatePayload();
+			const payload = buildUpdatePayload(data);
 			console.log("=== UPDATE PAYLOAD ===");
 			console.log(JSON.stringify(payload, null, 2));
+
+			
 
 			// updateReservationMutation.mutate(
 			// 	{
@@ -686,7 +651,7 @@ function AddReservationScreen() {
 			// );
 		}
 		else {
-			const payload = buildReservationPayload();
+			const payload = buildReservationPayload(data);
 			console.log("=== UPDATE PAYLOAD ===");
 			console.log(JSON.stringify(payload, null, 2));
 
@@ -715,6 +680,8 @@ function AddReservationScreen() {
 			// 	},
 			// });
 		}
+
+		
 	};
 
 
@@ -818,6 +785,7 @@ function AddReservationScreen() {
 	}
 
 	const getDateDialogInitialValue = () => {
+
 		switch (activeDateField) {
 			case "ARRIVAL":
 				return new Date(getValues("dateTimeOfArrival"));
@@ -848,7 +816,8 @@ function AddReservationScreen() {
 		iconName: LucideIconName,
 		rightElement?: React.ReactNode,
 		disabled?: boolean,
-		formatValue?: (value: any) => string
+		formatValue?: (value: any) => string,
+		inputProps?: any,
 	) => {
 		return(
 			<FormField
@@ -865,6 +834,7 @@ function AddReservationScreen() {
 				labelSize="lg"
 				disabled={disabled}
 				formatValue={formatValue}
+				inputProps={inputProps}
 			/>
 		);
 	}
@@ -983,7 +953,7 @@ function AddReservationScreen() {
 						renderFormField(t("reservations.form.fields.phone"), 'phoneNumber', '065/123-456', undefined, 'text', "Phone")
 					}
 					birthDateField={
-						renderFormField(t("reservations.form.fields.birthDate"), 'birthDate', undefined, undefined, 'text', undefined, <IconButton iconName="CalendarPlus" onPress={() => openDateDialog("BIRTH_DATE")} color='gray' />)
+						renderFormField(t("reservations.form.fields.birthDate"), 'birthDate', undefined, undefined, 'text', undefined, <IconButton iconName="CalendarPlus" onPress={() => openDateDialog("BIRTH_DATE")} color='gray' />, undefined, formatDateLabel)
 					}
 					birthPlaceField={
 						renderFormField(t("reservations.form.fields.birthPlace"), 'birthPlace', 'Banja Luka', undefined, 'text', "MapPinned")
@@ -992,7 +962,7 @@ function AddReservationScreen() {
 						guestType === "DOMESTIC"
 							? {
 								citizenIdField: (
-									renderFormField(t("reservations.form.fields.citizenId"), 'jmbg', '1234567891234', undefined, 'text', "Key")
+									renderFormField(t("reservations.form.fields.citizenId"), 'jmbg', '1234567891234', undefined, 'text', "Key", undefined, undefined, undefined, { keyboardType: "numeric", })
 								),
 								birthMunicipalityField: (
 									renderFormField(t("reservations.form.fields.birthMunicipality"), 'birthMunicipality', 'Banja Luka', undefined, 'text', "MapPin")
@@ -1052,7 +1022,7 @@ function AddReservationScreen() {
 										'text', 
 										undefined, 
 										<IconButton iconName="CalendarPlus" onPress={() => openDateDialog("PERMITTED_RESIDENCE")} color='gray' />,
-										false,
+										undefined,
 										formatDateLabel
 									)
 								),
@@ -1091,31 +1061,11 @@ function AddReservationScreen() {
 						</View>
 					}
 					priceField={
-						renderFormField(t("reservations.form.fields.price") + ' (BAM)', 'price', '50.00', undefined, 'text', "DollarSign")
-						// <View style={styles.priceRow}>
-						// 	<Label text={t("reservations.form.fields.price")} size="lg" />
-						// 	<View style={styles.priceInputWrap}>
-						// 		<TextField
-						// 			inputProps={{
-						// 				value: price,
-						// 				onChangeText: setPrice,
-						// 				keyboardType: "numeric",
-						// 			}}
-						// 			size="xl"
-						// 		/>
-						// 		<Text style={styles.priceCurrency}>BAM</Text>
-						// 	</View>
-						// </View>
+						renderFormField(t("reservations.form.fields.price") + ' (BAM)', 'price', '50.00', undefined, 'text', "DollarSign",
+					undefined, false, undefined, { keyboardType: "numeric", })
 					}
 					invoiceNumberField={
 						renderFormField(t("reservations.form.fields.invoiceNumber"), 'issuedInvoiceNumber', '65413211', undefined, 'text', "Receipt")
-						// <LabeledTextField
-						// 	label={t("reservations.form.fields.invoiceNumber")}
-						// 	value={invoiceNumber}
-						// 	size="xl"
-						// 	labelSize="lg"
-						// 	onChangeText={setInvoiceNumber}
-						// />
 					}
 					noteField={
 						<View style={styles.noteWrap}>
@@ -1129,7 +1079,7 @@ function AddReservationScreen() {
 							activeOpacity={0.85}
 							onPressIn={() => setSubmitPressed(true)}
 							onPressOut={() => setSubmitPressed(false)}
-							onPress={handleSubmit}
+							onPress={handleSubmit1(onSubmit, (e) => { console.log("ERROR: ", e.dateTimeOfDeparture) })}
 							disabled={isSubmitting}
 							style={[
 								styles.submitBtn,
