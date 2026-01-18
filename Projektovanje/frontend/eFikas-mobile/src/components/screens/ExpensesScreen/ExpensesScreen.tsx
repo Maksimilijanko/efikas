@@ -1,125 +1,140 @@
-import React, { useState } from 'react';
-import { View, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { useQueryClient } from "@tanstack/react-query"; 
+import { useTranslation } from 'react-i18next';
 import TaskDamageCostTemplate from '@/src/components/templates/TaskDamageCostTemplate/TaskDamageCostTemplate'; 
 import { Dropdown } from '@/src/components/atoms/Dropdown/Dropdown';
 import FloatButton from '@/src/components/atoms/FloatButton/FloatButton';
 import TaskDamageCostCard from "@/src/components/organisms/TaskDamageCostCard/TaskDamageCostCard"; 
 import { ExpensesDialog } from '@/src/components/organisms/Dialogs/ExpensesDialog/ExpensesDialog'; 
-import { Colors } from "@/src/styles/style"; 
-
-
-interface Expense {
-    id: string;
-    apartmant: string;
-    costType: string; 
-    date?: string; 
-    amount?: string; 
-    note?: string; 
-    isFinished: boolean; 
-}
-
-const APARTMENT_OPTIONS = [
-   { label: 'Stan Centar', value: 'Stan Centar', id: 1, address: 'ulica 1' },
-   { label: 'Stan Ilidža', value: 'Stan Ilidža', id: 2, address: 'ulica 2' },
-   { label: 'Kuća Trebević', value: 'Kuća Trebević', id: 3, address: 'ulica 3' },
-];
-
-const INITIAL_EXPENSES: Expense[] = [];
-
+import { useApartmentsList } from "@/src/hooks/useApartmentsList";
+import { useExpenses } from "@/src/hooks/useExpenses"; 
+import { expenseService } from "@/src/api/services/expenseService"; 
+import { ApartmentExpenseDTO } from '@/src/types/types'; 
+import { toastService } from '@/src/services/toastService';
 
 const ExpensesScreen = () => { 
-    const [expenses, setExpenses] = useState<Expense[]>(INITIAL_EXPENSES);
-    const [selectedApartment, setSelectedApartment] = useState(APARTMENT_OPTIONS[0]);
+    const queryClient = useQueryClient();
+    const { t } = useTranslation();
+    const [selectedApartment, setSelectedApartment] = useState<any>(null);
     const [isModalVisible, setIsModalVisible] = useState(false); 
 
+    const { data: apartmentsData, isLoading: loadingApartments } = useApartmentsList();
 
-   const handleOpenDialog = () => {
-       if (!selectedApartment) {
-           Alert.alert("Greška", "Morate izabrati stan prije dodavanja troška.");
-            return;
-        }  
-         setIsModalVisible(true);
-   };
+    const { 
+        data: expenses = [], 
+        isLoading: loadingExpenses 
+    } = useExpenses(selectedApartment?.id);
 
-    const handleConfirmExpense = (data: {
-        trosak: string; 
-        iznos: string; 
-        napomena: string;
-     }) => { 
-     if (!selectedApartment) return;
+    const apartments = apartmentsData?.map((apt: any) => ({
+        label: apt.name || "Bez imena", 
+        value: (apt.apartmentId || apt.id)?.toString() || "", 
+        id: apt.apartmentId || apt.id
+    })) ?? [];
 
-       const newExpense: Expense = {
-            id: Date.now().toString(),
-             apartmant: selectedApartment.label,
-            costType: data.trosak,
-           amount: data.iznos,
-            note: data.napomena,
-            isFinished: false,
+    useEffect(() => {
+        if (apartments.length > 0 && !selectedApartment) {
+            setSelectedApartment(apartments[0]);
+        }
+    }, [apartmentsData]);
+
+    const handleConfirmExpense = async (formData: any) => {
+        const payload: ApartmentExpenseDTO = {
+            name: formData.trosak,
+            amount: parseFloat(formData.iznos) || 0,
+            expenseType: formData.kategorija, 
+            status: false,
+            note: formData.napomena || "" 
         };
 
-        setExpenses(prevExpenses => [newExpense, ...prevExpenses]); 
+        try {
+            const apartmentId = selectedApartment?.apartmentId || selectedApartment?.id;
+            await expenseService.create(Number(apartmentId), payload);
+            
+            toastService.success(
+                t('expenses.messages.successTitle'), 
+                t('expenses.messages.successMessage')
+            );
+
+            await queryClient.invalidateQueries({ queryKey: ['expenses', Number(apartmentId)] });
+            setIsModalVisible(false);
+        } catch (error: any) {
+            console.error("GREŠKA:", error.response?.data);
+            toastService.error(
+                t('expenses.messages.errorTitle'), 
+                t('expenses.messages.errorMessage')
+            );
+        }
     };
-   
-    const handleExpenseComplete = (expenseId: string) => {
-         setExpenses(prevExpenses => 
-             prevExpenses.map(expense => 
-                 expense.id === expenseId ? { ...expense, isFinished: true } : expense
-             )
-        );
-      console.log(`Trošak sa ID: ${expenseId} je označen kao PLAĆEN.`); 
-   };
 
+    const handleExpenseComplete = async (item: ApartmentExpenseDTO) => {
+        try {
+            const apartmentId = selectedApartment?.id || selectedApartment?.value;
+            await expenseService.updateStatus(Number(apartmentId), item.name, item);
+            
+            toastService.success(
+                t('expenses.messages.statusSuccessTitle'), 
+                t('expenses.messages.statusSuccessMessage')
+            );
+            
+            await queryClient.invalidateQueries({ queryKey: ['expenses', Number(apartmentId)] });
+        } catch (error) {
+            toastService.error(
+                t('expenses.messages.errorTitle'), 
+                "Nije moguće promijeniti status troška."
+            );
+        }
+    };
 
-    const dropdownComponent = (
-     <Dropdown
-            placeholder="Izaberite stan" 
-            options={APARTMENT_OPTIONS}
-            optionLabel="label"
-            optionValue="value"
-            selectedValue={selectedApartment}
-            setSelectedValue={setSelectedApartment} 
-        />
-    );
-
-   const listComponent = (
-      <View>
-          {expenses.map(expense => ( 
-                <TaskDamageCostCard
-                    key={expense.id}
-                    id={expense.id} 
-                    apartmant={expense.apartmant}
-                    description={
-                            expense.costType + 
-                            (expense.amount ? ` (${expense.amount} KM)` : '')
-                        } 
-                    isFinished={expense.isFinished} 
-                    onFinish={handleExpenseComplete} 
-                /> 
-               ))}
-        </View>
-    );
-
-   const floatingButtonComponent = (
-        <FloatButton 
-            size="lg"
-           onClick={handleOpenDialog} 
-        />
-    );
-
+    if (loadingApartments) return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
 
     return (
         <>
-           <TaskDamageCostTemplate 
-                dropdown={dropdownComponent}
-                list={listComponent}
-                floatingButton={floatingButtonComponent}
+            <TaskDamageCostTemplate 
+                dropdown={
+                    <Dropdown 
+                        placeholder={t('expenses.selectApartment')} 
+                        options={apartments} 
+                        optionLabel="label" 
+                        optionValue="value" 
+                        selectedValue={selectedApartment} 
+                        setSelectedValue={setSelectedApartment} 
+                    />
+                }
+                list={
+                    <View>
+                        {loadingExpenses ? (
+                            <ActivityIndicator color="#0000ff" style={{ marginTop: 20 }} />
+                        ) : (
+                            expenses.map((item, index) => {
+                                // Dinamički prevod kategorije iz tvog JSON-a
+                                // Ako je item.expenseType "Režije", traži ključ "expenses.categories.Režije"
+                                const translatedCategory = t(`expenses.categories.${item.expenseType}`);
+                                
+                                return (
+                                    <TaskDamageCostCard 
+                                        key={`expense-${item.name}-${index}`}
+                                        id={item.name} 
+                                        apartmant={selectedApartment?.label || ""} 
+                                        description={`${translatedCategory}: ${item.name}`} 
+                                        isFinished={item.status} 
+                                        onFinish={() => handleExpenseComplete(item)} 
+                                    />
+                                );
+                            })
+                        )}
+                    </View>
+                }
+                floatingButton={
+                    <FloatButton size="lg" onClick={() => setIsModalVisible(true)} />
+                }
             />
-  
+
             <ExpensesDialog 
-                visible={isModalVisible}
-                onClose={() => setIsModalVisible(false)}
+                visible={isModalVisible} 
+                onClose={() => setIsModalVisible(false)} 
                 onConfirm={handleConfirmExpense} 
-            /> 
+            />  
         </>
     );
 };

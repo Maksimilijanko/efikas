@@ -1,130 +1,145 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from 'react-i18next'; 
+
 import TaskDamageCostTemplate from '@/src/components/templates/TaskDamageCostTemplate/TaskDamageCostTemplate'; 
 import { Dropdown } from '@/src/components/atoms/Dropdown/Dropdown';
 import FloatButton from '@/src/components/atoms/FloatButton/FloatButton';
 import TaskDamageCostCard from "@/src/components/organisms/TaskDamageCostCard/TaskDamageCostCard"; 
 import { TasksDialog } from '@/src/components/organisms/Dialogs/TasksDialog/TasksDialog'; 
-import { Colors } from "@/src/styles/style"; 
 
-interface Task {
-    id: string;
-    apartmant: string;
-    task: string; 
-    date?: string;  
-    time?: string;
-    description?: string;
-    isFinished: boolean; 
-}
+import { useApartmentsList } from "@/src/hooks/useApartmentsList";
+import { useTasks } from "@/src/hooks/useTasks";
+import { taskService } from "@/src/api/services/taskService";
+import { toastService } from '@/src/services/toastService'; 
 
-const APARTMENT_OPTIONS = [
-   { label: 'Stan Centar', value: 'Stan Centar', id: 1, address: 'ulica 1' },
-   { label: 'Stan Ilidža', value: 'Stan Ilidža', id: 2, address: 'ulica 2' },
-   { label: 'Kuća Trebević', value: 'Kuća Trebević', id: 3, address: 'ulica 3' },
-];
-
-const INITIAL_TASKS: Task[] = [];
+import { ApartmentTaskDTO } from '@/src/types/types';
 
 const TasksScreen = () => { 
-    const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
-     const [selectedApartment, setSelectedApartment] = useState(APARTMENT_OPTIONS[0]);
+    const queryClient = useQueryClient();
+    const { t } = useTranslation(); 
+    const [selectedApartment, setSelectedApartment] = useState<any>(null);
     const [isModalVisible, setIsModalVisible] = useState(false); 
 
+    const { data: apartmentsData, isLoading: loadingApartments } = useApartmentsList();
 
-   const handleOpenDialog = () => {
-        if (!selectedApartment) {
-            Alert.alert("Greška", "Morate izabrati stan prije dodavanja zadatka.");
-             return;
-        } 
-        setIsModalVisible(true);
-    };
+    const { 
+        data: tasks = [], 
+        isLoading: loadingTasks 
+    } = useTasks(selectedApartment?.id);
 
+    const apartments = apartmentsData?.map((apt: any) => ({
+        label: apt.name || "Bez imena", 
+        value: (apt.apartmentId || apt.id)?.toString() || "", 
+        id: apt.apartmentId || apt.id
+    })) ?? [];
 
-    const handleConfirmTask = (data: {
-        zadatak: string;
-        datum: string;
-         vrijeme: string;
-         napomena: string;
-     }) => {
-        if (!selectedApartment) return;
+    useEffect(() => {
+        if (apartments.length > 0 && !selectedApartment) {
+            setSelectedApartment(apartments[0]);
+        }
+    }, [apartmentsData]);
 
-        const newTask: Task = {
-             id: Date.now().toString(),
-            apartmant: selectedApartment.label,
-            task: data.zadatak, 
-            date: data.datum,
-            time: data.vrijeme,
-            description: data.napomena,
-            isFinished: false, 
+    const handleConfirmTask = async (formData: any) => {
+        const apartmentId = selectedApartment?.id || selectedApartment?.value;
+        if (!apartmentId) return;
+
+        const payload: ApartmentTaskDTO = {
+            name: formData.zadatak,
+            note: formData.napomena || "",
+            status: false,
+            dateTime: new Date().toISOString() 
         };
 
-        setTasks(prevTasks => [newTask, ...prevTasks]);
+        try {
+            await taskService.create(Number(apartmentId), payload);
+            
+            toastService.success(
+                t('tasks.messages.successTitle'), 
+                t('tasks.messages.successMessage')
+            );
+
+            await queryClient.invalidateQueries({ queryKey: ['tasks', Number(apartmentId)] });
+            setIsModalVisible(false);
+        } catch (error) {
+            toastService.error(
+                t('tasks.messages.errorTitle'), 
+                t('tasks.messages.errorMessage')
+            );
+        }
     };
-    
-  
-    const handleTaskFinish = (taskId: string) => {
-        setTasks(prevTasks => 
-            prevTasks.map(task => 
-                task.id === taskId ? { ...task, isFinished: true } : task
-            )
-        );
-       
-        console.log(`Zadatak sa ID: ${taskId} je označen kao ZAVRŠEN`);
+
+    const handleTaskFinish = async (task: ApartmentTaskDTO) => {
+        try {
+            const apartmentId = selectedApartment?.id || selectedApartment?.value;
+            if (!apartmentId) return;
+            
+            await taskService.updateStatus(Number(apartmentId), task.name, task);
+            
+            toastService.success(
+                t('tasks.messages.statusSuccessTitle'), 
+                t('tasks.messages.statusSuccessMessage')
+            );
+
+            await queryClient.invalidateQueries({ queryKey: ['tasks', Number(apartmentId)] });
+        } catch (error) {
+            toastService.error(
+                t('tasks.messages.errorTitle'), 
+                t('tasks.messages.errorMessage')
+            );
+        }
     };
 
-
-    const dropdownComponent = (
-        <Dropdown
-            placeholder="Izaberite stan" 
-             options={APARTMENT_OPTIONS}
-            optionLabel="label"
-            optionValue="value"
-            selectedValue={selectedApartment}
-            setSelectedValue={setSelectedApartment}
-        />
-    );
-
-   const listComponent = (
-       <View>
-           {tasks.map(task => (
-                <TaskDamageCostCard
-                    key={task.id}
-                    id={task.id} 
-                     apartmant={task.apartmant}
-                    description={task.task}
-                    isFinished={task.isFinished} 
-                    onFinish={handleTaskFinish} 
-               /> 
-                ))}
-       </View>
-    );
-
-   const floatingButtonComponent = (
-       <FloatButton 
-            size="lg"
-           onClick={handleOpenDialog} 
-        />
-   );
-
+    if (loadingApartments) return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
 
     return (
         <>
-           <TaskDamageCostTemplate 
-                dropdown={dropdownComponent}
-                 list={listComponent}
-                 floatingButton={floatingButtonComponent}
-             />
-             
-             <TasksDialog 
-                visible={isModalVisible}
-                onClose={() => setIsModalVisible(false)}
+            <TaskDamageCostTemplate 
+                dropdown={
+                    <Dropdown 
+                        placeholder={t('common.selectApartment')} 
+                        options={apartments} 
+                        optionLabel="label" 
+                        optionValue="value" 
+                        selectedValue={selectedApartment} 
+                        setSelectedValue={setSelectedApartment} 
+                    />
+                }
+                list={
+                    <View>
+                        {loadingTasks ? (
+                            <ActivityIndicator color="#0000ff" style={{ marginTop: 20 }} />
+                        ) : (
+                            tasks.map((task, index) => (
+                                <TaskDamageCostCard 
+                                    key={`task-${task.name}-${index}`}
+                                    id={task.name} 
+                                    apartmant={selectedApartment?.label || ""} 
+                                    description={task.name} 
+                                    isFinished={task.status} 
+                                    onFinish={() => handleTaskFinish(task)} 
+                                />
+                            ))
+                        )}
+                    </View>
+                }
+                floatingButton={
+                    <FloatButton size="lg" onClick={() => setIsModalVisible(true)} />
+                }
+            />
+
+            <TasksDialog 
+                visible={isModalVisible} 
+                onClose={() => setIsModalVisible(false)} 
                 onConfirm={handleConfirmTask} 
-            /> 
+            />  
         </>
     );
 };
 
 export default TasksScreen;
+
 
 
 //primjer poziva

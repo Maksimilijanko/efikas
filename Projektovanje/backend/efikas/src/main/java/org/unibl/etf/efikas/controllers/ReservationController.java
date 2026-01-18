@@ -23,7 +23,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping(value = "/apartments/{apartmentId}/reservations", consumes = "multipart/form-data")//
-    public ResponseEntity<?> createReservation(@PathVariable Integer apartmentId, @RequestPart("reservation") ReservationDTO reservationDTO, @RequestPart("picture") MultipartFile documentPicture) {
+    public ResponseEntity<?> createReservation(@PathVariable Integer apartmentId, @RequestPart("reservation") ReservationDTO reservationDTO, @RequestPart(name = "picture", required = false) MultipartFile documentPicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
@@ -58,7 +58,7 @@ public class ReservationController {
     @PutMapping(value = "/reservations/{reservationId}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateReservation(@PathVariable Integer reservationId,
                                                @RequestPart("reservation") UpdateReservationRequest updateReservationRequest,
-                                               @RequestPart("picture") MultipartFile documentPicture) {
+                                               @RequestPart(name = "picture", required = false) MultipartFile documentPicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         ReservationResponse response = reservationService

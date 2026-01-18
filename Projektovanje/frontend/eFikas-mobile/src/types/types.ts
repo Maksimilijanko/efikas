@@ -17,12 +17,30 @@ export interface RegisterRequest {
     repeatPassword: string;
     jmbg: string;
     address: string;
+	phoneNumber: string;
 }
 
 export interface AuthenticationResponse {
   email: string;
   token: string;
 }
+
+export interface OtpSendRequest {
+	email: string;
+}
+
+export interface OtpVerifyRequest {
+	email: string;
+	otp: string;
+}
+
+export interface ResetPasswordRequest {
+	email: string;
+	newPassword: string;
+	confirmPassword: string;
+}
+
+
 export interface StatisticsDataPoint {
   label: string;
   value: number;
@@ -188,4 +206,39 @@ export interface PushNotificationTokenRequest {
 export interface ToggleNotificationRequest {
     pushToken: string;
 	enabled: boolean;
+}
+
+export interface ApartmentDamageDTO {
+    name: string;        
+    damagePrice: number; 
+    note: string;       
+    status: boolean;     
+}
+
+
+export interface ApartmentTaskDTO {
+    name: string;
+    note: string;
+    status: boolean;
+    dateTime: string; 
+}
+
+export interface ApartmentTaskResponse {
+    apartmentId: number;
+    name: string;
+    note: string;
+    status: boolean;
+    dateTime: string;
+}
+
+export interface ApartmentExpenseDTO {
+    name: string;      
+    amount: number;    
+    note: string;     
+    status: boolean;  
+    expenseType: string; 
+}
+
+export interface ApartmentExpenseResponse extends ApartmentExpenseDTO {
+    apartmentId: number;
 }

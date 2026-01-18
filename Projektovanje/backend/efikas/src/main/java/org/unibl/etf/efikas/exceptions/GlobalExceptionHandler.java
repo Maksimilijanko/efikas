@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import software.amazon.awssdk.services.ses.model.MessageRejectedException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -93,6 +94,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(StoreExistsException.class)
     public  ResponseEntity<?> handleStoreExistsException(StoreExistsException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(MessageRejectedException.class)
+    public ResponseEntity<?> handleMessageRejectedException(MessageRejectedException ex){
+        return ResponseEntity.badRequest().body("This email is not verified.");
     }
 
     private Throwable getRootCause(Throwable ex) {

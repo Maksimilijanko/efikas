@@ -85,7 +85,8 @@ export const lightTheme = {
   success: "#22c55e",
   error: "#ef4444",
   info: "#3b82f6",
-
+  
+  disabledBackground: "#bdc3c7"
 };
 
 export const darkTheme = {
@@ -122,5 +123,5 @@ export const darkTheme = {
   error: "#ef4444",
   info: "#3b82f6",
  
-
+  disabledBackground: "#bdc3c7"
 };
