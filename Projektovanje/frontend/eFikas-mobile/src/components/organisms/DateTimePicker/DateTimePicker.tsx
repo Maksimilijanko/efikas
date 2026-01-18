@@ -20,7 +20,14 @@ const DateTimePicker = ({
 }: DateTimePickerProps) => {
   const { Colors, theme } = useTheme();
   const { i18n, t } = useTranslation();
-  const [date, setDate] = React.useState(initialValue || new Date());
+
+  const getSafeDate = (d: Date | null | string | undefined): Date => {
+	if (!d) return new Date();
+	const dt = d instanceof Date ? d : new Date(d);
+	return isNaN(dt.getTime()) ? new Date() : dt;
+  };
+
+  const [date, setDate] = React.useState(getSafeDate(initialValue));
 
   React.useEffect(() => {
     if (visible) {

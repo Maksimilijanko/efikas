@@ -132,15 +132,15 @@ export interface GuestBase {
   surname: string;
   gender: "Male" | "Female";
   phoneNumber: string;
-  birthDate: string;
+  birthDate: Date;
   birthPlace: string;
   birthCountry: string;
   address: string;
   accommodationUnitNumber: number;
   accommodationUnitFloor: number;
 
-  dateTimeOfArrival: string;
-  dateTimeOfDeparture: string;
+  dateTimeOfArrival: Date;
+  dateTimeOfDeparture: Date;
 
   issuedInvoiceNumber?: string | null;
   remarks?: string | null;
@@ -155,11 +155,11 @@ export interface ForeignGuest extends GuestBase {
   isLocal: false;
   citizenship: string;
   passportNumber: string;
-  passportIssuedDate: string;
+  passportIssuedDate: Date;
   visaType?: string | null;
   visaNumber?: string | null;
-  permittedResidenceDate?: string | null;
-  entryDate?: string | null;
+  permittedResidenceDate?: Date | null;
+  entryDate?: Date | null;
   entryPlace?: string | null;
 }
 

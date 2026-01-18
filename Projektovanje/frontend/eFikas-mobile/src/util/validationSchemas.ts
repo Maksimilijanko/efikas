@@ -63,3 +63,137 @@ export namespace ResetPasswordValidation {
     export type FormValues = z.infer<typeof schema>;
 }
 
+
+
+
+const genderEnum = z.enum(['Male', 'Female'], t('auth.errors.requiredFieldError'));
+
+const dateString = z.date().nullable();
+
+export namespace GuestValidation {
+  export const schema = z
+    .object({
+      // ─────────────────────────────
+      // Common fields
+      // ─────────────────────────────
+      isLocal: z.boolean(),
+
+      name: z
+        .string(REQUIRED_FIELD_ERROR)
+        .min(2, t('guest.validation.nameLength')),
+
+      surname: z
+        .string(REQUIRED_FIELD_ERROR)
+        .min(2, t('guest.validation.surnameLength')),
+
+      gender: genderEnum,
+	  
+	  phoneNumber: z.string(REQUIRED_FIELD_ERROR)
+			.min(11, t('auth.errors.phoneNumberLengthError', { length: 11 }))
+			.regex(
+				/^06[0-9]\/\d{3}-\d{3}$/, 
+				t('auth.errors.phoneNumberFormatError') //t('auth.errors.phoneNumberFormatError') // "Invalid format. Expected: 06X/123-456"
+			),
+      birthDate: dateString,
+      birthPlace: z.string(REQUIRED_FIELD_ERROR).min(2),
+      birthCountry: z.string(REQUIRED_FIELD_ERROR).min(2),
+
+      address: z
+        .string(REQUIRED_FIELD_ERROR)
+        .min(5, t('guest.validation.addressLength')),
+
+      accommodationUnitNumber: z
+        .number(REQUIRED_FIELD_ERROR)
+        .int()
+        .positive(),
+
+      accommodationUnitFloor: z
+        .number(REQUIRED_FIELD_ERROR)
+        .int()
+        .min(0),
+
+      dateTimeOfArrival: dateString,
+      dateTimeOfDeparture: dateString,
+	  
+	  price: z
+        .number(REQUIRED_FIELD_ERROR)
+        .min(0),
+      issuedInvoiceNumber: z.string().nullable().optional(),
+      remarks: z.string().nullable().optional(),
+
+      // ─────────────────────────────
+      // Domestic guest fields
+      // ─────────────────────────────
+      jmbg: z
+        .string()
+        .length(13, t('auth.errors.jmbgLengthError'))
+        .regex(/^\d+$/, t('auth.errors.jmbgFormatError'))
+        .optional(),
+
+      birthMunicipality: z.string().optional(),
+
+      // ─────────────────────────────
+      // Foreign guest fields
+      // ─────────────────────────────
+      citizenship: z.string().optional(),
+      passportNumber: z.string().optional(),
+      passportIssuedDate: dateString,
+
+      visaType: z.string().nullable().optional(),
+      visaNumber: z.string().nullable().optional(),
+      permittedResidenceDate: dateString,
+      entryDate: dateString,
+      entryPlace: z.string().nullable().optional(),
+    })
+
+    // ─────────────────────────────
+    // Conditional validation
+    // ─────────────────────────────
+    .superRefine((data, ctx) => {
+      if (data.isLocal) {
+        // Domestic guest rules
+        if (!data.jmbg) {
+          ctx.addIssue({
+            path: ['jmbg'],
+            message: t('auth.errors.jmbgRequired'),
+            code: z.ZodIssueCode.custom,
+          });
+        }
+
+        if (!data.birthMunicipality) {
+          ctx.addIssue({
+            path: ['birthMunicipality'],
+            message: t('guest.validation.birthMunicipalityRequired'),
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      } else {
+        // Foreign guest rules
+        if (!data.citizenship) {
+          ctx.addIssue({
+            path: ['citizenship'],
+            message: t('guest.validation.citizenshipRequired'),
+            code: z.ZodIssueCode.custom,
+          });
+        }
+
+        if (!data.passportNumber) {
+          ctx.addIssue({
+            path: ['passportNumber'],
+            message: t('guest.validation.passportNumberRequired'),
+            code: z.ZodIssueCode.custom,
+          });
+        }
+
+        if (!data.passportIssuedDate) {
+          ctx.addIssue({
+            path: ['passportIssuedDate'],
+            message: t('guest.validation.passportIssuedDateRequired'),
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      }
+    });
+
+  export type FormValues = z.infer<typeof schema>;
+}
