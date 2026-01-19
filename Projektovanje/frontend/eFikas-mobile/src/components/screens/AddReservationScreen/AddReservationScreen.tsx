@@ -1,1018 +1,1132 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
-import {
-	View,
-	Text,
-	Pressable,
-	Image,
-	Keyboard,
-	Platform,
-	Modal,
-	TouchableOpacity,
-	ActivityIndicator,
-	Alert,
-} from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import * as ImagePicker from "expo-image-picker";
-import AddReservationTemplate from "@/src/components/templates/AddReservationTemplate/AddReservationTemplate";
-import ToggleItem from "@/src/components/molecules/ToggleItem/ToggleItem";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
-import { HStack } from "@/src/components/ui/hstack";
-import ApartmentSelectDropdown from "../../organisms/ApartmentSelectDropdown/ApartmentSelectDropdown";
-import DateTimePicker from "@/src/components/organisms/DateTimePicker/DateTimePicker";
-import { createStyles } from "./index.styles";
-import { ApartmentOption } from "../../organisms/ApartmentSelectOverlay/ApartmentSelectOverlay";
 import { Label } from "@/src/components/atoms/Label/Label";
-import NoteBox from "../../molecules/NoteBox/NoteBox";
+import ToggleItem from "@/src/components/molecules/ToggleItem/ToggleItem";
+import DateTimePicker from "@/src/components/organisms/DateTimePicker/DateTimePicker";
+import AddReservationTemplate from "@/src/components/templates/AddReservationTemplate/AddReservationTemplate";
+import { HStack } from "@/src/components/ui/hstack";
+import { useApartments } from "@/src/hooks/useApartments";
 import {
 	useCreateReservation,
 	useUpdateReservation,
 } from "@/src/hooks/useReservation";
-import { useApartments } from "@/src/hooks/useApartments";
 import { useTheme } from "@/src/providers/ThemeProvider";
-import { useTranslation } from "react-i18next";
 import {
 	CreateReservationPayload,
-	UpdateReservationPayload,
-	Reservation,
-	Guest,
 	DomesticGuest,
 	ForeignGuest,
+	Guest,
 	LucideIconName,
+	Reservation,
+	UpdateReservationPayload,
 } from "@/src/types/types";
-import { Path, useForm } from "react-hook-form";
 import { GuestValidation } from "@/src/util/validationSchemas";
-import FormField from "../../molecules/FormField/FormField";
-import { IconButton } from "../../atoms/IconButton/IconButton";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useMemo, useState } from "react";
+import { Path, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import {
+	Alert,
+	Image,
+	Keyboard,
+	Modal,
+	Platform,
+	Pressable,
+	Text,
+	TouchableOpacity,
+	View
+} from "react-native";
+import CustomRadioGroup from "../../atoms/CustomRadio/CustomRadioGroup";
+import { IconButton } from "../../atoms/IconButton/IconButton";
+import FormField from "../../molecules/FormField/FormField";
+import NoteBox from "../../molecules/NoteBox/NoteBox";
+import ApartmentSelectDropdown from "../../organisms/ApartmentSelectDropdown/ApartmentSelectDropdown";
+import { ApartmentOption } from "../../organisms/ApartmentSelectOverlay/ApartmentSelectOverlay";
 import { Spinner } from "../../ui/spinner";
-import { isScreen } from "expo-router/build/views/Screen";
-
-
-
+import { createStyles } from "./index.styles";
 
 type GuestType = "DOMESTIC" | "FOREIGN";
 type Gender = "Male" | "Female";
 type ActiveDateField =
-	| "ARRIVAL"
-	| "DEPARTURE"
-	| "BIRTH_DATE"
-	| "PASSPORT_ISSUED"
-	| "ENTRY_DATE"
-	| "PERMITTED_RESIDENCE"
-	| null;
+  | "ARRIVAL"
+  | "DEPARTURE"
+  | "BIRTH_DATE"
+  | "PASSPORT_ISSUED"
+  | "ENTRY_DATE"
+  | "PERMITTED_RESIDENCE"
+  | null;
 
 const dayjs: any = require("dayjs");
 
 const formatDateTimeLabel = (date: Date | null) => {
-	if (!date) return "";
-	return dayjs(date).format("DD. MM. YYYY. HH:mm");
+  if (!date) return "";
+  return dayjs(date).format("DD. MM. YYYY. HH:mm");
 };
 
 const formatDateLabel = (date: Date | null) => {
-	if (!date) return "";
-	return dayjs(date).format("DD. MM. YYYY.");
+  if (!date) return "";
+  return dayjs(date).format("DD. MM. YYYY.");
 };
 
 const clampGuests = (n: number) => Math.max(1, Math.min(20, n));
 
 function AddReservationScreen() {
-	const navigation = useNavigation<any>();
-	const route = useRoute<any>();
-	const { Colors } = useTheme();
-	const { t } = useTranslation();
-	const styles = useMemo(() => createStyles(Colors), [Colors]);
+  const navigation = useNavigation<any>();
+  const route = useRoute<any>();
+  const { Colors } = useTheme();
+  const { t } = useTranslation();
+  const styles = useMemo(() => createStyles(Colors), [Colors]);
 
-	// Odlucivanje da li smo u edit modu
-	const isEditMode = route.params?.mode === "edit";
-	const reservationId = route.params?.reservationId;
-	const existingReservation: Reservation | null = route.params?.reservationData
-		? JSON.parse(route.params.reservationData)
-		: null;
+  // Odlucivanje da li smo u edit modu
+  const isEditMode = route.params?.mode === "edit";
+  const reservationId = route.params?.reservationId;
+  const existingReservation: Reservation | null = route.params?.reservationData
+    ? JSON.parse(route.params.reservationData)
+    : null;
 
-	const {
-		data: apartmentsData,
-		isLoading: apartmentsLoading,
-		error: apartmentsError,
-	} = useApartments();
+  const {
+    data: apartmentsData,
+    isLoading: apartmentsLoading,
+    error: apartmentsError,
+  } = useApartments();
 
-	const apartments = useMemo<ApartmentOption[]>(() => {
-		if (!apartmentsData) return [];
+  const apartments = useMemo<ApartmentOption[]>(() => {
+    if (!apartmentsData) return [];
 
-		return apartmentsData.map((apt) => ({
-			id: String(apt.apartmentId),
-			name: apt.name,
-			address: apt.address,
-			imageUrl: apt.pictures && apt.pictures.length > 0 ? apt.pictures[0] : "",
-		}));
-	}, [apartmentsData]);
+    return apartmentsData.map((apt) => ({
+      id: String(apt.apartmentId),
+      name: apt.name,
+      address: apt.address,
+      imageUrl: apt.pictures && apt.pictures.length > 0 ? apt.pictures[0] : "",
+    }));
+  }, [apartmentsData]);
 
-	const [selectedApartment, setSelectedApartment] = useState<ApartmentOption | null>(null);
-	const [guestType, setGuestType] = useState<GuestType>("DOMESTIC");
-	const [dailyStay, setDailyStay] = useState(false);
-	const [isInitializing, setIsInitializing] = useState(true);
+  const [selectedApartment, setSelectedApartment] =
+    useState<ApartmentOption | null>(null);
+  const [guestType, setGuestType] = useState<GuestType>("DOMESTIC");
+  const [dailyStay, setDailyStay] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
-	
-	// Guest form
-	const { control, 
-		handleSubmit: handleSubmit1, 
-		watch, 
-		getValues, 
-		setValue, 
-		reset, 
-		formState: { errors: errors1, isSubmitting: isSubmitting1 }} = useForm<GuestValidation.FormValues>({
-		resolver: zodResolver(GuestValidation.schema),
-		mode: "onBlur",
-		defaultValues: {
-			//guestType: "DOMESTIC",
-			price: 0,
-			gender: "Male",
-			dateTimeOfArrival: null,
-    		dateTimeOfDeparture: null,
-			//guestsCount: 1,
-			//dailyStay: false,
-		},
-	});
+  // Guest form
+  const {
+    control,
+    handleSubmit: handleSubmit1,
+    watch,
+    getValues,
+    setValue,
+    reset,
+    formState: { errors: errors1, isSubmitting: isSubmitting1 },
+  } = useForm<GuestValidation.FormValues>({
+    resolver: zodResolver(GuestValidation.schema),
+    mode: "onBlur",
+    defaultValues: {
+      //guestType: "DOMESTIC",
+      price: 0,
+      gender: "Male",
+      dateTimeOfArrival: null,
+      dateTimeOfDeparture: null,
+      //guestsCount: 1,
+      //dailyStay: false,
+    },
+  });
 
+  // Guest fields
+  const [guestId, setGuestId] = useState(0);
+  const [gender, setGender] = useState<Gender>("Male");
 
-	// Guest fields
-	const [guestId, setGuestId] = useState(0);
-	const [gender, setGender] = useState<Gender>("Male");
+  // Additional fields
 
-	// Additional fields
+  const [guestsCount, setGuestsCount] = useState(1);
+  const [documentUri, setDocumentUri] = useState<string | null>(null);
 
-	const [guestsCount, setGuestsCount] = useState(1);
-	const [documentUri, setDocumentUri] = useState<string | null>(null);
+  const [dateDialogVisible, setDateDialogVisible] = useState(false);
+  const [activeDateField, setActiveDateField] = useState<ActiveDateField>(null);
 
-	const [dateDialogVisible, setDateDialogVisible] = useState(false);
-	const [activeDateField, setActiveDateField] = useState<ActiveDateField>(null);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [submitPressed, setSubmitPressed] = useState(false);
 
-	const [keyboardOffset, setKeyboardOffset] = useState(0);
-	const [previewVisible, setPreviewVisible] = useState(false);
-	const [submitPressed, setSubmitPressed] = useState(false);
+  const selectedApartmentIdNum = Number(selectedApartment?.id ?? 0);
+  const createReservationMutation = useCreateReservation(
+    selectedApartmentIdNum,
+  );
+  const updateReservationMutation = useUpdateReservation(
+    reservationId,
+    selectedApartmentIdNum,
+  );
 
-	const selectedApartmentIdNum = Number(selectedApartment?.id ?? 0);
-	const createReservationMutation = useCreateReservation(
-		selectedApartmentIdNum
-	);
-	const updateReservationMutation = useUpdateReservation(
-		reservationId,
-		selectedApartmentIdNum
-	);
+  useEffect(() => {
+    if (!isEditMode) {
+      setIsInitializing(false);
+      return;
+    }
 
+    const initializeForm = async () => {
+      if (!isEditMode || !existingReservation) return;
 
-	useEffect(() => {
-		if (!isEditMode) {
-			setIsInitializing(false);
-			return;
-		}
+      const guest: Guest = existingReservation.guest;
 
-		const initializeForm = async () => {
-			if (!isEditMode || !existingReservation) return;
+      console.log("RESERVATION GUEST: ", guest);
 
-			const guest: Guest = existingReservation.guest;
+      // 1 Apartment
+      const aptOption = apartments.find(
+        (apt) => apt.id === String(existingReservation.apartment.apartmentId),
+      );
+      if (aptOption) setSelectedApartment(aptOption);
 
-			console.log("RESERVATION GUEST: ", guest);
+      // 2 Reservation-level state (still useState)
+      setDailyStay(existingReservation.reservationType === "Dnevni boravak");
+      setGuestsCount(existingReservation.guestQuantity || 1);
+      setDocumentUri(guest.personalDocumentURL || null);
+      setGuestId(guest.id);
+      setGuestType(guest.isLocal ? "DOMESTIC" : "FOREIGN");
 
-			// 1 Apartment
-			const aptOption = apartments.find(
-				(apt) => apt.id === String(existingReservation.apartment.apartmentId)
-			);
-			if (aptOption) setSelectedApartment(aptOption);
+      console.log(`HALLO: ${(guest as DomesticGuest).birthMunicipality}`);
 
-			// 2 Reservation-level state (still useState)
-			setDailyStay(existingReservation.reservationType === "Dnevni boravak");
-			setGuestsCount(existingReservation.guestQuantity || 1);
-			setDocumentUri(guest.personalDocumentURL || null);
-			setGuestId(guest.id);
-			setGuestType(guest.isLocal ? "DOMESTIC" : "FOREIGN");
+      // 3 RHF form values
+      reset({
+        isLocal: guest.isLocal,
+        name: guest.name ?? "",
+        surname: guest.surname ?? "",
+        gender: guest.gender ?? "Male",
+        phoneNumber: guest.phoneNumber ?? "",
+        birthDate: guest.birthDate ? guest.birthDate : null,
+        birthPlace: guest.birthPlace ?? "",
+        birthCountry: guest.birthCountry ?? "",
+        address: guest.address ?? "",
+        dateTimeOfArrival: guest.dateTimeOfArrival
+          ? new Date(guest.dateTimeOfArrival)
+          : null,
+        dateTimeOfDeparture: guest.dateTimeOfDeparture
+          ? new Date(guest.dateTimeOfDeparture)
+          : null,
+        accommodationUnitNumber: guest.accommodationUnitNumber ?? 1,
+        accommodationUnitFloor: guest.accommodationUnitFloor ?? 1,
+        issuedInvoiceNumber: guest.issuedInvoiceNumber ?? "",
 
-			console.log(`HALLO: ${(guest as DomesticGuest).birthMunicipality}`)
+        price: existingReservation.price ?? 0,
 
-			// 3 RHF form values
-			reset({
-				isLocal: guest.isLocal,
-				name: guest.name ?? "",
-				surname: guest.surname ?? "",
-				gender: guest.gender ?? "Male",
-				phoneNumber: guest.phoneNumber ?? "",
-				birthDate: guest.birthDate ? guest.birthDate : null,
-				birthPlace: guest.birthPlace ?? "",
-				birthCountry: guest.birthCountry ?? "",
-				address: guest.address ?? "",
-				dateTimeOfArrival: guest.dateTimeOfArrival ? new Date(guest.dateTimeOfArrival) : null,
-				dateTimeOfDeparture: guest.dateTimeOfDeparture ? new Date(guest.dateTimeOfDeparture) : null,
-				accommodationUnitNumber: guest.accommodationUnitNumber ?? 1,
-				accommodationUnitFloor: guest.accommodationUnitFloor ?? 1,
-				issuedInvoiceNumber: guest.issuedInvoiceNumber ?? "",
+        // Domestic
+        jmbg: guest.citizenId ?? "",
+        birthMunicipality: guest.isLocal
+          ? ((guest as DomesticGuest).birthMunicipality ?? "")
+          : undefined,
 
-				price: existingReservation.price ?? 0,
+        // Foreign
+        citizenship: !guest.isLocal
+          ? ((guest as ForeignGuest).citizenship ?? "")
+          : undefined,
+        passportNumber: !guest.isLocal
+          ? ((guest as ForeignGuest).passportNumber ?? "")
+          : undefined,
+        passportIssuedDate:
+          !guest.isLocal && (guest as ForeignGuest).passportIssuedDate
+            ? (guest as ForeignGuest).passportIssuedDate
+            : null,
+        entryDate:
+          !guest.isLocal && (guest as ForeignGuest).entryDate
+            ? (guest as ForeignGuest).entryDate
+            : null,
+        entryPlace: !guest.isLocal
+          ? ((guest as ForeignGuest).entryPlace ?? "")
+          : undefined,
+        visaType: !guest.isLocal
+          ? ((guest as ForeignGuest).visaType ?? "")
+          : undefined,
+        visaNumber: !guest.isLocal
+          ? ((guest as ForeignGuest).visaNumber ?? "")
+          : undefined,
+        permittedResidenceDate:
+          !guest.isLocal && (guest as ForeignGuest).permittedResidenceDate
+            ? new Date((guest as ForeignGuest).permittedResidenceDate)
+            : null,
+      });
 
-				// Domestic
-				jmbg: guest.citizenId ?? "",
-				birthMunicipality: guest.isLocal
-					? (guest as DomesticGuest).birthMunicipality ?? ""
-					: undefined,
+      setIsInitializing(false);
+    };
 
-				// Foreign
-				citizenship: !guest.isLocal ? (guest as ForeignGuest).citizenship ?? "" : undefined,
-				passportNumber: !guest.isLocal
-					? (guest as ForeignGuest).passportNumber ?? ""
-					: undefined,
-				passportIssuedDate:
-					!guest.isLocal && (guest as ForeignGuest).passportIssuedDate
-						? (guest as ForeignGuest).passportIssuedDate
-						: null,
-				entryDate:
-					!guest.isLocal && (guest as ForeignGuest).entryDate
-						? (guest as ForeignGuest).entryDate
-						: null,
-				entryPlace: !guest.isLocal ? (guest as ForeignGuest).entryPlace ?? "" : undefined,
-				visaType: !guest.isLocal ? (guest as ForeignGuest).visaType ?? "" : undefined,
-				visaNumber: !guest.isLocal ? (guest as ForeignGuest).visaNumber ?? "" : undefined,
-				permittedResidenceDate:
-					!guest.isLocal && (guest as ForeignGuest).permittedResidenceDate
-						? new Date((guest as ForeignGuest).permittedResidenceDate)
-						: null,
-			});
+    initializeForm();
+  }, [isEditMode, existingReservation, apartments, reset]);
 
-			setIsInitializing(false);
-		}
+  // podesavanje default-nog apartmana u create mode
+  useEffect(() => {
+    if (!isEditMode && apartments.length > 0 && !selectedApartment) {
+      setSelectedApartment(apartments[0]);
+    }
+  }, [isEditMode, apartments, selectedApartment]);
 
-		initializeForm();
-	}, [isEditMode, existingReservation, apartments, reset]);
+  // podesavanje header naslova u zavisnosti od mode-a
+  useEffect(() => {
+    navigation.setOptions({
+      title: isEditMode
+        ? t("reservations.navigationTitle.editTitle")
+        : t("reservations.navigationTitle.addTitle"),
+    });
+  }, [navigation, isEditMode]);
 
+  useEffect(() => {
+    const showSub = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
+      (e: any) => {
+        const h = e?.endCoordinates?.height ?? 0;
+        setKeyboardOffset(-h * 0.7);
+      },
+    );
 
+    const hideSub = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
+      () => setKeyboardOffset(0),
+    );
 
-	// podesavanje default-nog apartmana u create mode
-	useEffect(() => {
-		if (!isEditMode && apartments.length > 0 && !selectedApartment) {
-			setSelectedApartment(apartments[0]);
-		}
-	}, [isEditMode, apartments, selectedApartment]);
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
-	// podesavanje header naslova u zavisnosti od mode-a
-	useEffect(() => {
-		navigation.setOptions({
-			title: isEditMode ? t("reservations.navigationTitle.editTitle") : t("reservations.navigationTitle.addTitle"),
-		});
-	}, [navigation, isEditMode]);
+  const isScreenLoading = apartmentsLoading;
+  const isFormHydrating = isEditMode && isInitializing;
 
-	useEffect(() => {
-		const showSub = Keyboard.addListener(
-			Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
-			(e: any) => {
-				const h = e?.endCoordinates?.height ?? 0;
-				setKeyboardOffset(-h * 0.7);
-			}
-		);
+  const openDateDialog = (field: ActiveDateField) => {
+    if (field === "DEPARTURE" && dailyStay) return;
+    setActiveDateField(field);
+    setDateDialogVisible(true);
+  };
 
-		const hideSub = Keyboard.addListener(
-			Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
-			() => setKeyboardOffset(0)
-		);
+  const closeDateDialog = () => {
+    setDateDialogVisible(false);
+    setActiveDateField(null);
+  };
 
-		return () => {
-			showSub.remove();
-			hideSub.remove();
-		};
-	}, []);
+  const confirmDateDialog = (value: Date) => {
+    console.log("RESERVATION DATE DIALOG VALUE: ", value);
 
-	const isScreenLoading = apartmentsLoading;
-	const isFormHydrating = isEditMode && isInitializing;
+    switch (activeDateField) {
+      case "ARRIVAL":
+        setValue("dateTimeOfArrival", value);
+        break;
+      case "DEPARTURE":
+        setValue("dateTimeOfDeparture", value);
+        break;
+      case "BIRTH_DATE":
+        setValue("birthDate", value);
+        break;
+      case "PASSPORT_ISSUED":
+        setValue("passportIssuedDate", value);
+        break;
+      case "ENTRY_DATE":
+        setValue("entryDate", value);
+        break;
+      case "PERMITTED_RESIDENCE":
+        setValue("permittedResidenceDate", value);
+        break;
+    }
+    closeDateDialog();
+  };
 
-	const openDateDialog = (field: ActiveDateField) => {
-		if (field === "DEPARTURE" && dailyStay) return;
-		setActiveDateField(field);
-		setDateDialogVisible(true);
-	};
+  const handleDailyStayToggle = (value: boolean) => {
+    setDailyStay(value);
+    if (value) setValue("dateTimeOfDeparture", null);
+  };
 
-	const closeDateDialog = () => {
-		setDateDialogVisible(false);
-		setActiveDateField(null);
-	};
+  const openImagePicker = () => {
+    Alert.alert(
+      t("reservations.alerts.pickDocument.title"),
+      t("reservations.alerts.pickDocument.message"),
+      [
+        {
+          text: t("reservations.alerts.pickDocument.camera"),
+          onPress: openCamera,
+        },
+        {
+          text: t("reservations.alerts.pickDocument.gallery"),
+          onPress: pickFromGallery,
+        },
+        {
+          text: t("reservations.alerts.pickDocument.cancel"),
+          style: "cancel",
+        },
+      ],
+      { cancelable: true },
+    );
+  };
 
-	const confirmDateDialog = (value: Date) => {
-		console.log("RESERVATION DATE DIALOG VALUE: ", value)
+  const openCamera = async () => {
+    const perm = await ImagePicker.requestCameraPermissionsAsync();
+    if (!perm.granted) {
+      Alert.alert(
+        t("reservations.alerts.permissionDenied.title"),
+        t("reservations.alerts.permissionDenied.camera"),
+      );
+      return;
+    }
 
-		switch (activeDateField) {
-			case "ARRIVAL":
-				setValue("dateTimeOfArrival", value);
-				break;
-			case "DEPARTURE":
-				setValue("dateTimeOfDeparture", value);
-				break;
-			case "BIRTH_DATE":
-				setValue("birthDate", value);
-				break;
-			case "PASSPORT_ISSUED":
-				setValue("passportIssuedDate", value);
-				break;
-			case "ENTRY_DATE":
-				setValue("entryDate", value);
-				break;
-			case "PERMITTED_RESIDENCE":
-				setValue("permittedResidenceDate", value);
-				break;
-		}
-		closeDateDialog();
-	};
+    const res = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+      allowsEditing: true,
+    });
 
-	const handleDailyStayToggle = (value: boolean) => {
-		setDailyStay(value);
-		if (value) setValue("dateTimeOfDeparture", null);
-	};
+    if (res.canceled) return;
+    const uri = res.assets?.[0]?.uri;
+    if (uri) setDocumentUri(uri);
+  };
 
-	const openImagePicker = () => {
-		Alert.alert(
-			t("reservations.alerts.pickDocument.title"),
-			t("reservations.alerts.pickDocument.message"),
-			[
-				{
-					text: t("reservations.alerts.pickDocument.camera"),
-					onPress: openCamera,
-				},
-				{
-					text: t("reservations.alerts.pickDocument.gallery"),
-					onPress: pickFromGallery,
-				},
-				{
-					text: t("reservations.alerts.pickDocument.cancel"),
-					style: "cancel",
-				},
-			],
-			{ cancelable: true }
-		);
-	};
+  const pickFromGallery = async () => {
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) {
+      Alert.alert(
+        t("reservations.alerts.permissionDenied.title"),
+        t("reservations.alerts.permissionDenied.gallery"),
+      );
+      return;
+    }
 
-	const openCamera = async () => {
-		const perm = await ImagePicker.requestCameraPermissionsAsync();
-		if (!perm.granted) {
-			Alert.alert(t("reservations.alerts.permissionDenied.title"), t("reservations.alerts.permissionDenied.camera"));
-			return;
-		}
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+    });
 
-		const res = await ImagePicker.launchCameraAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			quality: 0.8,
-			allowsEditing: true,
-		});
+    if (res.canceled) return;
+    const uri = res.assets?.[0]?.uri;
+    if (uri) setDocumentUri(uri);
+  };
 
-		if (res.canceled) return;
-		const uri = res.assets?.[0]?.uri;
-		if (uri) setDocumentUri(uri);
-	};
+  const resetForm = () => {
+    reset();
+  };
 
-	const pickFromGallery = async () => {
-		const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
-		if (!perm.granted) {
-			Alert.alert(
-				t("reservations.alerts.permissionDenied.title"),
-				t("reservations.alerts.permissionDenied.gallery")
-			);
-			return;
-		}
+  const formatLocalDate = (date: Date | null): string | null =>
+    date ? dayjs(date).format("YYYY-MM-DD") : null;
 
-		const res = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			quality: 0.8,
-			allowsEditing: true,
-			allowsMultipleSelection: false,
-		});
+  function isForeignGuest(
+    data: GuestValidation.FormValues,
+  ): data is Extract<GuestValidation.FormValues, { isLocal: false }> {
+    return data.isLocal === false;
+  }
 
-		if (res.canceled) return;
-		const uri = res.assets?.[0]?.uri;
-		if (uri) setDocumentUri(uri);
-	};
+  const buildGuestPayload = (data: GuestValidation.FormValues): Guest => {
+    const common = {
+      id: guestId,
+      name: data.name.trim(),
+      surname: data.surname.trim(),
+      gender: data.gender,
+      phoneNumber: data.phoneNumber,
+      birthDate: data.birthDate,
+      birthPlace: data.birthPlace,
+      address: data.address,
+      accommodationUnitNumber: data.accommodationUnitNumber,
+      accommodationUnitFloor: data.accommodationUnitFloor,
+      dateTimeOfArrival: data.dateTimeOfArrival,
+      dateTimeOfDeparture: dailyStay ? null : data.dateTimeOfDeparture,
+      personalDocumentURL: documentUri,
+    };
 
-	const resetForm = () => {		
-		reset();
-	};
+    if (data.isLocal) {
+      return {
+        ...common,
+        isLocal: true,
+        citizenId: data.jmbg,
+        birthMunicipality: data.birthMunicipality,
+        birthCountry: data.birthCountry,
+      };
+    } else if (isForeignGuest(data)) {
+      return {
+        ...common,
+        isLocal: false,
+        citizenId: data.passportNumber,
+        citizenship: data.citizenship,
+        passportNumber: data.passportNumber,
+        passportIssuedDate: data.passportIssuedDate,
+        entryDate: data.entryDate,
+        entryPlace: data.entryPlace,
+        visaType: data.visaType,
+        visaNumber: data.visaNumber,
+        permittedResidenceDate: data.permittedResidenceDate,
+        birthCountry: data.birthCountry,
+      };
+    }
+  };
 
+  const buildReservationPayload = (
+    data: GuestValidation.FormValues,
+  ): CreateReservationPayload => {
+    return {
+      guest: buildGuestPayload(data),
+      guestQuantity: guestsCount,
+      price: data.price ? data.price : null,
+      note: data.remarks || null,
+      reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
+    };
+  };
 
+  const buildUpdatePayload = (
+    data: GuestValidation.FormValues,
+  ): UpdateReservationPayload => {
+    return {
+      apartmentId: selectedApartmentIdNum,
+      guest: buildGuestPayload(data),
+      guestQuantity: guestsCount,
+      price: data.price ? data.price : null,
+      note: data.remarks || null,
+      reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
+    };
+  };
 
-	const formatLocalDate = (date: Date | null): string | null =>
-		date ? dayjs(date).format("YYYY-MM-DD") : null;
+  const onSubmit = (data: GuestValidation.FormValues) => {
+    if (!selectedApartment || !selectedApartment.id) {
+      Alert.alert(
+        t("reservations.alerts.selectApartment.title"),
+        t("reservations.alerts.selectApartment.message"),
+      );
+      return;
+    }
 
+    if (isEditMode) {
+      console.log(`FORM DATA: ${JSON.stringify(data)}`);
 
-	function isForeignGuest(data: GuestValidation.FormValues): data is Extract<GuestValidation.FormValues, { isLocal: false }> {
-		return data.isLocal === false;
-	}
+      const payload = buildUpdatePayload(data);
+      console.log("=== UPDATE PAYLOAD ===");
+      console.log(JSON.stringify(payload, null, 2));
 
-	const buildGuestPayload = (data: GuestValidation.FormValues): Guest => {
+      updateReservationMutation.mutate(
+        {
+          payload,
+          documentPicture:
+            documentUri && !documentUri.startsWith("http")
+              ? {
+                  uri: documentUri,
+                  type: "image/jpeg",
+                  name: `document_${Date.now()}.jpg`,
+                }
+              : undefined,
+        },
+        {
+          onSuccess: (data) => {
+            console.log("=== UPDATE SUCCESS ===", data);
+            resetForm();
+            navigation.goBack();
+          },
+          onError: (error: any) => {
+            console.log("=== UPDATE ERROR ===");
+            console.log("Error message:", error.message);
+            console.log("Error response:", error.response?.data);
+            console.log("Error status:", error.response?.status);
+          },
+        },
+      );
+    } else {
+      const payload = buildReservationPayload(data);
+      console.log("=== CREATE PAYLOAD ===");
+      console.log(JSON.stringify(payload, null, 2));
 
-		const common = {
-			id: guestId,
-			name: data.name.trim(),
-			surname: data.surname.trim(),
-			gender: data.gender,
-			phoneNumber: data.phoneNumber,
-			birthDate: data.birthDate,
-			birthPlace: data.birthPlace,
-			address: data.address,
-			accommodationUnitNumber: data.accommodationUnitNumber,
-			accommodationUnitFloor: data.accommodationUnitFloor,
-			dateTimeOfArrival: data.dateTimeOfArrival,
-			dateTimeOfDeparture: dailyStay ? null : data.dateTimeOfDeparture,
-			personalDocumentURL: documentUri,
-		};
+      // createReservationMutation.mutate({
+      // 	payload,
+      // 	documentPicture:
+      // 		documentUri && !documentUri.startsWith("http")
+      // 			? {
+      // 				uri: documentUri,
+      // 				type: "image/jpeg",
+      // 				name: `document_${Date.now()}.jpg`,
+      // 			}
+      // 			: undefined,
+      // },
+      // {
+      // 	onSuccess: (data) => {
+      // 		console.log("=== UPDATE SUCCESS ===", data);
+      // 		resetForm();
+      // 		navigation.goBack();
+      // 	},
+      // 	onError: (error: any) => {
+      // 		console.log("=== UPDATE ERROR ===");
+      // 		console.log("Error message:", error.message);
+      // 		console.log("Error response:", error.response?.data);
+      // 		console.log("Error status:", error.response?.status);
+      // 	},
+      // });
+    }
+  };
 
-		if (data.isLocal) {
-			return {
-				...common,
-				isLocal: true,
-				citizenId: data.jmbg,
-				birthMunicipality: data.birthMunicipality,
-				birthCountry: data.birthCountry,
-			};
-		} 
-		else if (isForeignGuest(data)) {
-			
-			return {
-				...common,
-				isLocal: false,
-				citizenId: data.passportNumber,
-				citizenship: data.citizenship,
-				passportNumber: data.passportNumber,
-				passportIssuedDate: data.passportIssuedDate,
-				entryDate: data.entryDate,
-				entryPlace: data.entryPlace,
-				visaType: data.visaType,
-				visaNumber: data.visaNumber,
-				permittedResidenceDate: data.permittedResidenceDate,
-				birthCountry: data.birthCountry,
-			};
-		}
-	};
+  const documentRow = (
+    <View>
+      <View style={styles.inlineRow}>
+        <Label text={t("reservations.form.fields.document")} size="lg" />
+        <Pressable style={styles.cameraBtn} onPress={openImagePicker}>
+          <Icon name="Camera" size={24} color={Colors.textLight} />
+        </Pressable>
+      </View>
 
-	const buildReservationPayload = (data: GuestValidation.FormValues): CreateReservationPayload => {
-		return {
-			guest: buildGuestPayload(data),
-			guestQuantity: guestsCount,
-			price: data.price ? data.price : null,
-			note: data.remarks || null,
-			reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
-		};
-	};
+      {documentUri && (
+        <View
+          style={{
+            marginTop: 12,
+            backgroundColor: Colors.background,
+            padding: 8,
+            borderRadius: 16,
+            position: "relative",
+            alignSelf: "flex-start",
+          }}
+        >
+          <Pressable onPress={() => setPreviewVisible(true)}>
+            <Image
+              source={{ uri: documentUri }}
+              style={{ width: 80, height: 80, borderRadius: 12 }}
+            />
+          </Pressable>
 
-	const buildUpdatePayload = (data: GuestValidation.FormValues): UpdateReservationPayload => {
-		return {
-			apartmentId: selectedApartmentIdNum,
-			guest: buildGuestPayload(data),
-			guestQuantity: guestsCount,
-			price: data.price ? data.price : null,
-			note: data.remarks || null,
-			reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
-		};
-	};
+          <Pressable
+            onPress={() => {
+              setDocumentUri(null);
+              setPreviewVisible(false);
+            }}
+            hitSlop={10}
+            style={{
+              position: "absolute",
+              top: -6,
+              right: -6,
+              width: 26,
+              height: 26,
+              borderRadius: 13,
+              backgroundColor: Colors.background,
+              borderWidth: 1,
+              borderColor: Colors.borderColor,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Icon name="X" size={14} color={Colors.textPrimary} />
+          </Pressable>
+        </View>
+      )}
+    </View>
+  );
 
-	const onSubmit = (data: GuestValidation.FormValues) => {
-		if (!selectedApartment || !selectedApartment.id) {
-			Alert.alert(t("reservations.alerts.selectApartment.title"), t("reservations.alerts.selectApartment.message"));
-			return;
-		}
+  if (isScreenLoading) {
+    return (
+      <View style={styles.screen}>
+        {isFormHydrating && (
+          <View>
+            <Spinner size="large" />
+            <Text>{t("reservations.load.preparingForm")}</Text>
+          </View>
+        )}
 
-		if(isEditMode) {
-			console.log(`FORM DATA: ${JSON.stringify(data)}`);
+        {/* Rest of UI always renders */}
+      </View>
+    );
+  }
 
-			const payload = buildUpdatePayload(data);
-			console.log("=== UPDATE PAYLOAD ===");
-			console.log(JSON.stringify(payload, null, 2));
+  // if (apartmentsLoading) {
+  // 	return (
+  // 		<View
+  // 			style={[
+  // 				styles.screen,
+  // 				{ justifyContent: "center", alignItems: "center" },
+  // 			]}
+  // 		>
+  // 			<ActivityIndicator size="large" color={Colors.primary} />
+  // 			<Text style={{ marginTop: 16, color: Colors.textLight }}>
+  // 				{t("reservations.load.message")}
+  // 			</Text>
+  // 		</View>
+  // 	);
+  // }
 
-			
+  // if (apartmentsError || apartments.length === 0) {
+  // 	return (
+  // 		<View
+  // 			style={[
+  // 				styles.screen,
+  // 				{ justifyContent: "center", alignItems: "center", padding: 20 },
+  // 			]}
+  // 		>
+  // 			<Icon name="AlertCircle" size={48} color={Colors.primary} />
+  // 			<Text
+  // 				style={{
+  // 					marginTop: 16,
+  // 					color: Colors.textPrimary,
+  // 					fontSize: 16,
+  // 					textAlign: "center",
+  // 				}}
+  // 			>
+  // 				{apartmentsError
+  // 					? t("reservations.alerts.noApartments.title")
+  // 					: t("reservations.alerts.noApartments.message")}
+  // 			</Text>
+  // 		</View>
+  // 	);
+  // }
 
-			updateReservationMutation.mutate(
-				{
-					payload,
-					documentPicture:
-						documentUri && !documentUri.startsWith("http")
-							? {
-								uri: documentUri,
-								type: "image/jpeg",
-								name: `document_${Date.now()}.jpg`,
-							}
-							: undefined,
-				},
-				{
-					onSuccess: (data) => {
-						console.log("=== UPDATE SUCCESS ===", data);
-						resetForm();
-						navigation.goBack();
+  if (!selectedApartment) {
+    return null;
+  }
+
+  const getDateDialogInitialValue = () => {
+    switch (activeDateField) {
+      case "ARRIVAL":
+        return getValues("dateTimeOfArrival");
+      case "DEPARTURE":
+        return getValues("dateTimeOfDeparture");
+      case "BIRTH_DATE":
+        return getValues("birthDate");
+      case "PASSPORT_ISSUED":
+        return getValues("passportIssuedDate");
+      case "ENTRY_DATE":
+        return getValues("entryDate");
+      case "PERMITTED_RESIDENCE":
+        return getValues("permittedResidenceDate");
+      default:
+        return null;
+    }
+  };
+
+  const isSubmitting =
+    createReservationMutation.isPending || updateReservationMutation.isPending;
+
+  const renderFormField = (
+    label: string,
+    name: Path<GuestValidation.FormValues>,
+    placeholder: string,
+    helperText: string,
+    type: "text" | "password",
+    iconName: LucideIconName,
+    rightElement?: React.ReactNode,
+    disabled?: boolean,
+    formatValue?: (value: any) => string,
+    inputProps?: any,
+  ) => {
+    return (
+      <FormField
+        control={control}
+        name={name}
+        label={label}
+        placeholder={t(placeholder)}
+        helperText={helperText}
+        type={type}
+        iconName={iconName}
+        isInvalid={false}
+        rightElement={rightElement}
+        size="xl"
+        labelSize="lg"
+        disabled={disabled}
+        formatValue={formatValue}
+        inputProps={inputProps}
+      />
+    );
+  };
+
+  return (
+    <View style={styles.screen}>
+      <View style={{ flex: 1, transform: [{ translateY: keyboardOffset }] }}>
+        <AddReservationTemplate
+          apartmentCard={
+            <ApartmentSelectDropdown
+              value={selectedApartment}
+              options={apartments}
+              onChange={setSelectedApartment}
+            />
+          }
+          dailyStayToggleRow={
+            <View style={styles.toggleRow}>
+              <Label text={t("reservations.form.dailyStay")} size="lg" />
+              <ToggleItem
+                title=""
+                initialValue={dailyStay}
+                onValueChange={handleDailyStayToggle}
+              />
+            </View>
+          }
+          arrivalField={renderFormField(
+            t("reservations.form.arrivalDateTime"),
+            "dateTimeOfArrival",
+            undefined,
+            undefined,
+            "text",
+            undefined,
+            <IconButton
+              iconName="CalendarPlus"
+              onPress={() => openDateDialog("ARRIVAL")}
+              color="gray"
+            />,
+            false,
+            formatDateTimeLabel,
+          )}
+          departureField={renderFormField(
+            t("reservations.form.departureDateTime"),
+            "dateTimeOfDeparture",
+            undefined,
+            undefined,
+            "text",
+            undefined,
+            <IconButton
+              iconName="CalendarPlus"
+              onPress={() => openDateDialog("DEPARTURE")}
+              color="gray"
+            />,
+            dailyStay,
+            formatDateTimeLabel,
+          )}
+          guestTypeRow={
+            <View style={styles.radioRow}>
+              <CustomRadioGroup
+                control={control}
+                name={"isLocal"}
+                options={[
+                  {
+                    label: t("reservations.form.guestType.domestic"),
+                    value: true,
+					disabled: isEditMode
+                  },
+                  {
+                    label: t("reservations.form.guestType.foreign"),
+                    value: false,
+					disabled: isEditMode
+                  },
+                ]}
+              />
+            </View>
+          }
+          guestNameField={renderFormField(
+            t("reservations.form.fields.firstName"),
+            "name",
+            "Marko",
+            undefined,
+            "text",
+            "User",
+          )}
+          guestSurnameField={renderFormField(
+            t("reservations.form.fields.lastName"),
+            "surname",
+            "Marković",
+            undefined,
+            "text",
+            "User",
+          )}
+          genderField={
+            <View style={styles.radioRow}>
+				<CustomRadioGroup
+					control={control}
+					label={t("reservations.form.gender.label")}
+					name={"gender"}
+					options={[
+					{
+						label: t("reservations.form.gender.male"),
+						value: "Male",
 					},
-					onError: (error: any) => {
-						console.log("=== UPDATE ERROR ===");
-						console.log("Error message:", error.message);
-						console.log("Error response:", error.response?.data);
-						console.log("Error status:", error.response?.status);
+					{
+						label: t("reservations.form.gender.female"),
+						value: "Female",
 					},
-				}
-			);
-		}
-		else {
-			const payload = buildReservationPayload(data);
-			console.log("=== UPDATE PAYLOAD ===");
-			console.log(JSON.stringify(payload, null, 2));
-
-			// createReservationMutation.mutate({
-			// 	payload,
-			// 	documentPicture:
-			// 		documentUri && !documentUri.startsWith("http")
-			// 			? {
-			// 				uri: documentUri,
-			// 				type: "image/jpeg",
-			// 				name: `document_${Date.now()}.jpg`,
-			// 			}
-			// 			: undefined,
-			// },
-			// {
-			// 	onSuccess: (data) => {
-			// 		console.log("=== UPDATE SUCCESS ===", data);
-			// 		resetForm();
-			// 		navigation.goBack();
-			// 	},
-			// 	onError: (error: any) => {
-			// 		console.log("=== UPDATE ERROR ===");
-			// 		console.log("Error message:", error.message);
-			// 		console.log("Error response:", error.response?.data);
-			// 		console.log("Error status:", error.response?.status);
-			// 	},
-			// });
-		}
-
-		
-	};
-
-
-	const documentRow = (
-		<View>
-			<View style={styles.inlineRow}>
-				<Label text={t("reservations.form.fields.document")} size="lg" />
-				<Pressable style={styles.cameraBtn} onPress={openImagePicker}>
-					<Icon name="Camera" size={24} color={Colors.textLight} />
-				</Pressable>
-			</View>
-
-			{documentUri && (
-				<View
-					style={{
-						marginTop: 12,
-						backgroundColor: Colors.background,
-						padding: 8,
-						borderRadius: 16,
-						position: "relative",
-						alignSelf: "flex-start",
-					}}
-				>
-					<Pressable onPress={() => setPreviewVisible(true)}>
-						<Image
-							source={{ uri: documentUri }}
-							style={{ width: 80, height: 80, borderRadius: 12 }}
-						/>
-					</Pressable>
-
-					<Pressable
-						onPress={() => {
-							setDocumentUri(null);
-							setPreviewVisible(false);
-						}}
-						hitSlop={10}
-						style={{
-							position: "absolute",
-							top: -6,
-							right: -6,
-							width: 26,
-							height: 26,
-							borderRadius: 13,
-							backgroundColor: Colors.background,
-							borderWidth: 1,
-							borderColor: Colors.borderColor,
-							alignItems: "center",
-							justifyContent: "center",
-						}}
-					>
-						<Icon name="X" size={14} color={Colors.textPrimary} />
-					</Pressable>
-				</View>
-			)}
-		</View>
-	);
-
-	if (isScreenLoading) {
-		return (
-			<View style={styles.screen}>
-				{isFormHydrating && (
-					<View >
-					<Spinner size="large" />
-					<Text >
-						{t("reservations.load.preparingForm")}
-					</Text>
-					</View>
-				)}
-
-			{/* Rest of UI always renders */}
-			</View>
-		);
-	}
-
-	// if (apartmentsLoading) {
-	// 	return (
-	// 		<View
-	// 			style={[
-	// 				styles.screen,
-	// 				{ justifyContent: "center", alignItems: "center" },
-	// 			]}
-	// 		>
-	// 			<ActivityIndicator size="large" color={Colors.primary} />
-	// 			<Text style={{ marginTop: 16, color: Colors.textLight }}>
-	// 				{t("reservations.load.message")}
-	// 			</Text>
-	// 		</View>
-	// 	);
-	// }
-
-	// if (apartmentsError || apartments.length === 0) {
-	// 	return (
-	// 		<View
-	// 			style={[
-	// 				styles.screen,
-	// 				{ justifyContent: "center", alignItems: "center", padding: 20 },
-	// 			]}
-	// 		>
-	// 			<Icon name="AlertCircle" size={48} color={Colors.primary} />
-	// 			<Text
-	// 				style={{
-	// 					marginTop: 16,
-	// 					color: Colors.textPrimary,
-	// 					fontSize: 16,
-	// 					textAlign: "center",
-	// 				}}
-	// 			>
-	// 				{apartmentsError
-	// 					? t("reservations.alerts.noApartments.title")
-	// 					: t("reservations.alerts.noApartments.message")}
-	// 			</Text>
-	// 		</View>
-	// 	);
-	// }
-
-	if (!selectedApartment) {
-		return null;
-	}
-
-	const getDateDialogInitialValue = () => {
-
-		switch (activeDateField) {
-			case "ARRIVAL":
-				return new Date(getValues("dateTimeOfArrival"));
-			case "DEPARTURE":
-				return new Date(getValues("dateTimeOfDeparture"));
-			case "BIRTH_DATE":
-				return new Date(getValues("birthDate"));
-			case "PASSPORT_ISSUED":
-				return new Date(getValues("passportIssuedDate"));
-			case "ENTRY_DATE":
-				return new Date(getValues("entryDate"));
-			case "PERMITTED_RESIDENCE":
-				return new Date(getValues("permittedResidenceDate"));
-			default:
-				return null;
-		}
-	};
-
-	const isSubmitting =
-		createReservationMutation.isPending || updateReservationMutation.isPending;
-
-	const renderFormField = (
-		label: string, 
-		name: Path<GuestValidation.FormValues>, 
-		placeholder: string, 
-		helperText: string,
-		type: 'text' | 'password',
-		iconName: LucideIconName,
-		rightElement?: React.ReactNode,
-		disabled?: boolean,
-		formatValue?: (value: any) => string,
-		inputProps?: any,
-	) => {
-		return(
-			<FormField
-				control={control}
-				name={name}
-				label={label}
-				placeholder={t(placeholder)}
-				helperText={helperText}
-				type={type}
-				iconName={iconName}
-				isInvalid={false}
-				rightElement={rightElement}
-				size="xl"
-				labelSize="lg"
-				disabled={disabled}
-				formatValue={formatValue}
-				inputProps={inputProps}
-			/>
-		);
-	}
-
-	return (
-		<View style={styles.screen}>
-			<View style={{ flex: 1, transform: [{ translateY: keyboardOffset }] }}>
-				<AddReservationTemplate
-					apartmentCard={
-						<ApartmentSelectDropdown
-							value={selectedApartment}
-							options={apartments}
-							onChange={setSelectedApartment}
-						/>
-					}
-					dailyStayToggleRow={
-						<View style={styles.toggleRow}>
-							<Label text={t("reservations.form.dailyStay")} size="lg" />
-							<ToggleItem
-								title=""
-								initialValue={dailyStay}
-								onValueChange={handleDailyStayToggle}
-							/>
-						</View>
-					}
-					arrivalField={
-						renderFormField(
-							t("reservations.form.arrivalDateTime"), 
-							'dateTimeOfArrival', 
-							undefined, 
-							undefined, 
-							'text', 
-							undefined, 
-							<IconButton iconName="CalendarPlus" onPress={() => openDateDialog("ARRIVAL")} color='gray' />,
-							false,
-							formatDateTimeLabel
-						)
-					}
-					departureField={
-						renderFormField(
-							t("reservations.form.departureDateTime"), 
-							'dateTimeOfDeparture', 
-							undefined, 
-							undefined, 
-							'text', 
-							undefined, 
-							<IconButton iconName="CalendarPlus" onPress={() => openDateDialog("DEPARTURE")} color='gray' />, 
-							dailyStay,
-							formatDateTimeLabel
-						)
-					}
-					guestTypeRow={
-						<View style={styles.radioRow}>
-							{["DOMESTIC", "FOREIGN"].map((g) => (
-								<Pressable
-									key={g}
-									style={styles.radioOption}
-									onPress={() => setGuestType(g as GuestType)}
-									disabled={isEditMode} // Disable in edit mode
-								>
-									<View
-										style={[
-											styles.radioOuter,
-											guestType === g && styles.radioOuterActive,
-											isEditMode && { opacity: 0.5 }, // Dim in edit mode
-										]}
-									>
-										{guestType === g && <View style={styles.radioInner} />}
-									</View>
-									<Text style={[styles.radioText, isEditMode && { opacity: 0.5 }]}>
-										{t(
-											g === "DOMESTIC"
-												? "reservations.form.guestType.domestic"
-												: "reservations.form.guestType.foreign"
-										)}
-									</Text>
-								</Pressable>
-							))}
-						</View>
-					}
-					guestNameField={
-						renderFormField(t("reservations.form.fields.firstName"), 'name', 'Marko', undefined, 'text', "User")
-					}
-					guestSurnameField={
-						renderFormField(t("reservations.form.fields.lastName"), 'surname', 'Marković', undefined, 'text', "User")
-					}
-					genderField={
-						<View style={styles.radioRow}>
-							<Label text={t("reservations.form.gender.label")} size="lg" />
-							{(["Male", "Female"] as Gender[]).map((g) => (
-								<Pressable
-									key={g}
-									style={styles.radioOption}
-									onPress={() => setGender(g)}
-								>
-									<View
-										style={[
-											styles.radioOuter,
-											gender === g && styles.radioOuterActive,
-										]}
-									>
-										{gender === g && <View style={styles.radioInner} />}
-									</View>
-									<Text style={[styles.radioText]}>
-										{t(
-											g === "Male"
-												? "reservations.form.gender.male"
-												: "reservations.form.gender.female"
-										)}
-									</Text>
-								</Pressable>
-							))}
-						</View>
-					}
-					phoneField={
-						renderFormField(t("reservations.form.fields.phone"), 'phoneNumber', '065/123-456', undefined, 'text', "Phone")
-					}
-					birthDateField={
-						renderFormField(t("reservations.form.fields.birthDate"), 'birthDate', undefined, undefined, 'text', undefined, <IconButton iconName="CalendarPlus" onPress={() => openDateDialog("BIRTH_DATE")} color='gray' />, undefined, formatDateLabel)
-					}
-					birthPlaceField={
-						renderFormField(t("reservations.form.fields.birthPlace"), 'birthPlace', 'Banja Luka', undefined, 'text', "MapPinned")
-					}
-					birthCountryField={
-						renderFormField(t("reservations.form.fields.birthCountry"), 'birthCountry', 'BiH', undefined, 'text', "MapPinned")
-					}
-					domesticFields={
-						guestType === "DOMESTIC"
-							? {
-								birthMunicipalityField: (
-									renderFormField(t("reservations.form.fields.birthMunicipality"), 'birthMunicipality', 'Banja Luka', undefined, 'text', "MapPin")
-								),
-								citizenIdField: (
-									renderFormField(t("reservations.form.fields.citizenId"), 'jmbg', '1234567891234', undefined, 'text', "Key", undefined, undefined, undefined, { keyboardType: "numeric", })
-								),
-							}
-							: undefined
-					}
-					foreignFields={
-						guestType === "FOREIGN"
-							? {
-								citizenshipField: (
-									renderFormField(t("reservations.form.fields.citizenship"), 'citizenship', 'Srbija', undefined, 'text', "Flag")
-								),
-								passportNumberField: (
-									renderFormField(t("reservations.form.fields.passportNumber"), 'passportNumber', 'W0000208', undefined, 'text', "IdCard")
-								),
-								passportIssuedDateField: (
-									renderFormField(
-										t("reservations.form.fields.passportIssuedDate"), 
-										'passportIssuedDate',
-										undefined, 
-										undefined, 
-										'text', 
-										undefined, 
-										<IconButton iconName="CalendarPlus" onPress={() => openDateDialog("PASSPORT_ISSUED")} color='gray' />
-									)
-								),
-								entryDateField: (
-									renderFormField(
-										t("reservations.form.fields.entryDate"), 
-										'entryDate',
-										undefined, 
-										undefined, 
-										'text', 
-										undefined, 
-										<IconButton iconName="CalendarPlus" onPress={() => openDateDialog("ENTRY_DATE")} color='gray' />
-									)
-								),
-								entryPlaceField: (
-									renderFormField(t("reservations.form.fields.entryPlace"), 'entryPlace', 'BiH', undefined, 'text', "MapPinned")
-								),
-								visaTypeField: (
-									renderFormField(t("reservations.form.fields.visaType"), 'visaType', 'Type C', undefined, 'text', "Stamp")
-								),
-								visaNumberField: (
-									renderFormField(t("reservations.form.fields.visaNumber"), 'visaNumber', 'D12345678', undefined, 'text', "Hash")
-								),
-								permittedResidenceDateField: (
-									renderFormField(
-										t("reservations.form.fields.permittedResidenceUntil"), 
-										'permittedResidenceDate',
-										undefined, 
-										undefined, 
-										'text', 
-										undefined, 
-										<IconButton iconName="CalendarPlus" onPress={() => openDateDialog("PERMITTED_RESIDENCE")} color='gray' />,
-										undefined,
-										formatDateLabel
-									)
-								),
-							}
-							: undefined
-					}
-					addressField={
-						renderFormField(t("reservations.form.fields.address"), 'address', 'Ulica 123', undefined, 'text', "House")
-					}
-					accommodationUnitNumberField={
-						renderFormField(t("reservations.form.fields.unitNumber"), 'accommodationUnitNumber', '13', undefined, 'text', "Hash")
-					}
-					accommodationUnitFloorField={
-						renderFormField(t("reservations.form.fields.unitFloor"), 'accommodationUnitFloor', '4', undefined, 'text', "Hash")
-					}
-					guestsCounterRow={
-						<View style={styles.inlineRow}>
-							<Label text={t("reservations.form.fields.guestsCount")} size="lg" />
-							<HStack space="md">
-								<Pressable
-									onPress={() => setGuestsCount((p) => clampGuests(p - 1))}
-									style={styles.counterBtn}
-								>
-									<Text style={styles.counterSymbol}>–</Text>
-								</Pressable>
-								<View style={styles.counterMid}>
-									<Text style={styles.counterValue}>{guestsCount}</Text>
-								</View>
-								<Pressable
-									onPress={() => setGuestsCount((p) => clampGuests(p + 1))}
-									style={styles.counterBtn}
-								>
-									<Text style={styles.counterSymbol}>+</Text>
-								</Pressable>
-							</HStack>
-						</View>
-					}
-					priceField={
-						renderFormField(t("reservations.form.fields.price") + ' (BAM)', 'price', '50.00', undefined, 'text', "DollarSign",
-					undefined, false, undefined, { keyboardType: "numeric", })
-					}
-					invoiceNumberField={
-						renderFormField(t("reservations.form.fields.invoiceNumber"), 'issuedInvoiceNumber', '65413211', undefined, 'text', "Receipt")
-					}
-					noteField={
-						<View style={styles.noteWrap}>
-							<Label text={t("reservations.form.fields.note")} size="lg" />
-							<NoteBox value={getValues("remarks")} onChangeText={(value) => setValue("remarks", value)} />
-						</View>
-					}
-					documentRow={documentRow}
-					submitButton={
-						<TouchableOpacity
-							activeOpacity={0.85}
-							onPressIn={() => setSubmitPressed(true)}
-							onPressOut={() => setSubmitPressed(false)}
-							onPress={handleSubmit1(onSubmit, (e) => { console.log("ERROR: ", e.dateTimeOfDeparture) })}
-							disabled={isSubmitting}
-							style={[
-								styles.submitBtn,
-								submitPressed && styles.submitBtnPressed,
-								isSubmitting && { opacity: 0.6 },
-							]}
-						>
-							<Text style={styles.submitBtnText}>
-								{isSubmitting
-									? t("reservations.form.buttons.saving")
-									: isEditMode
-										? t("reservations.form.buttons.update")
-										: t("reservations.form.buttons.save")}
-							</Text>
-						</TouchableOpacity>
-					}
+					]}
 				/>
-			</View>
+              
+            </View>
+          }
+          phoneField={renderFormField(
+            t("reservations.form.fields.phone"),
+            "phoneNumber",
+            "065/123-456",
+            undefined,
+            "text",
+            "Phone",
+          )}
+          birthDateField={renderFormField(
+            t("reservations.form.fields.birthDate"),
+            "birthDate",
+            undefined,
+            undefined,
+            "text",
+            undefined,
+            <IconButton
+              iconName="CalendarPlus"
+              onPress={() => openDateDialog("BIRTH_DATE")}
+              color="gray"
+            />,
+            undefined,
+            formatDateLabel,
+          )}
+          birthPlaceField={renderFormField(
+            t("reservations.form.fields.birthPlace"),
+            "birthPlace",
+            "Banja Luka",
+            undefined,
+            "text",
+            "MapPinned",
+          )}
+          birthCountryField={renderFormField(
+            t("reservations.form.fields.birthCountry"),
+            "birthCountry",
+            "BiH",
+            undefined,
+            "text",
+            "MapPinned",
+          )}
+          domesticFields={
+            guestType === "DOMESTIC"
+              ? {
+                  birthMunicipalityField: renderFormField(
+                    t("reservations.form.fields.birthMunicipality"),
+                    "birthMunicipality",
+                    "Banja Luka",
+                    undefined,
+                    "text",
+                    "MapPin",
+                  ),
+                  citizenIdField: renderFormField(
+                    t("reservations.form.fields.citizenId"),
+                    "jmbg",
+                    "1234567891234",
+                    undefined,
+                    "text",
+                    "Key",
+                    undefined,
+                    undefined,
+                    undefined,
+                    { keyboardType: "numeric" },
+                  ),
+                }
+              : undefined
+          }
+          foreignFields={
+            guestType === "FOREIGN"
+              ? {
+                  citizenshipField: renderFormField(
+                    t("reservations.form.fields.citizenship"),
+                    "citizenship",
+                    "Srbija",
+                    undefined,
+                    "text",
+                    "Flag",
+                  ),
+                  passportNumberField: renderFormField(
+                    t("reservations.form.fields.passportNumber"),
+                    "passportNumber",
+                    "W0000208",
+                    undefined,
+                    "text",
+                    "IdCard",
+                  ),
+                  passportIssuedDateField: renderFormField(
+                    t("reservations.form.fields.passportIssuedDate"),
+                    "passportIssuedDate",
+                    undefined,
+                    undefined,
+                    "text",
+                    undefined,
+                    <IconButton
+                      iconName="CalendarPlus"
+                      onPress={() => openDateDialog("PASSPORT_ISSUED")}
+                      color="gray"
+                    />,
+                    undefined,
+                    formatDateLabel,
+                  ),
+                  entryDateField: renderFormField(
+                    t("reservations.form.fields.entryDate"),
+                    "entryDate",
+                    undefined,
+                    undefined,
+                    "text",
+                    undefined,
+                    <IconButton
+                      iconName="CalendarPlus"
+                      onPress={() => openDateDialog("ENTRY_DATE")}
+                      color="gray"
+                    />,
+                    undefined,
+                    formatDateLabel,
+                  ),
+                  entryPlaceField: renderFormField(
+                    t("reservations.form.fields.entryPlace"),
+                    "entryPlace",
+                    "BiH",
+                    undefined,
+                    "text",
+                    "MapPinned",
+                  ),
+                  visaTypeField: renderFormField(
+                    t("reservations.form.fields.visaType"),
+                    "visaType",
+                    "Type C",
+                    undefined,
+                    "text",
+                    "Stamp",
+                  ),
+                  visaNumberField: renderFormField(
+                    t("reservations.form.fields.visaNumber"),
+                    "visaNumber",
+                    "D12345678",
+                    undefined,
+                    "text",
+                    "Hash",
+                  ),
+                  permittedResidenceDateField: renderFormField(
+                    t("reservations.form.fields.permittedResidenceUntil"),
+                    "permittedResidenceDate",
+                    undefined,
+                    undefined,
+                    "text",
+                    undefined,
+                    <IconButton
+                      iconName="CalendarPlus"
+                      onPress={() => openDateDialog("PERMITTED_RESIDENCE")}
+                      color="gray"
+                    />,
+                    undefined,
+                    formatDateLabel,
+                  ),
+                }
+              : undefined
+          }
+          addressField={renderFormField(
+            t("reservations.form.fields.address"),
+            "address",
+            "Ulica 123",
+            undefined,
+            "text",
+            "House",
+          )}
+          accommodationUnitNumberField={renderFormField(
+            t("reservations.form.fields.unitNumber"),
+            "accommodationUnitNumber",
+            "13",
+            undefined,
+            "text",
+            "Hash",
+          )}
+          accommodationUnitFloorField={renderFormField(
+            t("reservations.form.fields.unitFloor"),
+            "accommodationUnitFloor",
+            "4",
+            undefined,
+            "text",
+            "Hash",
+          )}
+          guestsCounterRow={
+            <View style={styles.inlineRow}>
+              <Label
+                text={t("reservations.form.fields.guestsCount")}
+                size="lg"
+              />
+              <HStack space="md">
+                <Pressable
+                  onPress={() => setGuestsCount((p) => clampGuests(p - 1))}
+                  style={styles.counterBtn}
+                >
+                  <Text style={styles.counterSymbol}>–</Text>
+                </Pressable>
+                <View style={styles.counterMid}>
+                  <Text style={styles.counterValue}>{guestsCount}</Text>
+                </View>
+                <Pressable
+                  onPress={() => setGuestsCount((p) => clampGuests(p + 1))}
+                  style={styles.counterBtn}
+                >
+                  <Text style={styles.counterSymbol}>+</Text>
+                </Pressable>
+              </HStack>
+            </View>
+          }
+          priceField={renderFormField(
+            t("reservations.form.fields.price") + " (BAM)",
+            "price",
+            "50.00",
+            undefined,
+            "text",
+            "DollarSign",
+            undefined,
+            false,
+            undefined,
+            { keyboardType: "numeric" },
+          )}
+          invoiceNumberField={renderFormField(
+            t("reservations.form.fields.invoiceNumber"),
+            "issuedInvoiceNumber",
+            "65413211",
+            undefined,
+            "text",
+            "Receipt",
+          )}
+          noteField={
+            <View style={styles.noteWrap}>
+              <Label text={t("reservations.form.fields.note")} size="lg" />
+              <NoteBox
+                value={getValues("remarks")}
+                onChangeText={(value) => setValue("remarks", value)}
+              />
+            </View>
+          }
+          documentRow={documentRow}
+          submitButton={
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPressIn={() => setSubmitPressed(true)}
+              onPressOut={() => setSubmitPressed(false)}
+              onPress={handleSubmit1(onSubmit, (e) => {
+                console.log("ERROR: ", e);
+              })}
+              disabled={isSubmitting}
+              style={[
+                styles.submitBtn,
+                submitPressed && styles.submitBtnPressed,
+                isSubmitting && { opacity: 0.6 },
+              ]}
+            >
+              <Text style={styles.submitBtnText}>
+                {isSubmitting
+                  ? t("reservations.form.buttons.saving")
+                  : isEditMode
+                    ? t("reservations.form.buttons.update")
+                    : t("reservations.form.buttons.save")}
+              </Text>
+            </TouchableOpacity>
+          }
+        />
+      </View>
 
-			<DateTimePicker
-				visible={dateDialogVisible}
-				initialValue={getDateDialogInitialValue()}
-				timePicker={
-					activeDateField === "ARRIVAL" || activeDateField === "DEPARTURE"
-				}
-				onClose={closeDateDialog}
-				onConfirm={confirmDateDialog}
-			/>
+      <DateTimePicker
+        visible={dateDialogVisible}
+        initialValue={getDateDialogInitialValue()}
+        timePicker={
+          activeDateField === "ARRIVAL" || activeDateField === "DEPARTURE"
+        }
+        onClose={closeDateDialog}
+        onConfirm={confirmDateDialog}
+      />
 
-			{documentUri && (
-				<Modal
-					visible={previewVisible}
-					transparent
-					animationType="fade"
-					onRequestClose={() => setPreviewVisible(false)}
-				>
-					<Pressable
-						style={{
-							flex: 1,
-							backgroundColor: "rgba(0,0,0,0.9)",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-						onPress={() => setPreviewVisible(false)}
-					>
-						<Image
-							source={{ uri: documentUri }}
-							style={{
-								width: "90%",
-								height: "80%",
-								resizeMode: "contain",
-								borderRadius: 12,
-							}}
-						/>
-					</Pressable>
-				</Modal>
-			)}
-		</View>
-	);
-};
+      {documentUri && (
+        <Modal
+          visible={previewVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setPreviewVisible(false)}
+        >
+          <Pressable
+            style={{
+              flex: 1,
+              backgroundColor: "rgba(0,0,0,0.9)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => setPreviewVisible(false)}
+          >
+            <Image
+              source={{ uri: documentUri }}
+              style={{
+                width: "90%",
+                height: "80%",
+                resizeMode: "contain",
+                borderRadius: 12,
+              }}
+            />
+          </Pressable>
+        </Modal>
+      )}
+    </View>
+  );
+}
 
 export default AddReservationScreen;
