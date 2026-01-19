@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import {
 	View,
 	Text,
@@ -44,6 +44,8 @@ import { GuestValidation } from "@/src/util/validationSchemas";
 import FormField from "../../molecules/FormField/FormField";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Spinner } from "../../ui/spinner";
+import { isScreen } from "expo-router/build/views/Screen";
 
 
 
@@ -107,6 +109,7 @@ function AddReservationScreen() {
 	const [selectedApartment, setSelectedApartment] = useState<ApartmentOption | null>(null);
 	const [guestType, setGuestType] = useState<GuestType>("DOMESTIC");
 	const [dailyStay, setDailyStay] = useState(false);
+	const [isInitializing, setIsInitializing] = useState(true);
 
 	
 	// Guest form
@@ -156,102 +159,86 @@ function AddReservationScreen() {
 		selectedApartmentIdNum
 	);
 
-	// popunjavanje polja u edit modu
-	useEffect(() => {
-		if (isEditMode && existingReservation) {
-			const guest = existingReservation.guest;
 
-			// podesavanje apartmana
+	useEffect(() => {
+		if (!isEditMode) {
+			setIsInitializing(false);
+			return;
+		}
+
+		const initializeForm = async () => {
+			if (!isEditMode || !existingReservation) return;
+
+			const guest: Guest = existingReservation.guest;
+
+			console.log("RESERVATION GUEST: ", guest);
+
+			// 1 Apartment
 			const aptOption = apartments.find(
 				(apt) => apt.id === String(existingReservation.apartment.apartmentId)
 			);
 			if (aptOption) setSelectedApartment(aptOption);
 
-			// podesavanje tipa rezervacije
+			// 2 Reservation-level state (still useState)
 			setDailyStay(existingReservation.reservationType === "Dnevni boravak");
-
-			// podesavanje tipa gosta
+			setGuestsCount(existingReservation.guestQuantity || 1);
+			setDocumentUri(guest.personalDocumentURL || null);
+			setGuestId(guest.id);
 			setGuestType(guest.isLocal ? "DOMESTIC" : "FOREIGN");
 
-			// podesavanje datuma
+			console.log(`HALLO: ${(guest as DomesticGuest).birthMunicipality}`)
 
+			// 3 RHF form values
+			reset({
+				isLocal: guest.isLocal,
+				name: guest.name ?? "",
+				surname: guest.surname ?? "",
+				gender: guest.gender ?? "Male",
+				phoneNumber: guest.phoneNumber ?? "",
+				birthDate: guest.birthDate ? guest.birthDate : null,
+				birthPlace: guest.birthPlace ?? "",
+				birthCountry: guest.birthCountry ?? "",
+				address: guest.address ?? "",
+				dateTimeOfArrival: guest.dateTimeOfArrival ? new Date(guest.dateTimeOfArrival) : null,
+				dateTimeOfDeparture: guest.dateTimeOfDeparture ? new Date(guest.dateTimeOfDeparture) : null,
+				accommodationUnitNumber: guest.accommodationUnitNumber ?? 1,
+				accommodationUnitFloor: guest.accommodationUnitFloor ?? 1,
+				issuedInvoiceNumber: guest.issuedInvoiceNumber ?? "",
 
-			// podesavanje zajednickih polja za sve tipove gostiju	
-			setGuestId(guest.id);
-			setDocumentUri(guest.personalDocumentURL || null);
+				price: existingReservation.price ?? 0,
+
+				// Domestic
+				jmbg: guest.citizenId ?? "",
+				birthMunicipality: guest.isLocal
+					? (guest as DomesticGuest).birthMunicipality ?? ""
+					: undefined,
+
+				// Foreign
+				citizenship: !guest.isLocal ? (guest as ForeignGuest).citizenship ?? "" : undefined,
+				passportNumber: !guest.isLocal
+					? (guest as ForeignGuest).passportNumber ?? ""
+					: undefined,
+				passportIssuedDate:
+					!guest.isLocal && (guest as ForeignGuest).passportIssuedDate
+						? (guest as ForeignGuest).passportIssuedDate
+						: null,
+				entryDate:
+					!guest.isLocal && (guest as ForeignGuest).entryDate
+						? (guest as ForeignGuest).entryDate
+						: null,
+				entryPlace: !guest.isLocal ? (guest as ForeignGuest).entryPlace ?? "" : undefined,
+				visaType: !guest.isLocal ? (guest as ForeignGuest).visaType ?? "" : undefined,
+				visaNumber: !guest.isLocal ? (guest as ForeignGuest).visaNumber ?? "" : undefined,
+				permittedResidenceDate:
+					!guest.isLocal && (guest as ForeignGuest).permittedResidenceDate
+						? new Date((guest as ForeignGuest).permittedResidenceDate)
+						: null,
+			});
+
+			setIsInitializing(false);
 		}
-	}, [isEditMode, existingReservation, apartments]);
 
-
-
-	useEffect(() => {
-		if (!isEditMode || !existingReservation) return;
-
-		const guest: Guest = existingReservation.guest;
-
-		console.log("RESERVATION GUEST: ", guest);
-
-		// 1 Apartment
-		const aptOption = apartments.find(
-			(apt) => apt.id === String(existingReservation.apartment.apartmentId)
-		);
-		if (aptOption) setSelectedApartment(aptOption);
-
-		// 2 Reservation-level state (still useState)
-		setDailyStay(existingReservation.reservationType === "Dnevni boravak");
-
-
-		setGuestsCount(existingReservation.guestQuantity || 1);
-		setDocumentUri(guest.personalDocumentURL || null);
-
-		console.log(`HALLO: ${(guest as DomesticGuest).birthMunicipality}`)
-
-		// 3 RHF form values
-		reset({
-			isLocal: guest.isLocal,
-			name: guest.name ?? "",
-			surname: guest.surname ?? "",
-			gender: guest.gender ?? "Male",
-			phoneNumber: guest.phoneNumber ?? "",
-			birthDate: guest.birthDate ? new Date(guest.birthDate) : null,
-			birthPlace: guest.birthPlace ?? "",
-			address: guest.address ?? "",
-			dateTimeOfArrival: guest.dateTimeOfArrival ? new Date(guest.dateTimeOfArrival) : null,
-			dateTimeOfDeparture: guest.dateTimeOfDeparture ? new Date(guest.dateTimeOfDeparture) : null,
-			accommodationUnitNumber: guest.accommodationUnitNumber ?? 1,
-			accommodationUnitFloor: guest.accommodationUnitFloor ?? 1,
-			issuedInvoiceNumber: guest.issuedInvoiceNumber ?? "",
-			birthCountry: guest.birthCountry ?? "",
-
-			price: existingReservation.price ?? 0,
-
-			// Domestic
-			jmbg: guest.citizenId ?? "",
-			birthMunicipality: guest.isLocal
-				? (guest as DomesticGuest).birthMunicipality ?? ""
-				: undefined,
-
-			// Foreign
-			citizenship: !guest.isLocal ? (guest as ForeignGuest).citizenship ?? "" : undefined,
-			passportNumber: !guest.isLocal
-				? (guest as ForeignGuest).passportNumber ?? ""
-				: undefined,
-			passportIssuedDate:
-				!guest.isLocal && (guest as ForeignGuest).passportIssuedDate
-					? (guest as ForeignGuest).passportIssuedDate
-					: null,
-			entryDate:
-				!guest.isLocal && (guest as ForeignGuest).entryDate
-					? (guest as ForeignGuest).entryDate
-					: null,
-			entryPlace: !guest.isLocal ? (guest as ForeignGuest).entryPlace ?? "" : undefined,
-			visaType: !guest.isLocal ? (guest as ForeignGuest).visaType ?? "" : undefined,
-			visaNumber: !guest.isLocal ? (guest as ForeignGuest).visaNumber ?? "" : undefined,
-			permittedResidenceDate:
-				!guest.isLocal && (guest as ForeignGuest).permittedResidenceDate
-					? new Date((guest as ForeignGuest).permittedResidenceDate)
-					: null,
-		});
+		initializeForm();
 	}, [isEditMode, existingReservation, apartments, reset]);
 
 
@@ -289,6 +276,9 @@ function AddReservationScreen() {
 			hideSub.remove();
 		};
 	}, []);
+
+	const isScreenLoading = apartmentsLoading;
+	const isFormHydrating = isEditMode && isInitializing;
 
 	const openDateDialog = (field: ActiveDateField) => {
 		if (field === "DEPARTURE" && dailyStay) return;
@@ -606,46 +596,63 @@ function AddReservationScreen() {
 		</View>
 	);
 
-	if (apartmentsLoading) {
+	if (isScreenLoading) {
 		return (
-			<View
-				style={[
-					styles.screen,
-					{ justifyContent: "center", alignItems: "center" },
-				]}
-			>
-				<ActivityIndicator size="large" color={Colors.primary} />
-				<Text style={{ marginTop: 16, color: Colors.textLight }}>
-					{t("reservations.load.message")}
-				</Text>
+			<View style={styles.screen}>
+				{isFormHydrating && (
+					<View >
+					<Spinner size="large" />
+					<Text >
+						{t("reservations.load.preparingForm")}
+					</Text>
+					</View>
+				)}
+
+			{/* Rest of UI always renders */}
 			</View>
 		);
 	}
 
-	if (apartmentsError || apartments.length === 0) {
-		return (
-			<View
-				style={[
-					styles.screen,
-					{ justifyContent: "center", alignItems: "center", padding: 20 },
-				]}
-			>
-				<Icon name="AlertCircle" size={48} color={Colors.primary} />
-				<Text
-					style={{
-						marginTop: 16,
-						color: Colors.textPrimary,
-						fontSize: 16,
-						textAlign: "center",
-					}}
-				>
-					{apartmentsError
-						? t("reservations.alerts.noApartments.title")
-						: t("reservations.alerts.noApartments.message")}
-				</Text>
-			</View>
-		);
-	}
+	// if (apartmentsLoading) {
+	// 	return (
+	// 		<View
+	// 			style={[
+	// 				styles.screen,
+	// 				{ justifyContent: "center", alignItems: "center" },
+	// 			]}
+	// 		>
+	// 			<ActivityIndicator size="large" color={Colors.primary} />
+	// 			<Text style={{ marginTop: 16, color: Colors.textLight }}>
+	// 				{t("reservations.load.message")}
+	// 			</Text>
+	// 		</View>
+	// 	);
+	// }
+
+	// if (apartmentsError || apartments.length === 0) {
+	// 	return (
+	// 		<View
+	// 			style={[
+	// 				styles.screen,
+	// 				{ justifyContent: "center", alignItems: "center", padding: 20 },
+	// 			]}
+	// 		>
+	// 			<Icon name="AlertCircle" size={48} color={Colors.primary} />
+	// 			<Text
+	// 				style={{
+	// 					marginTop: 16,
+	// 					color: Colors.textPrimary,
+	// 					fontSize: 16,
+	// 					textAlign: "center",
+	// 				}}
+	// 			>
+	// 				{apartmentsError
+	// 					? t("reservations.alerts.noApartments.title")
+	// 					: t("reservations.alerts.noApartments.message")}
+	// 			</Text>
+	// 		</View>
+	// 	);
+	// }
 
 	if (!selectedApartment) {
 		return null;

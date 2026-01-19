@@ -454,9 +454,16 @@
             "addReservationTitle": "Add Reservation"
         },
         "segments": {
-            "finished": "Finished",
-            "active": "Active",
-            "upcoming": "Upcoming"
+			"switcher": {
+				"finished": "Finished",
+				"active": "Active",
+				"upcoming": "Upcoming"
+			},
+            "missing": {
+				"finished": "finished",
+				"active": "active",
+				"upcoming": "upcoming"
+			}
         },
         "toastMessages": {
             "genericError": "An error occurred.",
@@ -561,6 +568,7 @@
             "departureAfterArrival": "Departure must be after arrival"
         },
         "alerts": {
+			"missingReservationsNotification": "Currently you have no {{type}} reservations.",
             "selectApartment": {
                 "title": "Error",
                 "message": "You must select an apartment"

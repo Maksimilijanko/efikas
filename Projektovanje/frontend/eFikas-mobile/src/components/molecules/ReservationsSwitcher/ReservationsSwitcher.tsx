@@ -14,9 +14,9 @@ export default function ReservationSegmentedControl({ segment, onSegmentChange }
   const { t } = useTranslation();
 
   const segmentOptions = useMemo(() => [
-    { label: t("reservations.segments.finished"), value: "finished" },
-    { label: t("reservations.segments.active"), value: "active" },
-    { label: t("reservations.segments.upcoming"), value: "upcoming" }
+    { label: t("reservations.segments.switcher.finished"), value: "finished" },
+    { label: t("reservations.segments.switcher.active"), value: "active" },
+    { label: t("reservations.segments.switcher.upcoming"), value: "upcoming" }
   ], [t]);
 
   return (

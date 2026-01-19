@@ -93,6 +93,8 @@ const getStyles = (Colors: any) =>
       flexDirection: 'row',
       height: 36,
       backgroundColor: Colors.secondary,
+	  borderColor: '#EDEDED',
+	  borderWidth: 1,
     },
     activeBox: {
       position: 'absolute',

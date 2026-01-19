@@ -450,9 +450,16 @@
             "addReservationTitle": "Dodavanje rezervacije"
         },
         "segments": {
-            "finished": "Završene",
-            "active": "Aktivne",
-            "upcoming": "Predstojeće"
+			"switcher": {
+				"finished": "Završene",
+				"active": "Aktivne",
+				"upcoming": "Predstojeće"
+			},
+            "missing": {
+				"finished": "završenih",
+				"active": "aktivnih",
+				"upcoming": "predstojećih"
+			}
         },
         "toastMessages": {
             "genericError": "Došlo je do greške.",
@@ -557,6 +564,7 @@
             "departureAfterArrival": "Vrijeme odlaska mora biti nakon dolaska"
         },
         "alerts": {
+			"missingReservationsNotification": "Trenutno nemate {{type}} rezervacija.",
             "selectApartment": {
                 "title": "Greška",
                 "message": "Morate izabrati apartman"
