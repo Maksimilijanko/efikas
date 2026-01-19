@@ -1,5 +1,6 @@
 package org.unibl.etf.efikas.controllers;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -48,17 +49,17 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/reservations/{reservationId}")
-    public ResponseEntity<?> getReservation(@PathVariable Integer reservationId) {
+    public ResponseEntity<?> getReservation(@PathVariable Integer reservationId, @RequestParam Integer apartmentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        ReservationResponse response = reservationService.getReservation(reservationId, authentication);
+        ReservationResponse response = reservationService.getReservation(reservationId, apartmentId, authentication);
 
         return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/reservations/{reservationId}", consumes = "multipart/form-data")
     public ResponseEntity<?> updateReservation(@PathVariable Integer reservationId,
-                                               @RequestPart("reservation") UpdateReservationRequest updateReservationRequest,
+                                               @RequestPart("reservation") ReservationDTO updateReservationRequest,
                                                @RequestPart(name = "picture", required = false) MultipartFile documentPicture) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -4,76 +4,83 @@ import { useTheme } from "@/src/providers/ThemeProvider";
 import { useTranslation } from "react-i18next";
 
 interface DateTimePickerProps {
-  visible: boolean;
-  initialValue: Date | null;
-  timePicker?: boolean;
-  onClose: () => void;
-  onConfirm: (date: Date) => void;
+	visible: boolean;
+	initialValue: Date | null;
+	timePicker?: boolean;
+	onClose: () => void;
+	onConfirm: (date: Date) => void;
 }
 
 const DateTimePicker = ({
-  visible,
-  initialValue,
-  timePicker = true,
-  onClose,
-  onConfirm,
+	visible,
+	initialValue,
+	timePicker = true,
+	onClose,
+	onConfirm,
 }: DateTimePickerProps) => {
-  const { Colors, theme } = useTheme();
-  const { i18n, t } = useTranslation();
-  const [date, setDate] = React.useState(initialValue || new Date());
+	const { Colors, theme } = useTheme();
+	const { i18n, t } = useTranslation();
 
-  React.useEffect(() => {
-    if (visible) {
-      setDate(initialValue || new Date());
-    }
-  }, [visible, initialValue]);
+	const getSafeDate = (d: Date | null | string | undefined): Date => {
+		if (!d) return new Date();
+		const dt = d instanceof Date ? d : new Date(d);
+		return isNaN(dt.getTime()) ? new Date() : dt;
+	};
 
-  const handleConfirm = () => {
-    onConfirm(date);
-    onClose();
-  };
+	const [date, setDate] = React.useState(getSafeDate(initialValue));
 
-  const getDatePickerLocale = () => {
-    const currentLang = i18n.language;
-    
-    const localeMap: Record<string, string> = {
-      'sr': 'sr-Latn',
-      'en': 'en',
-    };
+	React.useEffect(() => {
+		if (visible) {
+			setDate(initialValue || new Date());
+		}
+	}, [visible, initialValue]);
 
-    return localeMap[currentLang] || 'en';
-  };
+	const handleConfirm = () => {
+		onConfirm(date);
+		onClose();
+	};
 
-  const getPickerTheme = () => {
-    if (theme === 'dark' || theme === 'light') {
-      return theme;
-    }
-    return 'light';
-  };
+	const getDatePickerLocale = () => {
+		const currentLang = i18n.language;
 
-  const getTitle = () => {
-    if (timePicker) {
-      return t("datePicker.titleDateTime");
-    }
-    return t("datePicker.titleDateOnly");
-  };
+		const localeMap: Record<string, string> = {
+			'sr': 'sr-Latn',
+			'en': 'en',
+		};
 
-  return (
-    <DatePicker
-      modal
-      open={visible}
-      date={date}
-      onDateChange={setDate}
-      mode={timePicker ? "datetime" : "date"}
-      onConfirm={handleConfirm}
-      onCancel={onClose}
-      locale={getDatePickerLocale()}
-      title={getTitle()}
-      confirmText={t("datePicker.common.confirm")}
-      cancelText={t("datePicker.common.cancel")}
-      theme={getPickerTheme()}
-    />
-  );
+		return localeMap[currentLang] || 'en';
+	};
+
+	const getPickerTheme = () => {
+		if (theme === 'dark' || theme === 'light') {
+			return theme;
+		}
+		return 'light';
+	};
+
+	const getTitle = () => {
+		if (timePicker) {
+			return t("datePicker.titleDateTime");
+		}
+		return t("datePicker.titleDateOnly");
+	};
+
+	return (
+		<DatePicker
+			modal
+			open={visible}
+			date={date}
+			onDateChange={setDate}
+			mode={timePicker ? "datetime" : "date"}
+			onConfirm={handleConfirm}
+			onCancel={onClose}
+			locale={getDatePickerLocale()}
+			title={getTitle()}
+			confirmText={t("datePicker.common.confirm")}
+			cancelText={t("datePicker.common.cancel")}
+			theme={getPickerTheme()}
+		/>
+	);
 };
 
 export default DateTimePicker;

@@ -1,5 +1,5 @@
-const scheme = "https";
-const address = "efikas-team.com";
+const scheme = "http";
+const address = "192.168.50.44:8080";
 const version = "v1";
 
 export const API_BASE_URL = `${scheme}://${address}/api/${version}`;
@@ -28,8 +28,8 @@ export const API_URLS = {
     listByApartment: (apartmentId: number) =>
       `${API_BASE_URL}/apartments/${apartmentId}/reservations`,
 
-    getById: (reservationId: number) =>
-      `${API_BASE_URL}/reservations/${reservationId}`,
+    getById: (reservationId: number, apartmentId: number) =>
+      `${API_BASE_URL}/reservations/${reservationId}?apartmentId=${apartmentId}`,
 
     create: (apartmentId: number) =>
       `${API_BASE_URL}/apartments/${apartmentId}/reservations`,

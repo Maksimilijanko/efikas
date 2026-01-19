@@ -3,6 +3,7 @@ import { HStack } from "@/src/components/ui/hstack";
 import { Text } from "@/src/components/ui/text";
 import { useTheme } from '@/src/providers/ThemeProvider';
 import { styles } from "./index.styles";
+import { VStack } from "../../ui/vstack";
 
 interface Props {
     label: string;
@@ -20,8 +21,11 @@ function ApartmentAttribute({ label, icon }: Props) {
             }]}>
                 {icon}
             </Box>
-
-            <Text>{label}</Text>
+			
+			<VStack style={styles.vstack}>
+				<Text  numberOfLines={2} ellipsizeMode="tail">{label}</Text>
+			</VStack>
+			
         </HStack>
     );
 }

@@ -50,8 +50,6 @@ public class DomesticGuestsBookService {
         updateDomesticGuestRequest.setId(guestId);
         GuestsBook domesticGuestsBook = modelMapper.map(updateDomesticGuestRequest, GuestsBook.class);
 
-        //System.out.println("domesticGuestsBook: " + domesticGuestsBook);
-
         GuestsBook saved = domesticGuestsBookRepository.save(domesticGuestsBook);
 
         return modelMapper.map(saved, DomesticGuestsEntry.class);

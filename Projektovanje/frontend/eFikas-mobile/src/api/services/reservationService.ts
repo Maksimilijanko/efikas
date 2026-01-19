@@ -17,9 +17,9 @@ export const reservationService = {
     return res.data;
   },
 
-  getReservation: async (reservationId: number): Promise<Reservation> => {
+  getReservation: async (reservationId: number, apartmentId: number): Promise<Reservation> => {
     const res = await axiosInstance.get<Reservation>(
-      API_URLS.reservations.getById(reservationId)
+      API_URLS.reservations.getById(reservationId, apartmentId)
     );
     return res.data;
   },
