@@ -1,4 +1,13 @@
 {
+	"common": {
+		"finish": "Finish",
+		"selectApartment": "Select apartment",
+
+		"errors": {
+			"invalidNumberError": "Enter a valid number"
+		}
+	},
+
     "tabs": {
         "reservations": "Reservations",
         "home": "Home",
@@ -696,27 +705,25 @@
   }
     },
     "tasks": {
-    "messages": {
-        "successTitle": "Success",
-        "successMessage": "Task added successfully!",
-        "errorTitle": "Error",
-        "errorMessage": "Unable to save task.",
-        "statusSuccessTitle": "Success",
-        "statusSuccessMessage": "Task has been completed!"
-    }
-},
-"damages": {
-    "messages": {
-        "successTitle": "Success",
-        "successMessage": "Damage saved successfully!",
-        "errorTitle": "Error",
-        "errorMessage": "Unable to save damage.",
-        "statusSuccessTitle": "Success",
-        "statusSuccessMessage": "Damage has been resolved!"
-    }
-},
-"common": {
-    "finish": "Finish",
-    "selectApartment": "Select apartment"
-}
+		"messages": {
+			"successTitle": "Success",
+			"successMessage": "Task added successfully!",
+			"errorTitle": "Error",
+			"errorMessage": "Unable to save task.",
+			"statusSuccessTitle": "Success",
+			"statusSuccessMessage": "Task has been completed!"
+		}
+	},
+	"damages": {
+		"messages": {
+			"successTitle": "Success",
+			"successMessage": "Damage saved successfully!",
+			"errorTitle": "Error",
+			"errorMessage": "Unable to save damage.",
+			"statusSuccessTitle": "Success",
+			"statusSuccessMessage": "Damage has been resolved!"
+		}
+	}
+
+	
 }

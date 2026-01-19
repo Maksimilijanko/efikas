@@ -100,7 +100,10 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
-        return modelMapper.map(reservation, ReservationResponse.class);
+        ReservationResponse reservationResponse = modelMapper.map(reservation, ReservationResponse.class);
+        reservationResponse.setGuest(getConcreteGuest(reservation.getGuest()));
+
+        return reservationResponse;
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #updateReservationRequest.getApartmentId())")
@@ -109,11 +112,8 @@ public class ReservationService {
                                                  ReservationDTO updateReservationRequest,
                                                  MultipartFile documentPicture
     ) {
+
         Reservation reservation = persistGuestIfNonExistant(updateReservationRequest);
-
-        //Reservation reservation = reservationRepository.findById(reservationId)
-        //        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
-
 
         Apartment apartment = apartmentRepository.findById(updateReservationRequest.getApartmentId())
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
@@ -122,13 +122,14 @@ public class ReservationService {
                 .findReservationTypeByTypeName(updateReservationRequest.getReservationType())
                 .orElseThrow(() -> new EntityNotFoundException("Reservation type not found!"));
 
-
+        reservation.setReservationId(reservationId);
         reservation.setType(reservationType);
         reservation.setNote(updateReservationRequest.getNote());
         reservation.setPrice(updateReservationRequest.getPrice());
         reservation.setApartment(apartment);
         reservation.setGuestQuantity(updateReservationRequest.getGuestQuantity());
         reservation.setGuest(getGuestFromReservationDTO(updateReservationRequest));
+
 
         if(documentPicture != null && !documentPicture.isEmpty()) {
             // Delete old picture from S3 bucket
@@ -190,20 +191,19 @@ public class ReservationService {
     }
 
     private Reservation saveReservationWithUpdatedGuest(Reservation reservation) {
-        GuestDTO guestDTO = modelMapper.map(reservation.getGuest(), GuestDTO.class);
-        System.out.println("GUEST DTO: " + guestDTO);
+        GuestDTO guestDTO = getConcreteGuest(reservation.getGuest());
 
-        if(guestDTO.getIsLocal()){
-            DomesticGuestDTO domesticGuestDTO = modelMapper.map(guestDTO, DomesticGuestDTO.class);
-            DomesticGuestsEntry entry = domesticGuestsBookService.updateDomesticGuest(guestDTO.getId(), domesticGuestDTO);
-            reservation.setGuest(modelMapper.map(entry, GuestsBook.class));
+        if(guestDTO instanceof DomesticGuestDTO domesticGuestDTO) {
+            domesticGuestsBookService.updateDomesticGuest(guestDTO.getId(), domesticGuestDTO);
         }
-        else {
-            ForeignGuestDTO foreignGuestDTO = modelMapper.map(guestDTO, ForeignGuestDTO.class);
-            ForeignGuestsEntry entry = foreignGuestsBookService.updateForeignGuest(guestDTO.getId(), foreignGuestDTO);
-            reservation.setGuest(modelMapper.map(entry, GuestsBook.class));
+        else if(guestDTO instanceof ForeignGuestDTO foreignGuestDTO) {
+            foreignGuestsBookService.updateForeignGuest(guestDTO.getId(), foreignGuestDTO);
         }
 
         return reservationRepository.save(reservation);
+    }
+
+    public GuestDTO getConcreteGuest(GuestsBook guestsBook) {
+        return modelMapper.map(guestsBook, guestsBook.getIsLocal() ? DomesticGuestDTO.class : ForeignGuestDTO.class);
     }
 }

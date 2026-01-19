@@ -138,11 +138,7 @@ function AddReservationScreen() {
 	// Additional fields
 
 	const [guestsCount, setGuestsCount] = useState(1);
-	const [price, setPrice] = useState("");
-	const [note, setNote] = useState("");
 	const [documentUri, setDocumentUri] = useState<string | null>(null);
-
-	const [errors, setErrors] = useState<Record<string, string>>({});
 
 	const [dateDialogVisible, setDateDialogVisible] = useState(false);
 	const [activeDateField, setActiveDateField] = useState<ActiveDateField>(null);
@@ -182,10 +178,7 @@ function AddReservationScreen() {
 
 			// podesavanje zajednickih polja za sve tipove gostiju	
 			setGuestId(guest.id);
-			setNote(existingReservation.note || "");
 			setDocumentUri(guest.personalDocumentURL || null);
-
-			
 		}
 	}, [isEditMode, existingReservation, apartments]);
 
@@ -209,9 +202,9 @@ function AddReservationScreen() {
 
 
 		setGuestsCount(existingReservation.guestQuantity || 1);
-		setPrice((pricePrev) => existingReservation.price ? String(existingReservation.price) : "");
-		setNote(existingReservation.note || "");
 		setDocumentUri(guest.personalDocumentURL || null);
+
+		console.log(`HALLO: ${(guest as DomesticGuest).birthMunicipality}`)
 
 		// 3 RHF form values
 		reset({
@@ -225,8 +218,10 @@ function AddReservationScreen() {
 			address: guest.address ?? "",
 			dateTimeOfArrival: guest.dateTimeOfArrival ? new Date(guest.dateTimeOfArrival) : null,
 			dateTimeOfDeparture: guest.dateTimeOfDeparture ? new Date(guest.dateTimeOfDeparture) : null,
-			accommodationUnitNumber: guest.accommodationUnitNumber ?? null,
-			accommodationUnitFloor: guest.accommodationUnitFloor ?? null,
+			accommodationUnitNumber: guest.accommodationUnitNumber ?? 1,
+			accommodationUnitFloor: guest.accommodationUnitFloor ?? 1,
+			issuedInvoiceNumber: guest.issuedInvoiceNumber ?? "",
+			birthCountry: guest.birthCountry ?? "",
 
 			price: existingReservation.price ?? 0,
 
@@ -237,7 +232,6 @@ function AddReservationScreen() {
 				: undefined,
 
 			// Foreign
-			birthCountry: !guest.isLocal ? guest.birthCountry ?? "" : undefined,
 			citizenship: !guest.isLocal ? (guest as ForeignGuest).citizenship ?? "" : undefined,
 			passportNumber: !guest.isLocal
 				? (guest as ForeignGuest).passportNumber ?? ""
@@ -464,8 +458,8 @@ function AddReservationScreen() {
 		return {
 			guest: buildGuestPayload(data),
 			guestQuantity: guestsCount,
-			price: price ? Number(price) : null,
-			note: note || null,
+			price: data.price ? data.price : null,
+			note: data.remarks || null,
 			reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
 		};
 	};
@@ -475,139 +469,11 @@ function AddReservationScreen() {
 			apartmentId: selectedApartmentIdNum,
 			guest: buildGuestPayload(data),
 			guestQuantity: guestsCount,
-			price: price ? Number(price) : null,
-			note: note || null,
+			price: data.price ? data.price : null,
+			note: data.remarks || null,
 			reservationType: dailyStay ? "Dnevni boravak" : "Nocenje",
 		};
 	};
-
-	// const handleSubmit = () => {
-	// 	const nextErrors: Record<string, string> = {};
-
-	// 	if (!selectedApartment || !selectedApartment.id) {
-	// 		Alert.alert(t("reservations.alerts.selectApartment.title"), t("reservations.alerts.selectApartment.message"));
-	// 		return;
-	// 	}
-
-	// 	if (!isEditMode) {
-	// 		if (!guestName.trim()) nextErrors.guestName = t("reservations.validation.required");
-	// 		if (!guestSurname.trim()) nextErrors.guestSurname = t("reservations.validation.required");
-	// 		if (!phone.trim()) nextErrors.phone = t("reservations.validation.required");
-	// 		if (!birthDate) nextErrors.birthDate = t("reservations.validation.required");
-	// 		if (!birthPlace.trim()) nextErrors.birthPlace = t("reservations.validation.required");
-
-	// 		if (guestType === "DOMESTIC") {
-	// 			if (!citizenId.trim()) {
-	// 				nextErrors.citizenId = t("reservations.validation.required");
-	// 			}
-	// 			if (!/^\d{13}$/.test(citizenId)) {
-	// 				nextErrors.citizenId = t("reservations.validation.id");
-	// 			}
-	// 			if (!birthMunicipality.trim()) {
-	// 				nextErrors.birthMunicipality = t("reservations.validation.required");
-	// 			}
-	// 		}
-
-	// 		if (guestType === "FOREIGN") {
-	// 			if (!birthCountry.trim()) nextErrors.birthCountry = t("reservations.validation.required");
-	// 			if (!citizenship.trim()) nextErrors.citizenship = t("reservations.validation.required");
-	// 			if (!passportNumber.trim())
-	// 				nextErrors.passportNumber = t("reservations.validation.required");
-	// 			if (!passportIssuedDate) {
-	// 				nextErrors.passportIssuedDate = t("reservations.validation.required");
-	// 			}
-	// 			if (!entryDate) nextErrors.entryDate = t("reservations.validation.required");
-	// 			if (!entryPlace.trim()) nextErrors.entryPlace = t("reservations.validation.required");
-	// 		}
-	// 	}
-
-	// 	// Common validation for both modes
-	// 	if (!arrivalAt) nextErrors.arrivalAt = t("reservations.validation.selectArrival");
-
-	// 	if (!dailyStay) {
-	// 		if (!departureAt) {
-	// 			nextErrors.departureAt = t("reservations.validation.selectDeparture");
-	// 		}
-	// 		if (arrivalAt && departureAt && arrivalAt >= departureAt) {
-	// 			nextErrors.departureAt = t("reservations.validation.departureAfterArrival");
-	// 		}
-	// 	}
-
-	// 	setErrors(nextErrors);
-	// 	if (Object.keys(nextErrors).length > 0) return;
-
-	// 	const apartmentIdNum = Number(selectedApartment.id);
-
-	// 	if (isNaN(apartmentIdNum) || apartmentIdNum <= 0) {
-	// 		Alert.alert(t("reservations.alerts.invalidApartment.title"), t("reservations.alerts.invalidApartment.message"));
-	// 		return;
-	// 	}
-
-	// 	if (isEditMode) {
-	// 		// UPDATE MODE
-	// 		const updatePayload = buildUpdatePayload();
-	// 		console.log("=== UPDATE PAYLOAD ===");
-	// 		console.log(JSON.stringify(updatePayload, null, 2));
-
-	// 		updateReservationMutation.mutate(
-	// 			{
-	// 				payload: updatePayload,
-	// 				documentPicture:
-	// 					documentUri && !documentUri.startsWith("http")
-	// 						? {
-	// 							uri: documentUri,
-	// 							type: "image/jpeg",
-	// 							name: `document_${Date.now()}.jpg`,
-	// 						}
-	// 						: undefined,
-	// 			},
-	// 			{
-	// 				onSuccess: (data) => {
-	// 					console.log("=== UPDATE SUCCESS ===", data);
-	// 					resetForm();
-	// 					navigation.goBack();
-	// 				},
-	// 				onError: (error: any) => {
-	// 					console.log("=== UPDATE ERROR ===");
-	// 					console.log("Error message:", error.message);
-	// 					console.log("Error response:", error.response?.data);
-	// 					console.log("Error status:", error.response?.status);
-	// 				},
-	// 			}
-	// 		);
-	// 	} else {
-	// 		// CREATE MODE
-	// 		const payload = buildReservationPayload();
-	// 		console.log("=== CREATE PAYLOAD ===");
-	// 		console.log(JSON.stringify(payload, null, 2));
-
-	// 		createReservationMutation.mutate(
-	// 			{
-	// 				payload,
-	// 				documentPicture: documentUri
-	// 					? {
-	// 						uri: documentUri,
-	// 						type: "image/jpeg",
-	// 						name: `document_${Date.now()}.jpg`,
-	// 					}
-	// 					: undefined,
-	// 			},
-	// 			{
-	// 				onSuccess: (data) => {
-	// 					console.log("=== CREATE SUCCESS ===", data);
-	// 					resetForm();
-	// 					navigation.goBack();
-	// 				},
-	// 				onError: (error: any) => {
-	// 					console.log("=== CREATE ERROR ===");
-	// 					console.log("Error message:", error.message);
-	// 					console.log("Error response:", error.response?.data);
-	// 					console.log("Error status:", error.response?.status);
-	// 				},
-	// 			}
-	// 		);
-	// 	}
-	// };
 
 	const onSubmit = (data: GuestValidation.FormValues) => {
 		if (!selectedApartment || !selectedApartment.id) {
@@ -616,39 +482,40 @@ function AddReservationScreen() {
 		}
 
 		if(isEditMode) {
-			
+			console.log(`FORM DATA: ${JSON.stringify(data)}`);
+
 			const payload = buildUpdatePayload(data);
 			console.log("=== UPDATE PAYLOAD ===");
 			console.log(JSON.stringify(payload, null, 2));
 
 			
 
-			// updateReservationMutation.mutate(
-			// 	{
-			// 		payload,
-			// 		documentPicture:
-			// 			documentUri && !documentUri.startsWith("http")
-			// 				? {
-			// 					uri: documentUri,
-			// 					type: "image/jpeg",
-			// 					name: `document_${Date.now()}.jpg`,
-			// 				}
-			// 				: undefined,
-			// 	},
-			// 	{
-			// 		onSuccess: (data) => {
-			// 			console.log("=== UPDATE SUCCESS ===", data);
-			// 			resetForm();
-			// 			navigation.goBack();
-			// 		},
-			// 		onError: (error: any) => {
-			// 			console.log("=== UPDATE ERROR ===");
-			// 			console.log("Error message:", error.message);
-			// 			console.log("Error response:", error.response?.data);
-			// 			console.log("Error status:", error.response?.status);
-			// 		},
-			// 	}
-			// );
+			updateReservationMutation.mutate(
+				{
+					payload,
+					documentPicture:
+						documentUri && !documentUri.startsWith("http")
+							? {
+								uri: documentUri,
+								type: "image/jpeg",
+								name: `document_${Date.now()}.jpg`,
+							}
+							: undefined,
+				},
+				{
+					onSuccess: (data) => {
+						console.log("=== UPDATE SUCCESS ===", data);
+						resetForm();
+						navigation.goBack();
+					},
+					onError: (error: any) => {
+						console.log("=== UPDATE ERROR ===");
+						console.log("Error message:", error.message);
+						console.log("Error response:", error.response?.data);
+						console.log("Error status:", error.response?.status);
+					},
+				}
+			);
 		}
 		else {
 			const payload = buildReservationPayload(data);
@@ -958,14 +825,17 @@ function AddReservationScreen() {
 					birthPlaceField={
 						renderFormField(t("reservations.form.fields.birthPlace"), 'birthPlace', 'Banja Luka', undefined, 'text', "MapPinned")
 					}
+					birthCountryField={
+						renderFormField(t("reservations.form.fields.birthCountry"), 'birthCountry', 'BiH', undefined, 'text', "MapPinned")
+					}
 					domesticFields={
 						guestType === "DOMESTIC"
 							? {
-								citizenIdField: (
-									renderFormField(t("reservations.form.fields.citizenId"), 'jmbg', '1234567891234', undefined, 'text', "Key", undefined, undefined, undefined, { keyboardType: "numeric", })
-								),
 								birthMunicipalityField: (
 									renderFormField(t("reservations.form.fields.birthMunicipality"), 'birthMunicipality', 'Banja Luka', undefined, 'text', "MapPin")
+								),
+								citizenIdField: (
+									renderFormField(t("reservations.form.fields.citizenId"), 'jmbg', '1234567891234', undefined, 'text', "Key", undefined, undefined, undefined, { keyboardType: "numeric", })
 								),
 							}
 							: undefined
@@ -973,9 +843,6 @@ function AddReservationScreen() {
 					foreignFields={
 						guestType === "FOREIGN"
 							? {
-								birthCountryField: (
-									renderFormField(t("reservations.form.fields.birthCountry"), 'birthCountry', 'BiH', undefined, 'text', "MapPinned")
-								),
 								citizenshipField: (
 									renderFormField(t("reservations.form.fields.citizenship"), 'citizenship', 'Srbija', undefined, 'text', "Flag")
 								),
@@ -1070,7 +937,7 @@ function AddReservationScreen() {
 					noteField={
 						<View style={styles.noteWrap}>
 							<Label text={t("reservations.form.fields.note")} size="lg" />
-							<NoteBox value={note} onChangeText={setNote} />
+							<NoteBox value={getValues("remarks")} onChangeText={(value) => setValue("remarks", value)} />
 						</View>
 					}
 					documentRow={documentRow}

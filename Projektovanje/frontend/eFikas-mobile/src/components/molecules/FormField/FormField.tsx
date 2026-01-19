@@ -69,7 +69,11 @@ export default function FormField<T extends FieldValues>({
 			name={name}
 			rules={rules}
 			render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
-				const displayValue = formatValue ? formatValue(value) : value ?? "";
+				const displayValue = formatValue
+					? formatValue(value)
+					: value !== null && value !== undefined
+						? String(value)   // <-- convert number to string
+						: "";
 				
 				return (
 					<FormControl isInvalid={!!error} isRequired size="md">
