@@ -4,7 +4,8 @@
 		"selectApartment": "Izaberite stan",
 		
 		"errors": {
-			"invalidNumberError": "Unesite ispravan broj"
+			"invalidNumberError": "Unesite ispravan broj",
+			"lengthError": "Ovo polje mora biti bar {{length}} karaktera"
 		}	
 	},
 
@@ -465,8 +466,10 @@
             "genericError": "Došlo je do greške.",
             "fetchErrorTitle": "Greška pri učitavanju rezervacija",
             "fetchErrorMessage": "Nije moguće učitati rezervacije. Molimo pokušajte ponovo.",
-            "createErrorTitle": "Greška pri kreiranju",
+            "createErrorTitle": "Greška pri kreiranju rezervacije",
             "createErrorMessage": "Rezervacija nije kreirana. Provjerite podatke.",
+			"create409Title": "Greška pri kreiranju rezervacije",
+			"create409Message": "Polja moraju imati jedinstvene vrijednosti. \nProvjerite podatke za (JMBG, telefon, broj pasoša).",
             "createSuccessTitle": "Rezervacija kreirana!",
             "createSuccessMessage": "Nova rezervacija je uspješno kreirana.",
             "updateErrorTitle": "Greška pri ažuriranju",

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.exceptions.S3UploadException;
@@ -50,6 +52,7 @@ public class ReservationService {
     private final ForeignGuestsBookService foreignGuestsBookService;
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
+    @Transactional
     public ReservationResponse createNewReservation(Integer apartmentId,
                                                     Authentication authentication,
                                                     ReservationDTO reservationDTO,
@@ -113,7 +116,8 @@ public class ReservationService {
                                                  MultipartFile documentPicture
     ) {
 
-        Reservation reservation = persistGuestIfNonExistant(updateReservationRequest);
+        //Reservation reservation = persistGuestIfNonExistant(updateReservationRequest);
+        Reservation reservation = modelMapper.map(updateReservationRequest, Reservation.class);
 
         Apartment apartment = apartmentRepository.findById(updateReservationRequest.getApartmentId())
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
@@ -178,8 +182,10 @@ public class ReservationService {
     }
 
     private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO) {
+        System.out.println("?????????????? HELLO ID: " + reservationDTO.getGuest().getCitizenId());
+
         GuestsBook guest = guestsBookRepository
-                .findByCitizenId(reservationDTO.getGuest().getCitizenId())
+                .findById(reservationDTO.getGuest().getId() != null ? reservationDTO.getGuest().getId() : 0)
                 .orElseGet(() -> guestsBookRepository.save(
                         modelMapper.map(reservationDTO.getGuest(), GuestsBook.class)
                 ));
@@ -187,10 +193,16 @@ public class ReservationService {
         Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
         reservation.setGuest(guest);
 
+        System.out.println("?????????????? HELLO ID 2: " + guest.getId());
+
         return reservation;
     }
 
     private Reservation saveReservationWithUpdatedGuest(Reservation reservation) {
+        if(reservation.getGuest().getId() == null) {
+            throw new IllegalArgumentException("Guest ID can not be null.");
+        }
+
         GuestDTO guestDTO = getConcreteGuest(reservation.getGuest());
 
         if(guestDTO instanceof DomesticGuestDTO domesticGuestDTO) {

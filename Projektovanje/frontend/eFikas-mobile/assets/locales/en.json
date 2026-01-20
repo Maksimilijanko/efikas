@@ -471,6 +471,8 @@
             "fetchErrorMessage": "Could not load reservations. Please try again.",
             "createErrorTitle": "Creation Error",
             "createErrorMessage": "Reservation was not created. Please check the data.",
+			"create409Title": "Creation Error",
+			"create409Message": "Fields must have unique values. \nCheck your data for (JMBG, phone, passport number).",
             "createSuccessTitle": "Reservation Created!",
             "createSuccessMessage": "New reservation has been successfully created.",
             "updateErrorTitle": "Update Error",

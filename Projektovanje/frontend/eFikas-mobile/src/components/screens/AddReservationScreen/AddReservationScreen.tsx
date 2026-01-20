@@ -35,7 +35,7 @@ import {
 	Pressable,
 	Text,
 	TouchableOpacity,
-	View
+	View,
 } from "react-native";
 import CustomRadioGroup from "../../atoms/CustomRadio/CustomRadioGroup";
 import { IconButton } from "../../atoms/IconButton/IconButton";
@@ -45,6 +45,7 @@ import ApartmentSelectDropdown from "../../organisms/ApartmentSelectDropdown/Apa
 import { ApartmentOption } from "../../organisms/ApartmentSelectOverlay/ApartmentSelectOverlay";
 import { Spinner } from "../../ui/spinner";
 import { createStyles } from "./index.styles";
+import { toastService } from "@/src/services/toastService";
 
 type GuestType = "DOMESTIC" | "FOREIGN";
 type Gender = "Male" | "Female";
@@ -111,7 +112,7 @@ function AddReservationScreen() {
   // Guest form
   const {
     control,
-    handleSubmit: handleSubmit1,
+    handleSubmit,
     watch,
     getValues,
     setValue,
@@ -130,10 +131,10 @@ function AddReservationScreen() {
       //dailyStay: false,
     },
   });
+  const isLocalWatcher = watch("isLocal");
 
   // Guest fields
-  const [guestId, setGuestId] = useState(0);
-  const [gender, setGender] = useState<Gender>("Male");
+  const [guestId, setGuestId] = useState<number | null>(null);
 
   // Additional fields
 
@@ -167,8 +168,6 @@ function AddReservationScreen() {
 
       const guest: Guest = existingReservation.guest;
 
-      console.log("RESERVATION GUEST: ", guest);
-
       // 1 Apartment
       const aptOption = apartments.find(
         (apt) => apt.id === String(existingReservation.apartment.apartmentId),
@@ -182,8 +181,6 @@ function AddReservationScreen() {
       setGuestId(guest.id);
       setGuestType(guest.isLocal ? "DOMESTIC" : "FOREIGN");
 
-      console.log(`HALLO: ${(guest as DomesticGuest).birthMunicipality}`);
-
       // 3 RHF form values
       reset({
         isLocal: guest.isLocal,
@@ -191,7 +188,7 @@ function AddReservationScreen() {
         surname: guest.surname ?? "",
         gender: guest.gender ?? "Male",
         phoneNumber: guest.phoneNumber ?? "",
-        birthDate: guest.birthDate ? guest.birthDate : null,
+        birthDate: guest.birthDate ? new Date(guest.birthDate) : null,
         birthPlace: guest.birthPlace ?? "",
         birthCountry: guest.birthCountry ?? "",
         address: guest.address ?? "",
@@ -247,7 +244,7 @@ function AddReservationScreen() {
     };
 
     initializeForm();
-  }, [isEditMode, existingReservation, apartments, reset]);
+  }, [isEditMode, reset]);
 
   // podesavanje default-nog apartmana u create mode
   useEffect(() => {
@@ -486,11 +483,11 @@ function AddReservationScreen() {
     }
 
     if (isEditMode) {
-      console.log(`FORM DATA: ${JSON.stringify(data)}`);
+      //console.log(`FORM DATA: ${JSON.stringify(data)}`);
 
       const payload = buildUpdatePayload(data);
-      console.log("=== UPDATE PAYLOAD ===");
-      console.log(JSON.stringify(payload, null, 2));
+    //   console.log("=== UPDATE PAYLOAD ===");
+    //   console.log(JSON.stringify(payload, null, 2));
 
       updateReservationMutation.mutate(
         {
@@ -506,47 +503,48 @@ function AddReservationScreen() {
         },
         {
           onSuccess: (data) => {
-            console.log("=== UPDATE SUCCESS ===", data);
+            //console.log("=== UPDATE SUCCESS ===", data);
             resetForm();
             navigation.goBack();
           },
           onError: (error: any) => {
-            console.log("=== UPDATE ERROR ===");
-            console.log("Error message:", error.message);
-            console.log("Error response:", error.response?.data);
-            console.log("Error status:", error.response?.status);
+            // console.log("=== UPDATE ERROR ===");
+            // console.log("Error message:", error.message);
+            // console.log("Error response:", error.response?.data);
+            // console.log("Error status:", error.response?.status);
           },
         },
       );
     } else {
       const payload = buildReservationPayload(data);
-      console.log("=== CREATE PAYLOAD ===");
-      console.log(JSON.stringify(payload, null, 2));
+      //console.log("=== CREATE PAYLOAD ===");
+      //console.log(JSON.stringify(payload, null, 2));
 
-      // createReservationMutation.mutate({
-      // 	payload,
-      // 	documentPicture:
-      // 		documentUri && !documentUri.startsWith("http")
-      // 			? {
-      // 				uri: documentUri,
-      // 				type: "image/jpeg",
-      // 				name: `document_${Date.now()}.jpg`,
-      // 			}
-      // 			: undefined,
-      // },
-      // {
-      // 	onSuccess: (data) => {
-      // 		console.log("=== UPDATE SUCCESS ===", data);
-      // 		resetForm();
-      // 		navigation.goBack();
-      // 	},
-      // 	onError: (error: any) => {
-      // 		console.log("=== UPDATE ERROR ===");
-      // 		console.log("Error message:", error.message);
-      // 		console.log("Error response:", error.response?.data);
-      // 		console.log("Error status:", error.response?.status);
-      // 	},
-      // });
+      createReservationMutation.mutate({
+      	payload,
+      	documentPicture:
+      		documentUri && !documentUri.startsWith("http")
+      			? {
+      				uri: documentUri,
+      				type: "image/jpeg",
+      				name: `document_${Date.now()}.jpg`,
+      			}
+      			: undefined,
+      },
+      {
+      	onSuccess: (data) => {
+      		//console.log("=== CREATE SUCCESS ===", data);
+      		resetForm();
+      		navigation.goBack();
+      	},
+      	onError: (error: any) => {
+      		// console.log("=== CREATE ERROR ===");
+      		// console.log("Error message:", error.message);
+      		// console.log("Error response:", error.response?.data);
+      		// console.log("Error status:", error.response?.status);
+			
+      	},
+      });
     }
   };
 
@@ -778,12 +776,12 @@ function AddReservationScreen() {
                   {
                     label: t("reservations.form.guestType.domestic"),
                     value: true,
-					disabled: isEditMode
+                    disabled: isEditMode,
                   },
                   {
                     label: t("reservations.form.guestType.foreign"),
                     value: false,
-					disabled: isEditMode
+                    disabled: isEditMode,
                   },
                 ]}
               />
@@ -807,22 +805,21 @@ function AddReservationScreen() {
           )}
           genderField={
             <View style={styles.radioRow}>
-				<CustomRadioGroup
-					control={control}
-					label={t("reservations.form.gender.label")}
-					name={"gender"}
-					options={[
-					{
-						label: t("reservations.form.gender.male"),
-						value: "Male",
-					},
-					{
-						label: t("reservations.form.gender.female"),
-						value: "Female",
-					},
-					]}
-				/>
-              
+              <CustomRadioGroup
+                control={control}
+                label={t("reservations.form.gender.label")}
+                name={"gender"}
+                options={[
+                  {
+                    label: t("reservations.form.gender.male"),
+                    value: "Male",
+                  },
+                  {
+                    label: t("reservations.form.gender.female"),
+                    value: "Female",
+                  },
+                ]}
+              />
             </View>
           }
           phoneField={renderFormField(
@@ -865,7 +862,7 @@ function AddReservationScreen() {
             "MapPinned",
           )}
           domesticFields={
-            guestType === "DOMESTIC"
+            isLocalWatcher
               ? {
                   birthMunicipalityField: renderFormField(
                     t("reservations.form.fields.birthMunicipality"),
@@ -891,7 +888,7 @@ function AddReservationScreen() {
               : undefined
           }
           foreignFields={
-            guestType === "FOREIGN"
+            !isLocalWatcher
               ? {
                   citizenshipField: renderFormField(
                     t("reservations.form.fields.citizenship"),
@@ -1065,7 +1062,7 @@ function AddReservationScreen() {
               activeOpacity={0.85}
               onPressIn={() => setSubmitPressed(true)}
               onPressOut={() => setSubmitPressed(false)}
-              onPress={handleSubmit1(onSubmit, (e) => {
+              onPress={handleSubmit(onSubmit, (e) => {
                 console.log("ERROR: ", e);
               })}
               disabled={isSubmitting}
