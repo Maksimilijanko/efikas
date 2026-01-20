@@ -1,7 +1,10 @@
 package org.unibl.etf.efikas.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,18 +25,26 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping(value = "/apartments/{apartmentId}/reservations", consumes = "multipart/form-data")//
-    public ResponseEntity<?> createReservation(@PathVariable Integer apartmentId, @RequestPart("reservation") ReservationDTO reservationDTO, @RequestPart(name = "picture", required = false) MultipartFile documentPicture) {
+    public ResponseEntity<?> createReservation(
+            @PathVariable Integer apartmentId,
+            //@RequestPart("reservation") ReservationDTO reservationDTO,
+            @RequestPart("reservation") String createReservationJson,
+            @RequestPart(name = "picture", required = false) MultipartFile documentPicture
+    ) throws JsonProcessingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
         System.out.println("Email: " + email);
 
+        ReservationDTO dto = objectMapper.readValue(createReservationJson, ReservationDTO.class);
+
         // For POST, we are extracting apartmentId from the endpoint URL itself.
         // We are not relying on the value found in DTO.
         ReservationResponse response = reservationService.createNewReservation(apartmentId, authentication,
-                reservationDTO, documentPicture);
+                dto, documentPicture);
 
         return ResponseEntity.ok(response); //response
     }
@@ -57,14 +68,18 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(value = "/reservations/{reservationId}", consumes = "multipart/form-data")
+    @PutMapping(value = "/reservations/{reservationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateReservation(@PathVariable Integer reservationId,
-                                               @RequestPart("reservation") ReservationDTO updateReservationRequest,
-                                               @RequestPart(name = "picture", required = false) MultipartFile documentPicture) {
+                                               //@RequestPart("reservation") ReservationDTO updateReservationRequest,
+                                               @RequestPart("reservation") String updateReservationJson,
+                                               @RequestPart(name = "picture", required = false) MultipartFile documentPicture) throws JsonProcessingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+
+        ReservationDTO dto = objectMapper.readValue(updateReservationJson, ReservationDTO.class);
+
         ReservationResponse response = reservationService
-                .updateReservation(reservationId, authentication, updateReservationRequest, documentPicture);
+                .updateReservation(reservationId, authentication, dto, documentPicture);
 
         // TODO: implement upsert behavior
 

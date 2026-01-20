@@ -116,17 +116,17 @@ export namespace GuestValidation {
   const commonFields = {
     isLocal: z.boolean(),
 
-    name: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthError", { length: 2 })),
-    surname: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthError", { length: 2 })),
+    name: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthMinError", { length: 2 })),
+    surname: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthMinError", { length: 2 })),
     gender: genderEnum,
 
     phoneNumber: z.string(REQUIRED_FIELD_ERROR).regex(/^06[0-9]\/\d{3}-\d{3}$/),
 
     birthDate: dateValidator,
-    birthPlace: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthError", { length: 2 })),
-    birthCountry: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthError", { length: 2 })),
+    birthPlace: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthMinError", { length: 2 })),
+    birthCountry: z.string(REQUIRED_FIELD_ERROR).min(2, t("common.errors.lengthMinError", { length: 2 })),
 
-    address: z.string(REQUIRED_FIELD_ERROR).min(5, t("common.errors.lengthError", { length: 5 })),
+    address: z.string(REQUIRED_FIELD_ERROR).min(5, t("common.errors.lengthMinError", { length: 5 })),
 
     accommodationUnitNumber: z.coerce.number(INVALID_NUMBER_ERROR).int().positive(),
     accommodationUnitFloor: z.coerce.number(INVALID_NUMBER_ERROR).int().min(0),
@@ -138,7 +138,7 @@ export namespace GuestValidation {
       z.date(t("reservations.validation.selectDeparture")),
     ),
 
-    price: z.coerce.number(INVALID_NUMBER_ERROR).min(1),
+    price: z.coerce.number(INVALID_NUMBER_ERROR).min(1, t("common.errors.lengthMinError", { length: 1 })),
 
     issuedInvoiceNumber: z.string().nullable().optional(),
     remarks: z.string().nullable().optional(),
@@ -150,7 +150,7 @@ export namespace GuestValidation {
 
     jmbg: z.string(REQUIRED_FIELD_ERROR).length(13, t("reservations.validation.id")).regex(/^\d+$/),
 
-    birthMunicipality: z.string(REQUIRED_FIELD_ERROR).min(5),
+    birthMunicipality: z.string(REQUIRED_FIELD_ERROR).min(5, t("common.errors.lengthMinError", { length: 5 })),
   });
 
   const foreignGuestSchema = z.object({
@@ -158,7 +158,7 @@ export namespace GuestValidation {
     isLocal: z.literal(false),
 
     citizenship: z.string().min(1),
-    passportNumber: z.string().min(8).max(8),
+    passportNumber: z.string().length(8, t("common.errors.lengthExactError", { length: 8 })),
     passportIssuedDate: dateValidator,
 
     visaType: z.string().nullable().optional(),

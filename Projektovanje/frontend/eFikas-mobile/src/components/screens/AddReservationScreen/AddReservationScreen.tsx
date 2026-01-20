@@ -46,6 +46,7 @@ import { ApartmentOption } from "../../organisms/ApartmentSelectOverlay/Apartmen
 import { Spinner } from "../../ui/spinner";
 import { createStyles } from "./index.styles";
 import { toastService } from "@/src/services/toastService";
+import { dateService } from "@/src/services/dateService";
 
 type GuestType = "DOMESTIC" | "FOREIGN";
 type Gender = "Male" | "Female";
@@ -168,6 +169,8 @@ function AddReservationScreen() {
 
       const guest: Guest = existingReservation.guest;
 
+	  console.log("GUEST: ", guest);
+
       // 1 Apartment
       const aptOption = apartments.find(
         (apt) => apt.id === String(existingReservation.apartment.apartmentId),
@@ -188,16 +191,16 @@ function AddReservationScreen() {
         surname: guest.surname ?? "",
         gender: guest.gender ?? "Male",
         phoneNumber: guest.phoneNumber ?? "",
-        birthDate: guest.birthDate ? new Date(guest.birthDate) : null,
+        birthDate: guest.birthDate ? dateService.parseBackendDate(guest.birthDate) : dateService.getCurrentDate(),
         birthPlace: guest.birthPlace ?? "",
         birthCountry: guest.birthCountry ?? "",
         address: guest.address ?? "",
         dateTimeOfArrival: guest.dateTimeOfArrival
-          ? new Date(guest.dateTimeOfArrival)
-          : null,
+          ? dateService.parseBackendDate(guest.dateTimeOfArrival)
+          : dateService.getCurrentDate(),
         dateTimeOfDeparture: guest.dateTimeOfDeparture
-          ? new Date(guest.dateTimeOfDeparture)
-          : null,
+          ? dateService.parseBackendDate(guest.dateTimeOfDeparture)
+          : dateService.getCurrentDate(),
         accommodationUnitNumber: guest.accommodationUnitNumber ?? 1,
         accommodationUnitFloor: guest.accommodationUnitFloor ?? 1,
         issuedInvoiceNumber: guest.issuedInvoiceNumber ?? "",
@@ -219,12 +222,12 @@ function AddReservationScreen() {
           : undefined,
         passportIssuedDate:
           !guest.isLocal && (guest as ForeignGuest).passportIssuedDate
-            ? (guest as ForeignGuest).passportIssuedDate
-            : null,
+            ? dateService.parseBackendDate((guest as ForeignGuest).passportIssuedDate)
+            : dateService.getCurrentDate(),
         entryDate:
           !guest.isLocal && (guest as ForeignGuest).entryDate
-            ? (guest as ForeignGuest).entryDate
-            : null,
+            ? dateService.parseBackendDate((guest as ForeignGuest).entryDate)
+            : dateService.getCurrentDate(),
         entryPlace: !guest.isLocal
           ? ((guest as ForeignGuest).entryPlace ?? "")
           : undefined,
@@ -236,8 +239,8 @@ function AddReservationScreen() {
           : undefined,
         permittedResidenceDate:
           !guest.isLocal && (guest as ForeignGuest).permittedResidenceDate
-            ? new Date((guest as ForeignGuest).permittedResidenceDate)
-            : null,
+            ? dateService.parseBackendDate((guest as ForeignGuest).permittedResidenceDate)
+            : dateService.getCurrentDate(),
       });
 
       setIsInitializing(false);
@@ -287,7 +290,7 @@ function AddReservationScreen() {
 
   const openDateDialog = (field: ActiveDateField) => {
     if (field === "DEPARTURE" && dailyStay) return;
-    setActiveDateField(field);
+    setActiveDateField((prev) => prev = field);
     setDateDialogVisible(true);
   };
 
@@ -360,12 +363,13 @@ function AddReservationScreen() {
     }
 
     const res = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      cameraType: ImagePicker.CameraType.back,
       quality: 0.8,
       allowsEditing: true,
     });
 
     if (res.canceled) return;
+
     const uri = res.assets?.[0]?.uri;
     if (uri) setDocumentUri(uri);
   };
@@ -665,17 +669,17 @@ function AddReservationScreen() {
   const getDateDialogInitialValue = () => {
     switch (activeDateField) {
       case "ARRIVAL":
-        return getValues("dateTimeOfArrival");
+        return watch("dateTimeOfArrival");
       case "DEPARTURE":
-        return getValues("dateTimeOfDeparture");
+        return watch("dateTimeOfDeparture");
       case "BIRTH_DATE":
-        return getValues("birthDate");
+        return watch("birthDate");
       case "PASSPORT_ISSUED":
-        return getValues("passportIssuedDate");
+        return watch("passportIssuedDate");
       case "ENTRY_DATE":
-        return getValues("entryDate");
+        return watch("entryDate");
       case "PERMITTED_RESIDENCE":
-        return getValues("permittedResidenceDate");
+        return watch("permittedResidenceDate");
       default:
         return null;
     }
@@ -993,6 +997,10 @@ function AddReservationScreen() {
             undefined,
             "text",
             "Hash",
+			undefined,
+			undefined,
+			undefined,
+			{ keyboardType: "numeric" },
           )}
           accommodationUnitFloorField={renderFormField(
             t("reservations.form.fields.unitFloor"),
@@ -1001,6 +1009,10 @@ function AddReservationScreen() {
             undefined,
             "text",
             "Hash",
+			undefined,
+			undefined,
+			undefined,
+			{ keyboardType: "numeric" },
           )}
           guestsCounterRow={
             <View style={styles.inlineRow}>
@@ -1064,6 +1076,10 @@ function AddReservationScreen() {
               onPressOut={() => setSubmitPressed(false)}
               onPress={handleSubmit(onSubmit, (e) => {
                 console.log("ERROR: ", e);
+				toastService.error(
+					t("reservations.toastMessages.createErrorTitle"),
+					t("reservations.toastMessages.createErrorMessage")
+				);
               })}
               disabled={isSubmitting}
               style={[

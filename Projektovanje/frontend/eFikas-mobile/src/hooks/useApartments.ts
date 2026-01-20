@@ -15,7 +15,7 @@ export const useApartments = () => {
     queryFn: async () => {
       try {
         const result = await apartmentService.getApartments();
-        console.log("Apartments dobavljeni:", result);
+        //console.log("Apartments dobavljeni:", result);
         return result;
       } catch (err: any) {
         console.error("(GRESKA)Nije moguce dobaviti apartmane:", err);

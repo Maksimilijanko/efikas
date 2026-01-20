@@ -59,7 +59,7 @@ public class ReservationService {
                                                     MultipartFile documentPicture
     ) {
 
-        Reservation reservation = persistGuestIfNonExistant(reservationDTO);
+        Reservation reservation = persistGuestIfNonExistant(reservationDTO, documentPicture);
 
         ReservationType reservationType = reservationTypeRepository
                 .findReservationTypeByTypeName(reservationDTO.getReservationType())
@@ -71,23 +71,12 @@ public class ReservationService {
         reservation.setApartment(apartment);
 
 
-
-        if(documentPicture != null && !documentPicture.isEmpty()) {
-            FileUploadResponse fileUploadResponse = null;
-            try {
-                fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
-            } catch (IOException e) {
-                throw new S3UploadException(e.getMessage());
-            }
-            String pictureUrl = fileUploadResponse.getFilePath();
-            reservation.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
-        }
-
         Reservation saved = reservationRepository.save(reservation);
         String url = documentPicture != null ? s3Service.getPresignedUrl(saved.getGuest().getPersonalDocumentURL()) : null;
-        saved.getGuest().setPersonalDocumentURL(url);  // User gets the downloadable URL
+        ReservationResponse response = modelMapper.map(reservation, ReservationResponse.class);
+        response.getGuest().setPersonalDocumentURL(url);  // User gets the downloadable URL
 
-        return modelMapper.map(saved, ReservationResponse.class);
+        return response;
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
@@ -181,19 +170,27 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO) {
-        System.out.println("?????????????? HELLO ID: " + reservationDTO.getGuest().getCitizenId());
+    private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO, MultipartFile documentPicture) {
+        if(documentPicture != null && !documentPicture.isEmpty()) {
+            FileUploadResponse fileUploadResponse = null;
+            try {
+                fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
+            } catch (IOException e) {
+                throw new S3UploadException(e.getMessage());
+            }
+            String pictureUrl = fileUploadResponse.getFilePath();
+            reservationDTO.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
+        }
 
         GuestsBook guest = guestsBookRepository
                 .findById(reservationDTO.getGuest().getId() != null ? reservationDTO.getGuest().getId() : 0)
                 .orElseGet(() -> guestsBookRepository.save(
                         modelMapper.map(reservationDTO.getGuest(), GuestsBook.class)
                 ));
+        guestsBookRepository.flush();
 
         Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
         reservation.setGuest(guest);
-
-        System.out.println("?????????????? HELLO ID 2: " + guest.getId());
 
         return reservation;
     }
@@ -216,6 +213,12 @@ public class ReservationService {
     }
 
     public GuestDTO getConcreteGuest(GuestsBook guestsBook) {
-        return modelMapper.map(guestsBook, guestsBook.getIsLocal() ? DomesticGuestDTO.class : ForeignGuestDTO.class);
+        GuestDTO guest = modelMapper.map(guestsBook, guestsBook.getIsLocal() ? DomesticGuestDTO.class : ForeignGuestDTO.class);
+        if(guest.getPersonalDocumentURL() != null) {
+            String documentUrl = s3Service.getPresignedUrl(guest.getPersonalDocumentURL());
+            guest.setPersonalDocumentURL(documentUrl);
+        }
+
+        return guest;
     }
 }

@@ -16,18 +16,13 @@ import ReservationsSwitcher from "../../molecules/ReservationsSwitcher/Reservati
 import { BlurView } from "expo-blur";
 import MissingItemsNotifier from "../../molecules/MissingItemsNotifier/MissingItemsNotifier";
 import { VStack } from "../../ui/vstack";
+import { dateService } from "@/src/services/dateService";
+import { Label } from "../../atoms/Label/Label";
 
 type SegmentOption = "finished" | "active" | "upcoming";
 type ViewMode = "list" | "calendar";
 
 /* ---------------- HELPERS ---------------- */
-
-const formatDate = (iso: string) => {
-	const d = new Date(iso);
-	return `${String(d.getDate()).padStart(2, "0")}.${String(
-		d.getMonth() + 1
-	).padStart(2, "0")}.${d.getFullYear()}`;
-};
 
 const filterReservationsBySegment = (
 	reservations: Reservation[],
@@ -121,24 +116,29 @@ export default function ReservationsScreen() {
 							data={filteredReservations}
 							keyExtractor={(item) => item.reservationId.toString()}
 							contentContainerStyle={styles.listContent}
-							renderItem={({ item }) => (
-								<ReservationCard
-									reservationId={item.reservationId.toString()}
-									name={item.apartment.name}
-									address={item.apartment.address}
-									dateFrom={formatDate(item.guest.dateTimeOfArrival)}
-									dateTo={formatDate(item.guest.dateTimeOfDeparture)}
-									onIconPress={() =>
-										router.push({
-											pathname: '/(home)/reservations/[id]',
-											params: {
-												id: item.reservationId,        // dynamic route param
-												apartmentId: item.apartment.apartmentId // search param
-											},
-										})
-									}
-								/>
-							)}
+							renderItem={({ item }) => {
+								const parsedDateArrival = dateService.parseBackendDate(item.guest.dateTimeOfArrival);
+								const parsedDateDeparture = dateService.parseBackendDate(item.guest.dateTimeOfDeparture);
+
+								return (
+									<ReservationCard
+										reservationId={item.reservationId.toString()}
+										name={item.apartment.name}
+										address={item.apartment.address}
+										dateFrom={dateService.formatLocalDate(parsedDateArrival).replaceAll(" ", "")}
+										dateTo={dateService.formatLocalDate(parsedDateDeparture).replaceAll(" ", "")}
+										onIconPress={() =>
+											router.push({
+												pathname: '/(home)/reservations/[id]',
+												params: {
+													id: item.reservationId,        // dynamic route param
+													apartmentId: item.apartment.apartmentId // search param
+												},
+											})
+										}
+									/>
+								);
+							}}
 						/>
 						:
 						<VStack style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>

@@ -4,7 +4,9 @@
 		"selectApartment": "Select apartment",
 
 		"errors": {
-			"invalidNumberError": "Enter a valid number"
+			"invalidNumberError": "Enter a valid number",
+			"lengthMinError": "This field must be at least {{length}} characters long.",
+			"lengthExactError": "This field must be exactly {{length}} characters long."
 		}
 	},
 

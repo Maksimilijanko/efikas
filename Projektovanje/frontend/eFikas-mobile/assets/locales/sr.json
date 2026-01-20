@@ -5,7 +5,8 @@
 		
 		"errors": {
 			"invalidNumberError": "Unesite ispravan broj",
-			"lengthError": "Ovo polje mora biti bar {{length}} karaktera"
+			"lengthMinError": "Ovo polje mora biti bar {{length}} karaktera",
+			"lengthExactError": "Ovo polje mora biti {{length}} karaktera",
 		}	
 	},
 
