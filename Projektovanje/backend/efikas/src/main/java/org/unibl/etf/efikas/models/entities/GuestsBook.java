@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "guests_book", schema = "efikas")
+@ToString
 public class GuestsBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -127,7 +129,6 @@ public class GuestsBook {
     private Instant dateTimeOfDeparture;
 
     @Size(max = 50)
-    @NotNull
     @Column(name = "\"IssuedInvoiceNumber\"", nullable = false, length = 50)
     private String issuedInvoiceNumber;
 

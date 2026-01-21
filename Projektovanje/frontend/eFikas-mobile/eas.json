@@ -9,8 +9,14 @@
       "distribution": "internal",
 	  "env": {
         "EXPO_PUBLIC_API_SCHEME": "http",
-		"EXPO_PUBLIC_API_ADDRESS": "192.168.50.44",
+		"EXPO_PUBLIC_API_ADDRESS": "192.168.100.1",
 		"EXPO_PUBLIC_API_PORT": "8080"
+      }
+    },
+    "ios-simulator": {
+      "extends": "development",
+      "ios": {
+        "simulator": true
       }
     },
     "preview": {

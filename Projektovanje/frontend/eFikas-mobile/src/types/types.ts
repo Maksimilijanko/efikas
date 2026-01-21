@@ -122,19 +122,123 @@ export interface ApartmentCurrentInfo {
   nextGuestsDate: string | null;
 }
 
+export interface GuestBase {
+  id?: number;
+  citizenId: string;
+  isLocal: boolean;
+  personalDocumentURL?: string | null;
+
+  name: string;
+  surname: string;
+  gender: "Male" | "Female";
+  phoneNumber: string;
+  birthDate: Date;
+  birthPlace: string;
+  birthCountry: string;
+  address: string;
+  accommodationUnitNumber: number;
+  accommodationUnitFloor: number;
+
+  dateTimeOfArrival: Date;
+  dateTimeOfDeparture: Date;
+
+  issuedInvoiceNumber?: string | null;
+  remarks?: string | null;
+}
+
+export interface DomesticGuest extends GuestBase {
+  isLocal: true;
+  birthMunicipality: string;
+}
+
+export interface ForeignGuest extends GuestBase {
+  isLocal: false;
+  citizenship: string;
+  passportNumber: string;
+  passportIssuedDate: Date;
+  visaType?: string | null;
+  visaNumber?: string | null;
+  permittedResidenceDate?: Date;
+  entryDate?: Date;
+  entryPlace?: string | null;
+}
+
+export type Guest = DomesticGuest | ForeignGuest;
+
+export interface CreateDomesticGuestPayload {
+  name: string;
+  surname: string;
+  gender: "Male" | "Female";
+  birthDate: Date;
+  birthPlace: string;
+  birthMunicipality: string;
+  birthCountry: string;
+  address: string;
+  jmbg: string;
+
+  accommodationUnitNumber: number;
+  accommodationUnitFloor: number;
+  dateTimeOfArrival: string;
+  dateTimeOfDeparture: string;
+
+  issuedInvoiceNumber?: string | null;
+  remarks?: string | null;
+}
+
+
+export interface CreateForeignGuestPayload {
+  name: string;
+  surname: string;
+  gender: "Male" | "Female";
+  birthDate: Date;
+  birthPlace: string;
+  birthCountry: string;
+  address: string;
+
+  citizenship: string;
+  passportNumber: string;
+  passportIssuedDate: Date;
+
+  visaType?: string | null;
+  visaNumber?: string | null;
+  permittedResidenceDate?: string | null;
+  entryDate?: Date;
+  entryPlace?: string | null;
+
+  accommodationUnitNumber: number;
+  accommodationUnitFloor: number;
+  dateTimeOfArrival: Date;
+  dateTimeOfDeparture: Date;
+
+  issuedInvoiceNumber?: string | null;
+  remarks?: string | null;
+}
+
 export interface Reservation {
   reservationId: number;
   apartment: Apartment;
-  guestFullName: string;
-  guestPhoneNumber: string;
-  dateTimeOfArrival: string;
-  dateTimeOfDeparture: string;
-  guestNumber: number;
+  guest: Guest;
+  guestQuantity: number;
   price: number | null;
   note: string | null;
-  personalDocumentURL: string | null;
   reservationType: string;
-  reservationTypeId?: number;
+}
+
+export interface CreateReservationPayload {
+  guestQuantity: number;
+  price?: number | null;
+  note?: string | null;
+  reservationType: string;
+  guest: Omit<Guest, "id">;
+}
+
+export interface UpdateReservationPayload {
+  apartmentId?: number;
+  guest: Guest;
+  guestQuantity?: number;
+  price?: number | null;
+  note?: string | null;
+  reservationType?: string;
 }
 
 export interface MenuItemProps {

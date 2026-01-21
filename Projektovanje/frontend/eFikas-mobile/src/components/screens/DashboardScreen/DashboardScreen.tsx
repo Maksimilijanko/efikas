@@ -85,8 +85,16 @@ export default function DashboardScreen() {
       calendar={
         <ReservationsCalendar
           reservations={reservations}
-          onOpenDetails={(r) =>
-            router.push(`/(home)/reservations/${r.reservationId}`)
+          onOpenDetails={(r) => {
+            router.push({
+				pathname: '/(home)/reservations/[id]',
+				params: {
+					id: r.reservationId,        // dynamic route param
+					apartmentId: r.apartment.apartmentId // search param
+				},
+			});
+		  }
+			
           }
         />
       }

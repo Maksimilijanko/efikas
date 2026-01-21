@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, ScrollViewProps } from 'react-native';
+import { ScrollView, View, ScrollViewProps, Text } from 'react-native';
 import styles from './index.styles';
 import { useTheme } from "@/src/providers/ThemeProvider";
 

@@ -6,13 +6,17 @@ import { View, ActivityIndicator } from "react-native";
 import { useTheme } from "@/src/providers/ThemeProvider";
 
 const ReservationDetailsById = () => {
-  const { id } = useLocalSearchParams();
+  const { id, apartmentId } = useLocalSearchParams<{
+    id: string;
+    apartmentId?: string;
+  }>();
   const { Colors } = useTheme();
 
   // id iz URL-a je string, a useReservation ocekuje number
   const reservationId = Number(id);
+  const apartmentIdNum = Number(apartmentId);
 
-  const { data: reservation, isLoading } = useReservation(reservationId);
+  const { data: reservation, isLoading } = useReservation(reservationId, apartmentIdNum);
 
   if (isLoading || !reservation) {
     return (

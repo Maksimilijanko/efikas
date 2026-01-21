@@ -8,6 +8,7 @@ import { QuickInfoDialog, QuickInfoItem } from "@/src/components/organisms/Dialo
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { calculateNights } from "@/src/util/dateUtils";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -87,8 +88,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
     // Grupisanje rezervacija po datumu
     reservations.forEach((res) => {
-      const startDate = getDateOnly(res.dateTimeOfArrival);
-      const endDate = getDateOnly(res.dateTimeOfDeparture);
+      const startDate = getDateOnly(res.guest.dateTimeOfArrival);
+      const endDate = getDateOnly(res.guest.dateTimeOfDeparture);
 
       getDateRange(startDate, endDate).forEach((d) => {
         if (!reservationsByDate[d]) {
@@ -100,8 +101,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
     // Oznacavanje svakog perioda rezervacije pojedinacno
     reservations.forEach((res) => {
-      const startDate = getDateOnly(res.dateTimeOfArrival);
-      const endDate = getDateOnly(res.dateTimeOfDeparture);
+      const startDate = getDateOnly(res.guest.dateTimeOfArrival);
+      const endDate = getDateOnly(res.guest.dateTimeOfDeparture);
       const dates = getDateRange(startDate, endDate);
 
       dates.forEach((date, index) => {
@@ -137,8 +138,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
     const clickedDate = day.dateString;
 
     const list = reservations.filter((r) => {
-      const startDate = getDateOnly(r.dateTimeOfArrival);
-      const endDate = getDateOnly(r.dateTimeOfDeparture);
+      const startDate = getDateOnly(r.guest.dateTimeOfArrival);
+      const endDate = getDateOnly(r.guest.dateTimeOfDeparture);
 
       return clickedDate >= startDate && clickedDate <= endDate;
     });
@@ -152,6 +153,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   const current = selectedReservations[currentIndex] ?? null;
 
+  
+
   const formatDateTime = (iso: string) => {
     if (!iso) return "";
     const local = dayjs.utc(iso).tz("Europe/Sarajevo");
@@ -162,19 +165,15 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
   const getDialogItems = (): QuickInfoItem[] => {
     if (!current) return [];
 
-    const nights = Math.max(
-      1,
-      Math.ceil(
-        (parseDate(getDateOnly(current.dateTimeOfDeparture)).getTime() -
-          parseDate(getDateOnly(current.dateTimeOfArrival)).getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+    const nights = calculateNights(
+      current.guest.dateTimeOfArrival,
+      current.guest.dateTimeOfDeparture
     );
 
     const items: QuickInfoItem[] = [
       {
         label: t("reservationsCalendar.guestCount"),
-        value: current.guestNumber,
+        value: current.guestQuantity,
         isBold: true,
       },
       {
@@ -184,13 +183,13 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
       },
       {
         label: t("reservationsCalendar.arrival"),
-        value: formatDateTime(current.dateTimeOfArrival),
+        value: formatDateTime(current.guest.dateTimeOfArrival),
         isBold: true,
         marginTop: 12,
       },
       {
         label: t("reservationsCalendar.departure"),
-        value: formatDateTime(current.dateTimeOfDeparture),
+        value: formatDateTime(current.guest.dateTimeOfDeparture),
         isBold: true,
       },
     ];
