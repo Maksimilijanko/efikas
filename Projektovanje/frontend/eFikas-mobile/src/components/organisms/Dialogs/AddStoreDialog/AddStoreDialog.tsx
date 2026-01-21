@@ -41,6 +41,7 @@ export default function AddStoreDialog({
 		return(
 			<FormField
 				control={control}
+				required
 				name={name}
 				label={t(labelTranslationString)}
 				placeholder={t(placeholder)}

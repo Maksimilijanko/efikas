@@ -15,6 +15,7 @@ interface Props<T extends FieldValues> {
 	name: Path<T>;
 	control: Control<T>;
 	rules?: object; // For validation rules
+	required?: boolean;
 	label: string;
 	placeholder: string;
 	iconName: LucideIconName;
@@ -44,6 +45,7 @@ export default function FormField<T extends FieldValues>({
 	name,
 	control,
 	rules,
+	required,
 	label,
 	placeholder,
 	iconName,
@@ -81,6 +83,7 @@ export default function FormField<T extends FieldValues>({
 							label={label}
 							labelSize={labelSize}
 							placeholder={placeholder}
+							required={required}
 							size={size}
 							iconLocation="left"
 							iconName={iconName}

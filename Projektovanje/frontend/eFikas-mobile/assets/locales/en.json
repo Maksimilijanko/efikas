@@ -373,6 +373,10 @@
             "addCashRegister": "Add Cash Register",
             "addStore": "Add Store"
         },
+		"missingItems": {
+			"cashRegister": "You currently have no cash registers.",
+			"store": "You haven't registered a store yet."
+		},
         "sectionTitle": "Profile information",
         "labels": {
             "firstName": "First Name",
