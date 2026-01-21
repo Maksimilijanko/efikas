@@ -19,6 +19,7 @@ import { useTheme } from "@/src/providers/ThemeProvider";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { calculateNights } from "@/src/util/dateUtils";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,12 +29,6 @@ const formatDateTime = (iso: string) => {
   if (!iso) return "";
   const local = dayjs.utc(iso).tz("Europe/Sarajevo");
   return local.format("DD.MM.YYYY HH:mm");
-};
-
-const calculateNights = (arrivalDate: string, departureDate: string) => {
-  const arrival = dayjs(arrivalDate);
-  const departure = dayjs(departureDate);
-  return Math.max(1, departure.diff(arrival, "day"));
 };
 
 const ReservationDetailsScreen = ({ reservation }) => {
@@ -70,6 +65,19 @@ const ReservationDetailsScreen = ({ reservation }) => {
     }
   };
 
+  const handleEdit = () => {
+    toggleDialog("editDelete", false);
+    
+    router.replace({
+      pathname: "/(home)/reservations/addReservation",
+      params: {
+        mode: "edit",
+        reservationId: reservation.reservationId,
+        reservationData: JSON.stringify(reservation),
+      },
+    });
+  };
+
   const handleFiscalizationConfirm = () => {
     // Logika za fikalizaciju... TODO
     console.log("Fiskalizacija potvrđena");
@@ -95,18 +103,18 @@ const ReservationDetailsScreen = ({ reservation }) => {
     () => [
       {
         key: "guest",
-        label: reservation.guestFullName,
+        label: `${reservation.guest.name} ${reservation.guest.surname}`,
         icon: "User" as const,
       },
       {
         key: "phone",
-        label: reservation.guestPhoneNumber,
+        label: reservation.guest.phoneNumber,
         icon: "Phone" as const,
       },
       {
         key: "people",
         label: t("reservations.details.peopleCount", {
-          count: reservation.guestNumber,
+          count: reservation.guestQuantity,
         }),
         icon: "Users" as const,
       },
@@ -121,21 +129,22 @@ const ReservationDetailsScreen = ({ reservation }) => {
       },
       {
         key: "arrival",
-        label: formatDateTime(reservation.dateTimeOfArrival),
+        label: formatDateTime(reservation.guest.dateTimeOfArrival),
         icon: "CalendarArrowDown" as const,
       },
       {
         key: "departure",
-        label: formatDateTime(reservation.dateTimeOfDeparture),
+        label: formatDateTime(reservation.guest.dateTimeOfDeparture),
         icon: "CalendarArrowUp" as const,
       },
     ],
     [
-      reservation.guestFullName,
-      reservation.guestPhoneNumber,
-      reservation.guestNumber,
-      reservation.dateTimeOfArrival,
-      reservation.dateTimeOfDeparture,
+      reservation.guest.name,
+      reservation.guest.surname,
+      reservation.guest.phoneNumber,
+      reservation.guestQuantity,
+      reservation.guest.dateTimeOfArrival,
+      reservation.guest.dateTimeOfDeparture,
       Colors.iconMenu,
       t,
     ]
@@ -162,15 +171,12 @@ const ReservationDetailsScreen = ({ reservation }) => {
       idDocument: {
         visible: dialogs.idDocument,
         onClose: () => toggleDialog("idDocument", false),
-        documentUrl: reservation.personalDocumentURL,
+        documentUrl: reservation.guest.personalDocumentURL,
       },
       editDelete: {
         visible: dialogs.editDelete,
         onClose: () => toggleDialog("editDelete", false),
-        onEdit: () => {
-          toggleDialog("editDelete", false);
-          // router.push("/(tabs)/reservations")   // TODO: otvaranje sceen-a za dodavanje rezervacije
-        },
+        onEdit: handleEdit,
         onDelete: () => {
           toggleDialog("editDelete", false);
           toggleDialog("deleteConfirm", true);
@@ -200,14 +206,14 @@ const ReservationDetailsScreen = ({ reservation }) => {
           },
           {
             label: t("reservations.details.fiscalization.peopleCount"),
-            value: reservation.guestNumber,
+            value: reservation.guestQuantity,
             isBold: true,
           },
           {
             label: t("reservations.details.fiscalization.nightsCount"),
             value: calculateNights(
-              reservation.dateTimeOfArrival,
-              reservation.dateTimeOfDeparture
+              reservation.guest.dateTimeOfArrival,
+              reservation.guest.dateTimeOfDeparture
             ),
             isBold: true,
           },
@@ -236,14 +242,15 @@ const ReservationDetailsScreen = ({ reservation }) => {
     }),
     [
       dialogs,
-      reservation.personalDocumentURL,
+      reservation.guest.personalDocumentURL,
       reservation.reservationType,
-      reservation.guestNumber,
-      reservation.dateTimeOfArrival,
-      reservation.dateTimeOfDeparture,
+      reservation.guestQuantity,
+      reservation.guest.dateTimeOfArrival,
+      reservation.guest.dateTimeOfDeparture,
       reservation.price,
       t,
       handleDelete,
+      handleEdit,
       handleFiscalizationConfirm,
     ]
   );

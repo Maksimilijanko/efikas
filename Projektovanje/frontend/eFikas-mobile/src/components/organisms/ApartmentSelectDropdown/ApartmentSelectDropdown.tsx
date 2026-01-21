@@ -26,63 +26,97 @@ const ApartmentSelectDropdown = ({ value, options, onChange }: Props) => {
   const { Colors } = useTheme();
   const styles = useStyles(getStyles);
   const [open, setOpen] = useState(false);
-  
+
   const otherOptions = useMemo(
-    () => options.filter((o) => o.id !== value.id),
+    () => options.filter(o => o.id !== value.id),
     [options, value.id]
   );
-  
-  const toggle = () => setOpen((p) => !p);
-  
+
+  const toggle = () => setOpen(p => !p);
+
   const pick = (apt: ApartmentOption) => {
     onChange(apt);
     setOpen(false);
   };
-  
+
   return (
     <View style={styles.wrapper}>
-      <Pressable onPress={toggle} style={({ pressed }) => [styles.head, pressed ? styles.pressed : null]}>
-        <HStack space="md" style={styles.row}>
-          <Image source={{ uri: value.imageUrl || FALLBACK_IMG }} style={styles.thumb} />
-          <View style={styles.textCol}>
-            <Label text={value.name} size="3xl" className="font-bold" color={Colors.textPrimary} />
-            <Label text={value.address} size="lg" className="font-semibold" color={Colors.tertiary} />
+      <View style={styles.card}>
+        {/* SELECTED ITEM */}
+        <Pressable
+          onPress={toggle}
+          style={({ pressed }) => [
+            styles.head,
+            pressed && styles.pressed,
+          ]}
+        >
+          <View style={styles.content}>
+            <HStack space="lg" style={styles.row}>
+              <Image
+                source={{ uri: value.imageUrl || FALLBACK_IMG }}
+                style={styles.thumb}
+              />
+
+              <View style={styles.textCol}>
+                <Label text={value.name} size="xl" className="font-bold" />
+                <Label
+                  text={value.address}
+                  size="md"
+                  color={Colors.textSecondary}
+                />
+              </View>
+
+              <Icon
+                name={open ? "ChevronUp" : "ChevronDown"}
+                size={24}
+                strokeWidth={2.3}
+              />
+            </HStack>
           </View>
-          <View style={styles.chevWrap}>
-            <Icon
-              name={open ? "ChevronUp" : "ChevronDown"}
-              size={26}
-              color={Colors.iconMenu}
-            />
-          </View>
-        </HStack>
-      </Pressable>
-      
-      {open && (
-        <View style={styles.dropdown}>
-          {otherOptions.map((apt, idx) => {
-            const isLast = idx === otherOptions.length - 1;
-            return (
+        </Pressable>
+
+        {/* DROPDOWN */}
+        {open && (
+          <View style={styles.dropdown}>
+            {otherOptions.map((apt, idx) => (
               <View key={apt.id}>
-                {idx === 0 && <View style={styles.divider} />}
                 <Pressable
                   onPress={() => pick(apt)}
-                  style={({ pressed }) => [styles.item, pressed ? styles.pressed : null]}
+                  style={({ pressed }) => [
+                    styles.item,
+                    pressed && styles.pressed,
+                  ]}
                 >
-                  <HStack space="md" style={styles.row}>
-                    <Image source={{ uri: apt.imageUrl || FALLBACK_IMG }} style={styles.thumb} />
-                    <View style={styles.textCol}>
-                      <Label text={apt.name} size="3xl" className="font-bold" color={Colors.textPrimary} />
-                      <Label text={apt.address} size="lg" className="font-semibold" color={Colors.tertiary} />
-                    </View>
-                  </HStack>
+                  <View style={styles.content}>
+                    <HStack space="lg" style={styles.row}>
+                      <Image
+                        source={{ uri: apt.imageUrl || FALLBACK_IMG }}
+                        style={styles.thumb}
+                      />
+                      <View style={styles.textCol}>
+                        <Label
+                          text={apt.name}
+                          size="lg"
+                          className="font-semibold"
+                        />
+                        <Label
+                          text={apt.address}
+                          size="sm" 
+                          color={Colors.textSecondary}
+                        />
+                      </View>
+                    </HStack>
+                  </View>
                 </Pressable>
-                {!isLast && <View style={styles.divider} />}
+
+                {idx !== otherOptions.length - 1 && (
+                  <View style={styles.divider} />
+                )}
               </View>
-            );
-          })}
-        </View>
-      )}
+            ))}
+          </View>
+        )}
+      </View>
     </View>
   );
 };

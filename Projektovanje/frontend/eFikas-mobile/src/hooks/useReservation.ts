@@ -1,5 +1,5 @@
 import { reservationService } from "@/src/api/services/reservationService";
-import { Reservation } from "@/src/types/types";
+import { Reservation, CreateReservationPayload, UpdateReservationPayload } from "@/src/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toastService } from '../services/toastService';
@@ -28,14 +28,14 @@ export const useReservations = (apartmentId: number) => {
 };
 
 // ------------------- FETCH JEDNE REZERVACIJE -------------------
-export const useReservation = (reservationId: number) => {
+export const useReservation = (reservationId: number, apartmentId: number) => {
   const { t } = useTranslation();
 
   return useQuery<Reservation, Error>({
     queryKey: ["reservation", reservationId],
     queryFn: async () => {
       try {
-        return await reservationService.getReservation(reservationId);
+        return await reservationService.getReservation(reservationId, apartmentId);
       } catch (err: any) {
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");
@@ -56,10 +56,38 @@ export const useCreateReservation = (apartmentId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async ({
+      payload,
+      documentPicture,
+    }: {
+      payload: CreateReservationPayload;
+      documentPicture?: { uri: string; type: string; name: string };
+    }) => {
       try {
-        return await reservationService.createReservation(apartmentId, data);
+        return await reservationService.createReservation(
+          apartmentId, 
+          payload, 
+          documentPicture
+        );
       } catch (err: any) {
+        console.log("=== HOOK ERROR ===", err);
+		
+		console.log("message:", err.message);
+		console.log("status:", err.response?.status);
+		console.log("data:", err.response?.data);
+		console.log("headers:", err.response?.headers);
+
+		if(err.response?.status === 409) {
+			toastService.error(
+				t("reservations.toastMessages.create409Title"),
+				t("reservations.toastMessages.create409Message")
+			);
+			const errorMessage =
+          err?.message || t("reservations.toastMessages.genericError");
+			throw new Error(errorMessage);
+		}
+
+
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");
         toastService.error(
@@ -69,8 +97,15 @@ export const useCreateReservation = (apartmentId: number) => {
         throw new Error(errorMessage);
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["reservations", apartmentId],
+      });
+    
+      await queryClient.invalidateQueries({
+        queryKey: ["userReservations"],
+      });
+    
       toastService.success(
         t("reservations.toastMessages.createSuccessTitle"),
         t("reservations.toastMessages.createSuccessMessage")
@@ -85,9 +120,19 @@ export const useUpdateReservation = (reservationId: number, apartmentId: number)
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async ({
+      payload,
+      documentPicture,
+    }: {
+      payload: UpdateReservationPayload;
+      documentPicture?: { uri: string; type: string; name: string };
+    }) => {
       try {
-        return await reservationService.updateReservation(reservationId, data);
+        return await reservationService.updateReservation(
+          reservationId, 
+          payload, 
+          documentPicture
+        );
       } catch (err: any) {
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");
@@ -101,6 +146,7 @@ export const useUpdateReservation = (reservationId: number, apartmentId: number)
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reservation", reservationId] });
       queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
+      queryClient.invalidateQueries({ queryKey: ["userReservations"] });
       toastService.success(
         t("reservations.toastMessages.updateSuccessTitle"),
         t("reservations.toastMessages.updateSuccessMessage")
@@ -131,6 +177,7 @@ export const useDeleteReservation = (reservationId: number, apartmentId: number)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
+      queryClient.invalidateQueries({ queryKey: ["userReservations"] });
       toastService.success(
         t("reservations.toastMessages.deleteSuccessTitle"),
         t("reservations.toastMessages.deleteSuccessMessage")

@@ -22,6 +22,22 @@ interface Props<T extends FieldValues> {
 	helperText?: string;
 	errorText?: string;
 	isInvalid?: boolean;
+	rightElement?: React.ReactNode;
+	size?: "sm" | "md" | "lg" | "xl";
+	labelSize?:
+	| "xs"
+	| "sm"
+	| "md"
+	| "lg"
+	| "xl"
+	| "2xl"
+	| "3xl"
+	| "4xl"
+	| "5xl"
+	| "6xl";
+	disabled?: boolean;
+	formatValue?: (value: any) => string;
+	inputProps?: any;
 }
 
 export default function FormField<T extends FieldValues>({
@@ -35,6 +51,13 @@ export default function FormField<T extends FieldValues>({
 	helperText,
 	errorText,
 	isInvalid = false,
+	rightElement = null,
+	size = "md",
+	labelSize = "md",
+	disabled = false,
+	inputProps,
+
+	formatValue,
 }: Props<T>) {
 	const [isPasswordVisible, setPasswordVisible] = useState(false);
 
@@ -45,52 +68,65 @@ export default function FormField<T extends FieldValues>({
 			control={control}
 			name={name}
 			rules={rules}
-			render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-				<FormControl isInvalid={!!error} isRequired size="md">
-					<LabeledTextField
-						label={label}
-						placeholder={placeholder}
-						iconLocation="left"
-						iconName={iconName}
-						value={value}
-						type={isPasswordField && !isPasswordVisible ? "password" : "text"}
-						onChangeText={onChange}
-						rightElement={
-							isPasswordField ? (
-								<TouchableOpacity
-									onPress={() => setPasswordVisible(v => !v)}
-									style={{ paddingRight: 8 }}
+			render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
+				const displayValue = formatValue
+					? formatValue(value)
+					: value !== null && value !== undefined
+						? String(value)   // <-- convert number to string
+						: "";
+				
+				return (
+					<FormControl isInvalid={!!error} isRequired size="md">
+						<LabeledTextField
+							label={label}
+							labelSize={labelSize}
+							placeholder={placeholder}
+							size={size}
+							iconLocation="left"
+							iconName={iconName}
+							value={displayValue}
+							type={isPasswordField && !isPasswordVisible ? "password" : "text"}
+							onChangeText={onChange}
+							rightElement={
+								isPasswordField ? (
+									<TouchableOpacity
+										onPress={() => setPasswordVisible(v => !v)}
+										style={{ paddingRight: 8 }}
+									>
+										{isPasswordVisible ? (
+											<Icon name="Eye" size={20} />
+										) : (
+											<Icon name="EyeOff" size={20} />
+										)}
+									</TouchableOpacity>
+								) : rightElement
+							}
+							disabled={disabled}
+							inputProps={inputProps}
+						/>
+
+						{helperText && (
+							<FormControlHelper>
+								<FormControlHelperText>{helperText}</FormControlHelperText>
+							</FormControlHelper>
+						)}
+
+						{error  && (
+							<FormControlError>
+								<FormControlErrorIcon
+									as={AlertTriangleIcon}
+									className="text-red-500"
 								>
-									{isPasswordVisible ? (
-										<Icon name="Eye" size={20} />
-									) : (
-										<Icon name="EyeOff" size={20} />
-									)}
-								</TouchableOpacity>
-							) : null
-						}
-					/>
-
-					{helperText && (
-						<FormControlHelper>
-							<FormControlHelperText>{helperText}</FormControlHelperText>
-						</FormControlHelper>
-					)}
-
-					{error  && (
-						<FormControlError>
-							<FormControlErrorIcon
-								as={AlertTriangleIcon}
-								className="text-red-500"
-							>
-							</FormControlErrorIcon>
-							<FormControlErrorText className="text-red-500">
-								{error.message}
-							</FormControlErrorText>
-						</FormControlError>
-					)}
-				</FormControl>
-			)}
+								</FormControlErrorIcon>
+								<FormControlErrorText className="text-red-500">
+									{error.message}
+								</FormControlErrorText>
+							</FormControlError>
+						)}
+					</FormControl>
+				);
+				
+			}}
 		/>
 	);
 }

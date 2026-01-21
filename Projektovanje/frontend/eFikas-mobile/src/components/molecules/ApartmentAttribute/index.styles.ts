@@ -4,6 +4,12 @@ import { Colors } from '@/src/styles/style';
 export const styles = StyleSheet.create({
   hstack: {
     alignItems: 'center',
+	
+  },
+  vstack : {
+	width: 'auto',
+
+	flexShrink: 1, // allow wrapping inside
   },
   iconBox: {
     width: 40,

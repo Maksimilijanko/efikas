@@ -47,7 +47,10 @@ const ApartmentsListScreen: React.FC = () => {
 
   const handleEdit = () => {
     if (dialogState.apartmentId !== null) {
-      // router.push(`/editApartment/${dialogState.apartmentId}`);
+      router.push({
+        pathname: "/editApartment",
+        params: { apartmentId: String(dialogState.apartmentId) },
+      });
       handleCloseDialog();
     }
   };
@@ -70,10 +73,8 @@ const ApartmentsListScreen: React.FC = () => {
     const id = apartmentIdPendingDelete;
     if (id === null) return;
 
-    // UX: odmah zatvori confirm
     closeConfirmDelete();
 
-    // ✅ OVAJ HOOK OČEKUJE BROJ
     deleteMutation.mutate(id, {
       onSuccess: (response) => {
         toastService.success(

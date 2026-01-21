@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, View, TouchableWithoutFeedback, ScrollView } from "react-native";
 import {
   ParkingSquare,
@@ -32,22 +32,31 @@ const FEATURES = [
 type FeatureKey = (typeof FEATURES)[number]["key"];
 type ValuesType = Record<FeatureKey, boolean>;
 
+const DEFAULT_VALUES: ValuesType = Object.fromEntries(
+  FEATURES.map((f) => [f.key, false])
+) as ValuesType;
+
 export default function InventoryModal({
   visible,
   onClose,
   onSave,
+  initialValues,
 }: {
   visible: boolean;
   onClose: () => void;
   onSave: (data: ValuesType) => void;
+  initialValues?: Partial<ValuesType>;
 }) {
   const { Colors } = useTheme();
   const { t } = useTranslation();
   const styles = useStyles(getStyles);
 
-  const [values, setValues] = useState<ValuesType>(() =>
-    Object.fromEntries(FEATURES.map((f) => [f.key, false])) as ValuesType
-  );
+  const [values, setValues] = useState<ValuesType>(DEFAULT_VALUES);
+
+  useEffect(() => {
+    if (!visible) return;
+    setValues({ ...DEFAULT_VALUES, ...(initialValues ?? {}) });
+  }, [visible, initialValues]);
 
   const toggle = (key: FeatureKey) => {
     setValues((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -92,7 +101,7 @@ export default function InventoryModal({
 
                 <View>
                   <BasicButton
-                    title={t('inventoryModal.buttons.save')}
+                    title={t("inventoryModal.buttons.save")}
                     onPress={() => {
                       onSave(values);
                       onClose();

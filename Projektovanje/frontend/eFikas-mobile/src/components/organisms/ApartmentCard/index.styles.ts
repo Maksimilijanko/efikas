@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     labelContainer: {
-        marginLeft: 10,
+        marginLeft: 16,
     },
     topRow: {
         flexDirection: 'row',

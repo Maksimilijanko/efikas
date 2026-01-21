@@ -101,6 +101,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body("This email is not verified.");
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleMessageRejectedException(IllegalArgumentException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     private Throwable getRootCause(Throwable ex) {
         Throwable cause = ex;
         while (cause.getCause() != null && cause.getCause() != cause) {

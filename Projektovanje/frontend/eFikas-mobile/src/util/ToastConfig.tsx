@@ -31,16 +31,23 @@ export const ToastConfig = {
     return (
       <ErrorToast
         {...props}
+		
         style={{
           backgroundColor: Colors.toastBackground,
           borderLeftColor: Colors.error,
+		  width: "90%",      // or any value you need
         }}
         text1Style={{
           color: Colors.textPrimary,
         }}
         text2Style={{
           color: Colors.textSecondary,
+			flexShrink: 1,
+			flexWrap: "wrap",
+			numberOfLines: 2,
+			includeFontPadding: true // optional, improves Android spacing
         }}
+		text2NumberOfLines={2}
       />
     );
   },

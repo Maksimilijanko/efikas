@@ -2,8 +2,10 @@ package org.unibl.etf.efikas.services;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.books.DomesticGuestsBookDTO;
@@ -32,7 +34,12 @@ public class DomesticGuestsBookService {
     /**
      * Persists a new domestic guest entry to the database.
      * */
+    @Transactional
     public DomesticGuestsEntry createNewDomesticGuest(DomesticGuestDTO createDomesticGuestRequest) {
+        if (domesticGuestsBookRepository.existsByPhoneNumber(createDomesticGuestRequest.getPhoneNumber())) {
+            throw new DataIntegrityViolationException("Phone number already exists");
+        }
+
         GuestsBook domesticGuestsBook = modelMapper.map(createDomesticGuestRequest, GuestsBook.class);
         domesticGuestsBook.setId(null);
 
@@ -46,11 +53,10 @@ public class DomesticGuestsBookService {
     /**
      * Updates a domestic guest
      * */
+    @Transactional
     public DomesticGuestsEntry updateDomesticGuest(int guestId, DomesticGuestDTO updateDomesticGuestRequest) {
         updateDomesticGuestRequest.setId(guestId);
         GuestsBook domesticGuestsBook = modelMapper.map(updateDomesticGuestRequest, GuestsBook.class);
-
-        //System.out.println("domesticGuestsBook: " + domesticGuestsBook);
 
         GuestsBook saved = domesticGuestsBookRepository.save(domesticGuestsBook);
 
