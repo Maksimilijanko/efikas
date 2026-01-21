@@ -210,6 +210,7 @@
             "notifications": "Notifications",
             "myApartments": "My apartments",
             "addApartment": "Add apartment",
+            "editApartment": "Edit apartment data",
             "expenses": "Expenses",
             "statistics": "Statistics",
             "incomeBook": "Income book",
@@ -362,16 +363,16 @@
     "notifications": {
         "title": "Notifications",
         "description": "Receive reminders about important events—guest arrivals, payments, tasks, and property maintenance",
-		"notificationToggleSuccessTitle": "Success!",
-		"notificationToggleSuccessMessage": "You've updated your notifications.",
-		"notificationToggleErrorTitle": "Error in updating your notifications.",
-		"notificationToggleErrorMessage": "Please try again."
+        "notificationToggleSuccessTitle": "Success!",
+        "notificationToggleSuccessMessage": "You've updated your notifications.",
+        "notificationToggleErrorTitle": "Error in updating your notifications.",
+        "notificationToggleErrorMessage": "Please try again."
     },
     "profile": {
-		"menuItems": {
-			"addCashRegister": "Add Cash Register",
-			"addStore": "Add Store"
-		},
+        "menuItems": {
+            "addCashRegister": "Add Cash Register",
+            "addStore": "Add Store"
+        },
         "sectionTitle": "Profile information",
         "labels": {
             "firstName": "First Name",
@@ -389,38 +390,37 @@
             "updateErrorTitle": "Saving Error",
             "updateErrorMessage": "Could not save the profile.",
             "genericError": "An error occurred.",
-
-			"addStoreSuccessTitle": "Store added!",
-			"addStoreSuccessMessage": "New store successfully added.",
-			"addStoreErrorTitle": "Error adding store",
-			"addStoreErrorMessage": "Not possible to add at this time.",
-			"addStoreErrorExistsTitle": "You've already registered your store once!"
+            "addStoreSuccessTitle": "Store added!",
+            "addStoreSuccessMessage": "New store successfully added.",
+            "addStoreErrorTitle": "Error adding store",
+            "addStoreErrorMessage": "Not possible to add at this time.",
+            "addStoreErrorExistsTitle": "You've already registered your store once!"
         },
-		"store": {
-			"addModalTitle": "Add Store Information",
-			"placeholders": {
-				"name": "Name",
-				"address": "Address",
-				"activity": "Name",
-				"activityCode": "nn.nn",
-				"jib": "1234567891234"
-			},
-			"labels": {
-				"name": "Store name",
-				"address": "Store address",
-				"activity": "Activity",
-				"activityCode": "Activity code",
-				"jib": "Tax ID (JIB)"
-			},
-			"validation": {
-				"nameError": "Name is too short",
-				"addressError": "Address is too short",
-				"activityError": "Activity is required",
-				"activityCodeError": "Incorrect format of activity code",
-				"jibLengthError": "Tax ID must be 13 digits long",
-				"jibFormatError": "Tax ID must contain only digits"
-			}
-		}
+        "store": {
+            "addModalTitle": "Add Store Information",
+            "placeholders": {
+                "name": "Name",
+                "address": "Address",
+                "activity": "Name",
+                "activityCode": "nn.nn",
+                "jib": "1234567891234"
+            },
+            "labels": {
+                "name": "Store name",
+                "address": "Store address",
+                "activity": "Activity",
+                "activityCode": "Activity code",
+                "jib": "Tax ID (JIB)"
+            },
+            "validation": {
+                "nameError": "Name is too short",
+                "addressError": "Address is too short",
+                "activityError": "Activity is required",
+                "activityCodeError": "Incorrect format of activity code",
+                "jibLengthError": "Tax ID must be 13 digits long",
+                "jibFormatError": "Tax ID must contain only digits"
+            }
+        }
     },
     "cashRegisters": {
         "sectionTitle": "Cash register information",
