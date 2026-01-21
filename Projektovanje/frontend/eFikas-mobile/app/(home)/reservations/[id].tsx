@@ -15,7 +15,6 @@ const ReservationDetailsById = () => {
   // id iz URL-a je string, a useReservation ocekuje number
   const reservationId = Number(id);
   const apartmentIdNum = Number(apartmentId);
-  console.log("RESERVATION ID: " + reservationId + ", APS ID: " + apartmentId);
 
   const { data: reservation, isLoading } = useReservation(reservationId, apartmentIdNum);
 

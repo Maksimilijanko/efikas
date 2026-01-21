@@ -77,6 +77,16 @@ export const useCreateReservation = (apartmentId: number) => {
 		console.log("data:", err.response?.data);
 		console.log("headers:", err.response?.headers);
 
+		if(err.response?.status === 409) {
+			toastService.error(
+				t("reservations.toastMessages.create409Title"),
+				t("reservations.toastMessages.create409Message")
+			);
+			const errorMessage =
+          err?.message || t("reservations.toastMessages.genericError");
+			throw new Error(errorMessage);
+		}
+
 
         const errorMessage =
           err?.message || t("reservations.toastMessages.genericError");

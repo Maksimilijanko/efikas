@@ -10,4 +10,6 @@ public interface GuestsBookRepository extends
         JpaRepository<GuestsBook, Integer>,
         JpaSpecificationExecutor<GuestsBook> {
     Optional<GuestsBook> findByCitizenId(String citizenId);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

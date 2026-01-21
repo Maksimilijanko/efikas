@@ -39,6 +39,7 @@ axiosInstance.interceptors.request.use(
 
 		// Ivan: Anđela, ovo je pravilo problem - Axios je stavljao application/json po default-u u zahtjev, a nije multipart/form-data
 		if (config.data instanceof FormData) {
+			console.log("USAO");
 			config.headers['Content-Type'] = 'multipart/form-data';
 		}
 

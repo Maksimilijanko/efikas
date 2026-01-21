@@ -22,16 +22,29 @@ const DateTimePicker = ({
 	const { i18n, t } = useTranslation();
 
 	const getSafeDate = (d: Date | null | string | undefined): Date => {
+		//console.log("FROM DATE PICKER 1: ", d);
+
 		if (!d) return new Date();
-		const dt = d instanceof Date ? d : new Date(d);
-		return isNaN(dt.getTime()) ? new Date() : dt;
+
+		if (d instanceof Date) return d;
+
+		// Handle LocalDate array: [year, month, day]
+		if (Array.isArray(d) && d.length >= 3) {
+			const [year, month, day] = d;
+			return new Date(year, month - 1, day);
+		}
+
+		const parsed = new Date(d);
+		return isNaN(parsed.getTime()) ? new Date() : parsed;
 	};
 
 	const [date, setDate] = React.useState(getSafeDate(initialValue));
 
 	React.useEffect(() => {
 		if (visible) {
-			setDate(initialValue || new Date());
+			const date = getSafeDate(initialValue);
+			//console.log("FROM DATE PICKER 2: ", date);
+			setDate(date);
 		}
 	}, [visible, initialValue]);
 

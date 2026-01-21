@@ -4,7 +4,9 @@
 		"selectApartment": "Select apartment",
 
 		"errors": {
-			"invalidNumberError": "Enter a valid number"
+			"invalidNumberError": "Enter a valid number",
+			"lengthMinError": "This field must be at least {{length}} characters long.",
+			"lengthExactError": "This field must be exactly {{length}} characters long."
 		}
 	},
 
@@ -454,9 +456,16 @@
             "addReservationTitle": "Add Reservation"
         },
         "segments": {
-            "finished": "Finished",
-            "active": "Active",
-            "upcoming": "Upcoming"
+			"switcher": {
+				"finished": "Finished",
+				"active": "Active",
+				"upcoming": "Upcoming"
+			},
+            "missing": {
+				"finished": "finished",
+				"active": "active",
+				"upcoming": "upcoming"
+			}
         },
         "toastMessages": {
             "genericError": "An error occurred.",
@@ -464,6 +473,8 @@
             "fetchErrorMessage": "Could not load reservations. Please try again.",
             "createErrorTitle": "Creation Error",
             "createErrorMessage": "Reservation was not created. Please check the data.",
+			"create409Title": "Creation Error",
+			"create409Message": "Fields must have unique values. \nCheck your data for (JMBG, phone, passport number).",
             "createSuccessTitle": "Reservation Created!",
             "createSuccessMessage": "New reservation has been successfully created.",
             "updateErrorTitle": "Update Error",
@@ -561,6 +572,7 @@
             "departureAfterArrival": "Departure must be after arrival"
         },
         "alerts": {
+			"missingReservationsNotification": "Currently you have no {{type}} reservations.",
             "selectApartment": {
                 "title": "Error",
                 "message": "You must select an apartment"

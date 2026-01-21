@@ -158,8 +158,8 @@ export interface ForeignGuest extends GuestBase {
   passportIssuedDate: Date;
   visaType?: string | null;
   visaNumber?: string | null;
-  permittedResidenceDate?: Date | null;
-  entryDate?: Date | null;
+  permittedResidenceDate?: Date;
+  entryDate?: Date;
   entryPlace?: string | null;
 }
 
@@ -169,7 +169,7 @@ export interface CreateDomesticGuestPayload {
   name: string;
   surname: string;
   gender: "Male" | "Female";
-  birthDate: string;
+  birthDate: Date;
   birthPlace: string;
   birthMunicipality: string;
   birthCountry: string;
@@ -190,25 +190,25 @@ export interface CreateForeignGuestPayload {
   name: string;
   surname: string;
   gender: "Male" | "Female";
-  birthDate: string;
+  birthDate: Date;
   birthPlace: string;
   birthCountry: string;
   address: string;
 
   citizenship: string;
   passportNumber: string;
-  passportIssuedDate: string;
+  passportIssuedDate: Date;
 
   visaType?: string | null;
   visaNumber?: string | null;
   permittedResidenceDate?: string | null;
-  entryDate?: string | null;
+  entryDate?: Date;
   entryPlace?: string | null;
 
   accommodationUnitNumber: number;
   accommodationUnitFloor: number;
-  dateTimeOfArrival: string;
-  dateTimeOfDeparture: string;
+  dateTimeOfArrival: Date;
+  dateTimeOfDeparture: Date;
 
   issuedInvoiceNumber?: string | null;
   remarks?: string | null;

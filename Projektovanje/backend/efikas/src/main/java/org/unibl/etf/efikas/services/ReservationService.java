@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.exceptions.S3UploadException;
@@ -50,13 +52,14 @@ public class ReservationService {
     private final ForeignGuestsBookService foreignGuestsBookService;
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
+    @Transactional
     public ReservationResponse createNewReservation(Integer apartmentId,
                                                     Authentication authentication,
                                                     ReservationDTO reservationDTO,
                                                     MultipartFile documentPicture
     ) {
 
-        Reservation reservation = persistGuestIfNonExistant(reservationDTO);
+        Reservation reservation = persistGuestIfNonExistant(reservationDTO, documentPicture);
 
         ReservationType reservationType = reservationTypeRepository
                 .findReservationTypeByTypeName(reservationDTO.getReservationType())
@@ -68,23 +71,12 @@ public class ReservationService {
         reservation.setApartment(apartment);
 
 
-
-        if(documentPicture != null && !documentPicture.isEmpty()) {
-            FileUploadResponse fileUploadResponse = null;
-            try {
-                fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
-            } catch (IOException e) {
-                throw new S3UploadException(e.getMessage());
-            }
-            String pictureUrl = fileUploadResponse.getFilePath();
-            reservation.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
-        }
-
         Reservation saved = reservationRepository.save(reservation);
         String url = documentPicture != null ? s3Service.getPresignedUrl(saved.getGuest().getPersonalDocumentURL()) : null;
-        saved.getGuest().setPersonalDocumentURL(url);  // User gets the downloadable URL
+        ReservationResponse response = modelMapper.map(reservation, ReservationResponse.class);
+        response.getGuest().setPersonalDocumentURL(url);  // User gets the downloadable URL
 
-        return modelMapper.map(saved, ReservationResponse.class);
+        return response;
     }
 
     @PreAuthorize("@userSecurity.isReservationOwner(authentication, #apartmentId)")
@@ -113,7 +105,8 @@ public class ReservationService {
                                                  MultipartFile documentPicture
     ) {
 
-        Reservation reservation = persistGuestIfNonExistant(updateReservationRequest);
+        //Reservation reservation = persistGuestIfNonExistant(updateReservationRequest);
+        Reservation reservation = modelMapper.map(updateReservationRequest, Reservation.class);
 
         Apartment apartment = apartmentRepository.findById(updateReservationRequest.getApartmentId())
                 .orElseThrow(() -> new EntityNotFoundException("Apartment not found!"));
@@ -177,12 +170,24 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO) {
+    private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO, MultipartFile documentPicture) {
+        if(documentPicture != null && !documentPicture.isEmpty()) {
+            FileUploadResponse fileUploadResponse = null;
+            try {
+                fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
+            } catch (IOException e) {
+                throw new S3UploadException(e.getMessage());
+            }
+            String pictureUrl = fileUploadResponse.getFilePath();
+            reservationDTO.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
+        }
+
         GuestsBook guest = guestsBookRepository
-                .findByCitizenId(reservationDTO.getGuest().getCitizenId())
+                .findById(reservationDTO.getGuest().getId() != null ? reservationDTO.getGuest().getId() : 0)
                 .orElseGet(() -> guestsBookRepository.save(
                         modelMapper.map(reservationDTO.getGuest(), GuestsBook.class)
                 ));
+        guestsBookRepository.flush();
 
         Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
         reservation.setGuest(guest);
@@ -191,6 +196,10 @@ public class ReservationService {
     }
 
     private Reservation saveReservationWithUpdatedGuest(Reservation reservation) {
+        if(reservation.getGuest().getId() == null) {
+            throw new IllegalArgumentException("Guest ID can not be null.");
+        }
+
         GuestDTO guestDTO = getConcreteGuest(reservation.getGuest());
 
         if(guestDTO instanceof DomesticGuestDTO domesticGuestDTO) {
@@ -204,6 +213,12 @@ public class ReservationService {
     }
 
     public GuestDTO getConcreteGuest(GuestsBook guestsBook) {
-        return modelMapper.map(guestsBook, guestsBook.getIsLocal() ? DomesticGuestDTO.class : ForeignGuestDTO.class);
+        GuestDTO guest = modelMapper.map(guestsBook, guestsBook.getIsLocal() ? DomesticGuestDTO.class : ForeignGuestDTO.class);
+        if(guest.getPersonalDocumentURL() != null) {
+            String documentUrl = s3Service.getPresignedUrl(guest.getPersonalDocumentURL());
+            guest.setPersonalDocumentURL(documentUrl);
+        }
+
+        return guest;
     }
 }

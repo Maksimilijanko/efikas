@@ -10,6 +10,7 @@ import { styles } from "./index.styles";
 import { Image } from "../../ui/image";
 import { Spinner } from "../../ui/spinner";
 import { BookPath } from "@/src/types/types";
+import MissingItemsNotifier from "../../molecules/MissingItemsNotifier/MissingItemsNotifier";
 
 
 interface Props {
@@ -40,11 +41,8 @@ export default function DownloadedBooksList({ bookPaths, loading }: Props) {
                     <Spinner size="large" color="gray" />
                 }
 
-                {(bookPaths == null || bookPaths.length === 0) &&
-                    <HStack>
-                        <Icon name="Info" />
-                        <Label text={t('books.downloadedList.noBooks')} color="gray" />
-                    </HStack> 
+                {(bookPaths == null || bookPaths.length === 0) && 
+					<MissingItemsNotifier label={t('books.downloadedList.noBooks')} />
                 }
 
                 <VStack style={styles.linksContainer}>
