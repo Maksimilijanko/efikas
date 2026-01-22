@@ -9,20 +9,15 @@ const LENGTH_EXACT_ERROR = (exactLength: number) => t("common.errors.lengthExact
 // #region Store
 export namespace StoreValidation {
   export const schema = z.object({
-    name: z
-      .string(REQUIRED_FIELD_ERROR)
+    name: z.string(REQUIRED_FIELD_ERROR)
       .min(2, t("profile.store.validation.nameError")),
-    address: z
-      .string(REQUIRED_FIELD_ERROR)
+    address: z.string(REQUIRED_FIELD_ERROR)
       .min(5, t("profile.store.validation.addressError")),
-    activity: z
-      .string(REQUIRED_FIELD_ERROR)
+    activity: z.string(REQUIRED_FIELD_ERROR)
       .min(2, t("profile.store.validation.activityError")),
-    activityCode: z
-      .string(REQUIRED_FIELD_ERROR)
+    activityCode: z.string(REQUIRED_FIELD_ERROR)
       .regex(/^\d+(\.\d+)*$/, t("profile.store.validation.activityCodeError")),
-    jib: z
-      .string(REQUIRED_FIELD_ERROR)
+    jib: z.string(REQUIRED_FIELD_ERROR)
       .length(13, t("profile.store.validation.jibLengthError"))
       .regex(/^\d+$/, t("profile.store.validation.jibFormatError")),
   });

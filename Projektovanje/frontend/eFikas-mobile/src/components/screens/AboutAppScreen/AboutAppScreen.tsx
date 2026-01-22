@@ -211,9 +211,6 @@ const getStyles = (Colors: any) => StyleSheet.create({
         shadowRadius: 4,
         shadowOffset: { width: 0, height: 4 },
       },
-      android: { 
-        elevation: 2,
-      },
     }),
   },
   appInfoSection: {
@@ -258,9 +255,7 @@ const getStyles = (Colors: any) => StyleSheet.create({
         shadowRadius: 4,
         shadowOffset: { width: 0, height: 4 },
       },
-      android: { 
-        elevation: 2,
-      },
+      
     }),
   },
   accordionRow: {

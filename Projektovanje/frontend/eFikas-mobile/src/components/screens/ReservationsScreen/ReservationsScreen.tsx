@@ -117,16 +117,13 @@ export default function ReservationsScreen() {
 							keyExtractor={(item) => item.reservationId.toString()}
 							contentContainerStyle={styles.listContent}
 							renderItem={({ item }) => {
-								const parsedDateArrival = dateService.parseBackendDate(item.guest.dateTimeOfArrival);
-								const parsedDateDeparture = dateService.parseBackendDate(item.guest.dateTimeOfDeparture);
-
 								return (
 									<ReservationCard
 										reservationId={item.reservationId.toString()}
 										name={item.apartment.name}
 										address={item.apartment.address}
-										dateFrom={dateService.formatLocalDate(parsedDateArrival).replaceAll(" ", "")}
-										dateTo={dateService.formatLocalDate(parsedDateDeparture).replaceAll(" ", "")}
+										dateFrom={dateService.formatLocalDate(item.guest.dateTimeOfArrival).replaceAll(" ", "")}
+										dateTo={dateService.formatLocalDate(item.guest.dateTimeOfDeparture).replaceAll(" ", "")}
 										onIconPress={() =>
 											router.push({
 												pathname: '/(home)/reservations/[id]',
