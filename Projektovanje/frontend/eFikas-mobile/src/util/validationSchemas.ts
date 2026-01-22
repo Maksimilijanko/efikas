@@ -45,7 +45,7 @@ export namespace LoginValidation {
     email: z
       .string(REQUIRED_FIELD_ERROR)
       .email(t("auth.errors.emailError"))
-      .min(10, t("auth.errors.emailLengthError", { length: 10 })),
+      .min(10, LENGTH_MIN_ERROR(10)),
     password: z
       .string(REQUIRED_FIELD_ERROR)
       .min(8, t("auth.errors.passwordLengthError")),
@@ -103,9 +103,8 @@ export namespace ResetPasswordValidation {
   export const schema = z
     .object({
       email: z
-        .string(REQUIRED_FIELD_ERROR)
         .email(t("auth.errors.emailError"))
-        .min(10, t("auth.errors.emailError", { length: 10 })),
+        .min(10, LENGTH_MIN_ERROR(10)),
       password: z
         .string(REQUIRED_FIELD_ERROR)
         .min(8, t("auth.errors.passwordLengthError")),

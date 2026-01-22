@@ -63,14 +63,18 @@ export default function ForgotPasswordScreen() {
 		const req: OtpSendRequest = { email: getValues("email") };
 		try {
 			const response = await authService.requestOtp(req);
-			if(response.status !== 200) {
+			if(response.status === 400) {
+				toastService.error(t('auth.errors.sendOtpEmailError'), t('auth.errors.verifyEmailError'));
+				throw new Error("Error sending OTP, unverified email");
+			}
+			if(response.status !== 200 && response.status !== 400) {
 				throw new Error("Error sending OTP");
 			}
 
 			onSuccess();
 		} catch(err) {
 			console.log(`OTP: ${err?.message}`)
-			toastService.error(t('auth.errors.sendOtpEmailError'));
+			toastService.error(t('auth.errors.sendOtpEmailError'), t('auth.errors.verifyEmailError'));
 		}
 	}
 
@@ -78,14 +82,14 @@ export default function ForgotPasswordScreen() {
 		const isEmailValid = await trigger("email");
 
 		if(!isEmailValid) {
-			toastService.error(t('auth.errors.sendOtpEmailError'));
+			//toastService.error(t('auth.errors.sendOtpEmailError'));
 			return;
 		}
 
 		sendOtpBase(() => setActiveStep(1));
 
 		// Opcionalno ako odmah želimo timeout
-		//activateOtpTimeout();
+		activateOtpTimeout();
 	}
 
 	const onVerifyOtp = async () => {

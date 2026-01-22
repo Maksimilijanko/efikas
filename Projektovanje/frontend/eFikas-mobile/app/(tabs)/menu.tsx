@@ -34,7 +34,7 @@ const MENU_SECTIONS: MenuSection[] = [
       { id: "expenses", icon: "Wallet", i18nKey: "menu.item.expenses" },
       { id: "statistics", icon: "ChartNoAxesCombined", i18nKey: "menu.item.statistics" },
       { id: "incomeBook", icon: "BookDown", i18nKey: "menu.item.incomeBook" },
-      { id: "expenseBook", icon: "BookUp", i18nKey: "menu.item.expenseBook" },
+      //{ id: "expenseBook", icon: "BookUp", i18nKey: "menu.item.expenseBook" },
       { id: "guestBook", icon: "Users", i18nKey: "menu.item.guestBook" },
     ],
   },

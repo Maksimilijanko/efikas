@@ -99,7 +99,8 @@
 			"addressLengthError": "Adresa mora biti bar {{length}} karaktera",
 			"phoneNumberLengthError": "Broj telefona mora biti bar {{length}} karaktera",
 			"phoneNumberFormatError": "Neispravan format. Očekivano: 06X/123-456",
-			"sendOtpEmailError": "Morate unijeti email za slanje OTP-a.",
+			"sendOtpEmailError": "Morate unijeti ispravan email za slanje OTP-a.",
+			"verifyEmailError": "Vaš email mora biti verifikovan.",
 			"otpNotVerified": "Ovaj OTP kôd nije važeći.",
 			"enterValidOtpError": "Unesite ispravan OTP kôd"
         }
@@ -143,6 +144,10 @@
             "cancel": "Odustani",
             "add": "Dodaj",
             "title": "Dodavanje kase"
+        },
+		"store": {
+            "cancel": "Odustani",
+            "add": "Dodaj"
         },
         "message": {
             "details": {

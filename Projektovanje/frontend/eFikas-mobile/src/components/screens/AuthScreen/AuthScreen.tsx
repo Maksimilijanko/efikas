@@ -141,6 +141,7 @@ const RegisterForm = ({
 				type={type}
 				iconName={iconName}
 				isInvalid={false}
+				required
 			/>
 		);
 	}
