@@ -41,6 +41,7 @@ export default function AddStoreDialog({
 		return(
 			<FormField
 				control={control}
+				required
 				name={name}
 				label={t(labelTranslationString)}
 				placeholder={t(placeholder)}
@@ -82,8 +83,8 @@ export default function AddStoreDialog({
 
                 <ModalFooter style={styles.buttonsContainer}>
                     <HStack style={{ justifyContent: "space-between", width: "100%" }}>
-                        <DialogButton title="Cancel" onPress={onClose} />
-                        <DialogButton title="Confirm" onPress={() => handleSubmit(onSubmit)()} />
+                        <DialogButton title={t("dialogs.store.cancel")} onPress={onClose} />
+                        <DialogButton title={t("dialogs.store.add")} onPress={() => handleSubmit(onSubmit)()} />
                     </HStack>
                 </ModalFooter>
             </ModalContent>

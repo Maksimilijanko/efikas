@@ -61,8 +61,9 @@ const LabeledTextField = ({
   return (
     <View className="w-full">
       <Label
-        text={`${label}${required ? " *" : ""}`}
+        text={`${label}`}
         size={labelSize}
+		required={required}
         align="left"
         color={hasError ? Colors.deleteColor : undefined}
         className="mb-1"

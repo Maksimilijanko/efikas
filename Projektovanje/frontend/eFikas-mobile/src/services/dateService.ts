@@ -2,7 +2,13 @@ import dayjs from "dayjs";
 
 export const dateService = {
     formatLocalDate: (date: Date): string => {
-        return dayjs(date).format('DD. MM. YYYY');
+		const d = dateService.parseBackendDate(date);
+        return dayjs(d).format('DD. MM. YYYY');
+    },
+
+	formatLocalDateTime: (date: Date): string => {
+		const d = dateService.parseBackendDate(date);
+        return dayjs(d).format('DD.MM.YYYY. HH:mm');
     },
 
     formatBackendDate: (date: Date): string => {

@@ -3,6 +3,7 @@ import { HStack } from "@/src/components/ui/hstack";
 import { Modal, ModalBackdrop, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@/src/components/ui/modal";
 import { Text } from "@/src/components/ui/text";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
 interface SettingsDialogProps {
@@ -21,6 +22,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     children,
 }) => {
     const { Colors } = useTheme();
+	const { t } = useTranslation();
 
     return (
         <Modal isOpen={visible} onClose={onClose}>
@@ -39,8 +41,8 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
                 <ModalFooter style={styles.buttonsContainer}>
                     <HStack style={{ justifyContent: "space-between", width: "100%" }}>
-                        <DialogButton title="Cancel" onPress={onClose} />
-                        <DialogButton title="Confirm" onPress={() => {onConfirm(); onClose();}} />
+                        <DialogButton title={t('dialogs.language.cancelButton')} onPress={onClose} />
+                        <DialogButton title={t('dialogs.language.confirmButton')} onPress={() => {onConfirm(); onClose();}} />
                     </HStack>
                 </ModalFooter>
             </ModalContent>

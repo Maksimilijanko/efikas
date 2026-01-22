@@ -691,6 +691,7 @@ function AddReservationScreen() {
   const renderFormField = (
     label: string,
     name: Path<GuestValidation.FormValues>,
+	required: boolean,
     placeholder: string,
     helperText: string,
     type: "text" | "password",
@@ -705,6 +706,7 @@ function AddReservationScreen() {
         control={control}
         name={name}
         label={label}
+		required={required}
         placeholder={t(placeholder)}
         helperText={helperText}
         type={type}
@@ -744,6 +746,7 @@ function AddReservationScreen() {
           arrivalField={renderFormField(
             t("reservations.form.arrivalDateTime"),
             "dateTimeOfArrival",
+			true,
             undefined,
             undefined,
             "text",
@@ -759,6 +762,7 @@ function AddReservationScreen() {
           departureField={renderFormField(
             t("reservations.form.departureDateTime"),
             "dateTimeOfDeparture",
+			true,
             undefined,
             undefined,
             "text",
@@ -794,6 +798,7 @@ function AddReservationScreen() {
           guestNameField={renderFormField(
             t("reservations.form.fields.firstName"),
             "name",
+			true,
             "Marko",
             undefined,
             "text",
@@ -802,6 +807,7 @@ function AddReservationScreen() {
           guestSurnameField={renderFormField(
             t("reservations.form.fields.lastName"),
             "surname",
+			true,
             "Marković",
             undefined,
             "text",
@@ -829,6 +835,7 @@ function AddReservationScreen() {
           phoneField={renderFormField(
             t("reservations.form.fields.phone"),
             "phoneNumber",
+			true,
             "065/123-456",
             undefined,
             "text",
@@ -837,6 +844,7 @@ function AddReservationScreen() {
           birthDateField={renderFormField(
             t("reservations.form.fields.birthDate"),
             "birthDate",
+			true,
             undefined,
             undefined,
             "text",
@@ -852,6 +860,7 @@ function AddReservationScreen() {
           birthPlaceField={renderFormField(
             t("reservations.form.fields.birthPlace"),
             "birthPlace",
+			true,
             "Banja Luka",
             undefined,
             "text",
@@ -860,6 +869,7 @@ function AddReservationScreen() {
           birthCountryField={renderFormField(
             t("reservations.form.fields.birthCountry"),
             "birthCountry",
+			true,
             "BiH",
             undefined,
             "text",
@@ -871,6 +881,7 @@ function AddReservationScreen() {
                   birthMunicipalityField: renderFormField(
                     t("reservations.form.fields.birthMunicipality"),
                     "birthMunicipality",
+					true,
                     "Banja Luka",
                     undefined,
                     "text",
@@ -879,6 +890,7 @@ function AddReservationScreen() {
                   citizenIdField: renderFormField(
                     t("reservations.form.fields.citizenId"),
                     "jmbg",
+					true,
                     "1234567891234",
                     undefined,
                     "text",
@@ -897,6 +909,7 @@ function AddReservationScreen() {
                   citizenshipField: renderFormField(
                     t("reservations.form.fields.citizenship"),
                     "citizenship",
+					true,
                     "Srbija",
                     undefined,
                     "text",
@@ -905,6 +918,7 @@ function AddReservationScreen() {
                   passportNumberField: renderFormField(
                     t("reservations.form.fields.passportNumber"),
                     "passportNumber",
+					true,
                     "W0000208",
                     undefined,
                     "text",
@@ -913,6 +927,7 @@ function AddReservationScreen() {
                   passportIssuedDateField: renderFormField(
                     t("reservations.form.fields.passportIssuedDate"),
                     "passportIssuedDate",
+					true,
                     undefined,
                     undefined,
                     "text",
@@ -928,6 +943,7 @@ function AddReservationScreen() {
                   entryDateField: renderFormField(
                     t("reservations.form.fields.entryDate"),
                     "entryDate",
+					true,
                     undefined,
                     undefined,
                     "text",
@@ -943,6 +959,7 @@ function AddReservationScreen() {
                   entryPlaceField: renderFormField(
                     t("reservations.form.fields.entryPlace"),
                     "entryPlace",
+					true,
                     "BiH",
                     undefined,
                     "text",
@@ -951,6 +968,7 @@ function AddReservationScreen() {
                   visaTypeField: renderFormField(
                     t("reservations.form.fields.visaType"),
                     "visaType",
+					true,
                     "Type C",
                     undefined,
                     "text",
@@ -959,6 +977,7 @@ function AddReservationScreen() {
                   visaNumberField: renderFormField(
                     t("reservations.form.fields.visaNumber"),
                     "visaNumber",
+					true,
                     "D12345678",
                     undefined,
                     "text",
@@ -967,6 +986,7 @@ function AddReservationScreen() {
                   permittedResidenceDateField: renderFormField(
                     t("reservations.form.fields.permittedResidenceUntil"),
                     "permittedResidenceDate",
+					true,
                     undefined,
                     undefined,
                     "text",
@@ -985,6 +1005,7 @@ function AddReservationScreen() {
           addressField={renderFormField(
             t("reservations.form.fields.address"),
             "address",
+			true,
             "Ulica 123",
             undefined,
             "text",
@@ -993,6 +1014,7 @@ function AddReservationScreen() {
           accommodationUnitNumberField={renderFormField(
             t("reservations.form.fields.unitNumber"),
             "accommodationUnitNumber",
+			true,
             "13",
             undefined,
             "text",
@@ -1005,6 +1027,7 @@ function AddReservationScreen() {
           accommodationUnitFloorField={renderFormField(
             t("reservations.form.fields.unitFloor"),
             "accommodationUnitFloor",
+			true,
             "4",
             undefined,
             "text",
@@ -1042,6 +1065,7 @@ function AddReservationScreen() {
           priceField={renderFormField(
             t("reservations.form.fields.price") + " (BAM)",
             "price",
+			true,
             "50.00",
             undefined,
             "text",
@@ -1054,6 +1078,7 @@ function AddReservationScreen() {
           invoiceNumberField={renderFormField(
             t("reservations.form.fields.invoiceNumber"),
             "issuedInvoiceNumber",
+			false,
             "65413211",
             undefined,
             "text",

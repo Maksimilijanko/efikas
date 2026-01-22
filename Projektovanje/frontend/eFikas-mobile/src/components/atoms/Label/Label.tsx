@@ -37,8 +37,8 @@ export const Label = ({
     >
       {text}
       {required && (
-        <Text size={size} style={{ color }}>
-          {" "}
+        <Text size={size} style={{ color: 'red' }}>
+          {" *"}
         </Text>
       )}
     </Text>

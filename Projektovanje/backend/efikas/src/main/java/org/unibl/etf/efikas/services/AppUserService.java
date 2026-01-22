@@ -16,6 +16,8 @@ import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.requests.RegistrationRequest;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
+import org.unibl.etf.efikas.services.interfaces.OtpService;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ public class AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final OtpService otpService;
     private final ModelMapper modelMapper;
 
     public AppUserResponse getUserById(int userId) {
@@ -99,6 +102,12 @@ public class AppUserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match!");
         }
 
+        boolean validOtp = otpService.verifyOtp(email, changePasswordDTO.getOtp());
+        if(!validOtp) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP!");
+        }
+
+        otpService.deleteOtpFromStorage(email); // Delete immediately after success
         user.setPasswordHash(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         appUserRepository.save(user);
     }

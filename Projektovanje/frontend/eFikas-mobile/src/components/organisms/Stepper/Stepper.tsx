@@ -1,4 +1,4 @@
-import { Colors } from "@/src/styles/style";
+import { useTheme } from "@/src/providers/ThemeProvider";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 
 export interface CustomProgressStepProps {
@@ -19,16 +19,23 @@ interface StepperProps {
 }
 
 export default function Stepper(props: StepperProps) {
+	const { Colors } = useTheme();
+
 	return (
 		<ProgressSteps 
-			completedCheckColor={"#FFFFFF"} 
+			completedCheckColor={"#FFFFFF"}
+
+			activeLabelColor={Colors.primary}
 			activeStepNumColor={Colors.textPrimary} 
 			activeStepIconBorderColor={Colors.primary}
-			completedProgressBarColor={Colors.primary}
+
+			completedProgressBarColor={Colors.statusAvailable}
 			completedStepIconColor={Colors.statusAvailable}
+			completedLabelColor={Colors.statusAvailable}
 			
+			disabledStepIconColor={Colors.disabledBackground}
+			disabledStepNumColor={Colors.tertiary}
 			activeStep={props.activeStep}
-			
 		>
 			{props.progressSteps.map((step, index) => {
 				return(
@@ -40,8 +47,8 @@ export default function Stepper(props: StepperProps) {
 						onPrevious={step.onPreviousStep}
 						buttonNextText={step.buttonNextText} 
 						buttonNextTextColor={Colors.background} // TODO: Find better workaround to hide it
-						onNext={step.onNextStep}
 						buttonNextDisabled={true}
+						onNext={step.onNextStep}
 					>
 						{step.componentToRender}
 					</ProgressStep>

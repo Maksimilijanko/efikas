@@ -20,26 +20,30 @@ export const API_URLS = {
 		resetPassword: `${API_BASE_URL}/users/me/reset-password`,
     },
 
+	cashRegisters: {
+		list: `${API_BASE_URL}/cash-registers`,
+		create: `${API_BASE_URL}/cash-registers`,
+		delete: (id: number) => `${API_BASE_URL}/cash-registers/${id}`,
+	},
 
+	reservations: {
+		listUser: () => `${API_BASE_URL}/reservations`,
 
-  reservations: {
-    listUser: () => `${API_BASE_URL}/reservations`,
+		listByApartment: (apartmentId: number) =>
+		`${API_BASE_URL}/apartments/${apartmentId}/reservations`,
 
-    listByApartment: (apartmentId: number) =>
-      `${API_BASE_URL}/apartments/${apartmentId}/reservations`,
+		getById: (reservationId: number, apartmentId: number) =>
+		`${API_BASE_URL}/reservations/${reservationId}?apartmentId=${apartmentId}`,
 
-    getById: (reservationId: number, apartmentId: number) =>
-      `${API_BASE_URL}/reservations/${reservationId}?apartmentId=${apartmentId}`,
+		create: (apartmentId: number) =>
+		`${API_BASE_URL}/apartments/${apartmentId}/reservations`,
 
-    create: (apartmentId: number) =>
-      `${API_BASE_URL}/apartments/${apartmentId}/reservations`,
+		update: (reservationId: number) =>
+		`${API_BASE_URL}/reservations/${reservationId}`,
 
-    update: (reservationId: number) =>
-      `${API_BASE_URL}/reservations/${reservationId}`,
-
-    delete: (reservationId: number) =>
-      `${API_BASE_URL}/reservations/${reservationId}`,
-  },
+		delete: (reservationId: number) =>
+		`${API_BASE_URL}/reservations/${reservationId}`,
+	},
 
 	notifications: {
 		pushToken: `${API_BASE_URL}/notifications/push-token`,

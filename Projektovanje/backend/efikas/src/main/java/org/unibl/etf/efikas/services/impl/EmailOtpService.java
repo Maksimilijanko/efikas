@@ -43,10 +43,14 @@ public class EmailOtpService implements OtpService {
 
         // 4. Validate & Manual Delete
         if (storedCode != null && storedCode.equals(code)) {
-            otpCacheService.remove(to); // Delete immediately after success
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public void deleteOtpFromStorage(String key) {
+        otpCacheService.remove(key);
     }
 }

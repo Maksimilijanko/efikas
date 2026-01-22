@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS efikas."guests_book" (
     "AccommodationUnitFloor" int NOT NULL,
     "DateTimeOfArrival" timestamp NOT NULL,
     "DateTimeOfDeparture" timestamp NOT NULL,
-    "IssuedInvoiceNumber" varchar(50) NOT NULL, 
+    "IssuedInvoiceNumber" varchar(50) NULL,
     "Remarks" varchar(200) NULL,
 
     "CreatedAt" timestamp DEFAULT NOW()
