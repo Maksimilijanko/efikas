@@ -26,6 +26,12 @@ export const API_URLS = {
 		delete: (id: number) => `${API_BASE_URL}/cash-registers/${id}`,
 	},
 
+	books: {
+		getIncomeBookPdf: `${API_BASE_URL}/books/pdf/INCOME`,
+		getDomesticGuestsBookPdf: `${API_BASE_URL}/books/pdf/DOMESTIC_GUESTS`,
+		getForeignGuestsBookPdf: `${API_BASE_URL}/books/pdf/FOREIGN_GUESTS`,
+	},
+
 	reservations: {
 		listUser: () => `${API_BASE_URL}/reservations`,
 

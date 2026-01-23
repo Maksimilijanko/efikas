@@ -7,6 +7,8 @@ import ReactNativeBlobUtil, { FetchBlobResponse } from "react-native-blob-util";
 
 
 import { File, Directory, Paths } from 'expo-file-system';
+import { SECURE_STORE_KEYS } from "@/src/util/secureStoreKeys";
+import { secureStoreService } from "@/src/services/secureStoreService";
 
 type BlobFetchOptions = {
 	downloadPath?: string; // full file path INCLUDING filename
@@ -31,14 +33,27 @@ export const fetchPdfHelper = async (
 
 	// Ensure parent directory exists
 	//await new Directory(file.parentDirectory).create({ intermediates: true });
-	const result = await File.downloadFileAsync(url, file, {
-		headers: {
-			Accept: 'application/pdf',
-		},
-		idempotent: true,
-	});
+	// 2. Manually get the token just like your interceptor does
+    const authResponseString = await secureStoreService.getItemAsync(
+        SECURE_STORE_KEYS.authenticationResponseKey
+    );
+    
+    let token = "";
+    if (authResponseString) {
+        const authResponse = JSON.parse(authResponseString);
+        token = authResponse.token;
+    }
 
-	console.log("RESULT DOWNLOAD: ", result);
+    // 3. Pass the token into the headers
+    const result = await File.downloadFileAsync(url, file, {
+        headers: {
+            'Accept': 'application/pdf',
+            'Authorization': `Bearer ${token}`, // <--- Add this line!
+        },
+        idempotent: true,
+    });
+
+	console.log("RESULT DOWNLOAD: ", result.uri);
 
 	if (!result.exists) {
 		throw new Error('PDF download failed');
@@ -63,6 +78,7 @@ export const bookService = {
 	/* ==================================== STREAMING BOOKS ==================================== */
 	streamIncomeBook: async (request: DownloadIncomeBookRequest): Promise<PdfResult> => {
 		const url = buildIncomeBookUrl(request);
+		console.log("URL FOR BOOK: ", url)
 
 		return fetchPdfHelper(url);
 	},

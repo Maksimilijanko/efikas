@@ -12,6 +12,9 @@ import { BookPath, DateRangeDTO, DownloadIncomeBookRequest, PdfResult } from '@/
 import { PATH_CONSTANTS } from '@/src/util/pathConstants';
 import { FetchBlobResponse } from 'react-native-blob-util';
 import { useDownload } from '@/src/hooks/useDownload';
+import { EditDeleteDialog } from '../../organisms/Dialogs/EditDeleteDialog/EditDeleteDialog';
+import { ConfirmationDialog } from '../../organisms/Dialogs/ConfirmationDialog/ConfirmationDialog';
+import { pdfService } from '@/src/services/pdfService';
 
 interface RawDocumentData {
     id: string;
@@ -38,6 +41,8 @@ const IncomeBookScreen: React.FC = () => {
 
     const [bookPaths, setBookPaths] = useState<BookPath[]>([]);
     const [loadingBooks, setLoadingBooks] = useState(true);
+	const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+	const [bookPathToDelete, setBookPathToDelete] = useState<string>("");
 
     const documentsDataForTemplate = rawIncomeBookData.map(doc => ({
 		id: doc.id,
@@ -62,28 +67,54 @@ const IncomeBookScreen: React.FC = () => {
     useEffect(() => {
         loadBooks();
     }, [isDownloading]);
+
+	// Opens the modal to ask user for permission to delete
+	const onDeleteBook = (pathToDelete: string) => {
+		setDeleteDialogVisible(true);
+		setBookPathToDelete(pathToDelete);
+	};
+
+	// Handles the deletion of a book
+	const handleDeleteBook = () => {
+		if(bookPathToDelete && bookPathToDelete !== "") {
+			pdfService.deletePdf(bookPathToDelete);
+			setBookPaths(prevBooks => prevBooks.filter(book => book.path !== bookPathToDelete));
+		}
+		
+	}
     
     return (
-        <DocumentsDownloadTemplate
-            streamPDF={streamIncomeBook}
-            downloadPDF={downloadIncomeBook}
-            pdfPath={pdfPath}
-            isDownloading={isDownloading}
-            bookPaths={bookPaths}
-            isLoadingBooks={loadingBooks}
+		<>
+			<DocumentsDownloadTemplate
+				streamPDF={streamIncomeBook}
+				downloadPDF={downloadIncomeBook}
+				pdfPath={pdfPath}
+				isDownloading={isDownloading}
+				bookPaths={bookPaths}
+				isLoadingBooks={loadingBooks}
 
-            documentsData={documentsDataForTemplate}
-            documentItemComponent={(props) => {
-                return (
-                    <DocumentItem
-						title={props.title}
-						documentType={props.documentType}
-						onPress={props.onPress}
-						onDownloadPress={props.onDownloadPress}
-					/>
-                );
-            }}
-        />
+				documentsData={documentsDataForTemplate}
+				documentItemComponent={(props) => {
+					return (
+						<DocumentItem
+							title={props.title}
+							documentType={props.documentType}
+							onPress={props.onPress}
+							onDownloadPress={props.onDownloadPress}
+						/>
+					);
+				}}
+				handleDeleteBook={(path: string) => onDeleteBook(path)}
+			/>
+
+			<ConfirmationDialog 
+				visible={deleteDialogVisible} 
+				title={t('dialogs.download.deleteBookTitle', {title: ''})} 
+				onClose={() => setDeleteDialogVisible(false)} 
+				onConfirm={handleDeleteBook}			
+			/>
+		</>
+        
     );
 };
 

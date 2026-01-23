@@ -12,7 +12,8 @@ export const authService = {
   },
 
   login: async (loginRequest: LoginRequest): Promise<AxiosResponse> => {
-    const response = await axiosInstance.post<string>(API_URLS.auth.login, loginRequest);
+	console.log("LOGIN REQ", loginRequest)
+	const response = await axiosInstance.post<string>(API_URLS.auth.login, loginRequest);
     return response;
   },
 

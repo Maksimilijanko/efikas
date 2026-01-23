@@ -14,7 +14,8 @@ export const styles = StyleSheet.create({
         marginBottom: 10,
     },
     linksContainer: {
-        gap: 10
+        gap: 10,
+		alignItems: 'center'
     },
     item: {
         gap: 10,

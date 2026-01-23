@@ -14,7 +14,7 @@ export const useAuth = () => {
 
     const loginMutation = useMutation({
         mutationFn: (loginRequest: LoginRequest) => authService.login(loginRequest),
-        onSuccess: (response) => {
+        onSuccess: async (response) => {
             if (response.status === 200) {
                 toastService.success(
                     t('auth.login.toastMessages.successTitle'),
@@ -25,6 +25,10 @@ export const useAuth = () => {
                     SECURE_STORE_KEYS.authenticationResponseKey,
                     JSON.stringify(response.data)
                 );
+
+				const jwt = await secureStoreService.getItemAsync(SECURE_STORE_KEYS.authenticationResponseKey);
+
+				console.log("JWT: ", jwt);
 
                 router.replace('/(tabs)');
             } else {
@@ -40,6 +44,7 @@ export const useAuth = () => {
             
             // If it's an Axios error
             if ((error as any).isAxiosError) {
+				console.log("ERR: ", error);
                 console.log("Axios error details:", {
                     status: (error as any).response?.status,
                     statusText: (error as any).response?.statusText,

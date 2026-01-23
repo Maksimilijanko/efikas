@@ -23,6 +23,13 @@ export const fileService = {
         if(dir.exists)
             dir.delete();
     },
+
+	deleteFile: (path: string) => {
+		const file = new File(path);
+		if(file.exists){
+			file.delete();
+		}
+	},
     
     ensureDirectory: async (dir: Directory) => {
         if(!dir.exists)

@@ -17,6 +17,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { HStack } from '../../ui/hstack';
 import { IconButton } from '../../atoms/IconButton/IconButton';
 import { DocumentType } from '../../molecules/DocumentItem/DocumentItem';
+import { toastService } from '@/src/services/toastService';
 
 
 
@@ -36,9 +37,10 @@ export type DocumentsDownloadTemplateProps = {
 	areGuests?: boolean;
 	streamPDF?: (dateFormVisible: boolean, period: DateRangeDTO) => void;
 	streamPDFGuests?: (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => void;
-	downloadPDF?: (dateFormVisible: boolean, period: DateRangeDTO) => void;
+	downloadPDF?: (dateFormVisible: boolean, period: DateRangeDTO, onSuccess?: () => void) => void;
 	downloadPDFGuests?: (type: GuestBookType, dateFormVisible: boolean, period: DateRangeDTO) => void;
 	bookkeepingModeChange?: (mode: BookkeepingMode) => void;
+	handleDeleteBook: (path: string) => void;
 };
 
 
@@ -54,6 +56,7 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 	streamPDFGuests,
 	downloadPDF,
 	downloadPDFGuests,
+	handleDeleteBook
 }) => {
 	const { t } = useTranslation();
 	const { Colors } = useTheme();
@@ -91,13 +94,15 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 		};
 
 		if (!areGuests) {
-			downloadPDF?.(dateFormVisible, period);
+			downloadPDF?.(dateFormVisible, period, () => toastService.success("USPJEH"));
 		} else {
 			const type = GUEST_BOOK_MAP[id];
 			if (!type) return;
 			downloadPDFGuests?.(type, dateFormVisible, period);
 		}
 	};
+
+	
 
 	useEffect(() => {
 		if (pdfPath && !isDownloading) {
@@ -119,6 +124,8 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 		setShowToDatePicker(false);
 		setToDate(selectedDate);
 	};
+
+
 
 	const renderDatePickerInputItem = (label: string, value: string, onPress: () => void) => {
 		return (
@@ -189,7 +196,7 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 
 
 			{/* Documents List Section */}
-			<DownloadedBooksList bookPaths={bookPaths} loading={isLoadingBooks} />
+			<DownloadedBooksList bookPaths={bookPaths} loading={isLoadingBooks} onDelete={handleDeleteBook}/>
 
 			<VStack style={{ marginBottom: 50 }}>
 				<BookkeepingSwitcher onModeChange={setBookkeepingMode} initialMode="yearly" />

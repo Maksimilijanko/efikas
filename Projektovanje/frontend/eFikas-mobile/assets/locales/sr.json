@@ -120,7 +120,8 @@
         "download": {
             "title": "Dokument se preuzima",
             "subtitle": "Provjerite folder sa preuzimanjima",
-            "okButton": "U redu"
+            "okButton": "U redu",
+			"deleteBookTitle": "Da li ste sigurni da želite obrisati ovu knjigu? {{title}}"
         },
         "language": {
             "title": "Jezik",
@@ -351,6 +352,10 @@
             "fromAfterToDescription": "Pomiješali ste vrijednosti datuma.",
             "sharingSavePdfTitle": "Podijelite {{title}}"
         },
+		"messages": {
+			"successfulDeleteTitle": "Uspjeh!",
+			"successfulDeleteMessage": "Knjiga je uspješno obrisana."
+		},
         "bookTitles": {
             "ExpenseBook": "Knjiga rashoda",
             "IncomeBook": "Knjiga prihoda",

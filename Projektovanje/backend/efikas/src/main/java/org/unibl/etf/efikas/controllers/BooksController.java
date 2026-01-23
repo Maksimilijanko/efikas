@@ -52,6 +52,7 @@ public class BooksController {
             @RequestParam LocalDate from,
             @RequestParam LocalDate to
     ) throws IOException {
+        System.out.println("IN book CONTROLLER");
         AppUserResponse appUserResponse = appUserService.getUserById(taxpayerId);
         if(from.isAfter(to)) {
             throw new InvalidBookPeriodException("From date can not come after To date range");
@@ -177,8 +178,10 @@ public class BooksController {
                 .build();
     }
 
-    private StoreDTO getStoreDTO() {  // TODO: to see if store is necessary
+    private StoreDTO getStoreDTO() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("IN getStoreDTO CONTROLLER");
+        System.out.println("AUTH: " + authentication);
         return storeService.getStoreForActiveUser(authentication);
     }
 

@@ -93,8 +93,8 @@ public class DomesticGuestsBookLayoutStrategy implements BookLayoutStrategy<Dome
         row.add(entry.getAccommodationUnitNumber() + ", " + entry.getAccommodationUnitFloor());
         row.add(formatDate(arrivalDateTime));
         row.add(formatDate(departureDateTime));
-        row.add(entry.getIssuedInvoiceNumber().toString());
-        row.add(entry.getRemarks());
+        row.add(entry.getIssuedInvoiceNumber() != null ? entry.getIssuedInvoiceNumber().toString() : "");
+        row.add(entry.getRemarks() != null ? entry.getRemarks() : "");
 
         return row;
     }

@@ -12,6 +12,7 @@ import { DateRangeDTO, DownloadIncomeBookRequest, GuestsBookRequest, PdfResult }
 import { dateService } from '../services/dateService';
 
 import * as Sharing from 'expo-sharing';
+import { pdfService } from '../services/pdfService';
 
 export const useDownload = () => {
     const { t } = useTranslation();
@@ -51,8 +52,8 @@ export const useDownload = () => {
             ? period.to
             : dateService.formatBackendDate(new Date()),
         },
-        taxpayerId: 1,
-        storeId: 0,
+        taxpayerId: 4,
+        storeId: 2,
     });
 
     const buildGuestsRequest = (
@@ -91,6 +92,10 @@ export const useDownload = () => {
             setIsDownloading(true);
 
             const { uri } = await action();
+			console.log("IS STREAMING: ", uri);
+			if (isStreaming) {
+				pdfService.openPdf(uri);
+			}
 
             if (!(await fileService.fileExists(uri))) {
                 throw new Error('File not found after download');
@@ -100,6 +105,7 @@ export const useDownload = () => {
                 t('books.documents.downloadSuccessMessage'),
                 t('books.documents.downloadSuccessDescription')
             );
+			
 
             if (!isStreaming && shareTitle && (await Sharing.isAvailableAsync())) {
                 await Sharing.shareAsync(uri, {
@@ -111,14 +117,16 @@ export const useDownload = () => {
             }
 
             setPdfPath(uri);
+			
             await onSuccess?.(uri);
         } catch (err: any) {
             setDownloadError(
                 err.message || t('books.documents.downloadErrorMessage')
             );
+			console.log("ERROR DOWNLOADING: ", err);
         } finally {
-            setIsDownloading(false);
-        }
+			setIsDownloading(false);
+		}
     };
 
     //#endregion
@@ -126,14 +134,27 @@ export const useDownload = () => {
     /*  ================================== PUBLIC API ================================== */
 
     //#region Streaming 
-    const streamIncomeBook = async (dateFormVisible: boolean, period: DateRangeDTO) => {
+    const streamIncomeBook = async (dateFormVisible: boolean, period: DateRangeDTO, onSuccess?: (uri: string) => Promise<void> | void) => {
         if(!checkPeriodValidity(period)) return;
 
-        const request = buildIncomeRequest(dateFormVisible, period);
+		try {
+			const request = buildIncomeRequest(dateFormVisible, period);
+			console.log("INC BOOK REQ: ", request)
 
-        await executePdfAction(() =>
-            bookService.streamIncomeBook(request),
-        );
+			await executePdfAction(
+				() => bookService.streamIncomeBook(request), 
+				{
+					isStreaming: true,
+					onSuccess
+				}
+			);
+			
+			
+		} catch(err) {
+			console.log("ERROR DOWNLOADING: ", err)
+		}
+
+        
     }
 
     const streamGuestsBook = async (
