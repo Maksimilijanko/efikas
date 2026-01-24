@@ -124,6 +124,7 @@ export const useDownload = () => {
                 err.message || t('books.documents.downloadErrorMessage')
             );
 			console.log("ERROR DOWNLOADING: ", err);
+			//toastService.error(t('books.documents.downloadErrorTitle'), t('books.documents.downloadErrorMessage'));
         } finally {
 			setIsDownloading(false);
 		}

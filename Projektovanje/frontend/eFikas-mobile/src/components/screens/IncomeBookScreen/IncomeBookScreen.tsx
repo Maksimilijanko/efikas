@@ -80,7 +80,6 @@ const IncomeBookScreen: React.FC = () => {
 			pdfService.deletePdf(bookPathToDelete);
 			setBookPaths(prevBooks => prevBooks.filter(book => book.path !== bookPathToDelete));
 		}
-		
 	}
     
     return (

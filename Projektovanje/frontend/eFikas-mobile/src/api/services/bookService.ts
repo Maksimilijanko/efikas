@@ -15,6 +15,19 @@ type BlobFetchOptions = {
 	description?: string;
 };
 
+// This function "streams" the data into a temporary path
+const getStreamUri = async (url, token) => {
+  const res = await ReactNativeBlobUtil.config({
+    fileCache: true, // Saves to a temp file automatically
+    appendExt: 'pdf'
+  }).fetch('GET', url, {
+    Authorization: `Bearer ${token}`,
+  });
+  
+  // This path is temporary and will be cleared by the OS eventually
+  return res.path(); 
+};
+
 export const fetchPdfHelper = async (
 	url: string,
 	options?: BlobFetchOptions
@@ -78,9 +91,12 @@ export const bookService = {
 	/* ==================================== STREAMING BOOKS ==================================== */
 	streamIncomeBook: async (request: DownloadIncomeBookRequest): Promise<PdfResult> => {
 		const url = buildIncomeBookUrl(request);
-		console.log("URL FOR BOOK: ", url)
+		console.log("URL FOR BOOK: ", url);
+		const savedUser = await secureStoreService.getItemAsync(SECURE_STORE_KEYS.authenticationResponseKey);
 
-		return fetchPdfHelper(url);
+		const uriResult = await getStreamUri(url, JSON.parse(savedUser).token);
+
+		return { uri: uriResult };
 	},
 
 	streamGuestsBook: async (type: GuestBookType, request: GuestsBookRequest): Promise<PdfResult> => {

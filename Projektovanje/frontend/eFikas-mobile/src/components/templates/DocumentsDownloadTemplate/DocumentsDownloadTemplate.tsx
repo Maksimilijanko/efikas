@@ -18,6 +18,7 @@ import { HStack } from '../../ui/hstack';
 import { IconButton } from '../../atoms/IconButton/IconButton';
 import { DocumentType } from '../../molecules/DocumentItem/DocumentItem';
 import { toastService } from '@/src/services/toastService';
+import { pdfService } from '@/src/services/pdfService';
 
 
 
@@ -106,12 +107,7 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 
 	useEffect(() => {
 		if (pdfPath && !isDownloading) {
-			router.push({
-				pathname: '/pdfView',
-				params: {
-					uri: `${pdfPath}`
-				}
-			});
+			pdfService.openPdf(pdfPath);
 		}
 	}, [pdfPath, isDownloading]);
 

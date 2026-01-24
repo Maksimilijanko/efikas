@@ -256,7 +256,7 @@ export interface MenuSectionProps {
 export interface ProfileData {
   name: string;
   surname: string;
-  jib: string;
+  jmbg: string;
   email: string;
 }
 

@@ -31,6 +31,7 @@ import { VStack } from "../../ui/vstack";
 import { Spinner } from "../../ui/spinner";
 import { HStack } from "../../ui/hstack";
 import { CreateCashRegisterDTO } from "@/src/api/services/cashRegisterService";
+import ProfileSection from "../../organisms/ProfileSection/ProfileSection";
 
 export default function ProfileScreen() {
 	const { t } = useTranslation();
@@ -145,29 +146,25 @@ export default function ProfileScreen() {
 			<ProfileTemplate
 				content={
 					<ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
-						<View style={{ gap: 16, paddingBottom: 50 }}>
+						<View style={{ gap: 30, paddingBottom: 50 }}>
 							{/* Sekcija za profil */}
-							<Label
-								text={t("profile.sectionTitle")}
-								size="xl"
-								color={Colors.primary}
-								className="font-semibold"
-							/>
+							<ProfileSection title={t("profile.sectionTitle")}>
+								{renderField("name", "profile.labels.firstName")}
+								{renderField("surname", "profile.labels.lastName")}
+								{renderField("jmbg", "profile.labels.taxId")}
+								{renderField("email", "profile.labels.email")}
+							</ProfileSection>
 
-							{renderField("name", "profile.labels.firstName")}
-							{renderField("surname", "profile.labels.lastName")}
-							{renderField("jib", "profile.labels.taxId")}
-							{renderField("email", "profile.labels.email")}
+							{/* Sekcija za radnju */}
+							<ProfileSection title={t("profile.store.sectionTitle")}>
+								{renderField("name", "profile.labels.firstName")}
+								{renderField("surname", "profile.labels.lastName")}
+								{renderField("jmbg", "profile.labels.taxId")}
+								{renderField("email", "profile.labels.email")}
+							</ProfileSection>
 
 							{/* Sekcija za kase */}
-							<View style={styles.cashRegisterSection}>
-								<Label
-									text={t("cashRegisters.sectionTitle")}
-									size="xl"
-									color={Colors.primary}
-									className="font-semibold mb-4"
-								/>
-
+							<ProfileSection title={t("cashRegisters.sectionTitle")}>
 								{isLoadingCashRegisters ? 
 								(
 									<HStack style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -210,9 +207,8 @@ export default function ProfileScreen() {
 									<VStack style={{ alignItems: 'center' }}>
 										<MissingItemsNotifier label={t('profile.missingItems.cashRegister')} />
 									</VStack>
-									
 								)}
-							</View>
+							</ProfileSection>
 
 							{isEditMode && (
 								<View style={styles.buttonContainer}>
@@ -239,11 +235,6 @@ export default function ProfileScreen() {
 				}
 			/>
 
-			{/* <FloatButton
-        size="lg"
-        placement="bottom right"
-        onClick={() => setIsAddModalVisible(true)}
-      /> */}
 			{!isEditMode && (
 				<View style={styles.floatButtonContainer}>
 					<CustomMenu

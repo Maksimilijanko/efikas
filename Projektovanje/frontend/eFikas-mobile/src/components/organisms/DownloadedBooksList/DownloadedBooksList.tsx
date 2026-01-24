@@ -43,7 +43,7 @@ export default function DownloadedBooksList({ bookPaths, loading, onDelete }: Pr
 
                 <VStack style={styles.linksContainer}>
                     {bookPaths?.map((book, index) => (
-						<HStack key={index} style={styles.linksContainer}>
+						<HStack key={index} style={styles.linksItemContainer}>
 							<TouchableOpacity
 								key={book.path}
 								onPress={() => pdfService.openPdf(book.path)}
@@ -55,9 +55,7 @@ export default function DownloadedBooksList({ bookPaths, loading, onDelete }: Pr
 										alt="pdfIcon.svg"
 									/>
 
-									<Label text={book.displayName} color={Colors.info} size="sm" />
-
-									
+									<Label text={book.displayName} color={Colors.info} size="xs" />
 								</HStack>
 							</TouchableOpacity>
 

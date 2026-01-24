@@ -121,7 +121,7 @@
             "title": "Dokument se preuzima",
             "subtitle": "Provjerite folder sa preuzimanjima",
             "okButton": "U redu",
-			"deleteBookTitle": "Da li ste sigurni da želite obrisati ovu knjigu? {{title}}"
+			"deleteBookTitle": "Da li ste sigurni da želite obrisati ovu knjigu sa ovog uređaja? {{title}}"
         },
         "language": {
             "title": "Jezik",
@@ -346,6 +346,8 @@
             "downloadErrorMessage": "Neuspješno preuzimanje",
             "downloadSuccessMessage": "Uspješno preuzimanje",
             "downloadSuccessDescription": "PDF knjige možete sada pregledati",
+			"viewSuccessMessage": "Pregled uspješan!",
+            "viewSuccessDescription": "PDF knjige možete sada pregledati",
             "customDateErrorMessage": "Greška u datumima",
             "customDateErrorDescription": "Morate izabrati datum u slučaju prilagođenog rada",
             "invalidPeriodMessage": "Pogrešan period",
@@ -385,7 +387,7 @@
         "labels": {
             "firstName": "Ime",
             "lastName": "Prezime",
-            "taxId": "JIB",
+            "taxId": "JMBG",
             "email": "Email"
         },
         "buttons": {
@@ -406,6 +408,7 @@
 			"addStoreErrorExistsTitle": "Već ste jednom registrovali Vašu radnju!"
         },
 		"store": {
+			"sectionTitle": "Informacije o radnji",
 			"addModalTitle": "Dodavanje radnje",
 			"placeholders": {
 				"name": "Naziv",

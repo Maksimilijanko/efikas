@@ -15,10 +15,15 @@ export const styles = StyleSheet.create({
     },
     linksContainer: {
         gap: 10,
-		alignItems: 'center'
+		alignItems: 'stretch',
+    },
+	linksItemContainer: {
+        gap: 10,
+		alignItems: 'center',
+		justifyContent: 'space-between'
     },
     item: {
         gap: 10,
-        alignItems: 'center'
+        alignItems: 'center',
     },
 });

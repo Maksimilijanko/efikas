@@ -11,10 +11,11 @@ export const pdfService = {
 				uri: `${path}`
 			}
 		});
+		toastService.success(t('books.documents.viewSuccessMessage'), t('books.documents.viewSuccessDescription'));
 	},
 
 	deletePdf: (path: string) => {
 		fileService.deleteFile(path);
-		toastService.success(t('books.messages.successfulDeleteTitle'), t('books.messages.successfulDeleteMessage'))
+		toastService.success(t('books.messages.successfulDeleteTitle'), t('books.messages.successfulDeleteMessage'));
 	}
 }
