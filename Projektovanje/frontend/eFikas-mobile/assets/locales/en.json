@@ -253,7 +253,11 @@
                 },
                 "feedback": {
                     "mainTitle": "Feedback",
-                    "bugReportTitle": "Report an error"
+                    "bugReportTitle": "Report an error",
+					"emptyFeedbackErrorTitle": "Error.",
+					"emptyFeedbackErrorMessage": "If you are reporting an error, please fill the appropriate field.",
+					"successfulFeedbackTitle": "Your report was registered.",
+					"successfulFeedbackMessage": "Thank you for your feedback!"
                 }
             }
         }

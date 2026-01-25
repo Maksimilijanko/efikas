@@ -37,7 +37,7 @@ export default function ProfileScreen() {
 	const { t } = useTranslation();
 	const { Colors } = useTheme();
 	const navigation = useNavigation();
-	const { profile, isLoading, isSaving, updateProfile, addStore } = useProfile();
+	const { profile, store, isLoading, isSaving, updateProfile, addStore } = useProfile();
 	
 
 
@@ -47,6 +47,7 @@ export default function ProfileScreen() {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
 	const [tempProfile, setTempProfile] = useState<ProfileData | null>(null);
+	const [tempStore, setTempStore] = useState<StoreDTO | null>(null);
 
 	const [isAddCashRegisterModalVisible, setIsAddCashRegisterModalVisible] = useState(false);
 	const [isAddStoreModalVisible, setIsAddStoreModalVisible] = useState(false);
@@ -59,6 +60,7 @@ export default function ProfileScreen() {
 	const handleStartEdit = () => {
 		if (profile) {
 			setTempProfile(profile);
+			setTempStore(store);
 			setIsEditMode(true);
 		}
 		setIsDialogVisible(false);
@@ -66,6 +68,7 @@ export default function ProfileScreen() {
 
 	const handleCancel = () => {
 		setTempProfile(profile);
+		setTempStore(store);
 		setIsEditMode(false);
 	};
 
@@ -80,8 +83,15 @@ export default function ProfileScreen() {
 		}
 	};
 
-	const handleChange = useCallback(
+	const handleChangeProfile = useCallback(
 		(field: keyof ProfileData, value: string) => {
+			setTempProfile((prev) => (prev ? { ...prev, [field]: value } : null));
+		},
+		[]
+	);
+
+	const handleChangeStore = useCallback(
+		(field: keyof StoreDTO, value: string) => {
 			setTempProfile((prev) => (prev ? { ...prev, [field]: value } : null));
 		},
 		[]
@@ -104,7 +114,7 @@ export default function ProfileScreen() {
 		});
 	}, [navigation, isEditMode, Colors.textPrimary]);
 
-	const renderField = (
+	const renderProfileField = (
 		fieldKey: keyof ProfileData,
 		labelKey: string,
 		readOnly = false
@@ -122,7 +132,31 @@ export default function ProfileScreen() {
 				disabled={!editable}
 				inputProps={{
 					value,
-					onChangeText: (text) => handleChange(fieldKey, text),
+					onChangeText: (text) => handleChangeProfile(fieldKey, text),
+				}}
+			/>
+		);
+	};
+
+	const renderStoreField = (
+		fieldKey: keyof StoreDTO,
+		labelKey: string,
+		readOnly = false
+	) => {
+		const current = isEditMode ? tempStore ?? store : store;
+		const value = current?.[fieldKey] ?? "";
+		const editable = isEditMode && !readOnly;
+
+		return (
+			<LabeledTextField
+				label={t(labelKey)}
+				value={value}
+				size="xl"
+				labelSize="lg"
+				disabled={!editable}
+				inputProps={{
+					value,
+					onChangeText: (text) => handleChangeStore(fieldKey, text),
 				}}
 			/>
 		);
@@ -149,18 +183,19 @@ export default function ProfileScreen() {
 						<View style={{ gap: 30, paddingBottom: 50 }}>
 							{/* Sekcija za profil */}
 							<ProfileSection title={t("profile.sectionTitle")}>
-								{renderField("name", "profile.labels.firstName")}
-								{renderField("surname", "profile.labels.lastName")}
-								{renderField("jmbg", "profile.labels.taxId")}
-								{renderField("email", "profile.labels.email")}
+								{renderProfileField("name", "profile.labels.firstName")}
+								{renderProfileField("surname", "profile.labels.lastName")}
+								{renderProfileField("jmbg", "profile.labels.taxId")}
+								{renderProfileField("email", "profile.labels.email")}
 							</ProfileSection>
 
 							{/* Sekcija za radnju */}
 							<ProfileSection title={t("profile.store.sectionTitle")}>
-								{renderField("name", "profile.labels.firstName")}
-								{renderField("surname", "profile.labels.lastName")}
-								{renderField("jmbg", "profile.labels.taxId")}
-								{renderField("email", "profile.labels.email")}
+								{renderStoreField("name", "profile.store.labels.name")}
+								{renderStoreField("address", "profile.store.labels.address")}
+								{renderStoreField("activity", "profile.store.labels.activity")}
+								{renderStoreField("activityCode", "profile.store.labels.activityCode")}
+								{renderStoreField("jib", "profile.store.labels.jib")}
 							</ProfileSection>
 
 							{/* Sekcija za kase */}

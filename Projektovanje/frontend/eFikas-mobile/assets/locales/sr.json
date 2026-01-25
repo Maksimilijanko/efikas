@@ -4,6 +4,8 @@
 		"selectApartment": "Izaberite stan",
 		
 		"errors": {
+			"networkErrorTitle": "Greška u mreži.",
+			"networkErrorMessage": "Pokušajte ponovo kasnije.",
 			"invalidNumberError": "Unesite ispravan broj",
 			"lengthMinError": "Ovo polje mora biti bar {{length}} karaktera",
 			"lengthExactError": "Ovo polje mora biti {{length}} karaktera"
@@ -246,7 +248,11 @@
                 },
                 "feedback": {
                     "mainTitle": "Povratne informacije",
-                    "bugReportTitle": "Prijavite grešku"
+                    "bugReportTitle": "Prijavite grešku",
+					"emptyFeedbackErrorTitle": "Greška.",
+					"emptyFeedbackErrorMessage": "Ukoliko prijavljujete grešku, molimo Vas da popunite dato polje.",
+					"successfulFeedbackTitle": "Vaša poruka je zaprimljena.",
+					"successfulFeedbackMessage": "Hvala Vam na Vašoj prijavi!"
                 }
             }
         }

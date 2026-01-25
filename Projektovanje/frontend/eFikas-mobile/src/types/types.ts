@@ -346,3 +346,9 @@ export interface ApartmentExpenseDTO {
 export interface ApartmentExpenseResponse extends ApartmentExpenseDTO {
     apartmentId: number;
 }
+
+
+// ================ Settings =====================
+export interface AppErrorDTO {
+	note: string;
+}

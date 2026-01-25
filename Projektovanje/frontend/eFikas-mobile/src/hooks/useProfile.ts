@@ -12,9 +12,9 @@ export const useProfile = () => {
     // -------- FETCH PROFILE --------
     const {
         data: profile,
-        isLoading,
-        isError,
-        error,
+        isLoading: isLoadingProfile,
+        isError: isProfileError,
+        error: profileError,
         refetch: fetchProfile,
     } = useQuery({
         queryKey: ["profile"],
@@ -35,7 +35,7 @@ export const useProfile = () => {
     // -------- UPDATE PROFILE --------
     const {
         mutateAsync: updateProfile,
-        isPending: isSaving,
+        isPending: isSavingProfile,
     } = useMutation({
         mutationFn: async (updatedData: ProfileData) => {
             try {
@@ -53,6 +53,30 @@ export const useProfile = () => {
         onSuccess: (updatedData) => {
             // Ovim mozemo azurirati keš!
             queryClient.setQueryData(["profile"], updatedData);
+        },
+    });
+
+
+	// -------- FETCH STORE --------
+	const {
+        data: store,
+        isLoading: isLoadingStore,
+        isError: isErrorStore,
+        error: storeError,
+        refetch: fetchStore,
+    } = useQuery({
+        queryKey: ["store"],
+        queryFn: async () => {
+            try {
+                return await profileService.fetchStore();
+            } catch (err: any) {
+                const errorMessage = err.message || t("profile.toastMessages.genericError");
+                toastService.error(
+                    t("profile.toastMessages.fetchErrorTitle"),
+                    t("profile.toastMessages.fetchErrorMessage")
+                );
+                throw new Error(errorMessage);
+            }
         },
     });
 
@@ -96,12 +120,15 @@ export const useProfile = () => {
 
     return {
         profile,
-        isLoading,
-        isSaving,
-        isError,
-        error: (error as Error)?.message ?? null,
+		store,
+        isLoading: isLoadingProfile,
+		isLoadingStore,
+        isSaving: isSavingProfile,
+        isError: isProfileError,
+        error: (profileError as Error)?.message ?? null,
         fetchProfile,
         updateProfile,
+		fetchStore,
 		addStore,
 		isAddingStore
     };

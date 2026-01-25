@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.unibl.etf.efikas.models.dto.ChangePasswordDTO;
 import org.unibl.etf.efikas.models.dto.UserDTO;
+import org.unibl.etf.efikas.models.dto.books.StoreDTO;
 import org.unibl.etf.efikas.models.entities.AppUser;
+import org.unibl.etf.efikas.models.entities.Store;
 import org.unibl.etf.efikas.models.requests.RegistrationRequest;
 import org.unibl.etf.efikas.repositories.AppUserRepository;
 import org.unibl.etf.efikas.models.responses.AppUserResponse;
@@ -77,6 +79,7 @@ public class AppUserService {
 
         return modelMapper.map(user, AppUserResponse.class);
     }
+
 
     public AppUserResponse updateUserAccount(UserDTO userDto, Authentication authentication) {
         String email = authentication.getName();

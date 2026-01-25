@@ -6,18 +6,20 @@ export const API_BASE_URL = `${scheme}://${address}/api/${version}`;
 
 export const API_URLS = {
     auth: {
-        googleLogin: `${API_BASE_URL}/users/google/login`,
-        login: `${API_BASE_URL}/users/login`,
-        register: `${API_BASE_URL}/users/register`,
-		requestOtp: `${API_BASE_URL}/users/otp/request`,
-		verifyOtp: `${API_BASE_URL}/users/otp/verify`,
+        googleLogin: `${API_BASE_URL}/auth/google/login`,
+        login: `${API_BASE_URL}/auth/login`,
+        register: `${API_BASE_URL}/auth/register`,
+		requestOtp: `${API_BASE_URL}/auth/otp/request`,
+		verifyOtp: `${API_BASE_URL}/auth/otp/verify`,
+		resetPassword: `${API_BASE_URL}/auth/reset-password`,
     },
     
     profile: {
         get: `${API_BASE_URL}/users/me`,
         update: `${API_BASE_URL}/users/me`,
 		registerStore: `${API_BASE_URL}/users/register/store`,
-		resetPassword: `${API_BASE_URL}/users/me/reset-password`,
+		resetPassword: `${API_BASE_URL}/auth/reset-password`,
+		getStore: `${API_BASE_URL}/users/me/store`,
     },
 
 	cashRegisters: {
@@ -83,4 +85,8 @@ export const API_URLS = {
         byName: (apartmentId: number, name: string) => 
             `${API_BASE_URL}/apartments/${apartmentId}/expenses/${encodeURIComponent(name)}`,
     },
+
+	settings: {
+		registerError: `${API_BASE_URL}/settings/register-error`
+	},
 }

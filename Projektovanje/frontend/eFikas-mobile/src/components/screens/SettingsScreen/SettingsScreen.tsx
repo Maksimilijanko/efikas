@@ -1,13 +1,14 @@
 
-import { MenuSectionProps } from "@/src/types/types";
-import { Href, router } from "expo-router";
+import { settingsService } from "@/src/api/services/settingsService";
+import { Theme, useTheme } from "@/src/providers/ThemeProvider";
+import { toastService } from "@/src/services/toastService";
+import { AppErrorDTO, MenuSectionProps } from "@/src/types/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import SettingsTemplate from "../../templates/SettingsTemplate/SettingsTemplate";
 import { LanguageDialog } from "../../organisms/Dialogs/LanguageDialog/LanguageDialog";
-import { ThemeDialog } from "../../organisms/Dialogs/ThemeDialog/ThemeDialog";
-import { Theme, useTheme } from "@/src/providers/ThemeProvider";
 import { ReportDialog } from "../../organisms/Dialogs/ReportDialog/ReportDialog";
+import { ThemeDialog } from "../../organisms/Dialogs/ThemeDialog/ThemeDialog";
+import SettingsTemplate from "../../templates/SettingsTemplate/SettingsTemplate";
 
 
 export default function SettingsScreen() {
@@ -29,8 +30,23 @@ export default function SettingsScreen() {
         console.log("Theme changed to: ", selectedTheme);
     };
 
-    const onErrorReportSubmit = () => {
-        // TODO wait for backend
+    const onErrorReportSubmit = async (appErrorText: string) => {
+		try {
+			const request: AppErrorDTO = {
+				note: appErrorText
+			};
+
+			const response = await settingsService.registerAppError(request);
+
+			if(response.status !== 200) {
+				throw new Error("Greska prilikom dodavanja prijave o grešci.");
+			}
+
+			toastService.success(t('menu.mainSettings.settings.feedback.successfulFeedbackTitle'), t('menu.mainSettings.settings.feedback.successfulFeedbackMessage'));
+		} catch(err) {
+			toastService.error(t('common.errors.networkErrorTitle'), t('common.errors.networkErrorMessage'));
+			console.log(err);
+		}
     }
 
 
@@ -73,7 +89,7 @@ export default function SettingsScreen() {
             <ReportDialog 
                 visible={reportDialogVisible} 
                 onCancel={() => setReportDialogVisible(false)} 
-                onSubmit={onErrorReportSubmit}            
+                onSubmit={(text: string) => onErrorReportSubmit(text)}            
             />
         </>
         

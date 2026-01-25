@@ -12,6 +12,11 @@ export const profileService = {
         await axiosInstance.put(API_URLS.profile.update, data);
     },
 
+	fetchStore: async (): Promise<StoreDTO> => {
+		const response = await axiosInstance.get<StoreDTO>(API_URLS.profile.getStore);
+		return response.data;
+	},
+
 	registerStore: async (data: StoreDTO): Promise<void> => {
 		await axiosInstance.post(API_URLS.profile.registerStore, data);
 	}
