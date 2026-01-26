@@ -8,7 +8,7 @@ import { LucideIconName } from "@/src/types/types";
 import { StoreValidation } from "@/src/util/validationSchemas";
 import { Path, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
@@ -37,7 +37,7 @@ export default function AddStoreDialog({
         },
     });
 
-	const renderStoreField = (labelTranslationString: string, name: Path<StoreValidation.FormValues>, placeholder: string, iconName: LucideIconName) => {
+	const renderStoreField = (labelTranslationString: string, name: Path<StoreValidation.FormValues>, placeholder: string, iconName: LucideIconName, inputProps?: any,) => {
 		return(
 			<FormField
 				control={control}
@@ -48,6 +48,7 @@ export default function AddStoreDialog({
 				type="text"
 				iconName={iconName}
 				isInvalid={false}
+				inputProps={inputProps}
 			/>
 		);
 	}
@@ -61,7 +62,7 @@ export default function AddStoreDialog({
 	return (
 		<Modal isOpen={visible} onClose={onClose}>
 			<ModalBackdrop />
-			<ModalContent
+			{/* <ModalContent
                 style={[
                     styles.modalContainer,
                     { backgroundColor: Colors.background, shadowColor: Colors.shadowColor },
@@ -76,8 +77,8 @@ export default function AddStoreDialog({
 						{renderStoreField('profile.store.labels.name', 'name', 'profile.store.placeholders.name', 'Store')}
 						{renderStoreField('profile.store.labels.address', 'address', 'profile.store.placeholders.address', 'MapPinHouse')}
 						{renderStoreField('profile.store.labels.activity', 'activity', 'profile.store.placeholders.activity', 'Briefcase')}
-						{renderStoreField('profile.store.labels.activityCode', 'activityCode', 'profile.store.placeholders.activityCode', 'Hash')}
-						{renderStoreField('profile.store.labels.jib', 'jib', 'profile.store.placeholders.jib', 'IdCard')}
+						{renderStoreField('profile.store.labels.activityCode', 'activityCode', 'profile.store.placeholders.activityCode', 'Hash', { keyboardType: "numeric" })}
+						{renderStoreField('profile.store.labels.jib', 'jib', 'profile.store.placeholders.jib', 'IdCard', { keyboardType: "numeric" })}
 					</VStack>
 				</ModalBody>
 
@@ -87,14 +88,53 @@ export default function AddStoreDialog({
                         <DialogButton title={t("dialogs.store.add")} onPress={() => handleSubmit(onSubmit)()} />
                     </HStack>
                 </ModalFooter>
-            </ModalContent>
+            </ModalContent> */}
+
+			<KeyboardAvoidingView
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				style={{ width: '90%', justifyContent: 'center', alignItems: 'center' }}
+			>
+				<ModalContent
+					style={[
+						styles.modalContainer,
+						{ backgroundColor: Colors.background, shadowColor: Colors.shadowColor },
+					]}
+				>
+					<ModalHeader>
+						<Text style={[styles.sectionTitle, { color: Colors.tertiary }]}>{title}</Text>
+					</ModalHeader>
+
+					<ModalBody style={styles.modalBody}>
+						{/* Add ScrollView so the form is reachable when keyboard is up */}
+						<ScrollView 
+							showsVerticalScrollIndicator={false}
+							contentContainerStyle={{ flexGrow: 1 }}
+						>
+							<VStack style={styles.addStoreContainer}>
+								{renderStoreField('profile.store.labels.name', 'name', 'profile.store.placeholders.name', 'Store')}
+								{renderStoreField('profile.store.labels.address', 'address', 'profile.store.placeholders.address', 'MapPinHouse')}
+								{renderStoreField('profile.store.labels.activity', 'activity', 'profile.store.placeholders.activity', 'Briefcase')}
+								{renderStoreField('profile.store.labels.activityCode', 'activityCode', 'profile.store.placeholders.activityCode', 'Hash', { keyboardType: "numeric" })}
+								{renderStoreField('profile.store.labels.jib', 'jib', 'profile.store.placeholders.jib', 'IdCard', { keyboardType: "numeric" })}
+							</VStack>
+						</ScrollView>
+					</ModalBody>
+
+					<ModalFooter style={styles.buttonsContainer}>
+						<HStack style={{ justifyContent: "space-between", width: "100%" }}>
+							<DialogButton title={t("dialogs.store.cancel")} onPress={onClose} />
+							<DialogButton title={t("dialogs.store.add")} onPress={handleSubmit(onSubmit)} />
+						</HStack>
+					</ModalFooter>
+				</ModalContent>
+			</KeyboardAvoidingView>
 		</Modal>
 	);
 }
 
 const styles = StyleSheet.create({
     modalContainer: {
-        width: "90%",
+        width: "95%",
         borderRadius: 20,
         paddingVertical: 25,
         paddingHorizontal: 20,
@@ -106,7 +146,7 @@ const styles = StyleSheet.create({
     },
     modalBody: {
         width: '100%',
-		height: '45%'
+		maxHeight: '80%'
     },
     sectionTitle: {
         fontSize: 16,
@@ -117,12 +157,11 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        width: "90%",
         marginTop: 10,
     },
 	addStoreContainer: {
 		height: 'auto',
 		gap: 10,
-		flex: 1
+		flexGrow: 1
 	}
 });

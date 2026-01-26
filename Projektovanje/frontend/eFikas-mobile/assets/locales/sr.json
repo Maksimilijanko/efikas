@@ -403,10 +403,12 @@
         "toastMessages": {
             "fetchErrorTitle": "Greška pri učitavanju",
             "fetchErrorMessage": "Nije moguće učitati podatke o profilu.",
+			"updateSuccessfulTitle": "Uspjeh!",
+			"updateSuccessfulMessage": "Vaš profil je uspješno ažuriran.",
             "updateErrorTitle": "Greška pri čuvanju",
             "updateErrorMessage": "Nije moguće sačuvati profil.",
             "genericError": "Došlo je do greške.",
-
+			
 			"addStoreSuccessTitle": "Radnja dodata!",
 			"addStoreSuccessMessage": "Nova radnja je uspješno registrovana.",
 			"addStoreErrorTitle": "Greška pri dodavanju radnje",
@@ -416,6 +418,7 @@
 		"store": {
 			"sectionTitle": "Informacije o radnji",
 			"addModalTitle": "Dodavanje radnje",
+			"missingStore": "Niste registrovali još Vašu radnju.",
 			"placeholders": {
 				"name": "Naziv",
 				"address": "Adresa",

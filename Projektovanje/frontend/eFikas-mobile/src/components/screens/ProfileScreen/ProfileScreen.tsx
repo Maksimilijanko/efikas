@@ -32,12 +32,13 @@ import { Spinner } from "../../ui/spinner";
 import { HStack } from "../../ui/hstack";
 import { CreateCashRegisterDTO } from "@/src/api/services/cashRegisterService";
 import ProfileSection from "../../organisms/ProfileSection/ProfileSection";
+import { toastService } from "@/src/services/toastService";
 
 export default function ProfileScreen() {
 	const { t } = useTranslation();
 	const { Colors } = useTheme();
 	const navigation = useNavigation();
-	const { profile, store, isLoading, isSaving, updateProfile, addStore } = useProfile();
+	const { profile, store, storeError, isLoading, isSaving, updateProfile, addStore } = useProfile();
 	
 
 
@@ -47,7 +48,7 @@ export default function ProfileScreen() {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
 	const [tempProfile, setTempProfile] = useState<ProfileData | null>(null);
-	const [tempStore, setTempStore] = useState<StoreDTO | null>(null);
+	//const [tempStore, setTempStore] = useState<StoreDTO | null>(null);
 
 	const [isAddCashRegisterModalVisible, setIsAddCashRegisterModalVisible] = useState(false);
 	const [isAddStoreModalVisible, setIsAddStoreModalVisible] = useState(false);
@@ -60,7 +61,7 @@ export default function ProfileScreen() {
 	const handleStartEdit = () => {
 		if (profile) {
 			setTempProfile(profile);
-			setTempStore(store);
+			//setTempStore(store);
 			setIsEditMode(true);
 		}
 		setIsDialogVisible(false);
@@ -68,7 +69,7 @@ export default function ProfileScreen() {
 
 	const handleCancel = () => {
 		setTempProfile(profile);
-		setTempStore(store);
+		//setTempStore(store);
 		setIsEditMode(false);
 	};
 
@@ -77,6 +78,7 @@ export default function ProfileScreen() {
 
 		try {
 			await updateProfile(tempProfile);
+			toastService.success(t('profile.toastMessages.updateSuccessfulTitle'), t('profile.toastMessages.updateSuccessfulMessage'));
 			setIsEditMode(false);
 		} catch (err) {
 			console.error("Failed to update profile:", err);
@@ -143,7 +145,7 @@ export default function ProfileScreen() {
 		labelKey: string,
 		readOnly = false
 	) => {
-		const current = isEditMode ? tempStore ?? store : store;
+		const current = store;
 		const value = current?.[fieldKey] ?? "";
 		const editable = isEditMode && !readOnly;
 
@@ -153,7 +155,7 @@ export default function ProfileScreen() {
 				value={value}
 				size="xl"
 				labelSize="lg"
-				disabled={!editable}
+				disabled={true}
 				inputProps={{
 					value,
 					onChangeText: (text) => handleChangeStore(fieldKey, text),
@@ -191,11 +193,23 @@ export default function ProfileScreen() {
 
 							{/* Sekcija za radnju */}
 							<ProfileSection title={t("profile.store.sectionTitle")}>
-								{renderStoreField("name", "profile.store.labels.name")}
-								{renderStoreField("address", "profile.store.labels.address")}
-								{renderStoreField("activity", "profile.store.labels.activity")}
-								{renderStoreField("activityCode", "profile.store.labels.activityCode")}
-								{renderStoreField("jib", "profile.store.labels.jib")}
+								{ storeError != null 
+								? (
+									<VStack style={styles.storeContainer}>
+										<MissingItemsNotifier label={t('profile.store.missingStore')} />
+									</VStack>
+									
+								)
+								: (
+									<>
+										{renderStoreField("name", "profile.store.labels.name")}
+										{renderStoreField("address", "profile.store.labels.address")}
+										{renderStoreField("activity", "profile.store.labels.activity")}
+										{renderStoreField("activityCode", "profile.store.labels.activityCode")}
+										{renderStoreField("jib", "profile.store.labels.jib")}
+									</>
+								)}
+								
 							</ProfileSection>
 
 							{/* Sekcija za kase */}
@@ -325,6 +339,9 @@ const styles = StyleSheet.create({
 		width: "90%",
 		justifyContent: "space-between",
 		marginTop: 32,
+	},
+	storeContainer: {
+		alignItems: 'center'
 	},
 	cashRegisterSection: {
 		marginTop: 24,

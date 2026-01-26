@@ -40,6 +40,37 @@ public class AppUserController {
     private final JwtUtil jwtUtil;
 
 
+    // This is temporary, for compatibility with old code till migration can be done to AuthController
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest user) {
+        return appUserService.register(user)
+                .map(error -> ResponseEntity.badRequest().body(error))
+                .orElseGet(() -> ResponseEntity.ok("User registered successfully."));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> userCredentials) {
+        String email = userCredentials.get("email");
+        String password = userCredentials.get("password");
+
+        boolean isAuthenticated = appUserService.authenticate(email, password);
+
+        if (!isAuthenticated) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials"));
+        }
+
+        // Generate token
+        String token = jwtUtil.generateToken(email);
+
+        // Prepare JWT to be returned to the user in JSON form
+        return ResponseEntity.ok(Map.of(
+                "email", email,
+                "token", token
+        ));
+    }
+
+
     @PostMapping("/register/store")
     public ResponseEntity<?> registerStore(@RequestBody CreateStoreRequest createStoreRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

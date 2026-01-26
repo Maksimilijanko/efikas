@@ -401,9 +401,12 @@
         "toastMessages": {
             "fetchErrorTitle": "Loading Error",
             "fetchErrorMessage": "Could not load profile data.",
+			"updateSuccessfulTitle": "Success!",
+			"updateSuccessfulMessage": "You have successfully updated your profile.",
             "updateErrorTitle": "Saving Error",
             "updateErrorMessage": "Could not save the profile.",
             "genericError": "An error occurred.",
+
             "addStoreSuccessTitle": "Store added!",
             "addStoreSuccessMessage": "New store successfully added.",
             "addStoreErrorTitle": "Error adding store",
@@ -413,6 +416,7 @@
         "store": {
 			"sectionTitle": "Store information",
             "addModalTitle": "Add Store Information",
+			"missingStore": "You have not registered your store yet.",
             "placeholders": {
                 "name": "Name",
                 "address": "Address",
