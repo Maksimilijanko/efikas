@@ -9,6 +9,8 @@ interface Props {
     isRequired?: boolean;
     isReadOnly?: boolean;
     placeholder?: string;
+	value?: string;
+    onChangeText?: (text: string) => void;
 }
 
 /**
@@ -44,11 +46,17 @@ function DescriptionBox({
     isFocused = false,
     isRequired = false,
     isReadOnly = false,
-    placeholder
+    placeholder,
+	value,
+	onChangeText
 }: Props) {
     return (
         <Textarea  size={size} isInvalid={isInvalid} isDisabled={isDisabled} isHovered={isHovered} isFocused={isFocused} isRequired={isRequired} isReadOnly={isReadOnly}>
-            <TextareaInput placeholder={placeholder} />
+            <TextareaInput 
+				placeholder={placeholder} 
+				value={value} 
+                onChangeText={onChangeText}
+			/>
         </Textarea>
     );
 }

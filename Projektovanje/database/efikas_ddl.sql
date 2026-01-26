@@ -36,6 +36,12 @@ CREATE TABLE efikas."notification_push_token" (
 );
 CREATE INDEX idx_push_tokens_user_id ON efikas."notification_push_token"("UserId");
 CREATE INDEX idx_push_tokens_token ON efikas."notification_push_token"("PushToken");
+
+
+CREATE TABLE efikas."app_errors" (
+	"ErrorId" SERIAL PRIMARY KEY,
+	"Note" VARCHAR(255) NOT NULL
+);
 -- =========================================================================
 --                                   USERS
 -- =========================================================================

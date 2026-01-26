@@ -37,29 +37,15 @@ public class AppUserController {
 
     private final AppUserService appUserService;
     private final StoreService storeService;
-    private final OAuthService oAuthService;
-    private final OtpService otpService;
     private final JwtUtil jwtUtil;
 
 
+    // This is temporary, for compatibility with old code till migration can be done to AuthController
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegistrationRequest user) {
         return appUserService.register(user)
                 .map(error -> ResponseEntity.badRequest().body(error))
                 .orElseGet(() -> ResponseEntity.ok("User registered successfully."));
-    }
-
-    @PostMapping("/register/store")
-    public ResponseEntity<?> registerStore(@RequestBody CreateStoreRequest createStoreRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        StoreDTO saved = storeService.createStore(createStoreRequest, authentication);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/store/{id}")
-                .buildAndExpand(saved).toUri();
-
-        return ResponseEntity.created(location).body(saved);
     }
 
     @PostMapping("/login")
@@ -84,50 +70,35 @@ public class AppUserController {
         ));
     }
 
-    @PostMapping("/otp/request")
-    public ResponseEntity<?> requestOtp(@RequestBody OtpSendRequest otpSendRequest) {
-        AppUser appUser = appUserService.getUserByEmail(otpSendRequest.getEmail());
-        if(appUser == null) {
-            return ResponseEntity.notFound().build();
-        }
 
-        String response = otpService.sendOtp(otpSendRequest.getEmail());
+    @PostMapping("/register/store")
+    public ResponseEntity<?> registerStore(@RequestBody CreateStoreRequest createStoreRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return ResponseEntity.ok(response);
+        StoreDTO saved = storeService.createStore(createStoreRequest, authentication);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/store/{id}")
+                .buildAndExpand(saved).toUri();
+
+        return ResponseEntity.created(location).body(saved);
     }
 
-    @PostMapping("/otp/verify")
-    public ResponseEntity<?> verifyOtp(@RequestBody OtpVerifyRequest otpVerifyRequest) {
-        AppUser appUser = appUserService.getUserByEmail(otpVerifyRequest.getEmail());
-        if(appUser == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        boolean verified = otpService.verifyOtp(otpVerifyRequest.getEmail(), otpVerifyRequest.getOtp());
-
-        return verified ? ResponseEntity.ok("OTP verified") : ResponseEntity.status(HttpStatus.NOT_FOUND).body("OTP not valid");
-    }
-
-
-    @PostMapping("/google/login")
-    public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> body) {
-        String token = body.get("token");
-
-        try{
-            AuthenticationResponse authResponse = oAuthService.authenticateOAuth(token);
-
-            return ResponseEntity.ok()
-                    .body(Map.of("accessToken", authResponse.getAccessToken()));
-        } catch (GeneralSecurityException | IOException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
 
     @GetMapping("/me")
     public ResponseEntity<?> getAccountInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         AppUserResponse response = appUserService.getCurrentUserInfo(authentication);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me/store")
+    public ResponseEntity<?> getAccountStoreInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        StoreDTO response = storeService.getStoreForActiveUser(authentication);
 
         return ResponseEntity.ok(response);
     }
@@ -148,14 +119,6 @@ public class AppUserController {
         ));
     }
 
-    @PutMapping("/me/reset-password")
-    public ResponseEntity<?> updatePassword(@RequestBody ChangePasswordDTO passwordChangeRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        appUserService.changeUserPassword(passwordChangeRequest, authentication);
-
-        return ResponseEntity.ok("Updated password successfully");
-    }
 
     @DeleteMapping("/me")
     public ResponseEntity<?> deleteAccount() {

@@ -11,27 +11,23 @@ import { Image } from "../../ui/image";
 import { Spinner } from "../../ui/spinner";
 import { BookPath } from "@/src/types/types";
 import MissingItemsNotifier from "../../molecules/MissingItemsNotifier/MissingItemsNotifier";
+import { pdfService } from "@/src/services/pdfService";
+import { IconButton } from "../../atoms/IconButton/IconButton";
+import { fileService } from "@/src/services/fileService";
 
 
 interface Props {
     bookPaths?: BookPath[];
     loading: boolean;
+	onDelete: (path: string) => void; // Add this
 }
 
-export default function DownloadedBooksList({ bookPaths, loading }: Props) {
+export default function DownloadedBooksList({ bookPaths, loading, onDelete }: Props) {
     const { t } = useTranslation();
     const { Colors } = useTheme();
     const PDF_ICON_PATH = '..//..//..//..//assets//images//pdfIcon.png';
 
-    const openPdf = (path: string) => {
-        router.push({
-            pathname: '/pdfView',
-            params: {
-                uri: `${path}`
-            }
-        });
-    };
-
+	
     return (
         <VStack style={styles.root}>
             <Label text={t('books.downloadedList.title')} />
@@ -47,19 +43,25 @@ export default function DownloadedBooksList({ bookPaths, loading }: Props) {
 
                 <VStack style={styles.linksContainer}>
                     {bookPaths?.map((book, index) => (
-                        <TouchableOpacity
-                            key={book.path}
-                            onPress={() => openPdf(book.path)}
-                        >
-                            <HStack style={styles.item}>
-                                <Image
-                                    size="xs"
-                                    source={require(PDF_ICON_PATH)}
-                                    alt="pdfIcon.svg"
-                                />
-                                <Label text={book.displayName} color={Colors.info} size="sm" />
-                            </HStack>
-                        </TouchableOpacity>
+						<HStack key={index} style={styles.linksItemContainer}>
+							<TouchableOpacity
+								key={book.path}
+								onPress={() => pdfService.openPdf(book.path)}
+							>
+								<HStack style={styles.item}>
+									<Image
+										size="xs"
+										source={require(PDF_ICON_PATH)}
+										alt="pdfIcon.svg"
+									/>
+
+									<Label text={book.displayName} color={Colors.info} size="xs" />
+								</HStack>
+							</TouchableOpacity>
+
+							<IconButton onPress={() => onDelete(book.path)} iconName="X" color="red" />
+						</HStack>
+                        
                     ))}
                 </VStack>
 

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -12,6 +13,7 @@ import org.hibernate.type.SqlTypes;
 @Setter
 @Entity
 @Table(name = "app_user", schema = "efikas")
+@ToString
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -129,7 +129,8 @@
         "download": {
             "title": "Document is downloading",
             "subtitle": "Check the downloads folder",
-            "okButton": "OK"
+            "okButton": "OK",
+			"deleteBookTitle": "Are you sure you want to delete this book from this device? {{title}}"
         },
         "language": {
             "title": "Language",
@@ -252,7 +253,11 @@
                 },
                 "feedback": {
                     "mainTitle": "Feedback",
-                    "bugReportTitle": "Report an error"
+                    "bugReportTitle": "Report an error",
+					"emptyFeedbackErrorTitle": "Error.",
+					"emptyFeedbackErrorMessage": "If you are reporting an error, please fill the appropriate field.",
+					"successfulFeedbackTitle": "Your report was registered.",
+					"successfulFeedbackMessage": "Thank you for your feedback!"
                 }
             }
         }
@@ -396,9 +401,12 @@
         "toastMessages": {
             "fetchErrorTitle": "Loading Error",
             "fetchErrorMessage": "Could not load profile data.",
+			"updateSuccessfulTitle": "Success!",
+			"updateSuccessfulMessage": "You have successfully updated your profile.",
             "updateErrorTitle": "Saving Error",
             "updateErrorMessage": "Could not save the profile.",
             "genericError": "An error occurred.",
+
             "addStoreSuccessTitle": "Store added!",
             "addStoreSuccessMessage": "New store successfully added.",
             "addStoreErrorTitle": "Error adding store",
@@ -406,7 +414,9 @@
             "addStoreErrorExistsTitle": "You've already registered your store once!"
         },
         "store": {
+			"sectionTitle": "Store information",
             "addModalTitle": "Add Store Information",
+			"missingStore": "You have not registered your store yet.",
             "placeholders": {
                 "name": "Name",
                 "address": "Address",

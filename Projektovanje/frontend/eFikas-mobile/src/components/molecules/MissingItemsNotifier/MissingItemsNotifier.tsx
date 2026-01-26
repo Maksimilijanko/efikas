@@ -10,7 +10,7 @@ export default function MissingItemsNotifier({ label }: Props) {
 	return (
 		<HStack>
 			<Icon name="Info" />
-			<Label text={label} color="gray" />
+			<Label text={" " + label} color="gray" />
 		</HStack> 
 	);
 }

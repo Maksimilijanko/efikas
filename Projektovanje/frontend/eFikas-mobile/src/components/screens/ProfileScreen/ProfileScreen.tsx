@@ -31,12 +31,14 @@ import { VStack } from "../../ui/vstack";
 import { Spinner } from "../../ui/spinner";
 import { HStack } from "../../ui/hstack";
 import { CreateCashRegisterDTO } from "@/src/api/services/cashRegisterService";
+import ProfileSection from "../../organisms/ProfileSection/ProfileSection";
+import { toastService } from "@/src/services/toastService";
 
 export default function ProfileScreen() {
 	const { t } = useTranslation();
 	const { Colors } = useTheme();
 	const navigation = useNavigation();
-	const { profile, isLoading, isSaving, updateProfile, addStore } = useProfile();
+	const { profile, store, storeError, isLoading, isSaving, updateProfile, addStore } = useProfile();
 	
 
 
@@ -46,6 +48,7 @@ export default function ProfileScreen() {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
 	const [tempProfile, setTempProfile] = useState<ProfileData | null>(null);
+	//const [tempStore, setTempStore] = useState<StoreDTO | null>(null);
 
 	const [isAddCashRegisterModalVisible, setIsAddCashRegisterModalVisible] = useState(false);
 	const [isAddStoreModalVisible, setIsAddStoreModalVisible] = useState(false);
@@ -58,6 +61,7 @@ export default function ProfileScreen() {
 	const handleStartEdit = () => {
 		if (profile) {
 			setTempProfile(profile);
+			//setTempStore(store);
 			setIsEditMode(true);
 		}
 		setIsDialogVisible(false);
@@ -65,6 +69,7 @@ export default function ProfileScreen() {
 
 	const handleCancel = () => {
 		setTempProfile(profile);
+		//setTempStore(store);
 		setIsEditMode(false);
 	};
 
@@ -73,14 +78,22 @@ export default function ProfileScreen() {
 
 		try {
 			await updateProfile(tempProfile);
+			toastService.success(t('profile.toastMessages.updateSuccessfulTitle'), t('profile.toastMessages.updateSuccessfulMessage'));
 			setIsEditMode(false);
 		} catch (err) {
 			console.error("Failed to update profile:", err);
 		}
 	};
 
-	const handleChange = useCallback(
+	const handleChangeProfile = useCallback(
 		(field: keyof ProfileData, value: string) => {
+			setTempProfile((prev) => (prev ? { ...prev, [field]: value } : null));
+		},
+		[]
+	);
+
+	const handleChangeStore = useCallback(
+		(field: keyof StoreDTO, value: string) => {
 			setTempProfile((prev) => (prev ? { ...prev, [field]: value } : null));
 		},
 		[]
@@ -103,7 +116,7 @@ export default function ProfileScreen() {
 		});
 	}, [navigation, isEditMode, Colors.textPrimary]);
 
-	const renderField = (
+	const renderProfileField = (
 		fieldKey: keyof ProfileData,
 		labelKey: string,
 		readOnly = false
@@ -121,7 +134,31 @@ export default function ProfileScreen() {
 				disabled={!editable}
 				inputProps={{
 					value,
-					onChangeText: (text) => handleChange(fieldKey, text),
+					onChangeText: (text) => handleChangeProfile(fieldKey, text),
+				}}
+			/>
+		);
+	};
+
+	const renderStoreField = (
+		fieldKey: keyof StoreDTO,
+		labelKey: string,
+		readOnly = false
+	) => {
+		const current = store;
+		const value = current?.[fieldKey] ?? "";
+		const editable = isEditMode && !readOnly;
+
+		return (
+			<LabeledTextField
+				label={t(labelKey)}
+				value={value}
+				size="xl"
+				labelSize="lg"
+				disabled={true}
+				inputProps={{
+					value,
+					onChangeText: (text) => handleChangeStore(fieldKey, text),
 				}}
 			/>
 		);
@@ -145,29 +182,38 @@ export default function ProfileScreen() {
 			<ProfileTemplate
 				content={
 					<ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
-						<View style={{ gap: 16, paddingBottom: 50 }}>
+						<View style={{ gap: 30, paddingBottom: 50 }}>
 							{/* Sekcija za profil */}
-							<Label
-								text={t("profile.sectionTitle")}
-								size="xl"
-								color={Colors.primary}
-								className="font-semibold"
-							/>
+							<ProfileSection title={t("profile.sectionTitle")}>
+								{renderProfileField("name", "profile.labels.firstName")}
+								{renderProfileField("surname", "profile.labels.lastName")}
+								{renderProfileField("jmbg", "profile.labels.taxId")}
+								{renderProfileField("email", "profile.labels.email")}
+							</ProfileSection>
 
-							{renderField("name", "profile.labels.firstName")}
-							{renderField("surname", "profile.labels.lastName")}
-							{renderField("jib", "profile.labels.taxId")}
-							{renderField("email", "profile.labels.email")}
+							{/* Sekcija za radnju */}
+							<ProfileSection title={t("profile.store.sectionTitle")}>
+								{ storeError != null 
+								? (
+									<VStack style={styles.storeContainer}>
+										<MissingItemsNotifier label={t('profile.store.missingStore')} />
+									</VStack>
+									
+								)
+								: (
+									<>
+										{renderStoreField("name", "profile.store.labels.name")}
+										{renderStoreField("address", "profile.store.labels.address")}
+										{renderStoreField("activity", "profile.store.labels.activity")}
+										{renderStoreField("activityCode", "profile.store.labels.activityCode")}
+										{renderStoreField("jib", "profile.store.labels.jib")}
+									</>
+								)}
+								
+							</ProfileSection>
 
 							{/* Sekcija za kase */}
-							<View style={styles.cashRegisterSection}>
-								<Label
-									text={t("cashRegisters.sectionTitle")}
-									size="xl"
-									color={Colors.primary}
-									className="font-semibold mb-4"
-								/>
-
+							<ProfileSection title={t("cashRegisters.sectionTitle")}>
 								{isLoadingCashRegisters ? 
 								(
 									<HStack style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -210,9 +256,8 @@ export default function ProfileScreen() {
 									<VStack style={{ alignItems: 'center' }}>
 										<MissingItemsNotifier label={t('profile.missingItems.cashRegister')} />
 									</VStack>
-									
 								)}
-							</View>
+							</ProfileSection>
 
 							{isEditMode && (
 								<View style={styles.buttonContainer}>
@@ -239,11 +284,6 @@ export default function ProfileScreen() {
 				}
 			/>
 
-			{/* <FloatButton
-        size="lg"
-        placement="bottom right"
-        onClick={() => setIsAddModalVisible(true)}
-      /> */}
 			{!isEditMode && (
 				<View style={styles.floatButtonContainer}>
 					<CustomMenu
@@ -299,6 +339,9 @@ const styles = StyleSheet.create({
 		width: "90%",
 		justifyContent: "space-between",
 		marginTop: 32,
+	},
+	storeContainer: {
+		alignItems: 'center'
 	},
 	cashRegisterSection: {
 		marginTop: 24,

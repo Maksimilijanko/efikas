@@ -25,27 +25,19 @@ const DocumentItem: React.FC<DocumentItemProps> = ({ title, documentType, onPres
     const { t } = useTranslation();
     const { Colors } = useTheme();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const { downloadDocument, isDownloading, downloadError } = useDownload();
+    const { isDownloading, downloadError } = useDownload();
 
     const styles = getStyles(Colors);
 
-    // Reakcija na gresku iz hook-a
-    useEffect(() => {
-        if (downloadError) {
-            Alert.alert(
-                t('books.documents.downloadErrorTitle'),
-                downloadError);
-        }
-    }, [downloadError]);
+    // // Reakcija na gresku iz hook-a
+    // useEffect(() => {
+    //     if (downloadError) {
+    //         Alert.alert(
+    //             t('books.documents.downloadErrorTitle'),
+    //             downloadError);
+    //     }
+    // }, [downloadError]);
 
-    const handleDownloadPress = async () => {
-        const success = await downloadDocument(documentType);
-    
-        if (success) {
-            setIsDialogOpen(true);
-        }
-        // Ako nije uspjelo (success je false), greska se vec prikazuje putem useEffect/Alert
-    };
 
     return (
         <View>

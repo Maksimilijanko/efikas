@@ -12,9 +12,9 @@ export const useProfile = () => {
     // -------- FETCH PROFILE --------
     const {
         data: profile,
-        isLoading,
-        isError,
-        error,
+        isLoading: isLoadingProfile,
+        isError: isProfileError,
+        error: profileError,
         refetch: fetchProfile,
     } = useQuery({
         queryKey: ["profile"],
@@ -35,7 +35,7 @@ export const useProfile = () => {
     // -------- UPDATE PROFILE --------
     const {
         mutateAsync: updateProfile,
-        isPending: isSaving,
+        isPending: isSavingProfile,
     } = useMutation({
         mutationFn: async (updatedData: ProfileData) => {
             try {
@@ -56,52 +56,70 @@ export const useProfile = () => {
         },
     });
 
+
+	// -------- FETCH STORE --------
+	const {
+        data: store,
+        isLoading: isLoadingStore,
+        isError: isErrorStore,
+        error: storeError,
+        refetch: fetchStore,
+    } = useQuery({
+        queryKey: ["store"],
+        queryFn: async () => {
+            try {
+                return await profileService.fetchStore();
+            } catch (err: any) {
+                const errorMessage = err.message || t("profile.toastMessages.genericError");
+
+                throw new Error(errorMessage);
+            }
+        },
+    });
+
 	// -------- ADD STORE --------
 	const {
 		mutateAsync: addStore,
 		isPending: isAddingStore,
 	} = useMutation({
 		mutationFn: async (data: StoreDTO) => {
-			try {
-				await profileService.registerStore(data);
-			} catch (err: any) {
-				if(err instanceof AxiosError) {
-					const status = err.response?.status;
-					if(status === 409) {
-						toastService.error(
-							t("profile.toastMessages.addStoreErrorExistsTitle")
-						);
-					}
-					else {
-						toastService.error(
-							t("profile.toastMessages.addStoreErrorTitle"),
-							t("profile.toastMessages.addStoreErrorMessage")
-						);
-					}
-				}
-
-				console.log(err.message);
-			}
+			// Just return the call. Let Axios throw, it will be catched by onError
+			const response = await profileService.registerStore(data);
+			return response.data;
 		},
-		onSuccess: async () => {
-			// safest option: refetch profile
-			await queryClient.invalidateQueries({ queryKey: ["profile"] });
-
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: ["store"] }); // Refetch is safer than setQueryData
 			toastService.success(
 				t("profile.toastMessages.addStoreSuccessTitle"),
 				t("profile.toastMessages.addStoreSuccessMessage")
 			);
 		},
+		onError: (err: any) => {
+			if (err.response?.status === 409) {
+				toastService.error(t("profile.toastMessages.addStoreErrorExistsTitle"));
+			} else {
+				toastService.error(
+					t("profile.toastMessages.addStoreErrorTitle"),
+					t("profile.toastMessages.addStoreErrorMessage")
+				);
+			}
+			console.log("Mutation Error: ", err.message);
+		},
 	});
 
     return {
         profile,
-        isLoading,
-        isSaving,
-        isError,
-        error: (error as Error)?.message ?? null,
+		store,
+        isLoading: isLoadingProfile,
+		isLoadingStore,
+        isSaving: isSavingProfile,
+        isError: isProfileError,
+		isErrorStore,
+        error: (profileError as Error)?.message ?? null,
+		storeError: (storeError as Error)?.message ?? null,
         fetchProfile,
         updateProfile,
+		fetchStore,
 		addStore,
 		isAddingStore
     };

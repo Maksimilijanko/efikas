@@ -256,7 +256,7 @@ export interface MenuSectionProps {
 export interface ProfileData {
   name: string;
   surname: string;
-  jib: string;
+  jmbg: string;
   email: string;
 }
 
@@ -345,4 +345,10 @@ export interface ApartmentExpenseDTO {
 
 export interface ApartmentExpenseResponse extends ApartmentExpenseDTO {
     apartmentId: number;
+}
+
+
+// ================ Settings =====================
+export interface AppErrorDTO {
+	note: string;
 }

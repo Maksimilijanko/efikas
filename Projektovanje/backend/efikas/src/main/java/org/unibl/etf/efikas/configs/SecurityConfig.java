@@ -15,11 +15,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.unibl.etf.efikas.security.JwtAuthFilter;
 import org.unibl.etf.efikas.security.JwtAuthenticationEntryPoint;
 import org.unibl.etf.efikas.util.Constants;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -55,9 +59,11 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/", "/login", "/register", "/activities", "/settings", "/logout",
                                 "/index.html", "/favicon.ico", "/manifest.json", "/static/**", "/assets/**",
                                 "/js/**", "/css/**", "/images/**",
-                                "/api/users/login", "/api/users/register",
-                                "/api/v1/users/login", "/api/v1/users/register", "/api/v1/users/otp/**",
-                                "/api/v1/users/me/reset-password",
+                                "/api/v1/users/login", "/api/v1/users/register",
+                                "/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/otp/**",
+                                "/api/v1/auth/reset-password",
+                                "/api/v1/books/pdf/**",
+
                                 "/actuator/health",
                                 "/error",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html")
@@ -75,5 +81,6 @@ public class SecurityConfig implements WebMvcConfigurer {
             throws Exception {
         return config.getAuthenticationManager();
     }
+
 
 }

@@ -14,10 +14,16 @@ export const styles = StyleSheet.create({
         marginBottom: 10,
     },
     linksContainer: {
-        gap: 10
+        gap: 10,
+		alignItems: 'stretch',
+    },
+	linksItemContainer: {
+        gap: 10,
+		alignItems: 'center',
+		justifyContent: 'space-between'
     },
     item: {
         gap: 10,
-        alignItems: 'center'
+        alignItems: 'center',
     },
 });
