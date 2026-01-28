@@ -57,7 +57,7 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   // Pomocna funkcija koja izdvaja samo datum iz stringa datuma i vremena
   const getDateOnly = (datetime: Date): string => {
-    const d = new Date(datetime);
+    const d = dateService.parseBackendDate(datetime);
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(d.getDate()).padStart(2, "0");
@@ -166,14 +166,6 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   const current = selectedReservations[currentIndex] ?? null;
 
-  
-
-  const formatDateTime = (iso: string) => {
-    if (!iso) return "";
-    const local = dayjs.utc(iso).tz("Europe/Sarajevo");
-    return local.format("DD.MM.YYYY HH:mm");
-  };
-
   // Priprema podataka za dialog
   const getDialogItems = (): QuickInfoItem[] => {
     if (!current) return [];
@@ -246,6 +238,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 	// selectedDayBackgroundColor: Colors.primary,
 	// selectedDayTextColor: Colors.textPrimary,
 	}), [Colors]); // Dependencies
+
+	console.log("MARKED DATES: ", markedDates)
 
   return (
     <View style={styles.calendarWrapper}>

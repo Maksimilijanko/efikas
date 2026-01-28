@@ -350,6 +350,8 @@
             "yearTo": "Datum do",
             "downloadErrorTitle": "Greška preuzimanja",
             "downloadErrorMessage": "Neuspješno preuzimanje",
+			"download204Message": "Nemate relevantnih podataka za ovaj period.",
+			"download400Message": "Provjerite Vaše unose.",
             "downloadSuccessMessage": "Uspješno preuzimanje",
             "downloadSuccessDescription": "PDF knjige možete sada pregledati",
 			"viewSuccessMessage": "Pregled uspješan!",

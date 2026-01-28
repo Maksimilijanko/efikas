@@ -3,17 +3,18 @@ package org.unibl.etf.efikas.services;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.efikas.exceptions.NoRelevantGuestsException;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
-import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.ForeignGuestDTO;
 import org.unibl.etf.efikas.models.dto.books.ForeignGuestsBookDTO;
-import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.dto.books.entries.ForeignGuestsEntry;
+import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
-import org.unibl.etf.efikas.models.requests.CreateForeignGuestRequest;
 import org.unibl.etf.efikas.repositories.GuestsBookRepository;
-import org.unibl.etf.efikas.repositories.specifications.ForeignGuestsPdfSpecifications;
+import org.unibl.etf.efikas.repositories.specifications.GuestsPdfSpecifications;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ForeignGuestsBookService {
     private final GuestsBookRepository foreignGuestsBookRepository;
+    private final AppUserService appUserService;
     private final ModelMapper modelMapper;
 
 
@@ -59,24 +61,33 @@ public class ForeignGuestsBookService {
             LocalDate toDate,
             Boolean active
     ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        AppUser user = appUserService.getUserByEmail(email);
+
         validateFilters(fromDate, toDate, active);
         DateRangeDTO period = DateRangeDTO.builder()
                 .from(fromDate)
                 .to(toDate)
                 .build();
 
-        Specification<GuestsBook> spec =
-                ForeignGuestsPdfSpecifications.entryDateFrom(fromDate)
-                        .and(ForeignGuestsPdfSpecifications.entryDateTo(toDate))
-                        .and(ForeignGuestsPdfSpecifications.active(active));
-                        //.or(ForeignGuestsPdfSpecifications.orderForPdf());
+        Specification<GuestsBook> spec = GuestsPdfSpecifications.belongsToUser(user.getUserId())
+                .and(GuestsPdfSpecifications.isForeign()) // Filter at DB level!
+                .and(GuestsPdfSpecifications.dateOfArrival(fromDate))
+                .and(GuestsPdfSpecifications.dateOfDeparture(toDate));
 
         List<ForeignGuestsEntry> entries = foreignGuestsBookRepository.findAll(spec).stream()
                 .filter(gb -> !gb.getIsLocal())
                 .map(fgb -> modelMapper.map(fgb, ForeignGuestsEntry.class))
                 .toList();
 
+        if(entries.isEmpty()) {
+            throw new NoRelevantGuestsException("No guests were found for this query/user.");
+        }
+
         System.out.println("ENTRIES: " + entries);
+
+
 
         return ForeignGuestsBookDTO.builder()
                 .period(period)

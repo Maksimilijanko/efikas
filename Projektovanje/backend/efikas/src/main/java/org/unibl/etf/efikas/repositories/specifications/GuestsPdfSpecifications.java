@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public final class DomesticGuestsPdfSpecifications {
+public final class GuestsPdfSpecifications {
     public static Specification<GuestsBook> dateOfArrival(LocalDate from) {
         return (root, query, cb) ->
                 from == null
@@ -58,6 +58,10 @@ public final class DomesticGuestsPdfSpecifications {
 
     public static Specification<GuestsBook> isLocal() {
         return (root, query, cb) -> cb.equal(root.get("isLocal"), true);
+    }
+
+    public static Specification<GuestsBook> isForeign() {
+        return (root, query, cb) -> cb.equal(root.get("isLocal"), false);
     }
 
     public static Specification<GuestsBook> belongsToUser(Integer userId) {

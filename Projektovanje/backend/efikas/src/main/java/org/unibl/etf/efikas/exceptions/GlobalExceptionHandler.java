@@ -96,6 +96,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
+    @ExceptionHandler(NoRelevantGuestsException.class)
+    public ResponseEntity<?> handleNoRelevantGuestsException(NoRelevantGuestsException ex){
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
+    }
+
     @ExceptionHandler(MessageRejectedException.class)
     public ResponseEntity<?> handleMessageRejectedException(MessageRejectedException ex){
         return ResponseEntity.badRequest().body("This email is not verified.");

@@ -8,15 +8,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.unibl.etf.efikas.exceptions.NoRelevantGuestsException;
 import org.unibl.etf.efikas.models.dto.DateRangeDTO;
 import org.unibl.etf.efikas.models.dto.DomesticGuestDTO;
 import org.unibl.etf.efikas.models.dto.books.DomesticGuestsBookDTO;
 import org.unibl.etf.efikas.models.dto.books.entries.DomesticGuestsEntry;
 import org.unibl.etf.efikas.models.entities.AppUser;
 import org.unibl.etf.efikas.models.entities.GuestsBook;
-import org.unibl.etf.efikas.models.requests.CreateDomesticGuestRequest;
 import org.unibl.etf.efikas.repositories.GuestsBookRepository;
-import org.unibl.etf.efikas.repositories.specifications.DomesticGuestsPdfSpecifications;
+import org.unibl.etf.efikas.repositories.specifications.GuestsPdfSpecifications;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -84,14 +84,18 @@ public class DomesticGuestsBookService {
                 .to(toDate)
                 .build();
 
-        Specification<GuestsBook> spec = DomesticGuestsPdfSpecifications.belongsToUser(user.getUserId())
-                .and(DomesticGuestsPdfSpecifications.isLocal()) // Filter at DB level!
-                .and(DomesticGuestsPdfSpecifications.dateOfArrival(fromDate))
-                .and(DomesticGuestsPdfSpecifications.dateOfDeparture(toDate));
+        Specification<GuestsBook> spec = GuestsPdfSpecifications.belongsToUser(user.getUserId())
+                .and(GuestsPdfSpecifications.isLocal()) // Filter at DB level!
+                .and(GuestsPdfSpecifications.dateOfArrival(fromDate))
+                .and(GuestsPdfSpecifications.dateOfDeparture(toDate));
 
         List<DomesticGuestsEntry> entries = domesticGuestsBookRepository.findAll(spec).stream()
                 .map(fgb -> modelMapper.map(fgb, DomesticGuestsEntry.class))
                 .toList();
+
+        if(entries.isEmpty()) {
+            throw new NoRelevantGuestsException("No guests were found for this query/user.");
+        }
 
         System.out.println("ENTRIES FROM METHOD: " + entries);
 

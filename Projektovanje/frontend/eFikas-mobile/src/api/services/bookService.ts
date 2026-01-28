@@ -9,6 +9,7 @@ import ReactNativeBlobUtil, { FetchBlobResponse } from "react-native-blob-util";
 import { File, Directory, Paths } from 'expo-file-system';
 import { SECURE_STORE_KEYS } from "@/src/util/secureStoreKeys";
 import { secureStoreService } from "@/src/services/secureStoreService";
+import { AxiosError } from "axios";
 
 type BlobFetchOptions = {
 	downloadPath?: string; // full file path INCLUDING filename
@@ -17,15 +18,27 @@ type BlobFetchOptions = {
 
 // This function "streams" the data into a temporary path
 const getStreamUri = async (url, token) => {
-  const res = await ReactNativeBlobUtil.config({
-    fileCache: true, // Saves to a temp file automatically
-    appendExt: 'pdf'
-  }).fetch('GET', url, {
-    Authorization: `Bearer ${token}`,
-  });
-  
-  // This path is temporary and will be cleared by the OS eventually
-  return res.path(); 
+	const res = await ReactNativeBlobUtil.config({
+		fileCache: true, // Saves to a temp file automatically
+		appendExt: 'pdf'
+	}).fetch('GET', url, {
+		Authorization: `Bearer ${token}`,
+	});
+
+	const status = res.info().status;
+
+	if (status === 400) {
+		throw new AxiosError('Invalid request parameters (400).', '400');
+	}
+	if (status === 204) {
+		throw new AxiosError('No data found for the selected period (204).', '204');
+	}
+	if (status >= 400) {
+		throw new AxiosError(`Server responded with status ${status}`, status.toString());
+	}
+
+	// This path is temporary and will be cleared by the OS eventually
+	return res.path();
 };
 
 export const fetchPdfHelper = async (
@@ -66,6 +79,11 @@ export const fetchPdfHelper = async (
         idempotent: true,
     });
 
+	if(result.size === 0) {
+		fileService.deleteFile(file.uri); // Clean up the empty file
+		throw new AxiosError('Downloaded file is empty.', '204');
+	}
+
 	console.log("RESULT DOWNLOAD: ", result.uri);
 
 	if (!result.exists) {
@@ -100,9 +118,17 @@ export const bookService = {
 	},
 
 	streamGuestsBook: async (type: GuestBookType, request: GuestsBookRequest): Promise<PdfResult> => {
-		const url = buildGuestsBookUrl(type, request);
+		// const url = buildGuestsBookUrl(type, request);
 
-		return fetchPdfHelper(url);
+		// return fetchPdfHelper(url);
+
+		const url = buildGuestsBookUrl(type, request);
+		console.log("URL FOR BOOK: ", url);
+		const savedUser = await secureStoreService.getItemAsync(SECURE_STORE_KEYS.authenticationResponseKey);
+
+		const uriResult = await getStreamUri(url, JSON.parse(savedUser).token);
+
+		return { uri: uriResult };
 	},
 
 

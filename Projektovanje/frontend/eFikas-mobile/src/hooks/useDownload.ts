@@ -13,6 +13,7 @@ import { dateService } from '../services/dateService';
 
 import * as Sharing from 'expo-sharing';
 import { pdfService } from '../services/pdfService';
+import { AxiosError } from 'axios';
 
 export const useDownload = () => {
     const { t } = useTranslation();
@@ -90,8 +91,9 @@ export const useDownload = () => {
         try {
             setDownloadError(null);
             setIsDownloading(true);
-
-            const { uri } = await action();
+			
+			const { uri } = await action();		
+            
 			console.log("IS STREAMING: ", uri);
 			if (isStreaming) {
 				pdfService.openPdf(uri);
@@ -120,10 +122,28 @@ export const useDownload = () => {
 			
             await onSuccess?.(uri);
         } catch (err: any) {
+			console.log("HELLLLLOOO: ", typeof(err));
+			if(err instanceof AxiosError) {
+				if(err.code === '204') {
+					setDownloadError(
+						t('books.documents.download204Message')
+					);
+					toastService.error(t('books.documents.downloadErrorTitle'), t('books.documents.download204Message'));
+					return;
+				}
+				else if(err.code === '400') {
+					setDownloadError(
+						t('books.documents.download400Message')
+					);
+					toastService.error(t('books.documents.downloadErrorTitle'), t('books.documents.download400Message'));
+					return;
+				}
+			}
+
             setDownloadError(
                 err.message || t('books.documents.downloadErrorMessage')
             );
-			console.log("ERROR DOWNLOADING: ", err);
+			console.log("ERROR DOWNLOADING 123: ", err);
 			//toastService.error(t('books.documents.downloadErrorTitle'), t('books.documents.downloadErrorMessage'));
         } finally {
 			setIsDownloading(false);

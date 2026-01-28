@@ -31,8 +31,8 @@ const filterReservationsBySegment = (
 	const now = new Date();
 
 	return reservations.filter((r) => {
-		const start = new Date(r.guest.dateTimeOfArrival);
-		const end = new Date(r.guest.dateTimeOfDeparture);
+		const start = dateService.parseBackendDate(r.guest.dateTimeOfArrival);
+		const end = dateService.parseBackendDate(r.guest.dateTimeOfDeparture);
 
 		switch (segment) {
 			case "finished":
