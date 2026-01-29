@@ -66,7 +66,8 @@ public class BooksController {
                 .period(DateRangeDTO.builder()
                         .from(from)
                         .to(to)
-                        .build())
+                        .build()
+                )
                 .build();
 
         var pdfService = bookPdfFactory.get(BookType.INCOME);

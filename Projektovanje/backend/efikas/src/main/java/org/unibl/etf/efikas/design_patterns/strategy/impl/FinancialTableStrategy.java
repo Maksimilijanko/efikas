@@ -90,7 +90,7 @@ public class FinancialTableStrategy implements TableStrategy {
     }
 
     private Cell createCell(String content, int colSpan, int rowSpan) {
-        Paragraph paragraph = new Paragraph(content);
+        Paragraph paragraph = new Paragraph(content == null ? "" : content);
         paragraph.setFontSize(Constants.PdfFonts.FINANCIAL_TABLE_FONT_SIZE)
                 .setProperty(Property.FLEX_WRAP, TextAlignment.LEFT);
         return new Cell(rowSpan, colSpan).add(paragraph);

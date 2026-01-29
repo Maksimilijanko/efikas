@@ -14,6 +14,8 @@ import org.unibl.etf.efikas.models.enums.Gender;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -140,5 +142,8 @@ public class GuestsBook {
     @CreationTimestamp
     @Column(name = "\"CreatedAt\"")
     private Instant createdAt;
+
+    @OneToMany(mappedBy = "guest")
+    private Set<Reservation> reservations = new LinkedHashSet<>();
 
 }

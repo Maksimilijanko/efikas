@@ -107,7 +107,7 @@ const DocumentsDownloadTemplate: React.FC<DocumentsDownloadTemplateProps> = ({
 
 	useEffect(() => {
 		if (pdfPath && !isDownloading) {
-			pdfService.openPdf(pdfPath);
+			//pdfService.openPdf(pdfPath);
 		}
 	}, [pdfPath, isDownloading]);
 

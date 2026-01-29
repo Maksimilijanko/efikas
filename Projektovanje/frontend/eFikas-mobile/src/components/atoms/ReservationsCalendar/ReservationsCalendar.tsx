@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Platform } from "react-native";
-import { Calendar, LocaleConfig } from "react-native-calendars";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "@/src/providers/ThemeProvider";
-import { Reservation } from "@/src/types/types";
 import { QuickInfoDialog, QuickInfoItem } from "@/src/components/organisms/Dialogs/QuickInfoDialog/QuickInfoDialog";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import { useTheme } from "@/src/providers/ThemeProvider";
+import { dateService } from "@/src/services/dateService";
+import { Reservation } from "@/src/types/types";
 import { calculateNights } from "@/src/util/dateUtils";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Platform, StyleSheet, View } from "react-native";
+import { Calendar, CalendarProps, LocaleConfig } from "react-native-calendars";
+
+import { Theme } from 'react-native-calendars/src/types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -18,12 +21,14 @@ interface ReservationsCalendarProps {
   onOpenDetails?: (reservation: Reservation) => void;
 }
 
+
+
 export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
   reservations,
   onOpenDetails,
 }) => {
   const { t, i18n } = useTranslation();
-  const { Colors } = useTheme();
+  const { Colors, theme } = useTheme();
   const [markedDates, setMarkedDates] = useState<{ [key: string]: any }>({});
   const [selectedReservations, setSelectedReservations] = useState<
     Reservation[]
@@ -51,8 +56,8 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
   }, [i18n.language, t]);
 
   // Pomocna funkcija koja izdvaja samo datum iz stringa datuma i vremena
-  const getDateOnly = (datetime: string): string => {
-    const d = new Date(datetime);
+  const getDateOnly = (datetime: Date): string => {
+    const d = dateService.parseBackendDate(datetime);
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(d.getDate()).padStart(2, "0");
@@ -130,6 +135,14 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
       });
     });
 
+	const today = new Date().toISOString().split('T')[0];
+	// Add marking for today if it doesn't exist, or augment it if it does
+	marks[today] = {
+		...marks[today], // Keep existing reservation colors if they exist
+		marked: true,    // This adds the dot
+		dotColor: Colors.primary, // Color of the dot
+	};
+
     setMarkedDates(marks);
   }, [reservations, Colors]);
 
@@ -153,21 +166,13 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   const current = selectedReservations[currentIndex] ?? null;
 
-  
-
-  const formatDateTime = (iso: string) => {
-    if (!iso) return "";
-    const local = dayjs.utc(iso).tz("Europe/Sarajevo");
-    return local.format("DD.MM.YYYY HH:mm");
-  };
-
   // Priprema podataka za dialog
   const getDialogItems = (): QuickInfoItem[] => {
     if (!current) return [];
 
     const nights = calculateNights(
-      current.guest.dateTimeOfArrival,
-      current.guest.dateTimeOfDeparture
+      current.guest.dateTimeOfArrival.toString(),
+      current.guest.dateTimeOfDeparture.toString()
     );
 
     const items: QuickInfoItem[] = [
@@ -183,13 +188,13 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
       },
       {
         label: t("reservationsCalendar.arrival"),
-        value: formatDateTime(current.guest.dateTimeOfArrival),
+        value: dateService.formatLocalDateTime(current.guest.dateTimeOfArrival),
         isBold: true,
         marginTop: 12,
       },
       {
         label: t("reservationsCalendar.departure"),
-        value: formatDateTime(current.guest.dateTimeOfDeparture),
+        value: dateService.formatLocalDateTime(current.guest.dateTimeOfDeparture),
         isBold: true,
       },
     ];
@@ -210,22 +215,43 @@ export const ReservationsCalendar: React.FC<ReservationsCalendarProps> = ({
 
   const styles = getStyles(Colors);
 
+  const calendarTheme: Theme = useMemo(() => ({
+	arrowColor: Colors.primary,
+	monthTextColor: Colors.textPrimary,
+	calendarBackground: Colors.background,
+	todayTextColor: Colors.primary,
+	dayTextColor: Colors.textPrimary,
+	
+
+	// backgroundColor: Colors.background,
+	// calendarBackground: Colors.background,
+
+	// monthTextColor: Colors.textPrimary,
+	// textMonthFontWeight: "600",
+
+	// dayTextColor: Colors.textPrimary,
+	// textDisabledColor: Colors.textSecondary,
+
+	// todayTextColor: Colors.primary,
+	// arrowColor: Colors.primary,
+
+	// selectedDayBackgroundColor: Colors.primary,
+	// selectedDayTextColor: Colors.textPrimary,
+	}), [Colors]); // Dependencies
+
+	console.log("MARKED DATES: ", markedDates)
+
   return (
     <View style={styles.calendarWrapper}>
       <Calendar
+	  	key={theme}
         markingType="period"
         markedDates={markedDates}
         onDayPress={handleDayPress}
         enableSwipeMonths
         firstDay={1}
         style={styles.calendar}
-        theme={{
-          arrowColor: Colors.primary,
-          monthTextColor: Colors.textPrimary,
-          textMonthFontSize: 18,
-          textMonthFontWeight: "600",
-          todayTextColor: Colors.primary,
-        }}
+        theme={calendarTheme}
       />
 
       <QuickInfoDialog
@@ -269,6 +295,7 @@ const getStyles = (Colors: any) =>
       backgroundColor: Colors.background,
       paddingTop: 10,
       paddingBottom: 10,
+	  textDecorationColor: 'red'
     },
 
     calendarWrapper: {
