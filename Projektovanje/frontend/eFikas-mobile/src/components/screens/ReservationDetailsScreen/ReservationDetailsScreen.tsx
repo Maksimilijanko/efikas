@@ -76,12 +76,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
     });
   };
 
-  // const handleFiscalizationConfirm = () => {
-  //   // Logika za fikalizaciju... TODO
-  //   console.log("Fiskalizacija potvrđena");
-  //   toggleDialog("fiscalization", false);
-  // };
-
+  // Logika za fikalizaciju
   const handleFiscalizationConfirm = async () => {
     toggleDialog("fiscalization", false);
   
