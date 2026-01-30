@@ -83,6 +83,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
   // };
 
   const handleFiscalizationConfirm = async () => {
+    toggleDialog("fiscalization", false);
   
     const IP_ADRESA = API_URLS.cash_register.ip_address; 
     const PORT = API_URLS.cash_register.port;                 
@@ -146,11 +147,11 @@ const ReservationDetailsScreen = ({ reservation }) => {
         console.log("Uspješna fiskalizacija:", data);
 
         Alert.alert(
-          t("success"),
-          `Račun uspješno fiskalizovan!\nBroj računa: ${data.invoiceNumber || "N/A"}`,
+          t("reservations.details.fiscalization.successTitle"),
+          `${t("reservations.details.fiscalization.successMessage")}\n${t("reservations.details.fiscalization.invoiceNumber")}: ${data.invoiceNumber || "N/A"}`,
           [
             {
-              text: "OK",
+              text: t("reservations.details.fiscalization.fiscalizationButton"),
               onPress: () => toggleDialog("fiscalization", false),
             },
           ]
@@ -160,13 +161,16 @@ const ReservationDetailsScreen = ({ reservation }) => {
       } else {
         const errorText = await response.text();
         console.error("Greška s kase:", errorText);
-        Alert.alert("Greška pri fiskalizaciji", `Status: ${response.status}\n${errorText}`);
+        Alert.alert(
+            t("reservations.toastMessages.genericError"), 
+            `Status: ${response.status}\n${errorText}`
+        );
       }
     } catch (error) {
       console.error("Network error:", error);
       Alert.alert(
-        "Greška u komunikaciji",
-        "Nije moguće kontaktirati fiskalnu kasu. Provjerite IP adresu i mrežu."
+        t("reservations.details.fiscalization.errorTitle"),
+        t("reservations.details.fiscalization.errorMessage")
       );
     }
   };

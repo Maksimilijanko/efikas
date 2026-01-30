@@ -533,7 +533,13 @@
                 "button": {
                     "confirmButton": "Potvrdi",
                     "cancelButton": "Odustani"
-                }
+                },
+                "successTitle": "Uspjeh!",
+                "successMessage": "Račun je uspješno fiskalizovan!",
+                "invoiceNumber": "Broj računa",
+                "fiscalizationButton": "U redu",
+                "errorTitle": "Greška u komunikaciji",
+                "errorMessage": "Nije moguće kontaktirati fiskalnu kasu. Provjerite IP adresu i mrežu."
             }
         },
         "load": {

@@ -528,7 +528,13 @@
                 "button": {
                     "confirmButton": "Confirm",
                     "cancelButton": "Cancel"
-                }
+                },
+                "successTitle": "Success!",
+                "successMessage": "Invoice successfully sent to the fiscal cash register!",
+                "invoiceNumber": "Invoice number",
+                "fiscalizationButton": "OK",
+                "errorTitle": "Communication Error",
+                "errorMessage": "Not possible to contact the fiscal cash register. Please check the IP address and network."
             }
         },
         "load": {
