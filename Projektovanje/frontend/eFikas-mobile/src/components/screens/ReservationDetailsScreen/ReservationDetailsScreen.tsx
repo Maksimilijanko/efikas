@@ -1,4 +1,3 @@
-import { Pressable } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";

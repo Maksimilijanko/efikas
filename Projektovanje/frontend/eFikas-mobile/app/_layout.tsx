@@ -2,6 +2,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import App from "./App";
 import { ThemeProvider } from "@/src/providers/ThemeProvider";
 import { findFiscalDeviceIp } from "@/src/util/NetworkScanner";
+import { useEffect } from 'react';
+import { API_URLS } from "@/src/util/apiConstants";
 
 
 export default function RootLayout() {
@@ -9,10 +11,9 @@ export default function RootLayout() {
       const initializeApp = async () => {
         console.log("🚀 Aplikacija se pokreće, tražim kasu...");
         
-        const foundIp = await findFiscalDeviceIp();
+        const foundIp = await findFiscalDeviceIp(API_URLS.cash_register.api_token);
         
         if (foundIp) {
-          // TODO: save info
           
           console.log("🔗 Spojen na kasu:", foundIp);
         }
