@@ -1,4 +1,3 @@
-import { Pressable } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";
@@ -16,11 +15,14 @@ import { useRouter } from "expo-router";
 import { useDeleteReservation } from "@/src/hooks/useReservation";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
+import { useProfile } from "@/src/hooks/useProfile"; 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { calculateNights } from "@/src/util/dateUtils";
 import { dateService } from "@/src/services/dateService";
+import { Pressable, Alert } from "react-native";
+import { API_URLS } from "@/src/util/apiConstants";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -31,6 +33,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
   const { Colors } = useTheme();
   const navigation = useNavigation();
   const router = useRouter();
+  const { profile } = useProfile();
 
   // -------------------- Dialog state --------------------
   const [dialogs, setDialogs] = useState({
@@ -73,10 +76,98 @@ const ReservationDetailsScreen = ({ reservation }) => {
     });
   };
 
-  const handleFiscalizationConfirm = () => {
-    // Logika za fikalizaciju... TODO
-    console.log("Fiskalizacija potvrđena");
+  // Logika za fikalizaciju
+  const handleFiscalizationConfirm = async () => {
     toggleDialog("fiscalization", false);
+  
+    const IP_ADRESA = API_URLS.cash_register.ip_address; 
+    const PORT = API_URLS.cash_register.port;                 
+    const API_TOKEN = API_URLS.cash_register.api_token;           
+    const URL = `http://${IP_ADRESA}:${PORT}/api/invoices`;
+
+    const nights = calculateNights(
+      reservation.guest.dateTimeOfArrival,
+      reservation.guest.dateTimeOfDeparture
+    );
+
+    const cashierName = profile 
+        ? `${profile.name} ${profile.surname}` 
+        : "Prodavac 1";
+
+    const totalPrice = reservation.price || 0;
+    const unitPrice = nights > 0 ? totalPrice / nights : totalPrice;
+    
+    const uniqueRequestId = Date.now().toString();
+
+    const payload = {
+      invoiceRequest: {
+        invoiceType: "Normal",
+        businessName: "eFikas",
+        transactionType: "Sale",
+        cashier: cashierName,
+        payment: [
+          {
+            amount: totalPrice.toFixed(2),
+            paymentType: "Cash",
+          },
+        ],
+        items: [
+          {
+            name: `Nocenje "${reservation.apartment.name}"`,
+            gtin: "5449000131805", 
+            quantity: nights,
+            unitPrice: unitPrice.toFixed(2), 
+            totalAmount: totalPrice.toFixed(2), 
+            labels: ["B"],
+          },
+        ],
+      },
+    };
+
+    console.log("Šaljem na fiskalnu:", JSON.stringify(payload, null, 2));
+
+    try {
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${API_TOKEN}`,
+          "RequestId": uniqueRequestId,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Uspješna fiskalizacija:", data);
+
+        Alert.alert(
+          t("reservations.details.fiscalization.successTitle"),
+          `${t("reservations.details.fiscalization.successMessage")}\n${t("reservations.details.fiscalization.invoiceNumber")}: ${data.invoiceNumber || "N/A"}`,
+          [
+            {
+              text: t("reservations.details.fiscalization.fiscalizationButton"),
+              onPress: () => toggleDialog("fiscalization", false),
+            },
+          ]
+        );
+        
+        
+      } else {
+        const errorText = await response.text();
+        console.error("Greška s kase:", errorText);
+        Alert.alert(
+            t("reservations.toastMessages.genericError"), 
+            `Status: ${response.status}\n${errorText}`
+        );
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      Alert.alert(
+        t("reservations.details.fiscalization.errorTitle"),
+        t("reservations.details.fiscalization.errorMessage")
+      );
+    }
   };
 
   // header - tri tackice
