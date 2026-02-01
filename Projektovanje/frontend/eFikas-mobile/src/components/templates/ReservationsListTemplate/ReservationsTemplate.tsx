@@ -35,7 +35,7 @@ const ReservationsListTemplate: React.FC<ReservationsListTemplateProps> = ({
                         keyExtractor={(_, index) => index.toString()}
                         renderItem={({ item }) => React.createElement(listItem, { item })}
                         contentContainerStyle={{
-                            paddingTop: 60,
+                            paddingTop: 200
                         }}
 
                     />

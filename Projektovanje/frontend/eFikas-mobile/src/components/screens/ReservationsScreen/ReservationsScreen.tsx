@@ -198,7 +198,7 @@ const getStyles = (Colors: any) =>
 		container: {
 			flex: 1,
 			backgroundColor: Colors.background,
-			alignItems: "center",
+			alignItems: "center"
 		},
 		content: {
 			width: "92%",
@@ -207,6 +207,7 @@ const getStyles = (Colors: any) =>
 		listContent: {
 			paddingTop: 12,
 			paddingBottom: 120,
+			paddingHorizontal: 2
 		},
 		segmentedWrapper: {
 			position: "absolute",

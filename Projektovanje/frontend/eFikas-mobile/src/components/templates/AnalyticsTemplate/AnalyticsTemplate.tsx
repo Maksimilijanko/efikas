@@ -15,7 +15,6 @@ export type AnalyticsTemplateProps = {
     summaryItems: React.ReactNode[];
     detailsContent: React.ReactNode;
     isDetailsMode: boolean;
-    periodSelector: React.ReactNode;
 };
 
 /*
@@ -31,8 +30,7 @@ const AnalyticsTemplate: React.FC<AnalyticsTemplateProps> = ({
     analyticsHeader,
     summaryItems,
     detailsContent,
-    isDetailsMode,
-    periodSelector
+    isDetailsMode
 }) => {
     useEffect(() => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -66,8 +64,6 @@ const AnalyticsTemplate: React.FC<AnalyticsTemplateProps> = ({
                     </View>
                 </View>
             </ScrollView>
-
-            <View style={styles.periodSelectorWrapper}>{periodSelector}</View>
         </View>
     );
 };

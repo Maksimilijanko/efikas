@@ -5,6 +5,7 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.background,
+        overflow: 'visible'
     },
 
     topRight: {
@@ -15,7 +16,7 @@ export default StyleSheet.create({
     },
 
     mainContent: {
-        flex: 1
+        flex: 1,
     },
 
     floatingButton: {

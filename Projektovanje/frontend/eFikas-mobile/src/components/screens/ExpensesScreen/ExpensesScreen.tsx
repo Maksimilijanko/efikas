@@ -57,6 +57,7 @@ const ExpensesScreen = () => {
             );
 
             await queryClient.invalidateQueries({ queryKey: ['expenses', Number(apartmentId)] });
+            await queryClient.invalidateQueries({ queryKey: ["analytics", String(apartmentId)] });
             setIsModalVisible(false);
         } catch (error: any) {
             console.error("GREŠKA:", error.response?.data);
