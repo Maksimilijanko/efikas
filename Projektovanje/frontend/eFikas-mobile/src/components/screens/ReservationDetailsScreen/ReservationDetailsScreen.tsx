@@ -12,7 +12,7 @@ import { EditDeleteDialog } from "@/src/components/organisms/Dialogs/EditDeleteD
 import { QuickInfoDialog } from "../../organisms/Dialogs/QuickInfoDialog/QuickInfoDialog";
 import { MessageDialog } from "@/src/components/organisms/Dialogs/MessageDialog/MessageDialog";
 import { useRouter } from "expo-router";
-import { useDeleteReservation } from "@/src/hooks/useReservation";
+import { useDeleteReservation, useUpdateReservation } from "@/src/hooks/useReservation";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { useProfile } from "@/src/hooks/useProfile"; 
@@ -48,6 +48,11 @@ const ReservationDetailsScreen = ({ reservation }) => {
   };
 
   const deleteMutation = useDeleteReservation(
+    reservation.reservationId,
+    reservation.apartment.apartmentId
+  );
+
+  const updateMutation = useUpdateReservation(
     reservation.reservationId,
     reservation.apartment.apartmentId
   );
@@ -99,9 +104,18 @@ const ReservationDetailsScreen = ({ reservation }) => {
     
     const uniqueRequestId = Date.now().toString();
 
+    var invoiceNumber = null;
+    var invoiceType = "Normal";
+    // If invoice number already issued, include it in the payload
+    if(reservation.guest.issuedInvoiceNumber != null && reservation.guest.issuedInvoiceNumber != "") {
+      invoiceNumber = reservation.guest.issuedInvoiceNumber;
+      invoiceType = "Copy";
+    }
+
     const payload = {
       invoiceRequest: {
-        invoiceType: "Normal",
+        invoiceType: invoiceType,
+        invoiceNumber: invoiceNumber,
         businessName: "eFikas",
         transactionType: "Sale",
         cashier: cashierName,
@@ -140,6 +154,22 @@ const ReservationDetailsScreen = ({ reservation }) => {
       if (response.ok) {
         const data = await response.json();
         console.log("Uspješna fiskalizacija:", data);
+        
+        if(invoiceNumber == null) {                       // if there was none issued before, update reservation with new one
+
+          try {
+            const updatePayload = {
+              ...reservation,
+              invoiceNumber: data.invoiceNumber,          // put the invoice number in 
+            };
+
+            await updateMutation.mutateAsync({
+              payload: updatePayload
+            });
+          } catch (updateError) {
+            console.log("Greška pri ažuriranju rezervacije s brojem računa:", updateError);
+          }
+        }
 
         Alert.alert(
           t("reservations.details.fiscalization.successTitle"),
