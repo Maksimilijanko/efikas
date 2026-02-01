@@ -104,20 +104,19 @@ const ReservationDetailsScreen = ({ reservation }) => {
     
     const uniqueRequestId = Date.now().toString();
 
-    var invoiceNumber = null;
+    var referentDocumentNumber = null;
     var invoiceType = "Normal";
     // If invoice number already issued, include it in the payload
     if(reservation.guest.issuedInvoiceNumber != null && reservation.guest.issuedInvoiceNumber != "") {
-      invoiceNumber = reservation.guest.issuedInvoiceNumber;
+      referentDocumentNumber = reservation.guest.issuedInvoiceNumber;
       invoiceType = "Copy";
     }
 
-    console.log("Invoice number is: ", invoiceNumber);
-
+    console.log("Referent document number is: ", referentDocumentNumber);
     const payload = {
       invoiceRequest: {
         invoiceType: invoiceType,
-        invoiceNumber: invoiceNumber,
+        referentDocumentNumber: referentDocumentNumber,
         businessName: "eFikas",
         transactionType: "Sale",
         cashier: cashierName,
@@ -157,7 +156,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
         const data = await response.json();
         console.log("Uspješna fiskalizacija:", data);
         
-        if(invoiceNumber == null) {                       // if there was none issued before, update reservation with new one
+        if(referentDocumentNumber == null) {                       // if there was none issued before, update reservation with new one
 
           try {
            const updatePayload = {
