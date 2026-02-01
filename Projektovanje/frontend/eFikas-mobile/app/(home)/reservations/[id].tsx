@@ -6,9 +6,10 @@ import { View, ActivityIndicator } from "react-native";
 import { useTheme } from "@/src/providers/ThemeProvider";
 
 const ReservationDetailsById = () => {
-  const { id, apartmentId } = useLocalSearchParams<{
+  const { id, apartmentId, segment } = useLocalSearchParams<{
     id: string;
     apartmentId?: string;
+	segment: string;
   }>();
   const { Colors } = useTheme();
 
@@ -26,7 +27,7 @@ const ReservationDetailsById = () => {
     );
   }
 
-  return <ReservationDetailsScreen reservation={reservation} />;
+  return <ReservationDetailsScreen reservation={reservation} segment={segment} />;
 };
 
 export default ReservationDetailsById;

@@ -1,7 +1,9 @@
 package org.unibl.etf.efikas.models.requests;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.unibl.etf.efikas.models.dto.books.entries.IncomeEntry;
 import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 
@@ -11,6 +13,8 @@ import java.util.stream.Stream;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateIncomeBookRequest {
     private int apartmentId;
     private String description;

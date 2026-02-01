@@ -503,7 +503,10 @@
             "deleteErrorTitle": "Deletion Error",
             "deleteErrorMessage": "Reservation was not deleted.",
             "deleteSuccessTitle": "Reservation Deleted!",
-            "deleteSuccessMessage": "Reservation has been successfully deleted."
+            "deleteSuccessMessage": "Reservation has been successfully deleted.",
+
+			"errorPrintingReceiptTitle": "Error",
+			"errorPrintingReceiptMessage": "Unable to fiscalize invoice for this type of reservation!"
         },
         "details": {
             "note": "Note",
@@ -520,6 +523,10 @@
                 "confirm": "Confirm",
                 "cancel": "Cancel"
             },
+			"incomeRegistration": {
+				"successTitle": "Success!",
+				"successMessage": "Income has been successfully registered in the income book."
+			},
             "fiscalization": {
                 "title": "Check Fiscalization Information",
                 "reservationType": "Service:",

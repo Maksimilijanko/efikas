@@ -129,7 +129,8 @@ export default function ReservationsScreen() {
 												pathname: '/(home)/reservations/[id]',
 												params: {
 													id: item.reservationId,        // dynamic route param
-													apartmentId: item.apartment.apartmentId // search param
+													apartmentId: item.apartment.apartmentId, // search param
+													segment: segment
 												},
 											})
 										}

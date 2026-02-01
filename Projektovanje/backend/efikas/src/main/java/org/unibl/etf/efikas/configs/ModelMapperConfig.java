@@ -5,6 +5,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.unibl.etf.efikas.models.dto.ApartmentExpenseDTO;
+import org.unibl.etf.efikas.models.dto.GuestDTO;
 import org.unibl.etf.efikas.models.dto.ReservationDTO;
 import org.unibl.etf.efikas.models.entities.*;
 import org.unibl.etf.efikas.models.responses.ApartmentDamageResponse;
@@ -69,7 +70,8 @@ public class ModelMapperConfig {
         mapper.createTypeMap(ApartmentExpenseDTO.class, ApartmentExpense.class)
                 .addMappings(m -> m.skip(ApartmentExpense::setExpenseType));
 
-
+        mapper.typeMap(GuestDTO.class, GuestsBook.class)
+                .addMappings(m -> m.skip(GuestsBook::setId));
 
         return mapper;
     }

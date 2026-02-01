@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { API_BASE_URL } from "../util/apiConstants";
 import { secureStoreService } from "../services/secureStoreService";
 import { SECURE_STORE_KEYS } from "../util/secureStoreKeys";
+import { router } from "expo-router";
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -64,6 +65,8 @@ axiosInstance.interceptors.response.use(
     async (error: AxiosError) => {
         if (error.response?.status === 401) {
             console.warn("Unauthorized (401) — token možda ne postoji ili je istekao.");
+
+			router.replace("/(auth)");
         }
 
         return Promise.reject(error);

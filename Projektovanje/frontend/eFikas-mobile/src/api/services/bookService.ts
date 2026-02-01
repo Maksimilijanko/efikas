@@ -1,6 +1,6 @@
 import { fileService } from "@/src/services/fileService";
 import { GuestBookType } from "@/src/types/enums";
-import { DownloadIncomeBookRequest, GuestsBookRequest, PdfResult } from "@/src/types/types";
+import { CreateIncomeBookRequest, DownloadIncomeBookRequest, GuestsBookRequest, PdfResult } from "@/src/types/types";
 import { API_URLS } from "@/src/util/apiConstants";
 import { Platform } from "react-native";
 import ReactNativeBlobUtil, { FetchBlobResponse } from "react-native-blob-util";
@@ -9,7 +9,8 @@ import ReactNativeBlobUtil, { FetchBlobResponse } from "react-native-blob-util";
 import { File, Directory, Paths } from 'expo-file-system';
 import { SECURE_STORE_KEYS } from "@/src/util/secureStoreKeys";
 import { secureStoreService } from "@/src/services/secureStoreService";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
+import axiosInstance from "../axiosInstance";
 
 type BlobFetchOptions = {
 	downloadPath?: string; // full file path INCLUDING filename
@@ -106,6 +107,13 @@ const buildIncomeBookUrl = ({ taxpayerId, period }: DownloadIncomeBookRequest) =
 	`${API_URLS.books.getIncomeBookPdf}?taxpayerId=${taxpayerId}&from=${period.from}&to=${period.to}`;
 
 export const bookService = {
+	/* ==================================== STREAMING BOOKS ==================================== */
+	addIncome: async (request: CreateIncomeBookRequest): Promise<AxiosResponse> => {
+		const response = await axiosInstance.post(API_URLS.books.addIncome, request);
+		return response;
+	},
+
+
 	/* ==================================== STREAMING BOOKS ==================================== */
 	streamIncomeBook: async (request: DownloadIncomeBookRequest): Promise<PdfResult> => {
 		const url = buildIncomeBookUrl(request);
