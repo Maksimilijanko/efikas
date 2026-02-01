@@ -99,6 +99,11 @@ const styles = (Colors: any, barColor?: string) => StyleSheet.create({
         marginVertical: 8,
         minHeight: 80,
         paddingLeft: 21,
+        shadowColor: Colors.shadowColor,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3.8,
+        elevation: 4,
     } as ViewStyle,
     textContainer: {
         marginLeft: 0,
