@@ -508,7 +508,10 @@
             "deleteErrorTitle": "Greška pri brisanju",
             "deleteErrorMessage": "Rezervacija nije izbrisana.",
             "deleteSuccessTitle": "Rezervacija izbrisana!",
-            "deleteSuccessMessage": "Rezervacija je uspješno izbrisana."
+            "deleteSuccessMessage": "Rezervacija je uspješno izbrisana.",
+
+			"errorPrintingReceiptTitle": "Greška",
+			"errorPrintingReceiptMessage": "Nije moguce fiskalizovati račun za ovaj tip rezervacije!"
         },
         "details": {
             "note": "Napomena",

@@ -21,7 +21,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "guests_book", schema = "efikas")
-@ToString
+
 public class GuestsBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

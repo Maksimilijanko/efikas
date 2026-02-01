@@ -201,7 +201,7 @@ public class ReservationService {
                     // Update existing guest info with new data from DTO
                     modelMapper.map(reservationDTO.getGuest(), existingGuest);
 
-
+                    
                     // Ensure ID doesn't get overwritten incorrectly if DTO has a null ID
                     if (finalPictureUrl != null) existingGuest.setPersonalDocumentURL(finalPictureUrl);
                     return guestsBookRepository.save(existingGuest);
@@ -213,7 +213,8 @@ public class ReservationService {
                     return guestsBookRepository.save(newGuest);
                 });
 
-
+        System.out.println("IN STREAM API, EXISTING: " + reservationDTO.getGuest().getDateTimeOfArrival());
+        System.out.println("IN STREAM API, RESERVATION GUEST: " +  guest.getDateTimeOfArrival());
 
         Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
         reservation.setGuest(guest);

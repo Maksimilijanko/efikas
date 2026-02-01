@@ -4,6 +4,8 @@ import { ThemeProvider } from "@/src/providers/ThemeProvider";
 import { findFiscalDeviceIp } from "@/src/util/NetworkScanner";
 import { useEffect } from 'react';
 import { API_URLS } from "@/src/util/apiConstants";
+import { asyncStorageService } from "@/src/services/asyncStorageService";
+import { ASYNC_STORAGE_KEYS } from "@/src/util/secureStoreKeys";
 
 
 export default function RootLayout() {
@@ -14,7 +16,7 @@ export default function RootLayout() {
         const foundIp = await findFiscalDeviceIp(API_URLS.cash_register.api_token);
         
         if (foundIp) {
-          
+          asyncStorageService.setItemAsync(ASYNC_STORAGE_KEYS.cashRegisterIp, foundIp);
           console.log("🔗 Spojen na kasu:", foundIp);
         }
       };
