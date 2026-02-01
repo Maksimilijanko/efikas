@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { Directory, File, Paths } from "expo-file-system";
+import { fetch } from "expo/fetch";
 
 import AddApartmentTemplate from "../../templates/AddApartmentTemplate/AddApartmentTemplate";
 import LabeledTextField from "../../molecules/LabeledTextField/LabeledTextField";
@@ -13,7 +15,11 @@ import { Label } from "../../atoms/Label/Label";
 import { BasicButton } from "../../atoms/BasicButton/BasicButton";
 import InventoryDialog from "../../organisms/Dialogs/InventoryDialog/InventoryDialog";
 
-import type { ApartmentInventory, ApartmentResponse, CreateApartmentPayload } from "@/src/types/types";
+import type {
+  ApartmentInventory,
+  ApartmentResponse,
+  CreateApartmentPayload,
+} from "@/src/types/types";
 import { toastService } from "@/src/services/toastService";
 import { useUpdateApartment } from "@/src/hooks/useUpdateApartment";
 
@@ -48,6 +54,67 @@ const EMPTY_INVENTORY: ApartmentInventory = {
   balkon: false,
 };
 
+const getFileExtFromUrl = (url: string) => {
+  const clean = url.split("?")[0];
+  const last = clean.split(".").pop();
+  if (!last) return "jpg";
+  const ext = last.toLowerCase();
+  return ["jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "jpg";
+};
+
+const downloadPicturesToLocal = async (urls: string[], apartmentId: number) => {
+  const results: string[] = [];
+  // folder in cache: <cache>/apartment-images/
+  const dir = new Directory(Paths.cache, "apartment-images");
+  try {
+    dir.create();
+  } catch {
+  }
+
+  for (let i = 0; i < urls.length; i++) {
+    const rawUrl = urls[i];
+    if (!rawUrl) continue;
+
+    const url = rawUrl;
+    const ext = getFileExtFromUrl(url);
+    const file = new File(Paths.cache, `apartment-images/apt_${apartmentId}_${i}.${ext}`);
+
+    try {
+      try {
+        if (file.exists) {
+          results.push(file.uri);
+          continue;
+        }
+      } catch {
+      }
+
+      console.log(`⬇️ downloading [${i}]`, url);
+
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        console.log(`❌ download failed [${i}] status:`, res.status);
+        console.log("URL:", url);
+        console.log("BODY:", text.slice(0, 300));
+        continue;
+      }
+
+      const bytes = await res.bytes();
+      file.write(bytes);
+
+
+      console.log(`✅ saved [${i}] ->`, file.uri);
+      results.push(file.uri);
+    } catch (e: any) {
+      console.log(`❌ download failed [${i}]`, e?.message ?? e);
+    }
+  }
+
+  console.log("📦 local URIs:", results);
+  return results;
+};
+
 export default function EditApartmentScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -60,13 +127,14 @@ export default function EditApartmentScreen() {
   const [form, setForm] = useState<FormState>(INITIAL_FORM_STATE);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [inventoryModalVisible, setInventoryModalVisible] = useState(false);
-  const [inventoryData, setInventoryData] = useState<ApartmentInventory>(EMPTY_INVENTORY);
+  const [inventoryData, setInventoryData] =
+    useState<ApartmentInventory>(EMPTY_INVENTORY);
 
   const apartmentFromCache = useMemo(() => {
-    const apartments = queryClient.getQueryData<ApartmentResponse[]>(["apartments"]) ?? [];
+    const apartments =
+      queryClient.getQueryData<ApartmentResponse[]>(["apartments"]) ?? [];
     return apartments.find((a) => a.apartmentId === apartmentId) ?? null;
   }, [queryClient, apartmentId]);
-
 
   useEffect(() => {
     if (!apartmentFromCache) return;
@@ -85,7 +153,25 @@ export default function EditApartmentScreen() {
       ...EMPTY_INVENTORY,
       ...(apartmentFromCache.traits ?? {}),
     });
-  }, [apartmentFromCache]);
+
+    const urls = apartmentFromCache.pictures ?? [];
+    console.log("🖼️ S3 pictures:", urls);
+
+    if (!urls.length || !Number.isFinite(apartmentId)) return;
+
+    let cancelled = false;
+
+    (async () => {
+      const localUris = await downloadPicturesToLocal(urls, apartmentId);
+      if (!cancelled) {
+        setSelectedImages((prev) => (prev.length ? prev : localUris));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [apartmentFromCache, apartmentId]);
 
   const updateField = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -93,11 +179,17 @@ export default function EditApartmentScreen() {
 
   const validateForm = (): boolean => {
     if (!form.apartmentName.trim()) {
-      toastService.error(t("addApartment.validation.errorTitle"), t("addApartment.validation.nameError"));
+      toastService.error(
+        t("addApartment.validation.errorTitle"),
+        t("addApartment.validation.nameError")
+      );
       return false;
     }
     if (!form.address.trim()) {
-      toastService.error(t("addApartment.validation.errorTitle"), t("addApartment.validation.addressError"));
+      toastService.error(
+        t("addApartment.validation.errorTitle"),
+        t("addApartment.validation.addressError")
+      );
       return false;
     }
     const nums: Array<[keyof FormState, string]> = [
@@ -122,13 +214,19 @@ export default function EditApartmentScreen() {
       return;
     }
     if (!apartmentFromCache) {
-      toastService.error("Greška", "Apartman nije pronađen u cache-u. Vrati se na listu.");
+      toastService.error(
+        "Greška",
+        "Apartman nije pronađen u cache-u. Vrati se na listu."
+      );
       return;
     }
     if (!validateForm()) return;
 
     if (!selectedImages.length) {
-      toastService.error(t("addApartment.validation.errorTitle"), "Dodaj bar jednu sliku.");
+      toastService.error(
+        t("addApartment.validation.errorTitle"),
+        "Dodaj bar jednu sliku."
+      );
       return;
     }
 
@@ -192,7 +290,10 @@ export default function EditApartmentScreen() {
         />
       }
       imagePicker={
-        <ImagePicker selectedImages={selectedImages} onImagesSelected={setSelectedImages} />
+        <ImagePicker
+          selectedImages={selectedImages}
+          onImagesSelected={setSelectedImages}
+        />
       }
       noBedsEdit={
         <LabeledTextField
@@ -246,7 +347,7 @@ export default function EditApartmentScreen() {
           visible={inventoryModalVisible}
           onClose={() => setInventoryModalVisible(false)}
           onSave={(data) => setInventoryData(data)}
-          initialValues={inventoryData} // ✅ bitno
+          initialValues={inventoryData}
         />
       }
       saveButton={

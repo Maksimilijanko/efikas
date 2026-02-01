@@ -10,8 +10,8 @@ export type ApartmentDetailsVM = {
   address: string;
   heroImageUrl: string;
 
-  bedrooms: number;      // = numberOfBeds
-  squareMeters: number;  // = numberOfRooms (za sada, treba uskladiti)
+  beds: number;      // = numberOfBeds
+  bedrooms: number;  // = numberOfRooms 
   maxGuests: number;     // = capacity 
 
   tags: string[];
@@ -71,8 +71,8 @@ export const apartmentDetailsService = {
       address: apartment.address,
       heroImageUrl,
 
-      bedrooms: apartment.numberOfBeds ?? 0,
-      squareMeters: apartment.numberOfRooms ?? 0,
+      beds: apartment.numberOfBeds ?? 0,
+      bedrooms: apartment.numberOfRooms ?? 0,
       maxGuests: apartment.capacity ?? 0,
 
       tags,

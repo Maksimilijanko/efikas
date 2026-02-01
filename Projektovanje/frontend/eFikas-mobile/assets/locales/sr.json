@@ -209,6 +209,7 @@
             "notifications": "Obavještenja",
             "myApartments": "Moji stanovi",
             "addApartment": "Dodaj stan",
+            "editApartment": "Uredi podatke o stanu",
             "expenses": "Troškovi",
             "statistics": "Statistika",
             "incomeBook": "Knjiga prihoda",
@@ -714,6 +715,7 @@
         }
     },
     "landingApartmentInfo": {
+        "rooms": "Broj soba",
         "services": {
             "title": "Usluge",
             "showAll": "Prikaži sve›",

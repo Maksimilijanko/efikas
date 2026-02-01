@@ -7,10 +7,10 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-	  "env": {
+      "env": {
         "EXPO_PUBLIC_API_SCHEME": "http",
-		"EXPO_PUBLIC_API_ADDRESS": "192.168.100.1",
-		"EXPO_PUBLIC_API_PORT": "8080"
+        "EXPO_PUBLIC_API_ADDRESS": "192.168.100.1",
+        "EXPO_PUBLIC_API_PORT": "8080"
       }
     },
     "ios-simulator": {
@@ -24,10 +24,10 @@
     },
     "production": {
       "autoIncrement": true,
-	  "env": {
+      "env": {
         "EXPO_PUBLIC_API_SCHEME": "https",
-		"EXPO_PUBLIC_API_ADDRESS": "efikas-team.com",
-		"EXPO_PUBLIC_API_PORT": "443"
+        "EXPO_PUBLIC_API_ADDRESS": "efikas-team.com",
+        "EXPO_PUBLIC_API_PORT": "443"
       }
     }
   },

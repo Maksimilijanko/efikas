@@ -710,6 +710,7 @@
         }
     },
     "landingApartmentInfo": {
+        "rooms": "Number of rooms",
         "services": {
             "title": "Services",
             "showAll": "Show all›",
