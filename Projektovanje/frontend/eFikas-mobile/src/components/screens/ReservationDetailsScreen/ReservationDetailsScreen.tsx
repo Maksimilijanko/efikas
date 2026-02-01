@@ -112,6 +112,8 @@ const ReservationDetailsScreen = ({ reservation }) => {
       invoiceType = "Copy";
     }
 
+    console.log("Invoice number is: ", invoiceNumber);
+
     const payload = {
       invoiceRequest: {
         invoiceType: invoiceType,
@@ -160,12 +162,18 @@ const ReservationDetailsScreen = ({ reservation }) => {
           try {
             const updatePayload = {
               ...reservation,
-              invoiceNumber: data.invoiceNumber,          // put the invoice number in 
+              guest: {
+                ...reservation.guest,
+                issuedInvoiceNumber: data.invoiceNumber,   // put the invoice number in guest object
+              }
             };
 
             await updateMutation.mutateAsync({
               payload: updatePayload
             });
+
+
+            console.log("Rezervacija ažurirana s brojem računa:", data.invoiceNumber);
           } catch (updateError) {
             console.log("Greška pri ažuriranju rezervacije s brojem računa:", updateError);
           }
