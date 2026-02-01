@@ -11,6 +11,7 @@ import { toastService } from "@/src/services/toastService";
 import { router } from "expo-router";
 import { MessageDialog } from "@/src/components/organisms/Dialogs/MessageDialog/MessageDialog";
 import { t } from "i18next";
+import MissingItemsNotifier from "../../molecules/MissingItemsNotifier/MissingItemsNotifier";
 
 interface DialogState {
   visible: boolean;
@@ -29,7 +30,8 @@ const ApartmentsListScreen: React.FC = () => {
   });
 
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
-  const [apartmentIdPendingDelete, setApartmentIdPendingDelete] = useState<number | null>(null);
+  const [apartmentIdPendingDelete, setApartmentIdPendingDelete] =
+    useState<number | null>(null);
 
   const handleLongPress = (apartmentId: number, event: any) => {
     const { pageY } = event.nativeEvent;
@@ -80,11 +82,11 @@ const ApartmentsListScreen: React.FC = () => {
         toastService.success(
           t("apartment.toast.deleteSuccessTitle") || "Uspešno obrisano",
           (response as any)?.message ||
-          t("apartment.toast.deleteSuccessMessage") ||
-          "Apartman je uspešno obrisan."
+            t("apartment.toast.deleteSuccessMessage") ||
+            "Apartman je uspešno obrisan."
         );
       },
-      onError: (err: any) => {
+      onError: () => {
         toastService.error(
           t("common.error"),
           t("apartment.toast.deleteErrorMessage")
@@ -96,28 +98,46 @@ const ApartmentsListScreen: React.FC = () => {
   if (isLoading) return <ApartmentsListTemplate apartments={[]} />;
   if (error) return <ApartmentsListTemplate apartments={[]} />;
 
-  const apartments =
-    data?.map((item) => (
-      <View key={item.apartmentId}>
-        <ApartmentCard
-          name={item.name}
-          address={item.address}
-          imageUrl={item.imageUrl || ""}
-          status={item.status}
-          statusUntil={item.statusUntil}
-          nextGuestsDate={item.nextGuestsDate}
-          onPress={() =>
-            router.push({
-              pathname: "/chosenApartment",
-              params: { apartmentId: String(item.apartmentId) },
-            })
-          }
-
-          onLongPress={(event) => handleLongPress(item.apartmentId, event)}
-          style={{}}
-        />
-      </View>
-    )) ?? [];
+  const apartments: React.ReactNode[] =
+    data && data.length > 0
+      ? data.map((item) => (
+          <View key={item.apartmentId}>
+            <ApartmentCard
+              name={item.name}
+              address={item.address}
+              imageUrl={item.imageUrl || ""}
+              status={item.status}
+              statusUntil={item.statusUntil}
+              nextGuestsDate={item.nextGuestsDate}
+              onPress={() =>
+                router.push({
+                  pathname: "/chosenApartment",
+                  params: { apartmentId: String(item.apartmentId) },
+                })
+              }
+              onLongPress={(event) =>
+                handleLongPress(item.apartmentId, event)
+              }
+              style={{}}
+            />
+          </View>
+        ))
+      : [
+          <View
+            key="missing-apartments"
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+            }}
+          >
+            <MissingItemsNotifier
+              label={t(
+                "apartments.missingApartmentsNotification"
+              )}
+            />
+          </View>,
+        ];
 
   return (
     <>
@@ -126,7 +146,9 @@ const ApartmentsListScreen: React.FC = () => {
         floatingActionButton={
           <FloatButton
             size="lg"
-            icon={() => <Icon name="HousePlus" size={22} color="white" />}
+            icon={() => (
+              <Icon name="HousePlus" size={22} color="white" />
+            )}
             onClick={() => router.push("/addApartment")}
           />
         }
