@@ -1,34 +1,40 @@
-import { useState, useEffect, useMemo } from "react";
-import { useNavigation } from "@react-navigation/native";
-import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";
-import ApartmentCard from "@/src/components/organisms/ApartmentCard/ApartmentCard";
-import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard";
-import DescriptionBox from "@/src/components/atoms/DescriptionBox/DescriptionBox";
+import { bookService } from "@/src/api/services/bookService";
 import { BasicButton } from "@/src/components/atoms/BasicButton/BasicButton";
+import DescriptionBox from "@/src/components/atoms/DescriptionBox/DescriptionBox";
 import { Icon } from "@/src/components/atoms/Icon/Icon";
 import { Label } from "@/src/components/atoms/Label/Label";
-import { IdDocumentDialog } from "@/src/components/organisms/Dialogs/IdDocumentDialog/IdDocumentDialog";
+import ApartmentFeatureCard from "@/src/components/molecules/ApartmentFeatureCard/ApartmentFeatureCard";
+import ApartmentCard from "@/src/components/organisms/ApartmentCard/ApartmentCard";
 import { EditDeleteDialog } from "@/src/components/organisms/Dialogs/EditDeleteDialog/EditDeleteDialog";
-import { QuickInfoDialog } from "../../organisms/Dialogs/QuickInfoDialog/QuickInfoDialog";
+import { IdDocumentDialog } from "@/src/components/organisms/Dialogs/IdDocumentDialog/IdDocumentDialog";
 import { MessageDialog } from "@/src/components/organisms/Dialogs/MessageDialog/MessageDialog";
-import { useRouter } from "expo-router";
+import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";
+import { useProfile } from "@/src/hooks/useProfile";
 import { useDeleteReservation } from "@/src/hooks/useReservation";
-import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
-import { useProfile } from "@/src/hooks/useProfile"; 
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import { calculateNights } from "@/src/util/dateUtils";
 import { dateService } from "@/src/services/dateService";
-import { Pressable, Alert } from "react-native";
+import { CreateIncomeBookRequest, Reservation } from "@/src/types/types";
 import { API_URLS } from "@/src/util/apiConstants";
+import { calculateNights } from "@/src/util/dateUtils";
+import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Alert, Pressable } from "react-native";
+import { QuickInfoDialog } from "../../organisms/Dialogs/QuickInfoDialog/QuickInfoDialog";
+import { toastService } from "@/src/services/toastService";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+interface Props {
+	reservation: Reservation;
+}
 
-const ReservationDetailsScreen = ({ reservation }) => {
+const ReservationDetailsScreen = ({ reservation }: Props) => {
   const { t } = useTranslation();
   const { Colors } = useTheme();
   const navigation = useNavigation();
@@ -75,6 +81,32 @@ const ReservationDetailsScreen = ({ reservation }) => {
       },
     });
   };
+
+  const addIncomeToBook = async () => {
+	const nights = calculateNights(
+      reservation.guest.dateTimeOfArrival,
+      reservation.guest.dateTimeOfDeparture
+    );
+	const totalPrice = reservation.price || 0;
+    const unitPrice = nights > 0 ? totalPrice / nights : totalPrice;
+
+	const request: CreateIncomeBookRequest = {
+		apartmentId: reservation.apartment.apartmentId,
+		description: `Plaćena rezervacija za stan ${reservation.apartment.name}`,
+		productSaleRevenue: 0,
+		goodsSaleRevenue: 0,
+		serviceSaleRevenue: parseFloat(unitPrice.toFixed(2)),
+		otherRevenue: 0,
+		financialRevenue: 0,
+		vatAmount: 0
+	}
+
+	const response = await bookService.addIncome(request);
+	if(response.status === 201) {
+		console.log("USPJESNO DODAT PRIHOD U KNJIGU!");
+		toastService.success(t('reservations.details.incomeRegistration.successTitle'), t('reservations.details.incomeRegistration.successMessage'))
+	}
+  }
 
   // Logika za fikalizaciju
   const handleFiscalizationConfirm = async () => {
@@ -137,6 +169,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
         body: JSON.stringify(payload),
       });
 
+	  
       if (response.ok) {
         const data = await response.json();
         console.log("Uspješna fiskalizacija:", data);
@@ -152,7 +185,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
           ]
         );
         
-        
+        await addIncomeToBook();
       } else {
         const errorText = await response.text();
         console.error("Greška s kase:", errorText);

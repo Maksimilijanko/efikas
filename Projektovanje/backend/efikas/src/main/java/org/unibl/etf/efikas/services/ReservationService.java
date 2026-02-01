@@ -171,23 +171,49 @@ public class ReservationService {
     }
 
     private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO, MultipartFile documentPicture) {
-        if(documentPicture != null && !documentPicture.isEmpty()) {
-            FileUploadResponse fileUploadResponse = null;
+        String citizenId = reservationDTO.getGuest().getCitizenId();
+        GuestsBook guest1 = guestsBookRepository.findByCitizenId(citizenId).orElseThrow(() -> new EntityNotFoundException("Guest not found!"));
+        if(guest1 != null) {
+            // Honestly makes no sense, but it works for UNIQUE constraints so we can make multiple reservations
+            // per guest... sorry ¯\_(ツ)_/¯
+            reservationDTO.getGuest().setId(guest1.getId());
+            reservationDTO.getGuest().setPhoneNumber(guest1.getPhoneNumber());
+        }
+
+
+        String pictureUrl = null;
+        if (documentPicture != null && !documentPicture.isEmpty()) {
             try {
-                fileUploadResponse = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
+                FileUploadResponse response = s3Service.uploadFile(Constants.Aws.S3_BUCKET_IMAGES_FOLDER_PREFIX, documentPicture);
+                pictureUrl = response.getFilePath();
             } catch (IOException e) {
                 throw new S3UploadException(e.getMessage());
             }
-            String pictureUrl = fileUploadResponse.getFilePath();
-            reservationDTO.getGuest().setPersonalDocumentURL(pictureUrl);  // Database gets the key stored
         }
 
-        GuestsBook guest = guestsBookRepository
-                .findById(reservationDTO.getGuest().getId() != null ? reservationDTO.getGuest().getId() : 0)
-                .orElseGet(() -> guestsBookRepository.save(
-                        modelMapper.map(reservationDTO.getGuest(), GuestsBook.class)
-                ));
-        guestsBookRepository.flush();
+        // Lookup by CitizenId (Unique Key)
+        String finalPictureUrl = pictureUrl;
+        String finalPictureUrl1 = pictureUrl;
+        GuestsBook guest = guestsBookRepository.findByCitizenId(citizenId)
+                .map(existingGuest -> {
+                    modelMapper.typeMap(GuestDTO.class, GuestsBook.class)
+                            .addMappings(mapper -> mapper.skip(GuestsBook::setId));
+                    // Update existing guest info with new data from DTO
+                    modelMapper.map(reservationDTO.getGuest(), existingGuest);
+
+
+                    // Ensure ID doesn't get overwritten incorrectly if DTO has a null ID
+                    if (finalPictureUrl != null) existingGuest.setPersonalDocumentURL(finalPictureUrl);
+                    return guestsBookRepository.save(existingGuest);
+                })
+                .orElseGet(() -> {
+                    // Not found? Create brand new
+                    GuestsBook newGuest = modelMapper.map(reservationDTO.getGuest(), GuestsBook.class);
+                    if (finalPictureUrl1 != null) newGuest.setPersonalDocumentURL(finalPictureUrl1);
+                    return guestsBookRepository.save(newGuest);
+                });
+
+
 
         Reservation reservation = modelMapper.map(reservationDTO, Reservation.class);
         reservation.setGuest(guest);
@@ -221,4 +247,5 @@ public class ReservationService {
 
         return guest;
     }
+
 }

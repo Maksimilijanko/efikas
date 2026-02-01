@@ -524,6 +524,10 @@
                 "confirm": "Potvrdi",
                 "cancel": "Odustani"
             },
+			"incomeRegistration": {
+				"successTitle": "Uspjeh!",
+				"successMessage": "Prihod je uspješno evidentiran u knjigu prihoda."
+			},
             "fiscalization": {
                 "title": "Provjera informacija za fiskalizaciju",
                 "reservationType": "Usluga:",

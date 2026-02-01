@@ -214,6 +214,19 @@ export interface CreateForeignGuestPayload {
   remarks?: string | null;
 }
 
+
+export interface CreateIncomeBookRequest {
+	apartmentId: number;
+    description: string;
+    productSaleRevenue: number;
+    goodsSaleRevenue: number;
+    serviceSaleRevenue: number;
+    otherRevenue: number;
+    financialRevenue: number;
+    vatAmount: number;
+}
+
+
 export interface Reservation {
   reservationId: number;
   apartment: Apartment;

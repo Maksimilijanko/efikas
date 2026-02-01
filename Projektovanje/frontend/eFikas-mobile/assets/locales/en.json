@@ -519,6 +519,10 @@
                 "confirm": "Confirm",
                 "cancel": "Cancel"
             },
+			"incomeRegistration": {
+				"successTitle": "Success!",
+				"successMessage": "Income has been successfully registered in the income book."
+			},
             "fiscalization": {
                 "title": "Check Fiscalization Information",
                 "reservationType": "Service:",
