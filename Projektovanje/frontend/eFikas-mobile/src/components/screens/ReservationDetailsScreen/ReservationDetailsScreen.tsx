@@ -10,7 +10,9 @@ import { IdDocumentDialog } from "@/src/components/organisms/Dialogs/IdDocumentD
 import { MessageDialog } from "@/src/components/organisms/Dialogs/MessageDialog/MessageDialog";
 import ReservationDetailsTemplate from "@/src/components/templates/ReservationDetailsTemplate/ReservationDetailsTemplate";
 import { useProfile } from "@/src/hooks/useProfile";
-import { useDeleteReservation } from "@/src/hooks/useReservation";
+import { useRouter } from "expo-router";
+import { useDeleteReservation, useUpdateReservation } from "@/src/hooks/useReservation";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@/src/providers/ThemeProvider";
 import { dateService } from "@/src/services/dateService";
 import { CreateIncomeBookRequest, Reservation } from "@/src/types/types";
@@ -20,9 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Alert, Pressable } from "react-native";
 import { QuickInfoDialog } from "../../organisms/Dialogs/QuickInfoDialog/QuickInfoDialog";
 import { toastService } from "@/src/services/toastService";
@@ -57,6 +57,13 @@ const ReservationDetailsScreen = ({ reservation }: Props) => {
     reservation.reservationId,
     reservation.apartment.apartmentId
   );
+
+  const updateMutation = useUpdateReservation(
+    reservation.reservationId,
+    reservation.apartment.apartmentId
+  );
+
+  const [isFiscalizing, setIsFiscalizing] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -111,6 +118,7 @@ const ReservationDetailsScreen = ({ reservation }: Props) => {
   // Logika za fikalizaciju
   const handleFiscalizationConfirm = async () => {
     toggleDialog("fiscalization", false);
+    setIsFiscalizing(true);
   
     const IP_ADRESA = API_URLS.cash_register.ip_address; 
     const PORT = API_URLS.cash_register.port;                 
@@ -131,9 +139,19 @@ const ReservationDetailsScreen = ({ reservation }: Props) => {
     
     const uniqueRequestId = Date.now().toString();
 
+    let referentDocumentNumber = null;
+    let invoiceType = "Normal";
+    // If invoice number already issued, include it in the payload
+    if(reservation.guest.issuedInvoiceNumber != null && reservation.guest.issuedInvoiceNumber != "") {
+      referentDocumentNumber = reservation.guest.issuedInvoiceNumber;
+      invoiceType = "Copy";
+    }
+
+    console.log("Referent document number is: ", referentDocumentNumber);
     const payload = {
       invoiceRequest: {
-        invoiceType: "Normal",
+        invoiceType: invoiceType,
+        ...(referentDocumentNumber && { referentDocumentNumber }),            // If there is a referent document number, include it, else skip it!
         businessName: "eFikas",
         transactionType: "Sale",
         cashier: cashierName,
@@ -173,6 +191,36 @@ const ReservationDetailsScreen = ({ reservation }: Props) => {
       if (response.ok) {
         const data = await response.json();
         console.log("Uspješna fiskalizacija:", data);
+        
+        setIsFiscalizing(false);
+
+        if(referentDocumentNumber == null) {                       // if there was none issued before, update reservation with new one
+
+          try {
+           const updatePayload = {
+            apartmentId: reservation.apartment.apartmentId, 
+
+            guestQuantity: reservation.guestQuantity,
+            price: reservation.price,
+            note: reservation.note,
+            reservationType: reservation.reservationType,
+
+            guest: {
+              ...reservation.guest, 
+              issuedInvoiceNumber: data.invoiceNumber 
+            }
+          };
+
+            await updateMutation.mutateAsync({
+              payload: updatePayload
+            });
+
+
+            console.log("Rezervacija ažurirana s brojem računa:", data.invoiceNumber);
+          } catch (updateError) {
+            console.log("Greška pri ažuriranju rezervacije s brojem računa:", updateError);
+          }
+        }
 
         Alert.alert(
           t("reservations.details.fiscalization.successTitle"),
@@ -189,6 +237,7 @@ const ReservationDetailsScreen = ({ reservation }: Props) => {
       } else {
         const errorText = await response.text();
         console.error("Greška s kase:", errorText);
+        setIsFiscalizing(false);
         Alert.alert(
             t("reservations.toastMessages.genericError"), 
             `Status: ${response.status}\n${errorText}`
@@ -196,6 +245,7 @@ const ReservationDetailsScreen = ({ reservation }: Props) => {
       }
     } catch (error) {
       console.error("Network error:", error);
+      setIsFiscalizing(false);
       Alert.alert(
         t("reservations.details.fiscalization.errorTitle"),
         t("reservations.details.fiscalization.errorMessage")
@@ -404,7 +454,12 @@ const ReservationDetailsScreen = ({ reservation }: Props) => {
         }
         primaryAction={
           <BasicButton
-            title={t("reservations.details.button")}
+            title={
+              isFiscalizing 
+                ? t("reservations.details.buttonPrinting")
+                : t("reservations.details.button")
+            }
+            disabled={isFiscalizing} 
             onPress={() => toggleDialog("fiscalization", true)}
           />
         }
