@@ -55,7 +55,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
 
   const statusColor =
     status === true ? Colors.statusOccupied : Colors.statusAvailable;
-    
+
   const showNextGuests = !!nextGuestsDate;
 
 
@@ -81,13 +81,14 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
           <View style={styles.labelContainer}>
             <Label
               className="font-bold"
-              size="2xl"
+              size="xl"
               text={name}
               color={Colors.textPrimary}
             />
             <Label
               className="font-semibold"
               text={address}
+              size="md"
               color={Colors.textSecondary}
             />
           </View>
