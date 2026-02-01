@@ -116,7 +116,7 @@ const ReservationDetailsScreen = ({ reservation }) => {
     const payload = {
       invoiceRequest: {
         invoiceType: invoiceType,
-        referentDocumentNumber: referentDocumentNumber,
+        ...(referentDocumentNumber && { referentDocumentNumber }),            // If there is a referent document number, include it, else skip it!
         businessName: "eFikas",
         transactionType: "Sale",
         cashier: cashierName,
