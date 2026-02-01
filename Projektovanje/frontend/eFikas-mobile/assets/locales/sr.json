@@ -514,6 +514,7 @@
             "note": "Napomena",
             "document": "Dokument",
             "button": "Štampaj račun",
+            "buttonPrinting": "Štampanje...",
             "peopleCount_one": "{{count}} osoba",
             "peopleCount_few": "{{count}} osobe",
             "peopleCount_other": "{{count}} osoba",
