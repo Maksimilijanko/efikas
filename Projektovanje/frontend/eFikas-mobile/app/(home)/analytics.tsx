@@ -1,9 +1,7 @@
-import { Text } from "react-native";
+import AnalyticsScreen from "@/src/components/screens/AnalyticsScreen/AnalyticsScreen";
 
 export default function Analytics() {
     return(
-        <>
-            <Text>Stranica za statistiku</Text>
-        </>
+        <AnalyticsScreen />
     );
 }

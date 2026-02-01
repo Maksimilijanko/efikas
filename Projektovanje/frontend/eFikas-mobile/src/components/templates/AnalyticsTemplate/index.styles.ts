@@ -20,15 +20,7 @@ const styles = StyleSheet.create({
     },
     apartmentCardWrapper: {
         width: '100%',
-        borderRadius: 18,
-        overflow: 'hidden',
-        backgroundColor: Colors.background,
         marginBottom: screenHeight * 0.025,
-        shadowColor: Colors.shadowColor,
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 3 },
-        elevation: 3
     },
     analyticsSection: {
         width: '100%',
@@ -46,15 +38,6 @@ const styles = StyleSheet.create({
     },
     detailsWrapper: {
         width: '100%'
-    },
-    periodSelectorWrapper: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        paddingHorizontal: '4%',
-        paddingBottom: 12,
-        alignItems: 'center'
     }
 });
 

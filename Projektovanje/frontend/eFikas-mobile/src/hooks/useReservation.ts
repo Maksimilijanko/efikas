@@ -65,27 +65,27 @@ export const useCreateReservation = (apartmentId: number) => {
     }) => {
       try {
         return await reservationService.createReservation(
-          apartmentId, 
-          payload, 
+          apartmentId,
+          payload,
           documentPicture
         );
       } catch (err: any) {
         console.log("=== HOOK ERROR ===", err);
-		
-		console.log("message:", err.message);
-		console.log("status:", err.response?.status);
-		console.log("data:", err.response?.data);
-		console.log("headers:", err.response?.headers);
 
-		if(err.response?.status === 409) {
-			toastService.error(
-				t("reservations.toastMessages.create409Title"),
-				t("reservations.toastMessages.create409Message")
-			);
-			const errorMessage =
-          err?.message || t("reservations.toastMessages.genericError");
-			throw new Error(errorMessage);
-		}
+        console.log("message:", err.message);
+        console.log("status:", err.response?.status);
+        console.log("data:", err.response?.data);
+        console.log("headers:", err.response?.headers);
+
+        if (err.response?.status === 409) {
+          toastService.error(
+            t("reservations.toastMessages.create409Title"),
+            t("reservations.toastMessages.create409Message")
+          );
+          const errorMessage =
+            err?.message || t("reservations.toastMessages.genericError");
+          throw new Error(errorMessage);
+        }
 
 
         const errorMessage =
@@ -101,11 +101,13 @@ export const useCreateReservation = (apartmentId: number) => {
       await queryClient.invalidateQueries({
         queryKey: ["reservations", apartmentId],
       });
-    
+
       await queryClient.invalidateQueries({
         queryKey: ["userReservations"],
       });
-    
+
+      await queryClient.invalidateQueries({ queryKey: ["analytics", String(apartmentId)] });
+
       toastService.success(
         t("reservations.toastMessages.createSuccessTitle"),
         t("reservations.toastMessages.createSuccessMessage")
@@ -129,8 +131,8 @@ export const useUpdateReservation = (reservationId: number, apartmentId: number)
     }) => {
       try {
         return await reservationService.updateReservation(
-          reservationId, 
-          payload, 
+          reservationId,
+          payload,
           documentPicture
         );
       } catch (err: any) {
@@ -147,6 +149,7 @@ export const useUpdateReservation = (reservationId: number, apartmentId: number)
       queryClient.invalidateQueries({ queryKey: ["reservation", reservationId] });
       queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
       queryClient.invalidateQueries({ queryKey: ["userReservations"] });
+      queryClient.invalidateQueries({ queryKey: ["analytics", String(apartmentId)] });
       toastService.success(
         t("reservations.toastMessages.updateSuccessTitle"),
         t("reservations.toastMessages.updateSuccessMessage")
@@ -178,6 +181,8 @@ export const useDeleteReservation = (reservationId: number, apartmentId: number)
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reservations", apartmentId] });
       queryClient.invalidateQueries({ queryKey: ["userReservations"] });
+      queryClient.invalidateQueries({ queryKey: ["analytics", String(apartmentId)] });
+
       toastService.success(
         t("reservations.toastMessages.deleteSuccessTitle"),
         t("reservations.toastMessages.deleteSuccessMessage")

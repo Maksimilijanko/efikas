@@ -62,8 +62,8 @@ const getServicesFromProps = (props: ServiceProps): Service[] => {
 
 interface LandingApartmentInfoProps extends ServiceProps {
   imageUrl: ImageSourcePropType;
+  beds: number;
   bedrooms: number;
-  squareMeters: number;
   maxGuests: number;
 }
 
@@ -110,7 +110,7 @@ export const getStyles = (Colors: any) =>
       paddingVertical: 8,
     },
     attrText: {
-      marginLeft: 10,
+      marginLeft: 0,
       fontSize: 14,
       fontWeight: "500",
       color: Colors.textPrimary,
@@ -170,7 +170,7 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
   const { t } = useTranslation();
   const styles = useStyles(getStyles);
 
-  const { imageUrl, bedrooms = 2, squareMeters = 60, maxGuests = 3 } = props;
+  const { imageUrl, bedrooms = 2, beds = 3, maxGuests = 3 } = props;
 
   const apartmentServices = useMemo(() => getServicesFromProps(props), [props]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -186,18 +186,18 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
           imageStyle={styles.imageStyle}
         >
           <View style={styles.infoContainer}>
-            {/* Bedrooms */}
+            {/*Numbe of beds */}
             <View style={styles.attrBox}>
               <View style={styles.attrInner}>
                 <Icon name="Bed" size={20} color={Colors.textPrimary} />
-                <Text style={styles.attrText}>{bedrooms}</Text>
+                <Text style={styles.attrText}> {beds}</Text>
               </View>
             </View>
 
-            {/* Square meters */}
+            {/*Number of bedrooms */}
             <View style={styles.attrBox}>
               <View style={styles.attrInner}>
-                <Text style={styles.attrText}>{squareMeters} m²</Text>
+                <Text style={styles.attrText}>{t('landingApartmentInfo.rooms')}: {bedrooms}</Text>
               </View>
             </View>
 
@@ -205,7 +205,7 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
             <View style={styles.attrBox}>
               <View style={styles.attrInner}>
                 <Icon name="Users" size={20} color={Colors.textPrimary} />
-                <Text style={styles.attrText}>{maxGuests}</Text>
+                <Text style={styles.attrText}> {maxGuests}</Text>
               </View>
             </View>
           </View>

@@ -1,17 +1,15 @@
 {
-	"common": {
-		"finish": "Završi",
-		"selectApartment": "Izaberite stan",
-		
-		"errors": {
-			"networkErrorTitle": "Greška u mreži.",
-			"networkErrorMessage": "Pokušajte ponovo kasnije.",
-			"invalidNumberError": "Unesite ispravan broj",
-			"lengthMinError": "Ovo polje mora biti bar {{length}} karaktera",
-			"lengthExactError": "Ovo polje mora biti {{length}} karaktera"
-		}	
-	},
-
+    "common": {
+        "finish": "Završi",
+        "selectApartment": "Izaberite stan",
+        "errors": {
+            "networkErrorTitle": "Greška u mreži.",
+            "networkErrorMessage": "Pokušajte ponovo kasnije.",
+            "invalidNumberError": "Unesite ispravan broj",
+            "lengthMinError": "Ovo polje mora biti bar {{length}} karaktera",
+            "lengthExactError": "Ovo polje mora biti {{length}} karaktera"
+        }
+    },
     "tabs": {
         "reservations": "Rezervacije",
         "home": "Početna",
@@ -39,7 +37,7 @@
             "registerButton": "Registrujte se",
             "address": "Adresa",
             "addressPlaceholder": "Ulica 123",
-			"phoneNumber": "Broj telefona",
+            "phoneNumber": "Broj telefona",
             "toastMessages": {
                 "successTitle": "Uspješno ste se registrovali!",
                 "successMsg": "Pokušajte se prijaviti sa novim nalogom.",
@@ -56,55 +54,53 @@
                 "errorMsg": "Neuspela odjava. Proverite vezu ili pokušajte ponovo."
             }
         },
-		"forgotPassword": {
-			"headerTitle": "Zaboravljena lozinka",
-
-			"step1": {
-				"label": "Slanje OTP",
-				"title": "Unesite Vaš email kako biste resetovali lozinku.",
-				"subtitle": "Nakon unosa, dobićete jednokratni OTP kôd putem mejla.",
-				"sendOtpButton": "Pošalji OTP"
-			},
-			"step2": {
-				"label": "Verifikacija OTP",
-				"title": "Unesite OTP kôd koji ste dobili",
-				"verifyOtpButton": "Verifikuj OTP",
-				"didntReceiveOtp": "Niste još dobili OTP kôd?",
-				"resendOtp": "Pošalji ponovo"
-			},
-			"step3": {
-				"label": "Reset lozinke",
-				"title": "Postavite novu lozinku",
-				"newPasswordLabel": "Nova lozinka",
-				"confirmPasswordLabel": "Ponovite lozinku",
-				"resetPasswordButton": "Resetuj lozinku"
-			},
-			"toastMessages": {
-				"successTitle": "Uspjeh!",
-				"successMsg": "Vaša lozinka je uspješno resetovana.",
-				"errorTitle": "Greška!",
-				"errorMsg": "Došlo je do greške. Molimo Vas da pokušate ponovo."
-			},
-
-			"otpVerified": "OTP uspješno verifikovan.",
-			"otpSentAgain": "OTP kôd poslat ponovo.",
-			"loadingTitle": "Resetovanje u toku"
-		},
+        "forgotPassword": {
+            "headerTitle": "Zaboravljena lozinka",
+            "step1": {
+                "label": "Slanje OTP",
+                "title": "Unesite Vaš email kako biste resetovali lozinku.",
+                "subtitle": "Nakon unosa, dobićete jednokratni OTP kôd putem mejla.",
+                "sendOtpButton": "Pošalji OTP"
+            },
+            "step2": {
+                "label": "Verifikacija OTP",
+                "title": "Unesite OTP kôd koji ste dobili",
+                "verifyOtpButton": "Verifikuj OTP",
+                "didntReceiveOtp": "Niste još dobili OTP kôd?",
+                "resendOtp": "Pošalji ponovo"
+            },
+            "step3": {
+                "label": "Reset lozinke",
+                "title": "Postavite novu lozinku",
+                "newPasswordLabel": "Nova lozinka",
+                "confirmPasswordLabel": "Ponovite lozinku",
+                "resetPasswordButton": "Resetuj lozinku"
+            },
+            "toastMessages": {
+                "successTitle": "Uspjeh!",
+                "successMsg": "Vaša lozinka je uspješno resetovana.",
+                "errorTitle": "Greška!",
+                "errorMsg": "Došlo je do greške. Molimo Vas da pokušate ponovo."
+            },
+            "otpVerified": "OTP uspješno verifikovan.",
+            "otpSentAgain": "OTP kôd poslat ponovo.",
+            "loadingTitle": "Resetovanje u toku"
+        },
         "errors": {
-			"requiredFieldError": "Ovo polje je obavezno",
+            "requiredFieldError": "Ovo polje je obavezno",
             "emailError": "Email nije ispravnog formata",
-			"emailLengthError": "Email mora biti bar {{length}} karaktera",
+            "emailLengthError": "Email mora biti bar {{length}} karaktera",
             "passwordLengthError": "Lozinka mora biti bar 8 karaktera",
             "jmbgLengthError": "JMBG mora imati 13 cifara",
-			"jmbgFormatError": "JMBG mora sadržavati samo cifre",
+            "jmbgFormatError": "JMBG mora sadržavati samo cifre",
             "passwordMismatchError": "Lozinke se ne podudaraju",
-			"addressLengthError": "Adresa mora biti bar {{length}} karaktera",
-			"phoneNumberLengthError": "Broj telefona mora biti bar {{length}} karaktera",
-			"phoneNumberFormatError": "Neispravan format. Očekivano: 06X/123-456",
-			"sendOtpEmailError": "Morate unijeti ispravan email za slanje OTP-a.",
-			"verifyEmailError": "Vaš email mora biti verifikovan.",
-			"otpNotVerified": "Ovaj OTP kôd nije važeći.",
-			"enterValidOtpError": "Unesite ispravan OTP kôd"
+            "addressLengthError": "Adresa mora biti bar {{length}} karaktera",
+            "phoneNumberLengthError": "Broj telefona mora biti bar {{length}} karaktera",
+            "phoneNumberFormatError": "Neispravan format. Očekivano: 06X/123-456",
+            "sendOtpEmailError": "Morate unijeti ispravan email za slanje OTP-a.",
+            "verifyEmailError": "Vaš email mora biti verifikovan.",
+            "otpNotVerified": "Ovaj OTP kôd nije važeći.",
+            "enterValidOtpError": "Unesite ispravan OTP kôd"
         }
     },
     "dialogs": {
@@ -123,7 +119,7 @@
             "title": "Dokument se preuzima",
             "subtitle": "Provjerite folder sa preuzimanjima",
             "okButton": "U redu",
-			"deleteBookTitle": "Da li ste sigurni da želite obrisati ovu knjigu sa ovog uređaja? {{title}}"
+            "deleteBookTitle": "Da li ste sigurni da želite obrisati ovu knjigu sa ovog uređaja? {{title}}"
         },
         "language": {
             "title": "Jezik",
@@ -148,7 +144,7 @@
             "add": "Dodaj",
             "title": "Dodavanje kase"
         },
-		"store": {
+        "store": {
             "cancel": "Odustani",
             "add": "Dodaj"
         },
@@ -209,6 +205,7 @@
             "notifications": "Obavještenja",
             "myApartments": "Moji stanovi",
             "addApartment": "Dodaj stan",
+            "editApartment": "Uredi podatke o stanu",
             "expenses": "Troškovi",
             "statistics": "Statistika",
             "incomeBook": "Knjiga prihoda",
@@ -249,10 +246,10 @@
                 "feedback": {
                     "mainTitle": "Povratne informacije",
                     "bugReportTitle": "Prijavite grešku",
-					"emptyFeedbackErrorTitle": "Greška.",
-					"emptyFeedbackErrorMessage": "Ukoliko prijavljujete grešku, molimo Vas da popunite dato polje.",
-					"successfulFeedbackTitle": "Vaša poruka je zaprimljena.",
-					"successfulFeedbackMessage": "Hvala Vam na Vašoj prijavi!"
+                    "emptyFeedbackErrorTitle": "Greška.",
+                    "emptyFeedbackErrorMessage": "Ukoliko prijavljujete grešku, molimo Vas da popunite dato polje.",
+                    "successfulFeedbackTitle": "Vaša poruka je zaprimljena.",
+                    "successfulFeedbackMessage": "Hvala Vam na Vašoj prijavi!"
                 }
             }
         }
@@ -350,11 +347,11 @@
             "yearTo": "Datum do",
             "downloadErrorTitle": "Greška preuzimanja",
             "downloadErrorMessage": "Neuspješno preuzimanje",
-			"download204Message": "Nemate relevantnih podataka za ovaj period.",
-			"download400Message": "Provjerite Vaše unose.",
+            "download204Message": "Nemate relevantnih podataka za ovaj period.",
+            "download400Message": "Provjerite Vaše unose.",
             "downloadSuccessMessage": "Uspješno preuzimanje",
             "downloadSuccessDescription": "PDF knjige možete sada pregledati",
-			"viewSuccessMessage": "Pregled uspješan!",
+            "viewSuccessMessage": "Pregled uspješan!",
             "viewSuccessDescription": "PDF knjige možete sada pregledati",
             "customDateErrorMessage": "Greška u datumima",
             "customDateErrorDescription": "Morate izabrati datum u slučaju prilagođenog rada",
@@ -362,10 +359,10 @@
             "fromAfterToDescription": "Pomiješali ste vrijednosti datuma.",
             "sharingSavePdfTitle": "Podijelite {{title}}"
         },
-		"messages": {
-			"successfulDeleteTitle": "Uspjeh!",
-			"successfulDeleteMessage": "Knjiga je uspješno obrisana."
-		},
+        "messages": {
+            "successfulDeleteTitle": "Uspjeh!",
+            "successfulDeleteMessage": "Knjiga je uspješno obrisana."
+        },
         "bookTitles": {
             "ExpenseBook": "Knjiga rashoda",
             "IncomeBook": "Knjiga prihoda",
@@ -376,21 +373,20 @@
     "notifications": {
         "title": "Obavještenja",
         "description": "Dobijate podsjetnike o važnim događajima - dolascima gostiju, plaćanjima, zadacima i održavanju smještaja",
-		"notificationToggleSuccessTitle": "Uspješno!",
-		"notificationToggleSuccessMessage": "Ažurirali ste svoja obavještenja.",
-		"notificationToggleErrorTitle": "Greska u ažuriranju notifikacija",
-		"notificationToggleErrorMessage": "Molimo Vas da pokušate ponovo."
-		
+        "notificationToggleSuccessTitle": "Uspješno!",
+        "notificationToggleSuccessMessage": "Ažurirali ste svoja obavještenja.",
+        "notificationToggleErrorTitle": "Greska u ažuriranju notifikacija",
+        "notificationToggleErrorMessage": "Molimo Vas da pokušate ponovo."
     },
     "profile": {
-		"menuItems": {
-			"addCashRegister": "Dodaj kasu",
-			"addStore": "Dodaj radnju"
-		},
-		"missingItems": {
-			"cashRegister": "Trenutno nemate registrovane kase.",
-			"store": "Niste registrovali još radnju."
-		},
+        "menuItems": {
+            "addCashRegister": "Dodaj kasu",
+            "addStore": "Dodaj radnju"
+        },
+        "missingItems": {
+            "cashRegister": "Trenutno nemate registrovane kase.",
+            "store": "Niste registrovali još radnju."
+        },
         "sectionTitle": "Informacije o profilu",
         "labels": {
             "firstName": "Ime",
@@ -405,45 +401,44 @@
         "toastMessages": {
             "fetchErrorTitle": "Greška pri učitavanju",
             "fetchErrorMessage": "Nije moguće učitati podatke o profilu.",
-			"updateSuccessfulTitle": "Uspjeh!",
-			"updateSuccessfulMessage": "Vaš profil je uspješno ažuriran.",
+            "updateSuccessfulTitle": "Uspjeh!",
+            "updateSuccessfulMessage": "Vaš profil je uspješno ažuriran.",
             "updateErrorTitle": "Greška pri čuvanju",
             "updateErrorMessage": "Nije moguće sačuvati profil.",
             "genericError": "Došlo je do greške.",
-			
-			"addStoreSuccessTitle": "Radnja dodata!",
-			"addStoreSuccessMessage": "Nova radnja je uspješno registrovana.",
-			"addStoreErrorTitle": "Greška pri dodavanju radnje",
-			"addStoreErrorMessage": "Nije moguće dodati radnju.",
-			"addStoreErrorExistsTitle": "Već ste jednom registrovali Vašu radnju!"
+            "addStoreSuccessTitle": "Radnja dodata!",
+            "addStoreSuccessMessage": "Nova radnja je uspješno registrovana.",
+            "addStoreErrorTitle": "Greška pri dodavanju radnje",
+            "addStoreErrorMessage": "Nije moguće dodati radnju.",
+            "addStoreErrorExistsTitle": "Već ste jednom registrovali Vašu radnju!"
         },
-		"store": {
-			"sectionTitle": "Informacije o radnji",
-			"addModalTitle": "Dodavanje radnje",
-			"missingStore": "Niste registrovali još Vašu radnju.",
-			"placeholders": {
-				"name": "Naziv",
-				"address": "Adresa",
-				"activity": "Naziv",
-				"activityCode": "nn.nn",
-				"jib": "1234567891234"
-			},
-			"labels": {
-				"name": "Naziv radnje",
-				"address": "Adresa radnje",
-				"activity": "Djelatnost",
-				"activityCode": "Šifra djelatnosti",
-				"jib": "JIB"
-			},
-			"validation": {
-				"nameError": "Naziv radnje je prekratak",
-				"addressError": "Adresa je prekratka",
-				"activityError": "Djelatnost je obavezna",
-				"activityCodeError": "Šifra djelatnosti nije korektnog formata",
-				"jibLengthError": "JIB mora imati 13 cifara",
-				"jibFormatError": "JIB mora sadržavati samo cifre"
-			}
-		}
+        "store": {
+            "sectionTitle": "Informacije o radnji",
+            "addModalTitle": "Dodavanje radnje",
+            "missingStore": "Niste registrovali još Vašu radnju.",
+            "placeholders": {
+                "name": "Naziv",
+                "address": "Adresa",
+                "activity": "Naziv",
+                "activityCode": "nn.nn",
+                "jib": "1234567891234"
+            },
+            "labels": {
+                "name": "Naziv radnje",
+                "address": "Adresa radnje",
+                "activity": "Djelatnost",
+                "activityCode": "Šifra djelatnosti",
+                "jib": "JIB"
+            },
+            "validation": {
+                "nameError": "Naziv radnje je prekratak",
+                "addressError": "Adresa je prekratka",
+                "activityError": "Djelatnost je obavezna",
+                "activityCodeError": "Šifra djelatnosti nije korektnog formata",
+                "jibLengthError": "JIB mora imati 13 cifara",
+                "jibFormatError": "JIB mora sadržavati samo cifre"
+            }
+        }
     },
     "actions": {
         "finish": "Završi"
@@ -465,7 +460,6 @@
             "createError": "Nije moguće sačuvati podatke o kasi."
         }
     },
-
     "datePicker": {
         "titleDateTime": "Izaberite datum i vrijeme",
         "titleDateOnly": "Izaberite datum",
@@ -480,16 +474,16 @@
             "addReservationTitle": "Dodavanje rezervacije"
         },
         "segments": {
-			"switcher": {
-				"finished": "Završene",
-				"active": "Aktivne",
-				"upcoming": "Predstojeće"
-			},
+            "switcher": {
+                "finished": "Završene",
+                "active": "Aktivne",
+                "upcoming": "Predstojeće"
+            },
             "missing": {
-				"finished": "završenih",
-				"active": "aktivnih",
-				"upcoming": "predstojećih"
-			}
+                "finished": "završenih",
+                "active": "aktivnih",
+                "upcoming": "predstojećih"
+            }
         },
         "toastMessages": {
             "genericError": "Došlo je do greške.",
@@ -497,8 +491,8 @@
             "fetchErrorMessage": "Nije moguće učitati rezervacije. Molimo pokušajte ponovo.",
             "createErrorTitle": "Greška pri kreiranju rezervacije",
             "createErrorMessage": "Rezervacija nije kreirana. Provjerite podatke.",
-			"create409Title": "Greška pri kreiranju rezervacije",
-			"create409Message": "Polja moraju imati jedinstvene vrijednosti. \nProvjerite podatke za (JMBG, telefon, broj pasoša).",
+            "create409Title": "Greška pri kreiranju rezervacije",
+            "create409Message": "Polja moraju imati jedinstvene vrijednosti. \nProvjerite podatke za (JMBG, telefon, broj pasoša).",
             "createSuccessTitle": "Rezervacija kreirana!",
             "createSuccessMessage": "Nova rezervacija je uspješno kreirana.",
             "updateErrorTitle": "Greška pri ažuriranju",
@@ -610,7 +604,7 @@
             "departureAfterArrival": "Vrijeme odlaska mora biti nakon dolaska"
         },
         "alerts": {
-			"missingReservationsNotification": "Trenutno nemate {{type}} rezervacija.",
+            "missingReservationsNotification": "Trenutno nemate {{type}} rezervacija.",
             "selectApartment": {
                 "title": "Greška",
                 "message": "Morate izabrati apartman"
@@ -637,8 +631,7 @@
             }
         }
     },
-    
-    "apartments":{
+    "apartments": {
         "toastMessages": {
             "genericError": "Došlo je do greške.",
             "fetchErrorTitle": "Greška pri učitavanju apartmana",
@@ -722,6 +715,7 @@
         }
     },
     "landingApartmentInfo": {
+        "rooms": "Broj soba",
         "services": {
             "title": "Usluge",
             "showAll": "Prikaži sve›",
@@ -747,34 +741,46 @@
             "statusSuccessTitle": "Uspjeh",
             "statusSuccessMessage": "Trošak je uspješno riješen!"
         },
-      
-         "categories": {
-        "Režije": "Režije",
-        "Čišćenje": "Čišćenje",
-        "Namirnice": "Namirnice"
-  }
-
+        "categories": {
+            "Režije": "Režije",
+            "Čišćenje": "Čišćenje",
+            "Namirnice": "Namirnice"
+        }
     },
-
     "tasks": {
-		"messages": {
-			"successTitle": "Uspjeh",
-			"successMessage": "Zadatak je uspješno dodan!",
-			"errorTitle": "Greška",
-			"errorMessage": "Nije moguće sačuvati zadatak.",
-			"statusSuccessTitle": "Uspjeh",
-			"statusSuccessMessage": "Zadatak je završen!"
-		}
-	},
-
-	"damages": {
-		"messages": {
-			"successTitle": "Uspjeh",
-			"successMessage": "Šteta je uspješno sačuvana!",
-			"errorTitle": "Greška",
-			"errorMessage": "Nije moguće sačuvati štetu.",
-			"statusSuccessTitle": "Uspjeh",
-			"statusSuccessMessage": "Šteta je uspješno sanirana!"
-		}
-	}
+        "messages": {
+            "successTitle": "Uspjeh",
+            "successMessage": "Zadatak je uspješno dodan!",
+            "errorTitle": "Greška",
+            "errorMessage": "Nije moguće sačuvati zadatak.",
+            "statusSuccessTitle": "Uspjeh",
+            "statusSuccessMessage": "Zadatak je završen!"
+        }
+    },
+    "damages": {
+        "messages": {
+            "successTitle": "Uspjeh",
+            "successMessage": "Šteta je uspješno sačuvana!",
+            "errorTitle": "Greška",
+            "errorMessage": "Nije moguće sačuvati štetu.",
+            "statusSuccessTitle": "Uspjeh",
+            "statusSuccessMessage": "Šteta je uspješno sanirana!"
+        }
+    },
+    "analytics": {
+        "title": "Analitički podaci",
+        "loading": "Učitavanje podataka...",
+        "errorLoading": "Greška pri učitavanju podataka",
+        "errorRetry": "Pokušajte ponovo kasnije",
+        "categories": {
+            "income": "Prihodi",
+            "expenses": "Troškovi",
+            "profit": "Profit",
+            "utilities": "Režije",
+            "damage": "Šteta",
+            "cleaning": "Čišćenje",
+            "groceries": "Namirnice"
+        },
+        "expenseBreakdown": "Troškovi po kategoriji"
+    }
 }
