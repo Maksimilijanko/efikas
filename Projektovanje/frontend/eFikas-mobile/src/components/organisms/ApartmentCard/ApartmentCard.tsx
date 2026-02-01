@@ -24,6 +24,7 @@ interface ApartmentCardProps {
   onLongPress?: (event: any) => void; // IZMENJENO - prima event
   style?: StyleProp<ViewStyle>;
   showArrow?: boolean;
+  showStatus?: boolean;
 }
 
 const ApartmentCard: React.FC<ApartmentCardProps> = ({
@@ -37,6 +38,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
   onLongPress, // DODATO
   style,
   showArrow = true,
+  showStatus = true,
 }) => {
   const imageSource = imageUrl
     ? { uri: imageUrl }
@@ -53,8 +55,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
 
   const statusColor =
     status === true ? Colors.statusOccupied : Colors.statusAvailable;
-
-  const showStatus = true; // ✅ uvijek prikazuj status (slobodno ili zauzeto)
+    
   const showNextGuests = !!nextGuestsDate;
 
 
