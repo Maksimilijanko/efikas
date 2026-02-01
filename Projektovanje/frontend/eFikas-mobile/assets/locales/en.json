@@ -736,6 +736,7 @@
       "statusSuccessTitle": "Success",
       "statusSuccessMessage": "Expense has been resolved!"
     },
+    "selectApartment":"Chooose apartment",
     "categories": {
       "Režije": "Utilities",
       "Čišćenje": "Maintenance",

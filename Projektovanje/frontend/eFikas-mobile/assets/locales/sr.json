@@ -741,6 +741,7 @@
       "statusSuccessTitle": "Uspjeh",
       "statusSuccessMessage": "Trošak je uspješno riješen!"
     },
+    "selectApartment":"Izaberite stan",
     "categories": {
       "Režije": "Režije",
       "Čišćenje": "Čišćenje",
