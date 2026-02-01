@@ -13,7 +13,15 @@ export const expenseService = {
     },
 
     updateStatus: async (apartmentId: number, name: string, currentData: ApartmentExpenseDTO) => {
-        const payload = { ...currentData, status: true }; 
+        // Filtriramo polja tačno onako kako Java DTO zahteva
+        const payload = { 
+            name: currentData.name,
+            amount: currentData.amount,
+            expenseType: currentData.expenseType,
+            note: currentData.note || "",
+            status: true // Menjamo status u završeno
+        }; 
+
         const response = await axiosInstance.put(
             `/apartments/${apartmentId}/expenses/${encodeURIComponent(name)}`, 
             payload
