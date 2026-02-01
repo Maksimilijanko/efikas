@@ -148,6 +148,169 @@
       "cancel": "Odustani",
       "add": "Dodaj"
     },
+    "reservations": {
+        "navigation": {
+            "reservationDetailsTitle": "Detalji rezervacije",
+            "addReservationTitle": "Dodavanje rezervacije"
+        },
+        "segments": {
+            "switcher": {
+                "finished": "Završene",
+                "active": "Aktivne",
+                "upcoming": "Predstojeće"
+            },
+            "missing": {
+                "finished": "završenih",
+                "active": "aktivnih",
+                "upcoming": "predstojećih"
+            }
+        },
+        "toastMessages": {
+            "genericError": "Došlo je do greške.",
+            "fetchErrorTitle": "Greška pri učitavanju rezervacija",
+            "fetchErrorMessage": "Nije moguće učitati rezervacije. Molimo pokušajte ponovo.",
+            "createErrorTitle": "Greška pri kreiranju rezervacije",
+            "createErrorMessage": "Rezervacija nije kreirana. Provjerite podatke.",
+            "create409Title": "Greška pri kreiranju rezervacije",
+            "create409Message": "Polja moraju imati jedinstvene vrijednosti. \nProvjerite podatke za (JMBG, telefon, broj pasoša).",
+            "createSuccessTitle": "Rezervacija kreirana!",
+            "createSuccessMessage": "Nova rezervacija je uspješno kreirana.",
+            "updateErrorTitle": "Greška pri ažuriranju",
+            "updateErrorMessage": "Rezervacija nije ažurirana. Provjerite podatke.",
+            "updateSuccessTitle": "Rezervacija ažurirana!",
+            "updateSuccessMessage": "Rezervacija je uspješno ažurirana.",
+            "deleteErrorTitle": "Greška pri brisanju",
+            "deleteErrorMessage": "Rezervacija nije izbrisana.",
+            "deleteSuccessTitle": "Rezervacija izbrisana!",
+            "deleteSuccessMessage": "Rezervacija je uspješno izbrisana.",
+
+			"errorPrintingReceiptTitle": "Greška",
+			"errorPrintingReceiptMessage": "Nije moguce fiskalizovati račun za ovaj tip rezervacije!"
+        },
+        "details": {
+            "note": "Napomena",
+            "document": "Dokument",
+            "button": "Štampaj račun",
+            "buttonPrinting": "Štampanje...",
+            "peopleCount_one": "{{count}} osoba",
+            "peopleCount_few": "{{count}} osobe",
+            "peopleCount_other": "{{count}} osoba",
+            "deleteText": "Brisanje rezervacije",
+            "deleteConfirm": {
+                "title": "Da li ste sigurni da želite obrisati rezervaciju?",
+                "description": "Svi podaci biće obrisani",
+                "confirm": "Potvrdi",
+                "cancel": "Odustani"
+            },
+			"incomeRegistration": {
+				"successTitle": "Uspjeh!",
+				"successMessage": "Prihod je uspješno evidentiran u knjigu prihoda."
+			},
+            "fiscalization": {
+                "title": "Provjera informacija za fiskalizaciju",
+                "reservationType": "Usluga:",
+                "peopleCount": "Broj osoba:",
+                "nightsCount": "Broj noćenja:",
+                "amount": "Iznos:",
+                "button": {
+                    "confirmButton": "Potvrdi",
+                    "cancelButton": "Odustani"
+                },
+                "successTitle": "Uspjeh!",
+                "successMessage": "Račun je uspješno fiskalizovan!",
+                "invoiceNumber": "Broj računa",
+                "fiscalizationButton": "U redu",
+                "errorTitle": "Greška u komunikaciji",
+                "errorMessage": "Nije moguće kontaktirati fiskalnu kasu. Provjerite IP adresu i mrežu."
+            }
+        },
+        "load": {
+            "message": "Učitavanje apartmana..."
+        },
+        "navigationTitle": {
+            "addTitle": "Dodavanje rezervacije",
+            "editTitle": "Izmjena rezervacije"
+        },
+        "form": {
+            "dailyStay": "Dnevni boravak",
+            "arrivalDateTime": "Datum i vrijeme dolaska",
+            "departureDateTime": "Datum i vrijeme odlaska",
+            "guestType": {
+                "domestic": "Domaći gost",
+                "foreign": "Strani gost"
+            },
+            "gender": {
+                "label": "Pol",
+                "male": "Muški",
+                "female": "Ženski"
+            },
+            "fields": {
+                "firstName": "Ime",
+                "lastName": "Prezime",
+                "phone": "Broj telefona",
+                "birthDate": "Datum rođenja",
+                "birthPlace": "Mjesto rođenja",
+                "citizenId": "JMBG",
+                "birthMunicipality": "Opština rođenja",
+                "birthCountry": "Država rođenja",
+                "citizenship": "Državljanstvo",
+                "passportNumber": "Broj pasoša",
+                "passportIssuedDate": "Datum izdavanja pasoša",
+                "entryDate": "Datum ulaska",
+                "entryPlace": "Mjesto ulaska",
+                "visaType": "Vrsta vize",
+                "visaNumber": "Broj vize",
+                "permittedResidenceUntil": "Boravak dozvoljen do",
+                "address": "Adresa",
+                "unitNumber": "Broj smještajne jedinice",
+                "unitFloor": "Sprat smještajne jedinice",
+                "guestsCount": "Broj gostiju",
+                "price": "Cijena",
+                "invoiceNumber": "Broj računa",
+                "note": "Napomena",
+                "document": "Dokument gosta"
+            },
+            "buttons": {
+                "save": "Sačuvaj rezervaciju",
+                "update": "Ažuriraj rezervaciju",
+                "saving": "Čuvanje..."
+            }
+        },
+        "validation": {
+            "required": "Obavezno polje",
+            "id": "JMBG mora imati 13 cifara",
+            "selectArrival": "Izaberite datum i vrijeme dolaska",
+            "selectDeparture": "Izaberite datum i vrijeme odlaska",
+            "departureAfterArrival": "Vrijeme odlaska mora biti nakon dolaska"
+        },
+        "alerts": {
+            "missingReservationsNotification": "Trenutno nemate {{type}} rezervacija.",
+            "selectApartment": {
+                "title": "Greška",
+                "message": "Morate izabrati apartman"
+            },
+            "invalidApartment": {
+                "title": "Greška",
+                "message": "Nevažeći ID apartmana"
+            },
+            "noApartments": {
+                "title": "Greška",
+                "message": "Nema dostupnih apartmana"
+            },
+            "pickDocument": {
+                "title": "Izaberite dokument",
+                "message": "Izaberite način dodavanja dokumenta gosta",
+                "camera": "Kamera",
+                "gallery": "Galerija",
+                "cancel": "Otkaži"
+            },
+            "permissionDenied": {
+                "title": "Dozvola odbijena",
+                "camera": "Potrebna je dozvola za korišćenje kamere",
+                "gallery": "Potrebna je dozvola za pristup galeriji"
+            }
+        }
+    },
     "message": {
       "details": {
         "message": "Za ovu rezervaciju nije pronađen lični dokument",

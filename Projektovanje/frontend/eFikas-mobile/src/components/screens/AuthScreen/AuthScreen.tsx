@@ -1,9 +1,11 @@
 import { VStack } from "@/src/components/ui/vstack";
 import { useAuth } from "@/src/hooks/useAuth";
 //import { Colors } from "@/src/styles/style";
+import { useTheme } from "@/src/providers/ThemeProvider";
 import { LoginRequest, LucideIconName, RegisterRequest } from "@/src/types/types";
 import { LoginValidation, RegistrationValidation } from "@/src/util/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Path, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -13,8 +15,6 @@ import { LoginButton } from "../../atoms/LoginButton/LoginButton";
 import AuthSwitcher from "../../molecules/AuthSwitcher/AuthSwitcher";
 import FormField from "../../molecules/FormField/FormField";
 import AuthScreenTemplate from "../../templates/AuthScreenTemplate/AuthScreenTemplate";
-import { router } from "expo-router";
-import { useTheme } from "@/src/providers/ThemeProvider";
 
 
 

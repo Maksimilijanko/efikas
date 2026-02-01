@@ -15,7 +15,7 @@ const checkIp = async (ip: string, apiKey: string): Promise<string | null> => {
         'Authorization': `Bearer ${apiKey}`, 
         'Content-Type': 'application/json'
       },
-      signal: controller.signal,
+      //signal: controller.signal,
     });
     clearTimeout(timeoutId);
 
@@ -39,6 +39,7 @@ export const findFiscalDeviceIp = async (apiKey: string): Promise<string | null>
     const allIps: string[] = [];
     for (let i = 1; i < 255; i++) {
       const targetIp = `${subnet}.${i}`;
+	  console.log("PROVJERAVAM IP:", targetIp);
       if (targetIp !== localIp) allIps.push(targetIp);
     }
 

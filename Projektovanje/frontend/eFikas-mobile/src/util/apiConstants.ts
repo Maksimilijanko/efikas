@@ -29,6 +29,7 @@ export const API_URLS = {
 	},
 
 	books: {
+		addIncome: `${API_BASE_URL}/books/income`,
 		getIncomeBookPdf: `${API_BASE_URL}/books/pdf/INCOME`,
 		getDomesticGuestsBookPdf: `${API_BASE_URL}/books/pdf/DOMESTIC_GUESTS`,
 		getForeignGuestsBookPdf: `${API_BASE_URL}/books/pdf/FOREIGN_GUESTS`,

@@ -150,6 +150,169 @@
       "add": "Add",
       "title": "Add cash register"
     },
+    "reservations": {
+        "navigation": {
+            "reservationDetailsTitle": "Reservation Details",
+            "addReservationTitle": "Add Reservation"
+        },
+        "segments": {
+            "switcher": {
+                "finished": "Finished",
+                "active": "Active",
+                "upcoming": "Upcoming"
+            },
+            "missing": {
+                "finished": "finished",
+                "active": "active",
+                "upcoming": "upcoming"
+            }
+        },
+        "toastMessages": {
+            "genericError": "An error occurred.",
+            "fetchErrorTitle": "Failed to Load Reservations",
+            "fetchErrorMessage": "Could not load reservations. Please try again.",
+            "createErrorTitle": "Creation Error",
+            "createErrorMessage": "Reservation was not created. Please check the data.",
+            "create409Title": "Creation Error",
+            "create409Message": "Fields must have unique values. \nCheck your data for (JMBG, phone, passport number).",
+            "createSuccessTitle": "Reservation Created!",
+            "createSuccessMessage": "New reservation has been successfully created.",
+            "updateErrorTitle": "Update Error",
+            "updateErrorMessage": "Reservation was not updated. Please check the data.",
+            "updateSuccessTitle": "Reservation Updated!",
+            "updateSuccessMessage": "Reservation has been successfully updated.",
+            "deleteErrorTitle": "Deletion Error",
+            "deleteErrorMessage": "Reservation was not deleted.",
+            "deleteSuccessTitle": "Reservation Deleted!",
+            "deleteSuccessMessage": "Reservation has been successfully deleted.",
+
+			"errorPrintingReceiptTitle": "Error",
+			"errorPrintingReceiptMessage": "Unable to fiscalize invoice for this type of reservation!"
+        },
+        "details": {
+            "note": "Note",
+            "document": "Document",
+            "button": "Print invoice",
+            "buttonPrinting": "Printing...",
+            "peopleCount_one": "{{count}} person",
+            "peopleCount_few": "{{count}} people",
+            "peopleCount_other": "{{count}} people",
+            "deleteText": "Delete reservation",
+            "deleteConfirm": {
+                "title": "Are you sure you want to delete the reservation?",
+                "description": "All data will be deleted",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+			"incomeRegistration": {
+				"successTitle": "Success!",
+				"successMessage": "Income has been successfully registered in the income book."
+			},
+            "fiscalization": {
+                "title": "Check Fiscalization Information",
+                "reservationType": "Service:",
+                "peopleCount": "Number of people:",
+                "nightsCount": "Number of nights:",
+                "amount": "Amount:",
+                "button": {
+                    "confirmButton": "Confirm",
+                    "cancelButton": "Cancel"
+                },
+                "successTitle": "Success!",
+                "successMessage": "Invoice successfully sent to the fiscal cash register!",
+                "invoiceNumber": "Invoice number",
+                "fiscalizationButton": "OK",
+                "errorTitle": "Communication Error",
+                "errorMessage": "Not possible to contact the fiscal cash register. Please check the IP address and network."
+            }
+        },
+        "load": {
+            "message": "Loading apartments..."
+        },
+        "navigationTitle": {
+            "addTitle": "Add reservation",
+            "editTitle": "Edit reservation"
+        },
+        "form": {
+            "dailyStay": "Daily stay",
+            "arrivalDateTime": "Arrival date and time",
+            "departureDateTime": "Departure date and time",
+            "guestType": {
+                "domestic": "Domestic guest",
+                "foreign": "Foreign guest"
+            },
+            "gender": {
+                "label": "Gender",
+                "male": "Male",
+                "female": "Female"
+            },
+            "fields": {
+                "firstName": "First name",
+                "lastName": "Last name",
+                "phone": "Phone number",
+                "birthDate": "Date of birth",
+                "birthPlace": "Place of birth",
+                "citizenId": "Personal ID number",
+                "birthMunicipality": "Municipality of birth",
+                "birthCountry": "Country of birth",
+                "citizenship": "Citizenship",
+                "passportNumber": "Passport number",
+                "passportIssuedDate": "Passport issue date",
+                "entryDate": "Entry date",
+                "entryPlace": "Entry place",
+                "visaType": "Visa type",
+                "visaNumber": "Visa number",
+                "permittedResidenceUntil": "Residence permitted until",
+                "address": "Address",
+                "unitNumber": "Accommodation unit number",
+                "unitFloor": "Accommodation unit floor",
+                "guestsCount": "Number of guests",
+                "price": "Price",
+                "invoiceNumber": "Invoice number",
+                "note": "Note",
+                "document": "Guest document"
+            },
+            "buttons": {
+                "save": "Save reservation",
+                "update": "Update reservation",
+                "saving": "Saving..."
+            }
+        },
+        "validation": {
+            "required": "Required field",
+            "id": "Personal ID number has to be exactly 13 digits long",
+            "selectArrival": "Select arrival date and time",
+            "selectDeparture": "Select departure date and time",
+            "departureAfterArrival": "Departure must be after arrival"
+        },
+        "alerts": {
+            "missingReservationsNotification": "Currently you have no {{type}} reservations.",
+            "selectApartment": {
+                "title": "Error",
+                "message": "You must select an apartment"
+            },
+            "invalidApartment": {
+                "title": "Error",
+                "message": "Invalid apartment ID"
+            },
+            "noApartments": {
+                "title": "Error",
+                "message": "No apartments available"
+            },
+            "pickDocument": {
+                "title": "Select document",
+                "message": "Choose how to add the guest document",
+                "camera": "Camera",
+                "gallery": "Gallery",
+                "cancel": "Cancel"
+            },
+            "permissionDenied": {
+                "title": "Permission denied",
+                "camera": "Camera permission is required",
+                "gallery": "Gallery permission is required"
+            }
+        }
+    },
     "store": {
       "cancel": "Cancel",
       "add": "Add"

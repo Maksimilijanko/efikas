@@ -40,6 +40,7 @@ public class ReservationController {
         System.out.println("Email: " + email);
 
         ReservationDTO dto = objectMapper.readValue(createReservationJson, ReservationDTO.class);
+        System.out.println("RESERVATION DTO: " + dto);
 
         // For POST, we are extracting apartmentId from the endpoint URL itself.
         // We are not relying on the value found in DTO.

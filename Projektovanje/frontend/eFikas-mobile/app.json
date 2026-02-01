@@ -54,7 +54,6 @@
           "resizeMode": "contain",
           "backgroundColor": "#FFFFFF",
           "dark": {
-            //"backgroundColor": "#34373c"
             "backgroundColor": "#FFFFFF"
           }
         }
@@ -64,7 +63,8 @@
       "expo-web-browser",
       "@config-plugins/react-native-blob-util",
       "@config-plugins/react-native-pdf",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
