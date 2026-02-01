@@ -160,13 +160,19 @@ const ReservationDetailsScreen = ({ reservation }) => {
         if(invoiceNumber == null) {                       // if there was none issued before, update reservation with new one
 
           try {
-            const updatePayload = {
-              ...reservation,
-              guest: {
-                ...reservation.guest,
-                issuedInvoiceNumber: data.invoiceNumber,   // put the invoice number in guest object
-              }
-            };
+           const updatePayload = {
+            apartmentId: reservation.apartment.apartmentId, 
+
+            guestQuantity: reservation.guestQuantity,
+            price: reservation.price,
+            note: reservation.note,
+            reservationType: reservation.reservationType,
+
+            guest: {
+              ...reservation.guest, 
+              issuedInvoiceNumber: data.invoiceNumber 
+            }
+          };
 
             await updateMutation.mutateAsync({
               payload: updatePayload
