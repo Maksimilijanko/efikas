@@ -595,6 +595,7 @@
                 "title": "Error",
                 "message": "You must select an apartment"
             },
+
             "invalidApartment": {
                 "title": "Error",
                 "message": "Invalid apartment ID"
@@ -622,9 +623,13 @@
             "genericError": "An error occurred.",
             "fetchErrorTitle": "Failed to Load Apartments",
             "fetchErrorMessage": "Could not load apartments. Please try again."
-        }
+
+        },
+        "missingApartmentsNotification": "Currently you do not have any apartments."
+
     },
     "apartment": {
+
         "card": {
             "status": {
                 "current": "Currently: ",
@@ -671,6 +676,7 @@
             "errorTitle": "Error",
             "errorMessage": "An error occurred"
         },
+
         "buttons": {
             "save": "Save",
             "saving": "Saving..."

@@ -601,6 +601,7 @@
                 "title": "Greška",
                 "message": "Morate izabrati apartman"
             },
+        
             "invalidApartment": {
                 "title": "Greška",
                 "message": "Nevažeći ID apartmana"
@@ -628,7 +629,9 @@
             "genericError": "Došlo je do greške.",
             "fetchErrorTitle": "Greška pri učitavanju apartmana",
             "fetchErrorMessage": "Nije moguće učitati apartmane. Molimo pokušajte ponovo."
-        }
+        },
+        "missingApartmentsNotification": "Trenutno nemate dodatih stanova."
+
     },
     "apartment": {
         "card": {
