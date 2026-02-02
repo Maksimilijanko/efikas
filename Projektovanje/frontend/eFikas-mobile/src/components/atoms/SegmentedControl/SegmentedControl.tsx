@@ -112,7 +112,7 @@ const getStyles = (Colors: any) =>
       alignItems: 'center',
     },
     label: {
-      fontSize: 15,
+      fontSize: 13,
       color: Colors.textSecondary,
       fontWeight: '400',
     },

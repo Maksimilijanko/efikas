@@ -162,7 +162,7 @@ export default function ReservationsScreen() {
 				{/* ---- SEGMENTED CONTROL ---- */}
 				<View style={styles.segmentedWrapper}>
 					<BlurView
-						intensity={15}
+						intensity={35}
 						tint="default"
 						style={styles.segmentedBlur}
 					/>
@@ -174,7 +174,7 @@ export default function ReservationsScreen() {
 
 				{/* ---- FLOAT BUTTON BLUR ---- */}
 				<BlurView
-					intensity={5}
+					intensity={15}
 					tint="default"
 					style={styles.floatButtonBlur}
 				/>
