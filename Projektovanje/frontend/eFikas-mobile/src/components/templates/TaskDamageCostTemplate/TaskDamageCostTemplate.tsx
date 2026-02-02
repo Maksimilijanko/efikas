@@ -60,7 +60,7 @@ const getStyles = (theme: any) =>
     },
     floatingBtnWrapper: {
       position: "absolute",
-      bottom: 25,
+      bottom: 50,
       right: 25,
     },
   });

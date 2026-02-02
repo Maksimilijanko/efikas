@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/apartments")
+@RequestMapping("/api/v1/apartments/")
 @RequiredArgsConstructor
 public class ApartmentExpenseController {
 
@@ -43,16 +43,17 @@ public class ApartmentExpenseController {
     }
 
     @PutMapping("{apartmentId}/expenses/{apartmentExpenseName}")
-    public ResponseEntity<?> updateApartmentExpense(@PathVariable Integer apartmentId, @PathVariable String apartmentExpenseName, @RequestBody ApartmentExpenseDTO expense) {
+    public ResponseEntity<?> updateApartmentExpense(@PathVariable String apartmentId, @PathVariable String apartmentExpenseName, @RequestBody ApartmentExpenseDTO expense) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("APARTMENT ID: " + apartmentId);
 
         // Upsert behavior
         ApartmentExpenseResponse response = null;
         try {
-            response = apartmentExpenseService.updateApartmentExpense(apartmentId, authentication, expense, apartmentExpenseName);
+            response = apartmentExpenseService.updateApartmentExpense(Integer.valueOf(apartmentId) , authentication, expense, apartmentExpenseName);
             return ResponseEntity.ok(response);
         } catch(EntityNotFoundException e) {
-            response = apartmentExpenseService.createNewApartmentExpense(apartmentId, authentication, expense);
+            response = apartmentExpenseService.createNewApartmentExpense(Integer.valueOf(apartmentId), authentication, expense);
 
             // Obtain absolute URI to the newly created resource in order to provide a Location header
             URI location = ServletUriComponentsBuilder

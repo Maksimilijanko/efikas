@@ -45,6 +45,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({
     : { uri: "https://picsum.photos/300/300" };
   const { Colors } = useTheme();
   const { t } = useTranslation();
+  console.log("????????????? IMAGE URL: ", imageUrl);
 
   const statusText =
     status === undefined

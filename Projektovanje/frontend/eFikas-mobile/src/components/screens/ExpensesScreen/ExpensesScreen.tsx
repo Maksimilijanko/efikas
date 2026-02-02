@@ -60,7 +60,7 @@ const ExpensesScreen = () => {
             await queryClient.invalidateQueries({ queryKey: ["analytics", String(apartmentId)] });
             setIsModalVisible(false);
         } catch (error: any) {
-            console.error("GREŠKA:", error.response?.data);
+            console.log("GREŠKA:", error.response?.data);
             toastService.error(
                 t('expenses.messages.errorTitle'), 
                 t('expenses.messages.errorMessage')

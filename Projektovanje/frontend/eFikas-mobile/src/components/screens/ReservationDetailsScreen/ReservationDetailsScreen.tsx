@@ -257,7 +257,7 @@ const ReservationDetailsScreen = ({ reservation, segment }: Props) => {
 				await addIncomeToBook();
 			} else {
 				const errorText = await response.text();
-				console.error("Greška s kase:", errorText);
+				console.log("Greška s kase:", errorText);
 				setIsFiscalizing(false);
 				Alert.alert(
 					t("reservations.toastMessages.genericError"),
@@ -265,7 +265,7 @@ const ReservationDetailsScreen = ({ reservation, segment }: Props) => {
 				);
 			}
 		} catch (error) {
-			console.error("Network error:", error);
+			console.log("Network error:", error);
 			setIsFiscalizing(false);
 			Alert.alert(
 				t("reservations.details.fiscalization.errorTitle"),
@@ -455,7 +455,7 @@ const ReservationDetailsScreen = ({ reservation, segment }: Props) => {
 						imageUrl={reservation.apartment.pictures?.[0] ?? undefined}
 						onPress={() => console.log("...")}
 						showArrow={false}
-            showStatus={false}
+            			showStatus={false}
 					/>
 				}
 				infoItems={infoItems}

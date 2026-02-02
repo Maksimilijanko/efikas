@@ -186,6 +186,7 @@ export function Dropdown({
             data={options}
             keyExtractor={(item) => item[optionValue].toString()}
             renderItem={renderItem}
+			scrollEnabled={false}
           />
         </View>
       )}

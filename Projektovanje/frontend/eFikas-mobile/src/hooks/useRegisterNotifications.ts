@@ -8,7 +8,7 @@ export const useRegisterNotifications = () => {
             console.info("Push notifications registered successfully!");
         },
         onError: (error) => {
-            console.error("Notification setup failed: ", error.message);
+            console.log("Notification setup failed: ", error.message);
         }
     });
 };

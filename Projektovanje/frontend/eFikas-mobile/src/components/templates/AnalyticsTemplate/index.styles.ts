@@ -1,9 +1,9 @@
-import { StyleSheet, Dimensions, Platform } from 'react-native';
-import { Colors } from '@/src/styles/style';
+import { Dimensions, StyleSheet } from 'react-native';
+
 
 const screenHeight = Dimensions.get('window').height;
 
-const styles = StyleSheet.create({
+const createStyles = (Colors: any) => StyleSheet.create({
     root: {
         flex: 1,
         backgroundColor: Colors.background
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default styles;
+export default createStyles;

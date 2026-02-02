@@ -70,7 +70,7 @@ export const useAuth = () => {
 					throw new Error(`Registration failed with status: ${response.status}`);
 				}
 			} catch(err) {
-				console.error("Error in login: ", err.message);
+				console.log("Error in login: ", err.message);
 			}
             
         },
@@ -130,7 +130,7 @@ export const useAuth = () => {
             router.replace('/(auth)');
             
         } catch (error) {
-            console.error("Greška prilikom odjave:", error);
+            console.log("Greška prilikom odjave:", error);
             toastService.error(
                 t('auth.logout.toastMessages.errorTitle'),
                 t('auth.logout.toastMessages.errorMsg')
