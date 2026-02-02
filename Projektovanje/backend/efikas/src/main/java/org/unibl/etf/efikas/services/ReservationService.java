@@ -24,6 +24,7 @@ import org.unibl.etf.efikas.models.entities.GuestsBook;
 import org.unibl.etf.efikas.models.entities.Reservation;
 import org.unibl.etf.efikas.models.entities.ReservationType;
 import org.unibl.etf.efikas.models.requests.UpdateReservationRequest;
+import org.unibl.etf.efikas.models.responses.ApartmentResponse;
 import org.unibl.etf.efikas.models.responses.FileUploadResponse;
 import org.unibl.etf.efikas.models.responses.ReservationResponse;
 import org.unibl.etf.efikas.repositories.ApartmentRepository;
@@ -44,6 +45,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTypeRepository reservationTypeRepository;
     private final ApartmentRepository apartmentRepository;
+
+    private final ApartmentService apartmentService;
     private final ModelMapper modelMapper;
     private final S3Service s3Service;
     private final GuestsBookRepository guestsBookRepository;
@@ -92,7 +95,10 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found!"));
 
+        ApartmentResponse apartment = apartmentService.getApartmentById(apartmentId);
+
         ReservationResponse reservationResponse = modelMapper.map(reservation, ReservationResponse.class);
+        reservationResponse.setApartment(apartment);
         reservationResponse.setGuest(getConcreteGuest(reservation.getGuest()));
 
         return reservationResponse;
@@ -172,7 +178,7 @@ public class ReservationService {
 
     private Reservation persistGuestIfNonExistant(ReservationDTO reservationDTO, MultipartFile documentPicture) {
         String citizenId = reservationDTO.getGuest().getCitizenId();
-        GuestsBook guest1 = guestsBookRepository.findByCitizenId(citizenId).orElseThrow(() -> new EntityNotFoundException("Guest not found!"));
+        GuestsBook guest1 = guestsBookRepository.findByCitizenId(citizenId).orElse(null);
         if(guest1 != null) {
             // Honestly makes no sense, but it works for UNIQUE constraints so we can make multiple reservations
             // per guest... sorry ¯\_(ツ)_/¯

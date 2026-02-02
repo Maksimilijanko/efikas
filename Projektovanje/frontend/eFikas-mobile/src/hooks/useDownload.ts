@@ -138,6 +138,10 @@ export const useDownload = () => {
 					toastService.error(t('books.documents.downloadErrorTitle'), t('books.documents.download400Message'));
 					return;
 				}
+                else if(err.code === '404') {
+                    toastService.error(t('books.documents.downloadErrorTitle'), t('books.documents.download404Message'));
+                    return;
+                }
 			}
 
             setDownloadError(
@@ -172,6 +176,7 @@ export const useDownload = () => {
 			
 			
 		} catch(err) {
+            
 			console.log("ERROR DOWNLOADING: ", err)
 		}
 

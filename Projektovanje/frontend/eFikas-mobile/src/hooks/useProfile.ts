@@ -75,6 +75,9 @@ export const useProfile = () => {
                 throw new Error(errorMessage);
             }
         },
+        retry: 1, 
+        // Optional: wait 1 second between retries instead of exponential backoff
+        retryDelay: 1000,
     });
 
 	// -------- ADD STORE --------

@@ -24,7 +24,7 @@ public class StoreService {
         String email = authentication.getName();
         System.out.println("EMAIL: " + email);
         AppUser user = appUserRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Store for user not found"));
-        Store store = storeRepository.findByUser(user);
+        Store store = storeRepository.findByUser(user).orElseThrow(() -> new EntityNotFoundException("Store for user not found"));
 
         return modelMapper.map(store, StoreDTO.class);
     }

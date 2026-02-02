@@ -42,13 +42,8 @@ export namespace CashRegisterValidation {
 // #region Login/Register
 export namespace LoginValidation {
   export const schema = z.object({
-    email: z
-      .string(REQUIRED_FIELD_ERROR)
-      .email(t("auth.errors.emailError"))
-      .min(10, LENGTH_MIN_ERROR(10)),
-    password: z
-      .string(REQUIRED_FIELD_ERROR)
-      .min(8, t("auth.errors.passwordLengthError")),
+    email: z.email(t("auth.errors.emailError")).min(10, LENGTH_MIN_ERROR(10)),
+    password: z.string(REQUIRED_FIELD_ERROR).min(8, t("auth.errors.passwordLengthError")),
   });
 
   export type FormValues = z.infer<typeof schema>;
@@ -57,32 +52,14 @@ export namespace LoginValidation {
 export namespace RegistrationValidation {
   export const schema = z
     .object({
-      name: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(2, t("profile.store.validation.nameError")),
-      surname: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(2, t("profile.store.validation.nameError")),
-      email: z
-        .string(REQUIRED_FIELD_ERROR)
-        .email(t("auth.errors.emailError"))
-        .min(10, t("auth.errors.emailError", { length: 10 })),
-      password: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(8, t("auth.errors.passwordLengthError")),
-      repeatPassword: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(8, t("auth.errors.passwordLengthError")),
-      jmbg: z
-        .string(REQUIRED_FIELD_ERROR)
-        .length(13, t("auth.errors.jmbgLengthError"))
-        .regex(/^\d+$/, t("auth.errors.jmbgFormatError")),
-      address: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(5, t("auth.errors.addressLengthError", { length: 5 })),
-      phoneNumber: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(11, t("auth.errors.phoneNumberLengthError", { length: 11 }))
+      name: z.string(REQUIRED_FIELD_ERROR).min(2, t("profile.store.validation.nameError")),
+      surname: z.string(REQUIRED_FIELD_ERROR).min(2, t("profile.store.validation.nameError")),
+      email: z.email(t("auth.errors.emailError")).min(10, t("auth.errors.emailError", { length: 10 })),
+      password: z.string(REQUIRED_FIELD_ERROR).min(8, t("auth.errors.passwordLengthError")),
+      repeatPassword: z.string(REQUIRED_FIELD_ERROR).min(8, t("auth.errors.passwordLengthError")),
+      jmbg: z.string(REQUIRED_FIELD_ERROR).length(13, t("auth.errors.jmbgLengthError")).regex(/^\d+$/, t("auth.errors.jmbgFormatError")),
+      address: z.string(REQUIRED_FIELD_ERROR).min(5, t("auth.errors.addressLengthError", { length: 5 })),
+      phoneNumber: z.string(REQUIRED_FIELD_ERROR).min(11, t("auth.errors.phoneNumberLengthError", { length: 11 }))
         .regex(
           /^06[0-9]\/\d{3}-\d{3}$/,
           t("auth.errors.phoneNumberFormatError"), //t('auth.errors.phoneNumberFormatError') // "Invalid format. Expected: 06X/123-456"
@@ -102,15 +79,9 @@ export namespace RegistrationValidation {
 export namespace ResetPasswordValidation {
   export const schema = z
     .object({
-      email: z
-        .email(t("auth.errors.emailError"))
-        .min(10, LENGTH_MIN_ERROR(10)),
-      password: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(8, t("auth.errors.passwordLengthError")),
-      repeatPassword: z
-        .string(REQUIRED_FIELD_ERROR)
-        .min(8, t("auth.errors.passwordLengthError")),
+      email: z.email(t("auth.errors.emailError")).min(10, LENGTH_MIN_ERROR(10)),
+      password: z.string(REQUIRED_FIELD_ERROR).min(8, t("auth.errors.passwordLengthError")),
+      repeatPassword: z.string(REQUIRED_FIELD_ERROR).min(8, t("auth.errors.passwordLengthError")),
     })
     .refine((data) => data.password === data.repeatPassword, {
       message: t("auth.errors.passwordMismatchError"),

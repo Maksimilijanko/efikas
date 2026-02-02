@@ -129,7 +129,8 @@ const RegisterForm = ({
 		placeholder: string, 
 		helperText: string | undefined,
 		type: 'text' | 'password',
-		iconName: LucideIconName
+		iconName: LucideIconName,
+		inputProps?: any
 	) => {
 		return(
 			<FormField
@@ -142,6 +143,7 @@ const RegisterForm = ({
 				iconName={iconName}
 				isInvalid={false}
 				required
+				inputProps={inputProps}
 			/>
 		);
 	}
@@ -158,7 +160,7 @@ const RegisterForm = ({
 			{renderRegisterField('Email', 'email', 'marko.markovic@gmail.com', undefined, 'text', "Mail")}
 			{renderRegisterField(t('auth.register.password'), 'password', '••••••••', t('auth.errors.passwordLengthError'), 'password', "Lock")}
 			{renderRegisterField(t('auth.register.repeatPassword'), 'repeatPassword', '••••••••', t('auth.errors.passwordLengthError'), 'password', "Lock")}
-			{renderRegisterField("JMBG", 'jmbg', '1234567891234', t('auth.errors.jmbgLengthError'), 'text', "Briefcase")}
+			{renderRegisterField("JMBG", 'jmbg', '1234567891234', t('auth.errors.jmbgLengthError'), 'text', "Briefcase", { keyboardType: 'numeric', maxLength: 13 })}
 			{renderRegisterField(t('auth.register.address'), 'address', 'Ulica 123', undefined, 'text', "House")}
 			{renderRegisterField(t('auth.register.phoneNumber'), 'phoneNumber', '065/123-456', undefined, 'text', "Phone")}
 

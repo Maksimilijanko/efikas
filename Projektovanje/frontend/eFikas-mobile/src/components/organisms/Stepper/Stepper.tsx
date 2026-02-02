@@ -47,7 +47,7 @@ export default function Stepper(props: StepperProps) {
 						onPrevious={step.onPreviousStep}
 						buttonNextText={step.buttonNextText} 
 						buttonNextTextColor={Colors.background} // TODO: Find better workaround to hide it
-						buttonNextDisabled={true}
+						buttonNextDisabled={false}
 						onNext={step.onNextStep}
 					>
 						{step.componentToRender}

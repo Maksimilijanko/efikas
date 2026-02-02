@@ -12,8 +12,8 @@ export const authService = {
   },
 
   login: async (loginRequest: LoginRequest): Promise<AxiosResponse> => {
-	console.log("LOGIN REQ", loginRequest)
-	const response = await axiosInstance.post<string>(API_URLS.auth.login, loginRequest);
+    console.log("LOGIN REQ", loginRequest)
+    const response = await axiosInstance.post<string>(API_URLS.auth.login, loginRequest);
     return response;
   },
 
@@ -25,17 +25,17 @@ export const authService = {
   },
 
   requestOtp: async (sendOtpRequest: OtpSendRequest): Promise<AxiosResponse> => {
-	const response = await axiosInstance.post<void>(API_URLS.auth.requestOtp, sendOtpRequest);
-	return response;
+    const response = await axiosInstance.post<void>(API_URLS.auth.requestOtp, sendOtpRequest);
+    return response;
   },
 
   verifyOtp: async (verifyOtpRequest: OtpVerifyRequest): Promise<AxiosResponse> => {
-	const response = await axiosInstance.post<void>(API_URLS.auth.verifyOtp, verifyOtpRequest);
-	return response;
+    const response = await axiosInstance.post<void>(API_URLS.auth.verifyOtp, verifyOtpRequest);
+    return response;
   },
 
   resetPassword: async (request: ResetPasswordRequest): Promise<AxiosResponse> => {
-	const response = await axiosInstance.put<void>(API_URLS.profile.resetPassword, request);
-	return response;
+    const response = await axiosInstance.put<void>(API_URLS.auth.resetPassword, request);
+    return response;
   }
 }; 
