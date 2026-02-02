@@ -455,6 +455,7 @@ const ReservationDetailsScreen = ({ reservation, segment }: Props) => {
 						imageUrl={reservation.apartment.pictures?.[0] ?? undefined}
 						onPress={() => console.log("...")}
 						showArrow={false}
+            showStatus={false}
 					/>
 				}
 				infoItems={infoItems}

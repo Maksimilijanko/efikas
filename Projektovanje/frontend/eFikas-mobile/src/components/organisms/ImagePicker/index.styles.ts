@@ -51,8 +51,9 @@ export const getStyles = (Colors: any) =>
       borderRadius: 10,
     },
     buttonWrapper: {
-      height: '25%',
-      width: '50%',
+      height: 40, 
+      width: 120,
+      marginTop: 10,
       alignItems: 'center',
       alignSelf: 'center',
     },

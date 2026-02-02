@@ -93,14 +93,14 @@ const getStyles = (Colors: any) =>
     },
 
     title: {
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: "600",
       color: Colors.textPrimary,
       marginBottom: 5,
     },
 
     subtitle: {
-      fontSize: 14,
+      fontSize: 12,
       color: Colors.tertiary,
     },
 
@@ -122,12 +122,12 @@ const getStyles = (Colors: any) =>
     },
 
     dateLabel: {
-      fontSize: 14,
+      fontSize: 12,
       color: Colors.tertiary,
     },
 
     dateValue: {
-      fontSize: 14,
+      fontSize: 12,
       color: Colors.textPrimary,
     },
 
