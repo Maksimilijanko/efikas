@@ -188,7 +188,7 @@ export default function AuthScreen() {
         try {
             // Google login logic
         } catch (error) {
-            console.error('Google Sign-In Error:', error);
+            console.log('Google Sign-In Error:', error);
         }
     };
 

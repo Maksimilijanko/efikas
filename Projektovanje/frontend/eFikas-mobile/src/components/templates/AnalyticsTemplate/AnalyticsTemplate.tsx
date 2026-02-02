@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import { useTheme } from '@/src/providers/ThemeProvider';
+import React, { useEffect, useMemo } from 'react';
 import {
-    View,
-    ScrollView,
-    LayoutAnimation,
-    Platform,
-    UIManager
+	LayoutAnimation,
+	Platform,
+	ScrollView,
+	UIManager,
+	View
 } from 'react-native';
-import styles from './index.styles';
-import { Colors } from '@/src/styles/style';
+import createStyles from './index.styles';
 
 export type AnalyticsTemplateProps = {
     apartmentCard: React.ReactNode;
@@ -35,6 +35,11 @@ const AnalyticsTemplate: React.FC<AnalyticsTemplateProps> = ({
     useEffect(() => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }, [isDetailsMode]);
+
+	const { Colors } = useTheme(); // Pull Colors from your context hook
+
+    // Memoize the styles so they only recalculate when Colors change
+    const styles = useMemo(() => createStyles(Colors), [Colors]);
 
     return (
         <View style={styles.root}>

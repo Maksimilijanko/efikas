@@ -18,9 +18,9 @@ export const useApartments = () => {
         //console.log("Apartments dobavljeni:", result);
         return result;
       } catch (err: any) {
-        console.error("(GRESKA)Nije moguce dobaviti apartmane:", err);
-        console.error("Status:", err?.response?.status);
-        console.error("Data:", err?.response?.data);
+        console.log("(GRESKA)Nije moguce dobaviti apartmane:", err);
+        console.log("Status:", err?.response?.status);
+        console.log("Data:", err?.response?.data);
 
         const errorMessage =
           err?.message || t("apartments.toastMessages.genericError");

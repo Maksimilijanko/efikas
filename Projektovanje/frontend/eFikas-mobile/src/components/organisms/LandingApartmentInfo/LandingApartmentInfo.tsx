@@ -186,7 +186,7 @@ export default function LandingApartmentInfo(props: LandingApartmentInfoProps) {
           imageStyle={styles.imageStyle}
         >
           <View style={styles.infoContainer}>
-            {/*Numbe of beds */}
+            {/* Number of beds */}
             <View style={styles.attrBox}>
               <View style={styles.attrInner}>
                 <Icon name="Bed" size={20} color={Colors.textPrimary} />

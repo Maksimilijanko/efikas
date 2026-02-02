@@ -41,16 +41,11 @@ const TasksScreen = () => {
         }
     }, [apartmentsData]);
 
-    const handleConfirmTask = async (formData: any) => {
+    const handleConfirmTask = async (formData: ApartmentTaskDTO) => {
         const apartmentId = selectedApartment?.id || selectedApartment?.value;
         if (!apartmentId) return;
 
-        const payload: ApartmentTaskDTO = {
-            name: formData.zadatak,
-            note: formData.napomena || "",
-            status: false,
-            dateTime: new Date().toISOString() 
-        };
+        const payload: ApartmentTaskDTO = formData;
 
         try {
             await taskService.create(Number(apartmentId), payload);

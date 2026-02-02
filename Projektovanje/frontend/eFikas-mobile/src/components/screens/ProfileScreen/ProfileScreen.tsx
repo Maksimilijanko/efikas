@@ -81,7 +81,7 @@ export default function ProfileScreen() {
 			toastService.success(t('profile.toastMessages.updateSuccessfulTitle'), t('profile.toastMessages.updateSuccessfulMessage'));
 			setIsEditMode(false);
 		} catch (err) {
-			console.error("Failed to update profile:", err);
+			console.log("Failed to update profile:", err);
 		}
 	};
 

@@ -63,7 +63,7 @@ export const findFiscalDeviceIp = async (apiKey: string): Promise<string | null>
     return null;
 
   } catch (e) {
-    console.error("Greška pri skeniranju:", e);
+    console.log("Greška pri skeniranju:", e);
     return null;
   }
 };

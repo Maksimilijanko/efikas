@@ -17,6 +17,7 @@ import { useStyles } from '@/src/hooks/useStyles';
 import { useTheme } from '@/src/providers/ThemeProvider';
 import { Label } from '../../atoms/Label/Label';
 import { getStyles } from './index.styles';
+import MissingItemsNotifier from '../../molecules/MissingItemsNotifier/MissingItemsNotifier';
 
 const Modal = ({
   visible,
@@ -72,32 +73,39 @@ export const Gallery: React.FC<GalleryProps> = ({ images, style }) => {
         size="xl"
         className="font-bold mb-4"
       />
-
-      <View style={styles.imageRow}>
-        {firstFour.map((img, index) => {
-          const isLast = index === 3 && extra > 0;
-          return (
-            <Pressable
-              key={index}
-              onPress={() => openGallery(index)}
-              style={styles.pressable}
-            >
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri: img }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-                {isLast && (
-                  <View style={styles.overlay}>
-                    <Text style={styles.overlayText}>+{extra}</Text>
-                  </View>
-                )}
-              </View>
-            </Pressable>
-          );
-        })}
-      </View>
+		{firstFour.length === 0
+		? <MissingItemsNotifier label='Trenutno nemate slika za ovaj apartman' /> 
+		: 
+			<View style={styles.imageRow}>
+				{firstFour.map((img, index) => {
+				const isLast = index === 3 && extra > 0;
+				const imageSource = img
+				? { uri: img }
+				: { uri: "https://picsum.photos/300/300" };
+				return (
+					<Pressable
+						key={index}
+						onPress={() => openGallery(index)}
+						style={styles.pressable}
+						>
+						<View style={styles.imageContainer}>
+							<Image
+								source={{ uri: imageSource.uri }}
+								style={styles.image}
+								resizeMode="cover"
+							/>
+							{isLast && (
+							<View style={styles.overlay}>
+								<Text style={styles.overlayText}>+{extra}</Text>
+							</View>
+						)}
+						</View>
+					</Pressable>
+				);
+				})}
+			</View>
+		}
+      
 
       <Modal visible={selectedIndex !== null} onClose={closeGallery}>
         <ModalBackdrop />
