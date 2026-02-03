@@ -37,12 +37,12 @@ export default function App() {
                 <QueryClientProvider client={queryClient}>
                     <Stack screenOptions={{ headerShown: false }}>
                         {/* Not logged in -> show auth flow (komentarisano za sada za lak pristup meniju, inače radi :D ) */}
-                        {/* <Stack.Screen
+                        <Stack.Screen
                             name="(auth)"
                             options={{
                                 headerShown: false,
                             }}
-                        /> */}
+                        />
 
                         {/* Authenticated users go to (tabs) */}
                         <Stack.Screen

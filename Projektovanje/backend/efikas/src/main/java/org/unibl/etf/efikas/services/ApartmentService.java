@@ -53,7 +53,15 @@ public class ApartmentService {
 
     public ApartmentResponse getApartmentById(int id) {
         Apartment apartment = apartmentRepository.findById(id).orElse(null);
-        return modelMapper.map(apartment, ApartmentResponse.class);
+
+        List<String> pictureUrls = getPictureUrlsForApartment(apartment);
+
+        ApartmentResponse response = modelMapper.map(apartment, ApartmentResponse.class);
+        response.setPictures(pictureUrls);
+
+        System.out.println("******* APARTMENT RESPONSE: " + response);
+
+        return response;
     }
 
     public ApartmentResponse createApartmentWithFiles(ApartmentDTO request, List<MultipartFile> files, String email) {
@@ -172,6 +180,8 @@ public class ApartmentService {
         ApartmentResponse response = modelMapper.map(updatedApartment, ApartmentResponse.class);
         response.setPictures(newKeys);
 
+
+
         return response;
     }
 
@@ -194,5 +204,17 @@ public class ApartmentService {
         response.getPictures().forEach(s3Service::deleteFile);
 
         return response;
+    }
+
+    public List<String> getPictureUrlsForApartment(Apartment apartment) {
+        List<ApartmentPicture> pictures = apartmentPictureRepository.findApartmentPictureByApartment(apartment);
+        List<String> urls = new ArrayList<>();
+        if(pictures != null)
+            for(ApartmentPicture picture : pictures) {
+                String presignedUrl = s3Service.getPresignedUrl(picture.getId().getPictureURL());
+                urls.add(presignedUrl);
+            }
+
+        return urls;
     }
 }

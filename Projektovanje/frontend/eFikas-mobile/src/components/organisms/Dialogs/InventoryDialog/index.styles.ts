@@ -4,7 +4,7 @@ export const getStyles = (Colors: any) =>
   StyleSheet.create({
     backdrop: {
         flex: 1,
-        backgroundColor: Colors.shadowColor,
+        backgroundColor: '#00000080',
         justifyContent: "center", 
         alignItems: "center"
     },

@@ -130,7 +130,8 @@ export default function ForgotPasswordScreen() {
 		const request: ResetPasswordRequest = {
 			email: data.email,
 			newPassword: data.password,
-			confirmPassword: data.repeatPassword
+			confirmPassword: data.repeatPassword,
+			otp: otpCode
 		}
 
 		resetPassword(request);
@@ -201,8 +202,8 @@ export default function ForgotPasswordScreen() {
 			</VStack>
 			
 			<VStack style={styles.emailFormContainer}>
-				<FormField control={control} name={"password"} type="password" label={t('auth.forgotPassword.step3.newPasswordLabel')} placeholder="••••••••" iconName="Lock" />
-				<FormField control={control} name={"repeatPassword"} type="password" label={t('auth.forgotPassword.step3.confirmPasswordLabel')} placeholder="••••••••" iconName="Lock" />
+				<FormField control={control} name={"password"} type="password" label={t('auth.forgotPassword.step3.newPasswordLabel')} placeholder="••••••••" iconName="Lock" helperText={t('auth.errors.passwordLengthError')} />
+				<FormField control={control} name={"repeatPassword"} type="password" label={t('auth.forgotPassword.step3.confirmPasswordLabel')} placeholder="••••••••" iconName="Lock" helperText={t('auth.errors.passwordLengthError')} />
 				
 				<LoginButton
 					title={t('auth.forgotPassword.step3.resetPasswordButton')}

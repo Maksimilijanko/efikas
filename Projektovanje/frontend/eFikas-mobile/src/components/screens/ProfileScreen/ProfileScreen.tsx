@@ -38,7 +38,7 @@ export default function ProfileScreen() {
 	const { t } = useTranslation();
 	const { Colors } = useTheme();
 	const navigation = useNavigation();
-	const { profile, store, storeError, isLoading, isSaving, updateProfile, addStore } = useProfile();
+	const { profile, store, isLoading, updateProfile, addStore } = useProfile();
 	
 
 
@@ -193,12 +193,11 @@ export default function ProfileScreen() {
 
 							{/* Sekcija za radnju */}
 							<ProfileSection title={t("profile.store.sectionTitle")}>
-								{ storeError != null 
+								{ store == null
 								? (
 									<VStack style={styles.storeContainer}>
 										<MissingItemsNotifier label={t('profile.store.missingStore')} />
-									</VStack>
-									
+									</VStack>	
 								)
 								: (
 									<>

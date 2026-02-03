@@ -1,5 +1,5 @@
 const scheme = "http";
-const address = "192.168.50.44:8080";
+const address = "192.168.50.185:8080";//172.20.10.3:8080
 const version = "v1";
 
 export const API_BASE_URL = `${scheme}://${address}/api/${version}`;
